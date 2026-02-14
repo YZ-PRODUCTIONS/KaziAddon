@@ -1,0 +1,77 @@
+
+[General]
+	#Visibility when on fire while using a fire resistant fruit 
+	#Default: 20
+	#Range: 0 ~ 100
+	"Fire Visibility" = 25
+	#Changes the outline of the player's Haoshoku Haki, uses the hexadecimal format which MUST start with a # (ex: "#FF0000")
+	#Default: #FF0000
+	"Haki Color" = "#ff0000"
+	#Always hold the leg up for combat as a Black Leg user
+	#Default: true
+	"Black Leg Always Up" = true
+
+	[General."Cooldown Visuals"]
+		Color = true
+		Text = true
+		#Will send a (client sided only) chat message announcing when entering or leaving combat
+		#Default: false
+		"Combat State Update Chat Message" = false
+
+[UI]
+	#Displays the cooldown, charge up time and any other number displayed in the ability icon as seconds instead of ticks
+	#Default: false
+	"Display in Seconds" = false
+	#Simplifies some UI elements down to numbers instead of visuals, can provide help for people with color blindness for example.
+	#Default: false
+	"Simple Displays" = false
+	#How many ability bars can be displayed on the user's screen, this is limited by the server's amount of ability bars a user can have, it cannot exceed that
+	#Default: 1
+	#Range: 1 ~ 3
+	"Ability Bars on Screen" = 1
+	#Merge the bonuses shown in the ability tooltip with the original value
+	#For example a default damage of 2 with a bonus of 2 would be displayed as 4, instead of 2 (+2)
+	#Default: true
+	"Merge Ability Bonuses" = false
+	#Displays the keybind associated with the slot as text in the bottom-left part of it
+	#Default: true
+	"Show Keybind" = true
+	#Changes how slow numbers are displayed (such as for cooldown or charging)
+	#Default: TICKS
+	#Allowed Values: TICKS, SECONDS, PERCENTAGE
+	"Slot Number Display" = "SECONDS"
+	#Use the mod's hearts bar showing only 1 line of hearts with the HP number on the right
+	#Default: true
+	"Use Mod Hearts UI" = true
+	#Hides all the ability stats by default, reveals then while holding the SHIFT key.
+	#Default: false
+	"Hide Ability Stats" = false
+
+	[UI."Ability List"]
+		#Which selection mode to use.
+		#Default: DRAG_AND_DROP
+		#Allowed Values: DRAG_AND_DROP, KEYBIND
+		"Ability List Selection Mode" = "DRAG_AND_DROP"
+		#Shows the ability tooltips when hovering them
+		#Default: true
+		"Ability List Show Tooltips" = true
+		#How close the abilities are from each other in the selection list.
+		#Default: SPATIOUS
+		#Allowed Values: SPATIOUS, COMPACT, MINIMAL
+		"Ability List Compactness" = "SPATIOUS"
+		#Shows the help button
+		#Default: true
+		"Ability List Show Help" = true
+
+	[UI.System]
+		#Turns Goro Goro no Mi, its abilities and special effects blue
+		#Restarting the game is recommended after changing this option
+		#Default: false
+		"Blue Goro" = false
+		#Allows the game to show a text message when the installed mod is outdated
+		#Default: true
+		"Update Message" = true
+		#Allows the game to show mod specific splash texts on the main menu
+		#Default: true
+		"Mod Splash Text" = true
+

@@ -1,0 +1,434 @@
+
+[General]
+	#Allows non-OP users to use /check_fruits command. Note that this is only for the listing of fruits, the history subcommand with all of its functionality will not be affected by this config.
+	#Default: false
+	"Public /check_fruits" = false
+	#Multiplies any haki gained from non-player kills by this amount (commands not included)
+	#Default: 1
+	#Range: 0.0 ~ 10.0
+	"Haki Exp Multiplier" = 1.0
+	#Destroys the spawner after all its spawns are killed
+	#Default: true
+	"Destroy Spawner" = true
+	#Defines at what doriki intervals an extra +1 HP is gained
+	#Default: 40
+	#Range: 40 ~ 100
+	"Health Gain Frequency" = 40
+	#Multiplies any belly gained from non-player kills by this amount (commands not included)
+	#Default: 1
+	#Range: 0.0 ~ 10.0
+	"Belly Reward Multiplier" = 1.0
+	#Normally despawns traders and trainers even if they're nametagged 
+	#Default: false
+	"Despawn NPCs with Nametags" = false
+	#Allows mobs to reward doriki, bounty or items
+	#Default: true
+	"Mob Rewards" = true
+	#List with item ids that will not get the durability protection of Imbuing Haki
+	"Banned Items from Imbuing" = ["mineminenomi:bubbly_coral", "mineminenomi:medic_bag"]
+	#Multiplies any doriki gained from non-player kills by this amount (commands not included)
+	#Default: 1
+	#Range: 0.0 ~ 10.0
+	"Doriki Reward Multiplier" = 1.0
+	#Allows players to receive extra hearts based on their doriki
+	#Default: true
+	"Extra Hearts" = true
+	#Guarantees a minimum of 1 doriki per kill
+	# If used together with a Haki Exp Multiplier with a multiplier less than <1.0 it will convert it to chances
+	#Default: false
+	"Minimum Doriki per Kill" = false
+	#Allows non-OP users to use /removedf command ON THEMSELVES! 
+	#Default: false
+	"Public /removedf" = false
+	#Allows big explosions to destroy water 
+	#Default: false
+	"Destroy Water" = false
+	#Randomizes the player's race at spawn (making the player unable to choose a race themselves) 
+	#Default: false
+	"Race Randomizer" = false
+	#Sets a new limit for maximum haki exp a player may obtain 
+	#Default: 100
+	#Range: 0 ~ 300
+	"Haki Exp Limit" = 100
+	#Multiplies any bounty gained from non-player kills by this amount (commands not included)
+	#Default: 1
+	#Range: 0.0 ~ 10.0
+	"Bounty Reward Multiplier" = 1.0
+	#Multiplies any loyalty gained by this amount (commands not included)
+	#Default: 1
+	#Range: 0.0 ~ 10.0
+	"Loyalty Multiplier" = 1.0
+	#Allow players to choose their specific Mink Race 
+	#Default: true
+	"Allow Mink Race Select" = true
+	#Allows vanilla and other modded NPCs to use Busoshoku Haki, has no visual effect on their model however and its purely mechanical 
+	#Default: true
+	"Native Haki" = true
+	#Sets a new limit for maximum doriki a player may obtain 
+	#Default: 10000
+	#Range: 0 ~ 100000
+	"Doriki Limit" = 10000
+	#Forces new players to select their race, faction and fighting style upon joining the world
+	#Default: false
+	"Force Selection" = false
+
+	[General."Stats to Keep"]
+		"Keep Fighting Style" = true
+		"Keep Devil Fruit" = false
+		#Percentage of bounty to keep after death
+		#Default: 33
+		#Range: 0 ~ 100
+		"Percentage of Bounty kept after death" = 33
+		#Percentage of faction loyalty to keep after death
+		#Default: 50
+		#Range: 0 ~ 100
+		"Percentage of Loyalty kept after death" = 50
+		"Keep Faction" = true
+		#Percentage of belly to keep after death
+		#Default: 33
+		#Range: 0 ~ 100
+		"Percentage of Belly kept after death" = 33
+		#Percentage of haki exp to keep after death
+		#Default: 33
+		#Range: 0 ~ 100
+		"Percentage of Haki Exp kept after death" = 33
+		"Keep Race" = true
+		#Percentage of doriki to keep after death
+		#Default: 33
+		#Range: 0 ~ 100
+		"Percentage of Doriki kept after death" = 33
+
+	[General."Quests & Trials"]
+		#Allows quests to reward players with abilities, otherwise all abilities will be unlocked from the beginning
+		#Default: true
+		"Enable Fighting Style Progression" = true
+		#Allows quests to be accepted / completed
+		#Default: true
+		"Enable Trials" = true
+
+["Devil Fruits / Abilities"]
+	#Invulnerability to avoid attacks
+	#Default: true
+	"Ability Invulnerability" = true
+	#Used to determine the logic for when a continuous ability is used while another continuous ability is being used;
+	# true - Currently used ability is stopped and the newly used ability starts its process
+	# false - The current ability is NOT stopped and the used ability has no effect
+	#Default: true
+	"Stop Continuous Abilities" = true
+	#Number of ability bars;
+	#Default: 2
+	#Range: 1 ~ 10
+	"Ability Bars" = 2
+	#Enables the shared cooldown between similar abilities
+	#Default: true
+	"Shared Cooldowns" = true
+	#Will randomize all visual aspects of a devil fruit, making them impossible to identify
+	#Default: false
+	"Randomized Fruits" = false
+	#How logias get affected by projectiles; 
+	# NONE - No projectile can damage logias 
+	# HAKI - Physical projectiles with buso cause damage 
+	# EXTENDED - HAKI + any attack considered special deals damage to logias 
+	#Default: EXTENDED
+	#Allowed Values: NONE, HAKI, EXTENDED
+	"Logia Projectiles Invulnerability" = "EXTENDED"
+	#Remove the Y level restriction for flying moves
+	#Default: false
+	"Remove Y Restriction" = false
+	#Will send a chat message to nearby players with the used ability's name
+	#Default: false
+	"Anime Scream" = false
+	#Allows logia users to have different effects when punched
+	#Default: false
+	"Logia Return Effect" = false
+	#Allows Yami Yami no Mi users to eat an additional fruit
+	#Default: false
+	"Yami Power" = false
+	#Allows Devil Fruits to drop from leaves if higher than 0
+	#Default: 0
+	#Range: 0.0 ~ 100.0
+	"Chance for Devil Fruits to drop from leaves" = 0.0
+	#Enables logia's invulnerability
+	"Logia Invulnerability" = true
+	#Makes the fire and lava damage source to reduce fire resistance; only applies to move attacks from fruits 
+	#Default: true
+	"Special Source Events" = true
+	#Allows abilities to break or replace blocks; if turned OFF it will make some abilities completly useless
+	#Default: true
+	"Ability Griefing" = true
+	#Chance for vice admirals and notorious captains to spawn with devil fruits
+	#Default: 0
+	#Range: 0 ~ 100
+	"Open World Fruit Users Chance" = 0
+	#Runs a check for all abilities on a player to remove dupes or suspicious abilities when the player joins the world
+	#Default: true
+	"Ability Fraud Checks" = true
+	#Enables fruit awakenings
+	#Default: false
+	"Enable Awakenings" = false
+	#Makes getting out of water much harder as it's supposed to be
+	#Default: false
+	"Devil Fruit Extended Weakness Checks" = false
+	#List with ability names that are banned from the mod entirely
+	#Names should be written using the modid:name model similar to the below examples, if no modid is provided 'mineminenomi' will be applied by default.
+	"Banned Abilities" = ["mineminenomi:example1"]
+
+	#These options only work when "One Fruit per World" option is set to EXTENDED!
+	["Devil Fruits / Abilities"."One Fruit Per World"]
+		#Restricts the Devil Fruit spawns to only 1 of each type per world; 
+		# NONE - No logic is applied, an infinite number of each fruit can exist 
+		# SIMPLE - No more than one fruit type can be acquired via natural means (chests, leaves, fruit reincarnations etc) 
+		# EXTENDED - Extra rules are applied on top of the SIMPLE set that blocks any means (or as many as possible) of storing/hoarding fruits 
+		#Default: NONE
+		#Allowed Values: NONE, SIMPLE, EXTENDED
+		"One Fruit per World" = "NONE"
+		#Sets the limit for how many fruits a player can hold in their inventory;
+		#Default: 3
+		#Range: 1 ~ 10
+		"Inventory Fruit Limit" = 3
+		#If the player already has a devil fruit then they will be unable to pickup any other fruit;
+		#Default: false
+		"Unable to pickup Devil Fruit as a fruit user" = false
+		#Defines how many days a player has to be offline before their Devil Fruits are removed
+		#A value of 0 means the setting is disabled and fruits will not be removed for inactivity!;
+		#Default: 6
+		#Range: 0 ~ 30
+		"Days for Inactivity" = 6
+
+	["Devil Fruits / Abilities"."Ability Protection"]
+		#List with ability names that can be used inside ability protection zones
+		#Names should be written using the modid:name model similar to the below examples, if no modid is provided 'mineminenomi' will be applied by default.
+		"Protection Whitelist" = ["mineminenomi:example1"]
+		#Time (in ticks) before a newly replaced block will get restored inside ability protection areas
+		#Default 400
+		#Range: 0 ~ 72000
+		"Global Protection Restoration Grace" = 400
+
+	["Devil Fruits / Abilities"."Devil Fruits Reincarnation"]
+		#Sets the % chance for a Devil Fruit to get reincarnated from a fruit inside of a nearby chest
+		#Default: 1
+		#Range: 0 ~ 100
+		"Chest Blocks Fruit Reincarnation Chance" = 70
+		#Sets the % chance for a Devil Fruit to get reincarnated from a fruit inside an entity's inventory
+		#Default: 1
+		#Range: 0 ~ 100
+		"Entity's Inventory Fruit Reincarnation Chance" = 50
+		#Sets the % chance for a Devil Fruit to get reincarnated from a dropped fruit
+		#Default: 15
+		#Range: 0 ~ 100
+		"Dropped Fruit Reincarnation Chance" = 50
+
+	["Devil Fruits / Abilities".Haki]
+		#Responsible for how player unlock Haoshoku Haki; 
+		# NONE - Haoshoku Haki cannot be unlocked naturally 
+		# RANDOM - Only a few chosen ones receive it when they spawn 
+		# EXPERIENCE - Will unlock based on the total amount of Haki experience a player has
+		# COMBINED - Combiens the logic of RANDOM and EXPERIENCE
+		# TRUE_RANDOM - Each world / server has its own pool of randomly chosen Haoshoku Haki users
+		#Default: COMBINED
+		#Allowed Values: NONE, RANDOM, EXPERIENCE, COMBINED, TRUE_RANDOM
+		"Haoshoku Haki Unlock Logic" = "COMBINED"
+		#Responsible for how a player's Haoshoku Haki outline will be colored; 
+		# STANDARD - Standard red outline 
+		# CUSTOM - Allows the player to customize it using their own client config 
+		# RANDOM - Assignes a random color for each player based on their account's UUID
+		#Default: STANDARD
+		#Allowed Values: STANDARD, CUSTOM, RANDOM
+		"Haoshoku Haki Coloring Logic" = "STANDARD"
+
+["World Features"]
+	#Sets the % chance for a Medium Ship to spawn, the % is calculated per chunk (16x16)
+	#Default: 50
+	#Range: 0 ~ 100
+	"Medium Ships Spawn Chance" = 25
+	#List of dimension ids where mod structures should never spawn
+	#Names should be written using the modid:name model similar to the below examples, if no modid is provided 'minecraft' will be applied by default.
+	"Dimension Banlist for Structures" = ["minecraft:the_nether", "minecraft:the_end"]
+	#Sets the % chance for a Sky Island to spawn, the % is calculated per chunk (16x16)
+	#Default: 50
+	#Range: 0 ~ 100
+	"Sky Islands Spawn Chance" = 25
+	#Sets the % chance for a Ghost Ship to spawn, the % is calculated per chunk (16x16)
+	#Default: 50
+	#Range: 0 ~ 100
+	"Ghost Ships Spawn Chance" = 25
+	#Sets the % chance for a Poneglyph to spawn, the % is calculated per chunk (16x16)
+	#Default: 10
+	#Range: 0 ~ 100
+	"Poneglyphs Spawn Chance" = 10
+	#Sets the % chance for a Small Ship to spawn, the % is calculated per chunk (16x16)
+	#Default: 50
+	#Range: 0 ~ 100
+	"Small Ships Spawn Chance" = 25
+	#Sets the % chance for a training structure to spawn
+	#Default: 50
+	#Range: 0 ~ 100
+	"Training Structure Spawn Chance" = 25
+	#Sets the % chance for a Camp to spawn, the % is calculated per chunk (16x16)
+	#Default: 10
+	#Range: 0 ~ 100
+	"Camps Spawn Chance" = 10
+	#Kairoseki count per chunk
+	#Default: 2
+	#Range: 1 ~ 20
+	"Kairoseki Count" = 2
+	#Sets the % chance for a Large Ship to spawn, the % is calculated per chunk (16x16)
+	#Default: 50
+	#Range: 0 ~ 100
+	"Large Ships Spawn Chance" = 25
+	#Sets the % chance for a Small Base to spawn, the % is calculated per chunk (16x16)
+	#Default: 50
+	#Range: 0 ~ 100
+	"Small Bases Spawn Chance" = 25
+	#Adds couple of new one piece themed biomes to the world
+	#WARNING: This is a very experimental option, and can have some major downsides such as biomes being too vast, which is why its disabled by default
+	#Default: true
+	"Spawn One Piece Biomes" = true
+	#Sets the % chance for a Watch Tower to spawn, the % is calculated per chunk (16x16)
+	#Default: 50
+	#Range: 0 ~ 100
+	"Watch Towers Spawn Chance" = 25
+	#Sets the % chance for a Large Base to spawn, the % is calculated per chunk (16x16)
+	#Default: 50
+	#Range: 0 ~ 100
+	"Large Bases Spawn Chance" = 25
+
+[Challenges]
+	#Enables the challenges menu and activation by players
+	#Default: true
+	"Enable Challenges" = true
+	#Saves the player's inventory before starting a challenge and restores it to its pre-challenge format regardless of what happens during the challenge (such as losing or using items)
+	#Default: true
+	"Challenge Caching" = true
+	#Haki reward pool for all 3 difficulties for challenge
+	#Default: [10, 40, 0]
+	"Haki Reward Pool" = [10, 40, 0]
+	#Defines the speed at which the arena generates
+	#Do note that a faster speed implies more blocks being placed per tick, which might affect performance on servers
+	#Lower speeds will mean the server will remain stable throughout arena generation however the time it takes to fully generate it will increase
+	#Default: 50
+	#Range: 10 ~ 100
+	"Arena Construction Speed" = 50
+	#Returns players to their beds or world's spawn point after finishing a challenge
+	#When set to false it'll return them all to the original position the challenge starter was in.
+	#Default: true
+	"Return to safety" = true
+	#Doriki reward pool for all 3 difficulties for challenge
+	#Default: [1000, 4000, 0]
+	"Doriki Reward Pool" = [1000, 4000, 0]
+	#Belly reward pool for all 3 difficulties for challenge
+	#Default: [5000, 15000, 0]
+	"Belly Reward Pool" = [5000, 15000, 0]
+
+["World Events"]
+	#Allows random animal NPCs to spawn in the world (Dugongs, Bananwanis, Gorillas etc.)
+	#Default: true
+	"World Animals Spawns" = true
+	#Allows random aggressive faction humans to spawn in the world (Marines, Pirates, Bandits)
+	#Default: true
+	"World Humanoids Spawns" = true
+	#Allows Caravan events to spawn in the world
+	#Default: true
+	"Spawn Caravans" = true
+	#Allows Notorious Target events to spawn in the world
+	#Default: true
+	"Spawn Notorious Targets" = true
+	#Allows Celestial Visit events to spawn in the world
+	#Default: true
+	"Spawn Celestial Visits" = true
+
+	["World Events".Trainers]
+		#Determines the time (in minutes) between two spawn attempts
+		#Default: 2 (minutes)
+		#Range: 0 ~ 30
+		"Time Between Trainer Spawns" = 2
+		#Determines the % chance for a trainer to spawn
+		#Default: 15
+		#Range: 0 ~ 100
+		"Chance for Trainer Spawns" = 15
+
+	["World Events"."Spawn Chances"]
+		#Chance for grunts to spawn in world
+		#Default: 100
+		#Range: 0.0 ~ 100.0
+		"Grunts Spawn Chance" = 100.0
+		#Chance for captains to spawn in world
+		#Default: 100
+		#Range: 0.0 ~ 100.0
+		"Captains Spawn Chance" = 100.0
+		#Chance for pacifistas to spawn in world
+		#Default: 100
+		#Range: 0.0 ~ 100.0
+		"Pacifistas Spawn Chance" = 100.0
+		#Chance for brutes to spawn in world
+		#Default: 100
+		#Range: 0.0 ~ 100.0
+		"Brutes Spawn Chance" = 100.0
+		#Chance for snipers to spawn in world
+		#Default: 100
+		#Range: 0.0 ~ 100.0
+		"Snipers Spawn Chance" = 100.0
+
+	["World Events".Ambushes]
+		#Determines the time (in minutes) between two spawn attempts
+		#Default: 15 (minutes)
+		#Range: 0 ~ 30
+		"Time Between Ambush Spawns" = 15
+		#Determines the % chance for an ambush to spawn
+		#Default: 15
+		#Range: 0 ~ 100
+		"Chance for Ambush Spawns" = 15
+
+	["World Events".Traders]
+		#Determines the % chance for a trader to spawn
+		#Default: 1
+		#Range: 0 ~ 100
+		"Chance for Trader Spawns" = 1
+		#Determines the time (in minutes) between two spawn attempts
+		#Default: 2 (minutes)
+		#Range: 0 ~ 30
+		"Time Between Trader Spawns" = 2
+
+[Factions]
+	#Disabled the friendly damage between crewmates
+	#Default: true
+	"Disable Friendly Damage" = true
+
+	[Factions.Crews]
+		#Sends a message to all players when a new crew gets formed
+		#Default: false
+		"World Message on Crew creations" = false
+		#Bounty Requirement for creating a crew; 0 means no requirement
+		#Default: 0
+		#Range: 0 ~ 100000
+		"Bounty Requirement" = 0
+
+	[Factions.Bounty]
+		#Time (in minutes) it takes for another package to drop
+		#0 means no package will spawn
+		#Default: 15 (minutes)
+		#Range: 0 ~ 60
+		"Time Between Package Drops" = 15
+
+[System]
+	#Allows the usage of bukkit style permissions for certain mod features. Will override the default checks based on vanilla's 1-4 levels of permissions but might also bypass some mod specific requirements.
+	#Default: false
+	"Enable Permissions" = false
+	#Adjusts the weights of buildings added to villages by the mod in order to better fit the extended village sizes added by other mods
+	#Default: false
+	"Village Compatibility" = false
+	#Merges all the commands added by this mod under a generic /mmnm command, used for compatibility reasons in case some other mod adds similarly named commands
+	#Default: false
+	"Master Command" = false
+	#Replaces the block based abilities like ROOM and Torikago with 3D rendered spheres
+	#Default: true
+	"Experimental Spheres" = true
+	#Replaces some of the timers in the mod with real life based timers, could slightly improve the accuracy of some, however on large servers with big TPS spikes it could also have the opposite effect
+	#Default: true
+	"Experimental Timers" = true
+
+[Integrations]
+	#Disables all special functions of items when worn in curios slots
+	#Default: false
+	"Visual Only Curio" = false
+

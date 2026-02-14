@@ -1,0 +1,43 @@
+# This is an example mods.toml file. It contains the data relating to the loading mods.
+# The overall format is standard TOML format, v0.5.0.
+
+modLoader="javafml" #mandatory
+loaderVersion="[36,)" #mandatory (Forge 36.x = MC 1.16.5)
+
+license="All Rights Reserved"
+
+[[mods]] #mandatory
+modId="kazimod" #mandatory
+version="0.2" #mandatory
+displayName="KazisAdditions" #mandatory
+authors="kazi" #optional
+
+# The logo must be in the *root* of your JAR (put logo.png in src/main/resources/)
+logoFile="logo.png"
+
+description='''Kazi'''
+
+[[dependencies.kazimod]]
+modId="forge"
+mandatory=true
+versionRange="[36,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.kazimod]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.5,1.17)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.kazimod]]
+modId="mineminenomi"
+mandatory=true
+versionRange="[0.10.10,)"
+ordering="AFTER"
+side="BOTH"
+
+
+# Optional link shown in the mods menu
+displayURL="https://your.mod.site"

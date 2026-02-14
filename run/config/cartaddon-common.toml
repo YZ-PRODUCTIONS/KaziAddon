@@ -1,0 +1,72 @@
+
+[General]
+	#Enables players to unlock a knock-off version of geppo at 2,000 Doriki 
+	#Default: true
+	"Allow Cheappo" = true
+	#Enables players to use Raid Flags and start a pirate raid
+	#Default: true
+	"Allow Raids" = true
+	#Enables players to use fruitless abilities with a devil fruit
+	#Default: false
+	"Can use fruitless abilities with a fruit" = false
+
+["World Features"]
+	#Sets the % chance for a Fishman Village to spawn, the % is calculated per chunk (16x16)
+	#Default: 0
+	#Range: 0 ~ 100
+	"EXPERIMENTAL Fishman Village Spawn Chance" = 0
+	#Sets the % chance for a Factory to spawn, the % is calculated per chunk (16x16)
+	#Default: 15
+	#Range: 0 ~ 100
+	"Factory Spawn Chance" = 10
+	#Sets the % chance for Grave Variant One to spawn, the % is calculated per chunk (16x16)
+	#Default: 15
+	#Range: 0 ~ 100
+	"Grave One Spawn Chance" = 15
+	#Sets the % chance for a Dragon Thirteen Spawning Structure to spawn, the % is calculated per chunk (16x16)
+	#Default: 5
+	#Range: 0 ~ 100
+	"Dragon Spawn Structure Spawn Chance" = 5
+	#Sets the % chance for Rev House Variant One to spawn, the % is calculated per chunk (16x16)
+	#Default: 12
+	#Range: 0 ~ 100
+	"Rev House One Spawn Chance" = 12
+	#Sets the % chance for a Simple Bar to spawn, the % is calculated per chunk (16x16)
+	#Default: 10
+	#Range: 0 ~ 100
+	"Simple Bar Spawn Chance" = 10
+
+["Spawn Chances"]
+	#Chance for revolutionary commanders to spawn in world
+	#Default: 10
+	#Range: 0.0 ~ 100.0
+	"Rev Commanders Spawn Chance" = 10.0
+	#Chance for revolutionary officers to spawn in world
+	#Default: 10
+	#Range: 0.0 ~ 100.0
+	"Rev Officers Spawn Chance" = 10.0
+	#Chance for PX-II to spawn in world
+	#Default: 100
+	#Range: 0.0 ~ 100.0
+	"PX-II Spawn Chance" = 100.0
+	#Chance for Rifleman to spawn in world
+	#Default: 100
+	#Range: 0.0 ~ 100.0
+	"Rifleman Spawn Chance" = 100.0
+	#Chance for revolutionary grunts to spawn in world
+	#Default: 10
+	#Range: 0.0 ~ 100.0
+	"Rev Grunts Spawn Chance" = 10.0
+
+[Factions]
+	#Bounty Requirement for Unlocking the Emperor Passive Bonus, set to -1 to disable natural unlock
+	#Default: 1,000,000
+	#Range: -1.0 ~ 1.0E10
+	"Emperor Bounty Requirement" = 1000000.0
+	#Allows players to lose from opening chests in their faction specific structure (applies to Revs and Marines only)
+	#Default: true
+	"Enable Loyalty Loss From Structures" = true
+	#Disable Faction Specific Title Passive Bonuses
+	#Default: true
+	"Disable Faction Specific Title Passive Bonuses" = true
+

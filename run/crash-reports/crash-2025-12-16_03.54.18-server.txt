@@ -1,0 +1,64 @@
+---- Minecraft Crash Report ----
+// You're mean.
+
+Time: 12/16/25 3:54 AM
+Description: Exception in server tick loop
+
+java.lang.NullPointerException: Exception in server tick loop
+	at net.zay.piraterecruits.events.PirateRecruitTickHandler.onWorldTick(PirateRecruitTickHandler.java:34) ~[main/:?] {re:classloading}
+	at net.minecraftforge.eventbus.ASMEventHandler_9_PirateRecruitTickHandler_onWorldTick_WorldTickEvent.invoke(.dynamic) ~[?:?] {}
+	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:85) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:302) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:283) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.fml.hooks.BasicEventHooks.onPostWorldTick(BasicEventHooks.java:86) ~[forge:?] {re:classloading}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:857) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:787) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.integrated.IntegratedServer.tickServer(IntegratedServer.java:78) ~[forge:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:642) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:232) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:750) [?:1.8.0_472] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.5
+	Minecraft Version ID: 1.16.5
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_472, Temurin
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Temurin
+	Memory: 2018747104 bytes (1925 MB) / 3455057920 bytes (3295 MB) up to 7568621568 bytes (7218 MB)
+	CPUs: 20
+	JVM Flags: 2 total; -XX:+IgnoreUnrecognizedVMOptions -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	ModLauncher: 8.1.3+8.1.3+main-8.1.x.c94d18ec
+	ModLauncher launch target: fmluserdevclient
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		/mixin-0.8.4.jar mixin PLUGINSERVICE 
+		/eventbus-4.0.0.jar eventbus PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar object_holder_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar runtime_enum_extender PLUGINSERVICE 
+		/accesstransformers-3.0.1.jar accesstransformer PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar capability_inject_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar runtimedistcleaner PLUGINSERVICE 
+		/mixin-0.8.4.jar mixin TRANSFORMATIONSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar fml TRANSFORMATIONSERVICE 
+	FML: 36.2
+	Forge: net.minecraftforge:36.2.39
+	FML Language Providers: 
+		javafml@36.2
+		minecraft@1
+	Mod List: 
+		client-extra.jar                                  |Minecraft                     |minecraft                     |1.16.5              |DONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		main                                              |PirateRecruits                |piraterecruits                |0.2                 |DONE      |Manifest: NOSIGNATURE
+		forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp|Forge                         |forge                         |36.2.39             |DONE      |Manifest: NOSIGNATURE
+		mine-mine-no-mi-78726-7170763_mapped_official_1.16|Mine Mine no Mi               |mineminenomi                  |0.10.10             |DONE      |Manifest: NOSIGNATURE
+		curios-309927-4419403_mapped_official_1.16.5.jar  |Curios API                    |curios                        |1.16.5-4.1.0.0      |DONE      |Manifest: NOSIGNATURE
+		carts-mmnm-addon-1143743-7175549_mapped_official_1|Cart's mmnm Addon             |cartaddon                     |0.7.22              |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: 55addeae-4dd5-492f-a0b2-4c1a09ed10d6
+	Player Count: 0 / 8; []
+	Data Packs: vanilla, mod:piraterecruits, mod:forge, mod:mineminenomi, mod:curios, mod:cartaddon
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'forge'

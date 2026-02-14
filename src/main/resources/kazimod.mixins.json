@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.kazi.kazimod.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "MineMineNoMiAddonTemplate.refmap.json",
+  "mixins": [
+    "CartStylesReplace"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
