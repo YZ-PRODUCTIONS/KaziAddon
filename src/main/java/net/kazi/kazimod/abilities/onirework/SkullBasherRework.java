@@ -35,7 +35,7 @@ import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class SkullBasherRework extends Ability {
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kaziaddon", "skull_basher", new Pair[]{ImmutablePair.of("The user collides their skull with any target within range, applying bleeding.", (Object)null)});
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "skull_basher", new Pair[]{ImmutablePair.of("The user collides their skull with any target within range, applying bleeding.", (Object)null)});
     private static final float HOLD_TIME = 30.0F;
     private static final float CHARGE = 20.0F;
     private static final int MAX_COOLDOWN = 300;

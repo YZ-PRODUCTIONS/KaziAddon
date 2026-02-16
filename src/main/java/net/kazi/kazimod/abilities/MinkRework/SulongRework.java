@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartEleclawAbility;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartElectroHelper;
-import net.MrMagicalCart.cartaddon.api.helpers.AbilityLimits;
 import net.MrMagicalCart.cartaddon.entities.mobs.CartOfficerEntity;
 import net.MrMagicalCart.cartaddon.init.CartEffects;
 import net.minecraft.entity.LivingEntity;
@@ -83,7 +82,7 @@ public class SulongRework extends Ability {
     }
 
     private void useEvent(LivingEntity entity, IAbility ability) {
-        if (entity.hasEffect((Effect)CartEffects.RUMBLE.get())) {
+        if (entity.hasEffect((Effect) CartEffects.RUMBLE.get())) {
             this.continuousComponent.triggerContinuity(entity, 3600.0F);
             this.rumbleBall = true;
         } else {
@@ -160,7 +159,7 @@ public class SulongRework extends Ability {
     }
 
     static {
-        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "sulong", new Pair[]{ImmutablePair.of("The user reveals their true power during the night, enhancing their physical and electrical power. While active %s stacks are not consumed. Can be used during all non new moon nights or while having a rumble ball eaten. Be careful holding this ability with rumble balls, since past one minute it starts to wear down on you.", new Object[]{AbilityHelper.mentionAbility(CartEleclawAbility.INSTANCE)})});
+        DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "sulong", new Pair[]{ImmutablePair.of("The user reveals their true power during the night, enhancing their physical and electrical power. While active %s stacks are not consumed. Can be used during all non new moon nights or while having a rumble ball eaten. Be careful holding this ability with rumble balls, since past one minute it starts to wear down on you.", new Object[]{AbilityHelper.mentionAbility(CartEleclawAbility.INSTANCE)})});
         COLOR = WyHelper.hexToRGB("#B0E9F255");
         INSTANCE = (new AbilityCore.Builder("Sulong", AbilityCategory.RACIAL, SulongRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(100.0F, 2500.0F), ContinuousComponent.getTooltip(3600.0F, 12000.0F), ChangeStatsComponent.getTooltip()}).setUnlockCheck(SulongRework::canUnlock).build();
         OVERLAY = (new AbilityOverlay.Builder()).setOverlayPart(OverlayPart.BODY).setColor(COLOR).build();

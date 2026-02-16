@@ -25,5 +25,7 @@ public class KaziRegistries {
 
     static {
         ABILITIES = RegistryManager.ACTIVE.getRegistry(AbilityCore.class);
+
     }
+
 }

@@ -8,7 +8,7 @@ license="All Rights Reserved"
 
 [[mods]] #mandatory
 modId="kazimod" #mandatory
-version="0.2" #mandatory
+version="1.2" #mandatory
 displayName="KazisAdditions" #mandatory
 authors="kazi" #optional
 

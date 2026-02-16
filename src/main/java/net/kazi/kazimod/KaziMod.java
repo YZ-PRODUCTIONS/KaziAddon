@@ -1,6 +1,7 @@
 package net.kazi.kazimod;
 
 import net.kazi.kazimod.init.KaziAbilities;
+import net.kazi.kazimod.init.KaziEffects;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.kazi.kazimod.init.KaziParticleTypes;
 
@@ -24,6 +25,7 @@ public class KaziMod {
         KaziAbilities.register(modBus);
         KaziParticleEffects.register(modBus);
         KaziParticleTypes.register(modBus);
+        KaziEffects.register(modBus);
 
 
         MinecraftForge.EVENT_BUS.register(this);

@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package net.kazi.kazimod.renderers.entities.projectiles;
+package net.kazi.kazimod.entities.projectiles;
 
 import net.MrMagicalCart.cartaddon.entities.projectiles.nitoryu.NitoryuProjectiles;
 import net.minecraft.entity.EntityType;

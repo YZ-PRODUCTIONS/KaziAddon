@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 
 import net.MrMagicalCart.cartaddon.api.helpers.AbilityLimits;
 import net.MrMagicalCart.cartaddon.init.CartQuests;
+import net.MrMagicalCart.cartaddon.init.CartValues;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -89,6 +90,7 @@ public class RadiantSliceAbility extends Ability {
         this.color = new Color(16711680); // Default red color
         this.radius = 0;
         this.haoMastery = 0;
+
 
         this.addComponents(new AbilityComponent[]{
                 chargeComponent,
@@ -382,14 +384,9 @@ public class RadiantSliceAbility extends Ability {
     /* ================= UNLOCK ================= */
 
     private static boolean canUnlock(LivingEntity entity) {
-        if (!(entity instanceof PlayerEntity)) return false;
-
-        PlayerEntity player = (PlayerEntity) entity;
-        IEntityStats props = EntityStatsCapability.get(player);
-        IQuestData questProps = QuestDataCapability.get(player);
-
-        return props.isSwordsman() &&
-                questProps.hasFinishedQuest(CartQuests.SWORDSMAN_TRIAL_01);
+        IEntityStats props = EntityStatsCapability.get(entity);
+        boolean Style = props.getFightingStyle().equals(ModResources.SWORDSMAN);
+        return Style && props.getDoriki() >= (double)8000.0F;
     }
 
     /* ================= CORE ================= */

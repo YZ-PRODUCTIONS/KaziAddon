@@ -101,10 +101,10 @@
 	[General."Quests & Trials"]
 		#Allows quests to reward players with abilities, otherwise all abilities will be unlocked from the beginning
 		#Default: true
-		"Enable Fighting Style Progression" = true
+		"Enable Fighting Style Progression" = false
 		#Allows quests to be accepted / completed
 		#Default: true
-		"Enable Trials" = true
+		"Enable Trials" = false
 
 ["Devil Fruits / Abilities"]
 	#Invulnerability to avoid attacks

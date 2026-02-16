@@ -1,4 +1,3 @@
-
 //
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by FernFlower decompiler)
@@ -55,7 +54,7 @@ import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class MountainEaterRework extends Ability {
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "mountain_eater", new Pair[]{ImmutablePair.of("", (Object)null)});
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "mountain_eater", new Pair[]{ImmutablePair.of("", (Object)null)});
     private static final float HOLD_TIME = 30.0F;
     private static final int COOLDOWN = 300;
     private static final float RANGE = 2.0F;
@@ -112,6 +111,7 @@ public class MountainEaterRework extends Ability {
     }
 
     private void startChargeEvent(LivingEntity entity, IAbility ability) {
+        this.animationComponent.start(entity, CartAnimations.MOUNTAIN_EATER);
     }
 
     private void tickChargeEvent(LivingEntity entity, IAbility ability) {
@@ -123,7 +123,7 @@ public class MountainEaterRework extends Ability {
     }
 
     private void startContinuityEvent(LivingEntity entity, IAbility ability) {
-        this.animationComponent.start(entity, CartAnimations.MOUNTAIN_EATER);
+
         this.changeStatsComponent.applyModifiers(entity);
         this.hitTrackerComponent.clearHits();
     }
@@ -146,17 +146,10 @@ public class MountainEaterRework extends Ability {
             }
 
             for(LivingEntity target : list) {
-                float maxhealthdamage = target.getHealth() * 0.1F + weaponDamage;
-                if (maxhealthdamage >= 20.0F) {
-                    maxhealthdamage = target.getHealth() * 0.05F;
-                }
-
-                if (maxhealthdamage >= 35.0F) {
-                    maxhealthdamage = target.getHealth() * 0.01F;
-                }
+                float damage = DAMAGE + weaponDamage;
 
                 if (this.hitTrackerComponent.canHit(target)) {
-                    this.dealDamageComponent.hurtTarget(entity, target, maxhealthdamage);
+                    this.dealDamageComponent.hurtTarget(entity, target, damage);
                     this.dealDamageComponent.getBonusManager().removeBonus(AxeHelper.AXE_DAMAGE_BONUS);
                     if (isBerserk) {
                         this.dealDamageComponent.getBonusManager().addBonus(AxeHelper.AXE_DAMAGE_BONUS, "Axe Damage Bonus", BonusOperation.MUL, 1.5F);
@@ -172,7 +165,7 @@ public class MountainEaterRework extends Ability {
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
         this.changeStatsComponent.removeModifiers(entity);
         this.hitTrackerComponent.clearHits();
-        this.cooldownComponent.startCooldown(entity, 300.0F);
+        this.cooldownComponent.startCooldown(entity, 180.0F);
         this.animationComponent.stop(entity);
     }
 

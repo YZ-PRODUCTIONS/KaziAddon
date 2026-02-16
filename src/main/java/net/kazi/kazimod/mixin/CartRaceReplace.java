@@ -8,6 +8,7 @@ import net.MrMagicalCart.cartaddon.abilities.oni.*;
 import net.MrMagicalCart.cartaddon.init.CartResources;
 import net.kazi.kazimod.abilities.MinkRework.SulongRework;
 import net.kazi.kazimod.abilities.onirework.SkullBasherRework;
+import net.kazi.kazimod.abilities.onirework.ViciousRoarRework;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import org.spongepowered.asm.mixin.Final;
@@ -60,7 +61,7 @@ public abstract class CartRaceReplace {
                                 SkullBasherRework.INSTANCE,
                                 SmashingFistAbility.INSTANCE,
                                 ThunderousLeapAbility.INSTANCE,
-                                ViciousRoarAbility.INSTANCE
+                                ViciousRoarRework.INSTANCE
                         });
 
                         return (I) new RaceId(info, true, 6);
@@ -83,7 +84,9 @@ public abstract class CartRaceReplace {
                                 CartElectricalLunaAbility.INSTANCE,
                                 CartElectricalMissileAbility.INSTANCE,
                                 CartElectricalTempestaAbility.INSTANCE,
-                                SulongRework.INSTANCE
+                                SulongRework.INSTANCE,
+                                ElectricalBurstAbility.INSTANCE,
+                                MinkSizePasssiveAbility.INSTANCE,
                         });
 
                         return (I) new RaceId(info, true, 4);

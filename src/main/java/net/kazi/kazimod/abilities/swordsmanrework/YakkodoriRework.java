@@ -31,7 +31,7 @@ import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModQuests;
 
 public class YakkodoriRework extends Ability {
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "yakkodori", new Pair[]{ImmutablePair.of("Launches a crescent moon-shaped slash, which destroys everything in its path", (Object)null)});
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "yakkodori", new Pair[]{ImmutablePair.of("Launches a crescent moon-shaped slash, which destroys everything in its path", (Object)null)});
     private static final float COOLDOWN = 200.0F;
     private static final float DAMAGE = 15.0F;
     private static final int ANIMATION_TICKS = 7;

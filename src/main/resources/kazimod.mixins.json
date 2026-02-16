@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "MineMineNoMiAddonTemplate.refmap.json",
   "mixins": [
-    "CartStylesReplace"
+    "CartStylesReplace",
+    "CartRaceReplace",
+    "AbilityUnlockBlocker"
   ],
   "client": [
   ],
