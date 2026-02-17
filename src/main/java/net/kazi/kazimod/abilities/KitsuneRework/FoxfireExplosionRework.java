@@ -53,7 +53,6 @@ public class FoxfireExplosionRework extends Ability {
     private final RequireMorphComponent requireMorphComponent;
     private final ContinuousComponent continuousComponent;
 
-    // FIX: Use a Map to store Y positions per player UUID instead of a single instance variable
     private final Map<UUID, Double> playerStartYPositions = new HashMap<>();
 
     public FoxfireExplosionRework(AbilityCore<FoxfireExplosionRework> core) {
@@ -76,30 +75,42 @@ public class FoxfireExplosionRework extends Ability {
 
     private void onUse(LivingEntity entity, IAbility ability) {
         this.animationComponent.start(entity, ModAnimations.POINT_RIGHT_ARM);
-
-        // FIX: Store the starting Y position per player
         this.playerStartYPositions.put(entity.getUUID(), entity.getY());
-
         this.continuousComponent.triggerContinuity(entity, (float)HOLD_TIME);
-
         entity.level.playSound((PlayerEntity)null, entity.blockPosition(), (SoundEvent)ModSounds.MERA_SFX.get(), SoundCategory.PLAYERS, 3.0F, 1.0F);
     }
 
     private void duringContinuityEvent(LivingEntity entity, IAbility ability) {
-        // FIX: Retrieve the stored Y position for this specific player
-        double startY = this.playerStartYPositions.getOrDefault(entity.getUUID(), entity.getY());
+        // Use player's current position instead of starting position to follow them
+        double currentX = entity.getX();
+        double currentY = entity.getY();
+        double currentZ = entity.getZ();
 
         // Create the cylindrical AoE bounding box (30 block diameter = 15 block radius, 10 block height)
         double radius = 15.0;
         double height = 10.0;
         AxisAlignedBB aoeBounds = new AxisAlignedBB(
-                entity.getX() - radius, startY, entity.getZ() - radius,
-                entity.getX() + radius, startY + height, entity.getZ() + radius
+                currentX - radius, currentY, currentZ - radius,
+                currentX + radius, currentY + height, currentZ + radius
         );
 
-        // FIX: Reduce particle spam - spawn every 3 ticks and reduce count
-        if (!entity.level.isClientSide && entity.tickCount % 3 == 0) {
-            for (int i = 0; i < 20; i++) { // Reduced from 60 to 20
+        // INCREASED PARTICLES: Spawn every tick with significantly more particles
+        if (!entity.level.isClientSide) {
+            // Main particle ring around the cylinder edge
+            for (int i = 0; i < 80; i++) {
+                double angle = (2 * Math.PI * i) / 80;
+                double offsetX = Math.cos(angle) * radius;
+                double offsetZ = Math.sin(angle) * radius;
+
+                SimpleParticleData data = new SimpleParticleData((ParticleType)CartParticleTypes.BLUE_FIRE.get());
+                data.setLife(25);
+                data.setSize(7.0F);
+                WyHelper.spawnParticles(data, (ServerWorld)entity.level,
+                        currentX + offsetX, currentY + WyHelper.randomDouble() * height, currentZ + offsetZ);
+            }
+
+            // Dense interior particles filling the cylinder
+            for (int i = 0; i < 120; i++) {
                 double offsetX = (WyHelper.randomDouble() - 0.5) * radius * 2;
                 double offsetZ = (WyHelper.randomDouble() - 0.5) * radius * 2;
 
@@ -109,29 +120,41 @@ public class FoxfireExplosionRework extends Ability {
                     data.setLife(20);
                     data.setSize(6.0F);
                     WyHelper.spawnParticles(data, (ServerWorld)entity.level,
-                            entity.getX() + offsetX, startY + WyHelper.randomDouble() * height, entity.getZ() + offsetZ);
+                            currentX + offsetX, currentY + WyHelper.randomDouble() * height, currentZ + offsetZ);
                 }
+            }
+
+            // Rising spiral effect
+            for (int i = 0; i < 40; i++) {
+                double spiralAngle = (entity.tickCount * 0.2 + i * 0.5) % (2 * Math.PI);
+                double spiralRadius = radius * 0.8 * (1.0 - (i / 40.0));
+                double offsetX = Math.cos(spiralAngle) * spiralRadius;
+                double offsetZ = Math.sin(spiralAngle) * spiralRadius;
+                double offsetY = (i / 40.0) * height;
+
+                SimpleParticleData data = new SimpleParticleData((ParticleType)CartParticleTypes.BLUE_FIRE.get());
+                data.setLife(30);
+                data.setSize(8.0F);
+                WyHelper.spawnParticles(data, (ServerWorld)entity.level,
+                        currentX + offsetX, currentY + offsetY, currentZ + offsetZ);
             }
         }
 
         // Apply effects to entities in the AoE
         int power = 0;
         int duration = 100;
-        float damage = 2.0F; // FIX: Added damage value
+        float damage = 2.0F;
 
         // Get all living entities in the AoE
         List<LivingEntity> entitiesInRange = entity.level.getEntitiesOfClass(
                 LivingEntity.class,
                 aoeBounds,
-                target -> target != entity && this.isInCylinder(target, entity.getX(), startY, entity.getZ(), radius, height)
+                target -> target != entity && this.isInCylinder(target, currentX, currentY, currentZ, radius, height)
         );
 
         // Apply effects to each entity
         for (LivingEntity target : entitiesInRange) {
-            // FIX: Apply damage to targets
             target.hurt(AbilityDamageSource.causeAbilityDamage(entity, this), damage);
-
-            // FIX: Set targets on fire as described
             target.setSecondsOnFire(5);
 
             if (!target.hasEffect((Effect) KaziEffects.FLAMING_ROT.get())) {
@@ -147,8 +170,6 @@ public class FoxfireExplosionRework extends Ability {
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
         this.animationComponent.stop(entity);
         super.cooldownComponent.startCooldown(entity, COOLDOWN);
-
-        // FIX: Clean up the stored Y position to prevent memory leaks
         this.playerStartYPositions.remove(entity.getUUID());
     }
 

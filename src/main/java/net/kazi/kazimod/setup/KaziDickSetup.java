@@ -17,6 +17,9 @@ import net.kazi.kazimod.abilities.AwaRework.GoldenHourRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
 import net.kazi.kazimod.abilities.GoroRework.ElThorRework;
 import net.kazi.kazimod.abilities.GoroRework.SangoRework;
+import net.kazi.kazimod.abilities.KaruRework.ExplodingKarmaAbility;
+import net.kazi.kazimod.abilities.KaruRework.IngaZarashiRework;
+import net.kazi.kazimod.abilities.KaruRework.RageRushAbility;
 import net.kazi.kazimod.abilities.KirinRework.DreamwavePulseAbility;
 import net.kazi.kazimod.abilities.KirinRework.KirinHeavyPointRework;
 import net.kazi.kazimod.abilities.KirinRework.SlumberFieldAbility;
@@ -41,6 +44,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.pixelatedw.mineminenomi.abilities.awa.GoldenHourAbility;
+import xyz.pixelatedw.mineminenomi.abilities.karu.IngaZarashiAbility;
 import xyz.pixelatedw.mineminenomi.init.ModAbilities;
 import xyz.pixelatedw.mineminenomi.items.AkumaNoMiItem;
 
@@ -122,6 +126,13 @@ public class KaziDickSetup {
                 SlumberFieldAbility.INSTANCE
         );
 
+        FruitAbilityInjector.addAbilities(
+                (AkumaNoMiItem) ModAbilities.KARU_KARU_NO_MI,
+                IngaZarashiRework.INSTANCE,
+                RageRushAbility.INSTANCE,
+                ExplodingKarmaAbility.INSTANCE
+        );
+
 
 
         // Replace all abilities on a fruit
@@ -176,6 +187,11 @@ public class KaziDickSetup {
                 (AkumaNoMiItem) CartAbilities.RYU_RYU_NO_MI_MODEL_KIRIN,
                 KirinHeavyPointAbility.INSTANCE,
                 KnockoutBeamAbility.INSTANCE
+        );
+
+        FruitAbilityInjector.removeAbilities(
+                (AkumaNoMiItem) ModAbilities.KARU_KARU_NO_MI,
+                IngaZarashiAbility.INSTANCE
         );
 
     }

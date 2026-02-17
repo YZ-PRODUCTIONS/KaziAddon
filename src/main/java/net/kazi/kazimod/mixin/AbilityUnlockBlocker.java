@@ -3,6 +3,9 @@ package net.kazi.kazimod.mixin;
 import net.MrMagicalCart.cartaddon.abilities.axestyle.MountainEaterAbility;
 import net.MrMagicalCart.cartaddon.abilities.axestyle.ReversalAbility;
 import net.MrMagicalCart.cartaddon.abilities.axestyle.SkySplitterAbility;
+import net.MrMagicalCart.cartaddon.abilities.axestyle.TyrantCleaveAbility;
+import net.MrMagicalCart.cartaddon.abilities.blacklegextra.CartBienCuitGrillShotAbility;
+import net.MrMagicalCart.cartaddon.abilities.blacklegextra.CartPartyTableKickCourseAbility;
 import net.MrMagicalCart.cartaddon.abilities.brawlerextra.ReworkedSuplexAbility;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartSulongAbility;
 import net.MrMagicalCart.cartaddon.abilities.nitoryu.NitoryuIaiRashomonAbility;
@@ -55,10 +58,13 @@ public abstract class AbilityUnlockBlocker {
                 || self == SaiKuruAbility.INSTANCE
                 || self == ReworkedSuplexAbility.INSTANCE
                 || self == SkySplitterAbility.INSTANCE
-                || self == ReversalAbility.INSTANCE)
+                || self == ReversalAbility.INSTANCE
+                || self == CartPartyTableKickCourseAbility.INSTANCE
+                || self == CartBienCuitGrillShotAbility.INSTANCE
+                || self == TyrantCleaveAbility.INSTANCE)
 
 
-        {
+                {
             cir.setReturnValue(false);
         }
     }

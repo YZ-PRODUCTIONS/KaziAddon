@@ -384,9 +384,14 @@ public class RadiantSliceAbility extends Ability {
     /* ================= UNLOCK ================= */
 
     private static boolean canUnlock(LivingEntity entity) {
-        IEntityStats props = EntityStatsCapability.get(entity);
-        boolean Style = props.getFightingStyle().equals(ModResources.SWORDSMAN);
-        return Style && props.getDoriki() >= (double)8000.0F;
+        if (!(entity instanceof PlayerEntity)) {
+            return false;
+        } else {
+            PlayerEntity player = (PlayerEntity)entity;
+            IEntityStats props = EntityStatsCapability.get(player);
+            IQuestData questProps = QuestDataCapability.get(player);
+            return props.isSwordsman() && questProps.hasFinishedQuest(ModQuests.SWORDSMAN_TRIAL_05);
+        }
     }
 
     /* ================= CORE ================= */

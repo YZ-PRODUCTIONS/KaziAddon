@@ -58,7 +58,7 @@ public class MountainEaterRework extends Ability {
     private static final float HOLD_TIME = 30.0F;
     private static final int COOLDOWN = 300;
     private static final float RANGE = 2.0F;
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 20.0F;
     public static final AbilityCore<MountainEaterRework> INSTANCE;
     private final ContinuousComponent continuousComponent = (new ContinuousComponent(this, true)).addStartEvent(this::startContinuityEvent).addTickEvent(this::duringContinuityEvent).addEndEvent(this::endContinuityEvent);
     private final RangeComponent rangeComponent = new RangeComponent(this);

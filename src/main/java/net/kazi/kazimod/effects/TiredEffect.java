@@ -20,6 +20,7 @@ public class TiredEffect extends Effect {
             if (tired != null) {
                 int duration = tired.getDuration();
                 entity.addEffect(new EffectInstance((Effect)CartEffects.SLEEPY.get(), 120, 0));
+                entity.addEffect(new EffectInstance((Effect)CartEffects.DISABLED_ABILITIES.get(),120, 0 ));
             }
 
             entity.removeEffect((Effect)KaziEffects.TIRED.get());

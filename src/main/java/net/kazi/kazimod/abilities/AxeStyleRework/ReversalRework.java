@@ -79,7 +79,7 @@ public class ReversalRework extends Ability {
     private static final float MIN_COOLDOWN = 180.0F;
     private static final float COUNTER_RANGE = 10.0F;
     private static final float DASH_DISTANCE = 15.0F;
-    private static final float DASH_DAMAGE = 25.0F;
+    private static final float DASH_DAMAGE = 35.0F;
     private static final float DASH_RANGE = 2.5F;
     public static final AbilityCore<ReversalRework> INSTANCE;
     private final ContinuousComponent continuousComponent = (new ContinuousComponent(this, true)).addStartEvent(this::startContinuityEvent).addTickEvent(this::tickContinuityEvent).addEndEvent(this::endContinuityEvent);
@@ -156,7 +156,7 @@ public class ReversalRework extends Ability {
         } else {
             Entity sourceEntity = source.getEntity();
             if (sourceEntity == null) {
-                return damage > 10.0F ? damage / 2.0F : damage;
+                return damage > 20.0F ? damage / 2.0F : damage;
             } else {
                 entity.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 30, 3));
                 if (sourceEntity instanceof LivingEntity) {

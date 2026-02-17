@@ -6,9 +6,15 @@ import net.kazi.kazimod.abilities.AwaRework.GoldenHourRework;
 import net.kazi.kazimod.abilities.AxeStyleRework.MountainEaterRework;
 import net.kazi.kazimod.abilities.AxeStyleRework.ReversalRework;
 import net.kazi.kazimod.abilities.AxeStyleRework.SkySplitterRework;
+import net.kazi.kazimod.abilities.AxeStyleRework.TyrantCleaveRework;
+import net.kazi.kazimod.abilities.BlacklegRework.BienCultGrillShotRework;
+import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
 import net.kazi.kazimod.abilities.GoroRework.ElThorRework;
 import net.kazi.kazimod.abilities.GoroRework.SangoRework;
+import net.kazi.kazimod.abilities.KaruRework.ExplodingKarmaAbility;
+import net.kazi.kazimod.abilities.KaruRework.IngaZarashiRework;
+import net.kazi.kazimod.abilities.KaruRework.RageRushAbility;
 import net.kazi.kazimod.abilities.KirinRework.KirinHeavyPointRework;
 import net.kazi.kazimod.abilities.KirinRework.DreamwavePulseAbility;
 import net.kazi.kazimod.abilities.KirinRework.SlumberFieldAbility;
@@ -30,6 +36,7 @@ import net.kazi.kazimod.abilities.swordsmanrework.RadiantSliceAbility;
 import net.kazi.kazimod.abilities.swordsmanrework.SanbyakurokujoPoundHoRework;
 import net.kazi.kazimod.abilities.swordsmanrework.YakkodoriRework;
 import net.kazi.kazimod.api.KaziRegistry;
+import net.kazi.kazimod.entities.projectiles.KarmaExplosionProjectile;
 import net.minecraftforge.eventbus.api.IEventBus;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.enums.AbilityCommandGroup;
@@ -65,7 +72,13 @@ public class KaziAbilities {
             KirinHeavyPointRework.INSTANCE,
             DreamwavePulseAbility.INSTANCE,
             SlumberFieldAbility.INSTANCE,
-            FoxfireBallRework.INSTANCE
+            FoxfireBallRework.INSTANCE,
+            IngaZarashiRework.INSTANCE,
+            RageRushAbility.INSTANCE,
+            ExplodingKarmaAbility.INSTANCE,
+            PartyTableKickCourseRework.INSTANCE,
+            BienCultGrillShotRework.INSTANCE,
+            TyrantCleaveRework.INSTANCE
 
 
 

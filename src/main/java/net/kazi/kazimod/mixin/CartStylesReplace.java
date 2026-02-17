@@ -3,6 +3,7 @@ package net.kazi.kazimod.mixin;
 import java.util.function.Supplier;
 
 import net.MrMagicalCart.cartaddon.abilities.axestyle.*;
+import net.MrMagicalCart.cartaddon.abilities.blacklegextra.*;
 import net.MrMagicalCart.cartaddon.abilities.brawlerextra.*;
 import net.MrMagicalCart.cartaddon.abilities.nitoryu.*;
 import net.MrMagicalCart.cartaddon.abilities.swordsmenextra.ReworkedOTatsumakiAbility;
@@ -11,6 +12,9 @@ import net.MrMagicalCart.cartaddon.init.CartResources;
 import net.kazi.kazimod.abilities.AxeStyleRework.MountainEaterRework;
 import net.kazi.kazimod.abilities.AxeStyleRework.ReversalRework;
 import net.kazi.kazimod.abilities.AxeStyleRework.SkySplitterRework;
+import net.kazi.kazimod.abilities.AxeStyleRework.TyrantCleaveRework;
+import net.kazi.kazimod.abilities.BlacklegRework.BienCultGrillShotRework;
+import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
 import net.kazi.kazimod.abilities.NitoryuRework.NitoryuIaiRashomonRework;
 import net.kazi.kazimod.abilities.NitoryuRework.SaiKuruRework;
 import net.kazi.kazimod.abilities.NitoryuRework.TakaNamiRework;
@@ -114,7 +118,7 @@ public abstract class CartStylesReplace {
                         PredatorsThrowAbility.INSTANCE,
                         ReversalRework.INSTANCE,
                         SkySplitterRework.INSTANCE,
-                        TyrantCleaveAbility.INSTANCE,
+                        TyrantCleaveRework.INSTANCE,
                         YasotakeruAbility.INSTANCE,
 
                 });
@@ -147,6 +151,30 @@ public abstract class CartStylesReplace {
                 info.addBottomAbilities(new AbilityCore[0]);
 
                 I val = (I) new StyleId(info, true, 5);
+                return val;
+            };
+        }
+
+        if (resourceName.equalsIgnoreCase("blackleg")) {
+            modifiedStyle = () -> {
+                CharacterCreatorSelectionMap.SelectionInfo info =
+                        new CharacterCreatorSelectionMap.SelectionInfo(ModResources.BLACK_LEG);
+
+                info.addTopAbilities(new AbilityCore[]{
+                        BeoufBurstAbility.INSTANCE,
+                        CartAntiMannerKickCourseAbility.INSTANCE,
+                        BienCultGrillShotRework.INSTANCE,
+                        CartConcasseAbility.INSTANCE,
+                        CartDiableJambeAbility.INSTANCE,
+                        CartExtraHachisAbility.INSTANCE,
+                        PartyTableKickCourseRework.INSTANCE,
+                        CartSkywalkAbility.INSTANCE
+
+                });
+
+                info.addBottomAbilities(new AbilityCore[0]);
+
+                I val = (I) new StyleId(info, true, 6);
                 return val;
             };
         }

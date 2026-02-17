@@ -51,7 +51,7 @@ public class SkySplitterRework extends Ability {
 
     private static final float COOLDOWN = 200.0F;
     private static final int CHARGE_TIME = 15;
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 35.0F;
     private static final float RANGE = 2.5F;
     public static int overuse = 2000; // Haki overuse threshold
 
