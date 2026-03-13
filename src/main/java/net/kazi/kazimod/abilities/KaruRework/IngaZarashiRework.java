@@ -138,7 +138,7 @@ public class IngaZarashiRework extends MorphAbility2 {
     }
 
     static {
-        DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "inga_zarashi", new Pair[]{ImmutablePair.of("Increases your physical prowess depending on how much damage you have in your %s counter", new Object[]{AbilityHelper.mentionText(ModI18n.GUI_KARMA)})});
+        DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "inga_zarashi", new Pair[]{ImmutablePair.of("Increases your physical prowess depending on how much damage you have in your Karma counter", new Object[]{AbilityHelper.mentionText(ModI18n.GUI_KARMA)})});
         INSTANCE = (new AbilityCore.Builder("Inga Zarashi", AbilityCategory.DEVIL_FRUITS, IngaZarashiRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(20.0F, 240.0F), ContinuousComponent.getTooltip()}).build();
         ARMOR_MODIFIER_UUID = UUID.fromString("06141405-6e5c-4b98-a8f7-230e0ffb96bc");
         ATTACK_MODIFIER_UUID = UUID.fromString("7ddb710f-a497-4f64-b272-8fcc9955b401");

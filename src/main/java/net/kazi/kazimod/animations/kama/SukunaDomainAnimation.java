@@ -1,4 +1,4 @@
-package net.kazi.kazimod.animations;
+package net.kazi.kazimod.animations.kama;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;

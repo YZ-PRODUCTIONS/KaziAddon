@@ -32,6 +32,16 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
+          "name": "kazimod:toshi_toshi_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
           "name": "cartaddon:hebi_hebi_no_mi_model_yamata_no_orochi"
         },
         {
@@ -785,6 +795,16 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
+          "name": "cartaddon:ishi_ishi_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
           "name": "cartaddon:noko_noko_no_mi"
         },
         {
@@ -936,16 +956,6 @@
             }
           ],
           "name": "mineminenomi:bomu_bomu_no_mi"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
-          "name": "mineminenomi:gomu_gomu_no_mi"
         }
       ],
       "conditions": [

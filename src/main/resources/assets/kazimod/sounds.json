@@ -1,0 +1,52 @@
+{
+  "dismantle": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.dismantle",
+    "sounds": ["kazimod:dismantle"]
+  },
+  "cleave_start": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.cleave_start",
+    "sounds": ["kazimod:cleave_start"]
+  },
+  "cleave_hit": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.cleave_hit",
+    "sounds": ["kazimod:cleave_hit"]
+  },
+  "shrine_music": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.shrine_music",
+    "sounds": ["kazimod:shrine_music"]
+  },
+  "shrine_start": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.shrine_start",
+    "sounds": ["kazimod:shrine_start"]
+  },
+  "fuga": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.fuga",
+    "sounds": ["kazimod:fuga"]
+  },
+  "fuga_hit": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.fuga_hit",
+    "sounds": ["kazimod:fuga_hit"]
+  },
+  "timetheft": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.timetheft",
+    "sounds": ["kazimod:timetheft"]
+  },
+  "timeacceleration": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.timeacceleration",
+    "sounds": ["kazimod:timeacceleration"]
+  },
+  "chronostasis": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.chronostasis",
+    "sounds": ["kazimod:chronostasis"]
+  }
+}

@@ -1,19 +1,15 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package net.kazi.kazimod.effects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
+import net.kazi.kazimod.init.KaziEffects;
 
 public class WeakenedMovement extends Effect {
-    public static final float MOVEMENT_REDUCTION = 0.8F; // 50% reduction
+    public static final float MOVEMENT_REDUCTION = 0.9F;
 
     public WeakenedMovement() {
-        super(EffectType.HARMFUL, 0x4A4A4A); // Gray color for the effect
+        super(EffectType.HARMFUL, 0x4A4A4A);
     }
 
     @Override
@@ -26,15 +22,13 @@ public class WeakenedMovement extends Effect {
         return true;
     }
 
-    /**
-     * Gets the movement multiplier based on the effect amplifier
-     * @param amplifier The effect amplifier level
-     * @return The movement multiplier (0.5 = 50% reduction at base level)
-     */
     public static float getMovementMultiplier(int amplifier) {
-        // Each amplifier level reduces movement by an additional 10%
-        // Amplifier 0 = 50%, Amplifier 1 = 40%, etc.
-        float reduction = MOVEMENT_REDUCTION - (amplifier * 0.1F);
-        return Math.max(0.1F, reduction); // Minimum 10% movement
+        float reduction = MOVEMENT_REDUCTION - (amplifier * 0.2F);
+        return Math.max(0.2F, reduction);
+    }
+
+    /** Returns true if this effect should be blocked due to mutual exclusivity */
+    public static boolean isBlocked(LivingEntity entity) {
+        return entity.hasEffect(KaziEffects.MINIATURIZED.get());
     }
 }

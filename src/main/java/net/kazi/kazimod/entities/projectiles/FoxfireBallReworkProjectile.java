@@ -57,7 +57,7 @@ public class FoxfireBallReworkProjectile extends AbilityProjectileEntity impleme
 
     public void onBlockImpactEvent(BlockPos hit) {
         ExplosionAbility explosion = super.createExplosion(super.getThrower(), super.level, (double)hit.getX(), (double)hit.getY(), (double)hit.getZ(), 0.6F * this.getSize());
-        explosion.setStaticDamage(2.0F * this.getSize());
+        explosion.setStaticDamage(5.0F * this.getSize());
         explosion.setStaticBlockResistance(0.25F);
         explosion.setFireAfterExplosion(true);
         explosion.setSmokeParticles(new CommonExplosionParticleEffect((int)(0.6F * this.getSize())));
@@ -77,7 +77,7 @@ public class FoxfireBallReworkProjectile extends AbilityProjectileEntity impleme
     }
 
     private void onTickEvent() {
-        super.setDamage(2.0F * this.getSize());
+        super.setDamage(5.0F * this.getSize());
 
         // Only track if the projectile has been launched
         if (this.isLaunched) {

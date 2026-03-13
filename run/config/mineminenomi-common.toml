@@ -165,7 +165,7 @@
 	"Ability Fraud Checks" = true
 	#Enables fruit awakenings
 	#Default: false
-	"Enable Awakenings" = false
+	"Enable Awakenings" = true
 	#Makes getting out of water much harder as it's supposed to be
 	#Default: false
 	"Devil Fruit Extended Weakness Checks" = false

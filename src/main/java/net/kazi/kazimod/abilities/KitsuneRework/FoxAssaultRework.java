@@ -53,7 +53,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.AnimationComponent;
 
 public class FoxAssaultRework extends Ability {
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "fox_assault", new Pair[]{ImmutablePair.of("The user dashes forward and grabs a nearby target, holding them in place before launching them into the ground with a powerful kick.", (Object)null)});
-    private static final int COOLDOWN = 400;
+    private static final int COOLDOWN = 300;
     private static final int HOLD_TIME = 20;
     private static final float RANGE = 2.5F;
     public static final AbilityCore<FoxAssaultRework> INSTANCE;
@@ -132,7 +132,7 @@ public class FoxAssaultRework extends Ability {
             }
 
             if (!this.grabEntityComponent.canContinueGrab(entity)) {
-                super.cooldownComponent.startCooldown(entity, 500.0F);
+                super.cooldownComponent.startCooldown(entity, 300.0F);
             } else {
                 this.chargeComponent.startCharging(entity, 10.0F);
             }
@@ -171,7 +171,7 @@ public class FoxAssaultRework extends Ability {
         }
 
         if (entity instanceof PlayerEntity) {
-            super.cooldownComponent.startCooldown(entity, 400.0F);
+            super.cooldownComponent.startCooldown(entity, 300.0F);
         } else {
             super.cooldownComponent.startCooldown(entity, 300.0F);
         }
@@ -187,6 +187,6 @@ public class FoxAssaultRework extends Ability {
     }
 
     static {
-        INSTANCE = (new AbilityCore.Builder("Fox Assault", AbilityCategory.DEVIL_FRUITS, FoxAssaultRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, DealDamageComponent.getTooltip(10.0F, 65.0F), ChargeComponent.getTooltip(20.0F), ContinuousComponent.getTooltip(30.0F), CooldownComponent.getTooltip(500.0F), RangeComponent.getTooltip(2.5F, RangeType.LINE)}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, RequireMorphComponent.getTooltip()}).setSourceHakiNature(SourceHakiNature.HARDENING).setSourceType(new SourceType[]{SourceType.FIST}).build();
+        INSTANCE = (new AbilityCore.Builder("Fox Assault", AbilityCategory.DEVIL_FRUITS, FoxAssaultRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, DealDamageComponent.getTooltip(10.0F, 65.0F), ChargeComponent.getTooltip(20.0F), ContinuousComponent.getTooltip(30.0F), CooldownComponent.getTooltip(300.0F), RangeComponent.getTooltip(2.5F, RangeType.LINE)}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, RequireMorphComponent.getTooltip()}).setSourceHakiNature(SourceHakiNature.HARDENING).setSourceType(new SourceType[]{SourceType.FIST}).build();
     }
 }

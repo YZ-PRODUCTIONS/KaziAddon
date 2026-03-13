@@ -81,40 +81,28 @@ public class FoxfireExplosionRework extends Ability {
     }
 
     private void duringContinuityEvent(LivingEntity entity, IAbility ability) {
-        // Use player's current position instead of starting position to follow them
         double currentX = entity.getX();
         double currentY = entity.getY();
         double currentZ = entity.getZ();
 
-        // Create the cylindrical AoE bounding box (30 block diameter = 15 block radius, 10 block height)
         double radius = 15.0;
         double height = 10.0;
-        AxisAlignedBB aoeBounds = new AxisAlignedBB(
-                currentX - radius, currentY, currentZ - radius,
-                currentX + radius, currentY + height, currentZ + radius
-        );
 
-        // INCREASED PARTICLES: Spawn every tick with significantly more particles
+        // Particles (unchanged)
         if (!entity.level.isClientSide) {
-            // Main particle ring around the cylinder edge
             for (int i = 0; i < 80; i++) {
                 double angle = (2 * Math.PI * i) / 80;
                 double offsetX = Math.cos(angle) * radius;
                 double offsetZ = Math.sin(angle) * radius;
-
                 SimpleParticleData data = new SimpleParticleData((ParticleType)CartParticleTypes.BLUE_FIRE.get());
                 data.setLife(25);
                 data.setSize(7.0F);
                 WyHelper.spawnParticles(data, (ServerWorld)entity.level,
                         currentX + offsetX, currentY + WyHelper.randomDouble() * height, currentZ + offsetZ);
             }
-
-            // Dense interior particles filling the cylinder
             for (int i = 0; i < 120; i++) {
                 double offsetX = (WyHelper.randomDouble() - 0.5) * radius * 2;
                 double offsetZ = (WyHelper.randomDouble() - 0.5) * radius * 2;
-
-                // Check if the particle is within the cylinder radius
                 if (offsetX * offsetX + offsetZ * offsetZ <= radius * radius) {
                     SimpleParticleData data = new SimpleParticleData((ParticleType)CartParticleTypes.BLUE_FIRE.get());
                     data.setLife(20);
@@ -123,15 +111,12 @@ public class FoxfireExplosionRework extends Ability {
                             currentX + offsetX, currentY + WyHelper.randomDouble() * height, currentZ + offsetZ);
                 }
             }
-
-            // Rising spiral effect
             for (int i = 0; i < 40; i++) {
                 double spiralAngle = (entity.tickCount * 0.2 + i * 0.5) % (2 * Math.PI);
                 double spiralRadius = radius * 0.8 * (1.0 - (i / 40.0));
                 double offsetX = Math.cos(spiralAngle) * spiralRadius;
                 double offsetZ = Math.sin(spiralAngle) * spiralRadius;
                 double offsetY = (i / 40.0) * height;
-
                 SimpleParticleData data = new SimpleParticleData((ParticleType)CartParticleTypes.BLUE_FIRE.get());
                 data.setLife(30);
                 data.setSize(8.0F);
@@ -140,20 +125,15 @@ public class FoxfireExplosionRework extends Ability {
             }
         }
 
-        // Apply effects to entities in the AoE
+        // ✅ Use rangeComponent.getTargetsInArea() — automatically skips teammates
         int power = 0;
         int duration = 100;
         float damage = 2.0F;
 
-        // Get all living entities in the AoE
-        List<LivingEntity> entitiesInRange = entity.level.getEntitiesOfClass(
-                LivingEntity.class,
-                aoeBounds,
-                target -> target != entity && this.isInCylinder(target, currentX, currentY, currentZ, radius, height)
-        );
+        for (LivingEntity target : this.rangeComponent.getTargetsInArea(entity, 15.0F)) {
+            // Extra check: still enforce the cylinder height bound
+            if (!this.isInCylinder(target, currentX, currentY, currentZ, radius, height)) continue;
 
-        // Apply effects to each entity
-        for (LivingEntity target : entitiesInRange) {
             target.hurt(AbilityDamageSource.causeAbilityDamage(entity, this), damage);
             target.setSecondsOnFire(5);
 

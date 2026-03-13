@@ -6,7 +6,10 @@ import java.util.function.Supplier;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.*;
 import net.MrMagicalCart.cartaddon.abilities.oni.*;
 import net.MrMagicalCart.cartaddon.init.CartResources;
-import net.kazi.kazimod.abilities.MinkRework.SulongRework;
+import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
+import net.kazi.kazimod.abilities.MinkRework.ElectricalMissileRework;
+import net.kazi.kazimod.abilities.MinkRework.ElectricalShowerRework;
+import net.kazi.kazimod.abilities.MinkRework.ElectricalTempestaRework;
 import net.kazi.kazimod.abilities.onirework.SkullBasherRework;
 import net.kazi.kazimod.abilities.onirework.ViciousRoarRework;
 import net.minecraftforge.fml.RegistryObject;
@@ -41,7 +44,7 @@ public abstract class CartRaceReplace {
     )
     private static <I extends RaceId> void registerEditedRace(String localizedName, Supplier<I> race, CallbackInfoReturnable<RegistryObject<I>> cir) {
         String resourceName = WyHelper.getResourceName(localizedName);
-        WyRegistry.getLangMap().put("race.cartaddon." + resourceName, localizedName);
+        WyRegistry.getLangMap().put("race.mineminenomi." + resourceName, localizedName);
         final Supplier<I>[] modifiedRace = new Supplier[]{race};
         if (resourceName.equalsIgnoreCase("oni")) {
             modifiedRace[0] = () -> {
@@ -80,13 +83,13 @@ public abstract class CartRaceReplace {
 
                         info.addTopAbilities(new AbilityCore[]{
                                 CartEleclawAbility.INSTANCE,
-                                CartElectricalShowerAbility.INSTANCE,
                                 CartElectricalLunaAbility.INSTANCE,
-                                CartElectricalMissileAbility.INSTANCE,
-                                CartElectricalTempestaAbility.INSTANCE,
-                                SulongRework.INSTANCE,
-                                ElectricalBurstAbility.INSTANCE,
                                 MinkSizePasssiveAbility.INSTANCE,
+                                CartSulongAbility.INSTANCE,
+                                ElectricalMissileRework.INSTANCE,
+                                ElectricalShowerRework.INSTANCE,
+                                ElectricalBurstRework.INSTANCE,
+                                ElectricalTempestaRework.INSTANCE
                         });
 
                         return (I) new RaceId(info, true, 4);

@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package net.kazi.kazimod.abilities.swordsmanrework;
 
 import java.util.List;
@@ -40,64 +35,210 @@ import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class HiryuKaenRework extends DropHitAbility {
-    private static final int COOLDOWN = 240;
-    private static final float RANGE = 4.5F;
-    private static final float DAMAGE = 20.0F;
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "hiryu_kaen", new Pair[]{ImmutablePair.of("The user leaps into the air and releases a big flaming shockwave slash when landing", (Object)null)});
+
+    // =========================================================
+    // CONSTANTS
+    // =========================================================
+
+    private static final int   COOLDOWN         = 240;
+    private static final float RANGE            = 4.5F;
+    private static final float DAMAGE           = 20.0F;
+    private static final int   FOXFIRE_COOLDOWN = 240;
+    private static final float FOXFIRE_RANGE    = 4.5F;
+    private static final float FOXFIRE_DAMAGE   = 45.0F;
+
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
+            "kazimod", "hiryu_kaen",
+            new Pair[]{ImmutablePair.of(
+                    "The user leaps into the air and releases a big flaming shockwave slash when landing. " +
+                            "When §6Foxfire Style§r is active, the slash becomes a superheated foxfire dive with greater damage.",
+                    (Object) null
+            )}
+    );
+
+    private static final ITextComponent[] FOXFIRE_DESCRIPTION = AbilityHelper.registerDescriptionText(
+            "kazimod", "hiryu_kaen_foxfire",
+            new Pair[]{ImmutablePair.of(
+                    "§6Foxfire Mode§r (requires §6Foxfire Style§r): superheated dive with greater damage and piercing.",
+                    (Object) null
+            )}
+    );
+
     public static final AbilityCore<HiryuKaenRework> INSTANCE;
+
+    // =========================================================
+    // COMPONENTS
+    // =========================================================
+
     private final DealDamageComponent dealDamageComponent = new DealDamageComponent(this);
-    private final RangeComponent rangeComponent = new RangeComponent(this);
+    private final RangeComponent rangeComponent           = new RangeComponent(this);
+
+    // No AltModeComponent — foxfire state is controlled exclusively by FoxfireStyleAbility
+    private boolean isFoxfireMode = false;
+
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
 
     public HiryuKaenRework(AbilityCore<HiryuKaenRework> core) {
         super(core);
-        this.addComponents(new AbilityComponent[]{this.dealDamageComponent, this.rangeComponent});
+        this.addComponents(new AbilityComponent[]{
+                this.dealDamageComponent,
+                this.rangeComponent
+        });
+
         this.continuousComponent.addStartEvent(100, this::onStartContinuityEvent);
         this.continuousComponent.addEndEvent(100, this::endContinuityEvent);
+        this.continuousComponent.addTickEvent(100, this::onContinuityTick);
+
         this.addCanUseCheck(AbilityHelper::canUseSwordsmanAbilities);
     }
 
-    public void onLanding(LivingEntity entity) {
-        List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(entity, 4.5F);
-        targets.remove(entity);
-        AbilityDamageSource source = (AbilityDamageSource)ModDamageSource.causeAbilityDamage(entity, this.getCore()).setSlash();
+    // =========================================================
+    // FOXFIRE MODE — only FoxfireStyleAbility may call these
+    // =========================================================
 
-        for(LivingEntity target : targets) {
-            if (this.hitTrackerComponent.canHit(target) && entity.canSee(target) && this.dealDamageComponent.hurtTarget(entity, target, 20.0F, source)) {
-                target.setSecondsOnFire(4);
+    public void switchFoxfireMode(LivingEntity entity) {
+        this.isFoxfireMode = true;
+    }
+
+    public void switchNormalMode(LivingEntity entity) {
+        this.isFoxfireMode = false;
+    }
+
+    // =========================================================
+    // CONTINUITY EVENTS
+    // =========================================================
+
+    private void onStartContinuityEvent(LivingEntity entity, IAbility ability) {
+        if (this.isFoxfireMode) {
+            Vector3d speed = WyHelper.propulsion(entity, 1.1, 1.1);
+            AbilityHelper.setDeltaMovement(entity, speed.x, 1.75F, speed.z);
+        } else {
+            Vector3d speed = WyHelper.propulsion(entity, 1.0F, 1.0F);
+            AbilityHelper.setDeltaMovement(entity, speed.x, 1.3, speed.z);
+        }
+    }
+
+    private void onContinuityTick(LivingEntity entity, IAbility ability) {
+        if (!this.isFoxfireMode) return;
+
+        if (this.continuousComponent.getContinueTime() >= 15.0F) {
+            Vector3d speed = entity.getLookAngle().multiply(1.25F, 1.0F, 1.25F);
+            AbilityHelper.setDeltaMovement(entity, speed.x, -3.0F, speed.z);
+
+            List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(entity, FOXFIRE_RANGE);
+            targets.remove(entity);
+            AbilityDamageSource source = (AbilityDamageSource) ModDamageSource
+                    .causeAbilityDamage(entity, this.getCore())
+                    .setSlash()
+                    .setPiercing(0.25F);
+
+            for (LivingEntity target : targets) {
+                if (this.hitTrackerComponent.canHit(target) && entity.canSee(target)
+                        && this.dealDamageComponent.hurtTarget(entity, target, FOXFIRE_DAMAGE, source)) {
+                    target.setSecondsOnFire(4);
+                }
             }
         }
-
-        if (!entity.level.isClientSide) {
-            if (targets.size() > 0) {
-                ((ServerWorld)entity.level).getChunkSource().broadcastAndSend(entity, new SAnimateHandPacket(entity, 0));
-            }
-
-            WyHelper.spawnParticleEffect((ParticleEffect)ModParticleEffects.HIRYU_KAEN.get(), entity, entity.getX(), entity.getY(), entity.getZ());
-        }
-
     }
 
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
-        this.cooldownComponent.startCooldown(entity, 240.0F);
+        this.cooldownComponent.startCooldown(entity, this.isFoxfireMode ? FOXFIRE_COOLDOWN : COOLDOWN);
     }
 
-    private void onStartContinuityEvent(LivingEntity entity, IAbility ability) {
-        Vector3d speed = WyHelper.propulsion(entity, (double)1.0F, (double)1.0F);
-        AbilityHelper.setDeltaMovement(entity, speed.x, 1.3, speed.z);
-    }
+    // =========================================================
+    // ON LANDING
+    // =========================================================
 
-    private static boolean canUnlock(LivingEntity entity) {
-        if (!(entity instanceof PlayerEntity)) {
-            return false;
+    @Override
+    public void onLanding(LivingEntity entity) {
+        if (this.isFoxfireMode) {
+            if (!entity.level.isClientSide) {
+                ((ServerWorld) entity.level).getChunkSource()
+                        .broadcastAndSend(entity, new SAnimateHandPacket(entity, 0));
+                WyHelper.spawnParticleEffect(
+                        (ParticleEffect) ModParticleEffects.HIRYU_KAEN.get(),
+                        entity, entity.getX(), entity.getY(), entity.getZ()
+                );
+            }
+            // Notify FoxfireStyleAbility that a foxfire ability was used
+            notifyFoxfireStyle(entity);
         } else {
-            PlayerEntity player = (PlayerEntity)entity;
-            IEntityStats props = EntityStatsCapability.get(player);
-            IQuestData questProps = QuestDataCapability.get(player);
-            return props.isSwordsman() && questProps.hasFinishedQuest(ModQuests.SWORDSMAN_TRIAL_05);
+            List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(entity, RANGE);
+            targets.remove(entity);
+            AbilityDamageSource source = (AbilityDamageSource) ModDamageSource
+                    .causeAbilityDamage(entity, this.getCore())
+                    .setSlash();
+
+            for (LivingEntity target : targets) {
+                if (this.hitTrackerComponent.canHit(target) && entity.canSee(target)
+                        && this.dealDamageComponent.hurtTarget(entity, target, DAMAGE, source)) {
+                    target.setSecondsOnFire(4);
+                }
+            }
+
+            if (!entity.level.isClientSide) {
+                if (targets.size() > 0) {
+                    ((ServerWorld) entity.level).getChunkSource()
+                            .broadcastAndSend(entity, new SAnimateHandPacket(entity, 0));
+                }
+                WyHelper.spawnParticleEffect(
+                        (ParticleEffect) ModParticleEffects.HIRYU_KAEN.get(),
+                        entity, entity.getX(), entity.getY(), entity.getZ()
+                );
+            }
         }
     }
 
+    // =========================================================
+    // NOTIFY FOXFIRE STYLE
+    // =========================================================
+
+    private static void notifyFoxfireStyle(LivingEntity entity) {
+        FoxfireStyleAbility foxfire = FoxfireStyleAbility.getEquippedAbility(
+                entity, FoxfireStyleAbility.INSTANCE, FoxfireStyleAbility.class);
+        if (foxfire != null) {
+            foxfire.setAbilityUsed(true);
+        }
+    }
+
+    // =========================================================
+    // UNLOCK CHECK
+    // =========================================================
+
+    private static boolean canUnlock(LivingEntity entity) {
+        if (!(entity instanceof PlayerEntity)) return false;
+        PlayerEntity player = (PlayerEntity) entity;
+        IEntityStats props = EntityStatsCapability.get(player);
+        IQuestData questProps = QuestDataCapability.get(player);
+        return props.isSwordsman() && questProps.hasFinishedQuest(ModQuests.SWORDSMAN_TRIAL_05);
+    }
+
+    // =========================================================
+    // STATIC INIT
+    // =========================================================
+
     static {
-        INSTANCE = (new AbilityCore.Builder("Hiryu: Kaen", AbilityCategory.STYLE, HiryuKaenRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(240.0F), DealDamageComponent.getTooltip(20.0F), RangeComponent.getTooltip(4.5F, RangeType.AOE)}).setSourceHakiNature(SourceHakiNature.IMBUING).setSourceType(new SourceType[]{SourceType.SLASH}).setSourceElement(SourceElement.FIRE).setUnlockCheck(HiryuKaenRework::canUnlock).build();
+        INSTANCE = (new AbilityCore.Builder<>("Hiryu: Kaen", AbilityCategory.STYLE, HiryuKaenRework::new))
+                .addDescriptionLine(DESCRIPTION)
+                .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{
+                        AbilityDescriptionLine.NEW_LINE,
+                        CooldownComponent.getTooltip((float) COOLDOWN),
+                        DealDamageComponent.getTooltip(DAMAGE),
+                        RangeComponent.getTooltip(RANGE, RangeType.AOE)
+                })
+                .addDescriptionLine(FOXFIRE_DESCRIPTION)
+                .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{
+                        AbilityDescriptionLine.NEW_LINE,
+                        CooldownComponent.getTooltip((float) FOXFIRE_COOLDOWN),
+                        DealDamageComponent.getTooltip(FOXFIRE_DAMAGE),
+                        RangeComponent.getTooltip(FOXFIRE_RANGE, RangeType.AOE)
+                })
+                .setSourceHakiNature(SourceHakiNature.IMBUING)
+                .setSourceType(new SourceType[]{SourceType.SLASH})
+                .setSourceElement(SourceElement.FIRE)
+                .setUnlockCheck(HiryuKaenRework::canUnlock)
+                .build();
     }
 }

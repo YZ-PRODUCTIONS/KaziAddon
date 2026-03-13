@@ -164,7 +164,7 @@ public class ReversalRework extends Ability {
                     // Changed range check from 4.0F to 10.0F (10 blocks)
                     if ((double)attacker.distanceTo(entity) <= (double)COUNTER_RANGE) {
                         float reflectedDamage = damage * 0.5F;
-                        BerserkAbility berserk = (BerserkAbility)AbilityDataCapability.get(entity).getEquippedAbility(BerserkAbility.INSTANCE);
+                        BerserkRework berserk = (BerserkRework)AbilityDataCapability.get(entity).getEquippedAbility(BerserkRework.INSTANCE);
                         boolean isBerserk = berserk != null && berserk.isContinuous();
                         this.dealDamageComponent.getBonusManager().removeBonus(AxeHelper.AXE_DAMAGE_BONUS);
                         if (isBerserk) {

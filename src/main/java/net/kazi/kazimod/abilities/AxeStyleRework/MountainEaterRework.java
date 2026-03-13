@@ -139,7 +139,7 @@ public class MountainEaterRework extends Ability {
             List<LivingEntity> list = this.rangeComponent.getTargetsInArea(entity, 4.0F);
             ItemStack mainHand = entity.getItemInHand(Hand.MAIN_HAND);
             float weaponDamage = (float)mainHand.getItem().getDamage(mainHand);
-            BerserkAbility Berserk = (BerserkAbility)AbilityDataCapability.get(entity).getEquippedAbility(BerserkAbility.INSTANCE);
+            BerserkRework Berserk = (BerserkRework)AbilityDataCapability.get(entity).getEquippedAbility(BerserkRework.INSTANCE);
             boolean isBerserk = Berserk != null && Berserk.isContinuous();
             if (isBerserk) {
                 list = this.rangeComponent.getTargetsInArea(entity, 6.0F);

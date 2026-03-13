@@ -7,9 +7,8 @@
   "mixins": [
     "CartStylesReplace",
     "CartRaceReplace",
-    "AbilityUnlockBlocker"
-  ],
-  "client": [
+    "AbilityUnlockBlocker",
+    "AkumaNoMiBoxMixin"
   ],
   "injectors": {
     "defaultRequire": 1

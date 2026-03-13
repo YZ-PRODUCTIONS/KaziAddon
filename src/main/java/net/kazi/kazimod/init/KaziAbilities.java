@@ -3,15 +3,29 @@ package net.kazi.kazimod.init;
 
 
 import net.kazi.kazimod.abilities.AwaRework.GoldenHourRework;
-import net.kazi.kazimod.abilities.AxeStyleRework.MountainEaterRework;
-import net.kazi.kazimod.abilities.AxeStyleRework.ReversalRework;
-import net.kazi.kazimod.abilities.AxeStyleRework.SkySplitterRework;
-import net.kazi.kazimod.abilities.AxeStyleRework.TyrantCleaveRework;
-import net.kazi.kazimod.abilities.BlacklegRework.BienCultGrillShotRework;
+import net.kazi.kazimod.abilities.AxeStyleRework.*;
+import net.kazi.kazimod.abilities.BaneRework.SpringSnipeRework;
 import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
+import net.kazi.kazimod.abilities.BomuRework.*;
+import net.kazi.kazimod.abilities.BrawlerRework.FistsOfLoveBarrageRework;
+import net.kazi.kazimod.abilities.BrawlerRework.GalaxyImpactRework;
+import net.kazi.kazimod.abilities.ChiyuRework.ChiyupopoRework;
+import net.kazi.kazimod.abilities.DekaRework.DekaDekaRework;
+import net.kazi.kazimod.abilities.DoctorRework.*;
+import net.kazi.kazimod.abilities.DokuRework.VenomRoadRework;
+import net.kazi.kazimod.abilities.GasuRework.GastilleRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
+import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.GoroRework.ElThorRework;
 import net.kazi.kazimod.abilities.GoroRework.SangoRework;
+import net.kazi.kazimod.abilities.HoroRework.MiniHollowRework;
+import net.kazi.kazimod.abilities.HoroRework.NegativeHollowRework;
+import net.kazi.kazimod.abilities.HoroRework.TokuHollowRework;
+import net.kazi.kazimod.abilities.ItoRework.GodThreadRework;
+import net.kazi.kazimod.abilities.JikiRework.DamnedPunkRework;
+import net.kazi.kazimod.abilities.JikiRework.GenocideRaidRework;
+import net.kazi.kazimod.abilities.JikiRework.PunkCrossRework;
+import net.kazi.kazimod.abilities.KamaRework.*;
 import net.kazi.kazimod.abilities.KaruRework.ExplodingKarmaAbility;
 import net.kazi.kazimod.abilities.KaruRework.IngaZarashiRework;
 import net.kazi.kazimod.abilities.KaruRework.RageRushAbility;
@@ -21,22 +35,40 @@ import net.kazi.kazimod.abilities.KirinRework.SlumberFieldAbility;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxAssaultRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireBallRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireExplosionRework;
-import net.kazi.kazimod.abilities.MinkRework.SulongRework;
+import net.kazi.kazimod.abilities.KitsuneRework.InuKitsuneWalkPointRework;
+import net.kazi.kazimod.abilities.KobuRework.ShoureiRework;
+import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
+import net.kazi.kazimod.abilities.MinkRework.ElectricalMissileRework;
+import net.kazi.kazimod.abilities.MinkRework.ElectricalShowerRework;
+import net.kazi.kazimod.abilities.MinkRework.ElectricalTempestaRework;
+import net.kazi.kazimod.abilities.NikyuRework.PadHoRework;
+import net.kazi.kazimod.abilities.NikyuRework.TsuppariPadHoRework;
 import net.kazi.kazimod.abilities.NikyuRework.UrsusShockRework;
 import net.kazi.kazimod.abilities.NitoryuRework.NitoryuIaiRashomonRework;
 import net.kazi.kazimod.abilities.NitoryuRework.SaiKuruRework;
 import net.kazi.kazimod.abilities.NitoryuRework.TakaNamiRework;
+import net.kazi.kazimod.abilities.NoroRework.NoroNoroBeamRework;
+import net.kazi.kazimod.abilities.NoroRework.NoroNoroBeamSwordRework;
+import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
+import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
+import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
+import net.kazi.kazimod.abilities.RyusokenRework.TalonRushRework;
+import net.kazi.kazimod.abilities.SoruRework.SoulRecoveryRework;
+import net.kazi.kazimod.abilities.SpearRework.AbsolutePierceRework;
+import net.kazi.kazimod.abilities.SpearRework.DrillJabRework;
+import net.kazi.kazimod.abilities.SpearRework.SkySplitterDescentRework;
+import net.kazi.kazimod.abilities.SpearRework.VaultRework;
+import net.kazi.kazimod.abilities.Tenki.*;
+import net.kazi.kazimod.abilities.Toki.*;
 import net.kazi.kazimod.abilities.ToriNueRework.FlameBlessingRework;
 import net.kazi.kazimod.abilities.ToriNueRework.ImperialFlameRIngCommandmentRework;
+import net.kazi.kazimod.abilities.Toshi.*;
 import net.kazi.kazimod.abilities.UoSeiryuRework.SeiryuHeavyPointRework;
+import net.kazi.kazimod.abilities.YamiRework.BlackHoleRework;
 import net.kazi.kazimod.abilities.onirework.SkullBasherRework;
 import net.kazi.kazimod.abilities.onirework.ViciousRoarRework;
-import net.kazi.kazimod.abilities.swordsmanrework.HiryuKaenRework;
-import net.kazi.kazimod.abilities.swordsmanrework.RadiantSliceAbility;
-import net.kazi.kazimod.abilities.swordsmanrework.SanbyakurokujoPoundHoRework;
-import net.kazi.kazimod.abilities.swordsmanrework.YakkodoriRework;
+import net.kazi.kazimod.abilities.swordsmanrework.*;
 import net.kazi.kazimod.api.KaziRegistry;
-import net.kazi.kazimod.entities.projectiles.KarmaExplosionProjectile;
 import net.minecraftforge.eventbus.api.IEventBus;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.enums.AbilityCommandGroup;
@@ -54,7 +86,6 @@ public class KaziAbilities {
             GoldenHourRework.INSTANCE,
             MountainEaterRework.INSTANCE,
             RadiantSliceAbility.INSTANCE,
-            SulongRework.INSTANCE,
             ViciousRoarRework.INSTANCE,
             TakaNamiRework.INSTANCE,
             SangoRework.INSTANCE,
@@ -77,8 +108,93 @@ public class KaziAbilities {
             RageRushAbility.INSTANCE,
             ExplodingKarmaAbility.INSTANCE,
             PartyTableKickCourseRework.INSTANCE,
-            BienCultGrillShotRework.INSTANCE,
-            TyrantCleaveRework.INSTANCE
+            TyrantCleaveRework.INSTANCE,
+            BerserkRework.INSTANCE,
+            FutenrakuRework.INSTANCE,
+            PredatorsThrowRework.INSTANCE,
+            YasotakeruRework.INSTANCE,
+            GalaxyImpactRework.INSTANCE,
+            BlackHoleRework.INSTANCE,
+            GodThreadRework.INSTANCE,
+            GomuGomuNoRedRocAbility.INSTANCE,
+            GomuGomuNoBazookaRework.INSTANCE,
+            GomuGomuNoGatlingRework.INSTANCE,
+            GomuGomuNoRocketRework.INSTANCE,
+            GomuGomuNoPistolRework.INSTANCE,
+            DismantleAbility.INSTANCE,
+            NoroNoroBeamRework.INSTANCE,
+            NoroNoroBeamSwordRework.INSTANCE,
+            ChiyupopoRework.INSTANCE,
+            SpringSnipeRework.INSTANCE,
+            DekaDekaRework.INSTANCE,
+            GearFifthRework.INSTANCE,
+            GomuGomuNoGigantRework.INSTANCE,
+            GomuGomuNoDawnWhipRework.INSTANCE,
+            GomuGomuNoKaminariAbility.INSTANCE,
+            OTatsumakiRework.INSTANCE,
+            ShiShishiSonsonRework.INSTANCE,
+            InuKitsuneWalkPointRework.INSTANCE,
+            RyuNoKagizumeRework.INSTANCE,
+            RyuNoIbukiRework.INSTANCE,
+            TalonRushRework.INSTANCE,
+            DragonWhirlwindAbility.INSTANCE,
+            VenomRoadRework.INSTANCE,
+            PadHoRework.INSTANCE,
+            TsuppariPadHoRework.INSTANCE,
+            ExplosivePunchRework.INSTANCE,
+            KickBombRework.INSTANCE,
+            GastilleRework.INSTANCE,
+            CleaveAbility.INSTANCE,
+            SpiderwebCleaveAbility.INSTANCE,
+            FistsOfLoveBarrageRework.INSTANCE,
+            DomainExpansionMalevolentShrine.INSTANCE,
+            FugaAbility.INSTANCE,
+            FoxfireStyleAbility.INSTANCE,
+            PropellingBlastsAbility.INSTANCE,
+            ClusterBombAbility.INSTANCE,
+            ExplosiveHoldAbility.INSTANCE,
+            StunGrenadeAbility.INSTANCE,
+            // In KaziAbilities register() method, add alongside the other abilities:
+            AntidoteShotRework.INSTANCE,
+            DopingRework.INSTANCE,
+            FailedExperimentRework.INSTANCE,
+            FirstAidRework.INSTANCE,
+            MedicBagExplosionRework.INSTANCE,
+            VirusZoneRework.INSTANCE,
+            DeAgedAbility.INSTANCE,
+            FutureOfFreedomAbility.INSTANCE,
+            AgeAccelerationAbility.INSTANCE,
+            GiantFutureAbility.INSTANCE,
+            GiantPunchAbility.INSTANCE,
+            MiniHollowRework.INSTANCE,
+            NegativeHollowRework.INSTANCE,
+            TokuHollowRework.INSTANCE,
+            ElectricalMissileRework.INSTANCE,
+            ElectricalShowerRework.INSTANCE,
+            ElectricalBurstRework.INSTANCE,
+            ElectricalTempestaRework.INSTANCE,
+            AbsolutePierceRework.INSTANCE,
+            DrillJabRework.INSTANCE,
+            SkySplitterDescentRework.INSTANCE,
+            VaultRework.INSTANCE,
+            SoulRecoveryRework.INSTANCE,
+            TimeTheftAbility.INSTANCE,
+            TimeReversalAbility.INSTANCE,
+            TimeAccelerationAbility.INSTANCE,
+            ChronostasisAbility.INSTANCE,
+            ChronostasisGrigoraAbility.INSTANCE,
+            TimeBarAbility.INSTANCE,
+            ShoureiRework.INSTANCE,
+            WindGustAbility.INSTANCE,
+            TornadoWrathAbility.INSTANCE,
+            LightningJabAbility.INSTANCE,
+            CloudyDayAbility.INSTANCE,
+            ThunderstormAbility.INSTANCE,
+            GaleStormAbility.INSTANCE,
+            DamnedPunkRework.INSTANCE,
+            GenocideRaidRework.INSTANCE,
+            PunkCrossRework.INSTANCE
+
 
 
 

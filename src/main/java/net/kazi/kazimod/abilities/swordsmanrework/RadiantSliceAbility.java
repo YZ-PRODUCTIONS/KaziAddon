@@ -43,6 +43,7 @@ import xyz.pixelatedw.mineminenomi.data.entity.quests.*;
 import xyz.pixelatedw.mineminenomi.entities.LightningDischargeEntity;
 import xyz.pixelatedw.mineminenomi.init.*;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
+import net.kazi.kazimod.events.components.DashComboComponent;
 
 public class RadiantSliceAbility extends Ability {
 
@@ -56,7 +57,7 @@ public class RadiantSliceAbility extends Ability {
     private static final int CHARGE_TIME = 20;
     private static final float DAMAGE = 35.0F;
     private static final float RANGE = 2.5F;
-    public static int overuse = 2000; // Haki overuse threshold
+    public static int overuse = 2000;
 
     public static final AbilityCore<RadiantSliceAbility> INSTANCE;
 
@@ -71,11 +72,7 @@ public class RadiantSliceAbility extends Ability {
     private final RangeComponent rangeComponent = new RangeComponent(this);
     private final AnimationComponent animationComponent = new AnimationComponent(this);
     private final HitTrackerComponent hitTrackerComponent = new HitTrackerComponent(this);
-
-    /* COMBO STATE */
-    private LivingEntity comboUser = null;
-    private int comboDashesRemaining = 0;
-    private int comboDelay = 0;
+    private final DashComboComponent dashComboComponent = new DashComboComponent(this, this::performDash);
 
     /* HAKI DISCHARGE */
     private LightningDischargeEntity discharge;
@@ -83,14 +80,18 @@ public class RadiantSliceAbility extends Ability {
     private int radius;
     private int haoMastery;
 
+    // True from the moment the charge starts until startCooldown is called.
+    // This is the single source of truth for "ability is busy" — covers
+    // charge phase, all dashes, and the gap between the last dash and cooldown.
+    private boolean isRunning = false;
+
     public RadiantSliceAbility(AbilityCore<RadiantSliceAbility> core) {
         super(core);
 
         this.isNew = true;
-        this.color = new Color(16711680); // Default red color
+        this.color = new Color(16711680);
         this.radius = 0;
         this.haoMastery = 0;
-
 
         this.addComponents(new AbilityComponent[]{
                 chargeComponent,
@@ -105,21 +106,25 @@ public class RadiantSliceAbility extends Ability {
         this.addCanUseCheck(AbilityLimits::fruitless);
 
         this.addUseEvent(this::onUseEvent);
-
-        // combo tick
         this.addTickEvent(this::comboTick);
     }
 
     /* ================= USE ================= */
 
     private void onUseEvent(LivingEntity entity, IAbility ability) {
-        // Haki Infusion Check (from Divine Departure)
+        // isRunning stays true from charge start all the way through to
+        // startCooldown(), so there is no window where re-pressing works.
+        if (isRunning) {
+            return;
+        }
+
+        // Haki Infusion Check
         if (!HakiHelper.hasInfusionActive(entity) && entity instanceof PlayerEntity) {
             entity.sendMessage(new StringTextComponent("You need to activate Hao Infusion to use this move!"), entity.getUUID());
             return;
         }
 
-        // Haki Overuse Check (from Divine Departure)
+        // Haki Overuse Check
         if (!WyHelper.isInChallengeDimension(entity.level)) {
             boolean isOnMaxOveruse = HakiHelper.checkForHakiOveruse(entity, overuse);
             if (isOnMaxOveruse) {
@@ -127,27 +132,24 @@ public class RadiantSliceAbility extends Ability {
             }
         }
 
-        // Sword Check (from Divine Departure)
+        // Sword Check
         if (!AbilityHelper.canUseSwordsmanAbilities(entity)) {
             entity.sendMessage(new TranslationTextComponent(ModI18n.ABILITY_MESSAGE_NEED_SWORD), entity.getUUID());
             return;
         }
 
-        if (!chargeComponent.isCharging()) {
-            chargeComponent.startCharging(entity, CHARGE_TIME);
-        }
+        isRunning = true;
+        chargeComponent.startCharging(entity, CHARGE_TIME);
     }
 
     private void startChargeEvent(LivingEntity entity, IAbility ability) {
         hitTrackerComponent.clearHits();
         animationComponent.start(entity, ModAnimations.ITTORYU_CHARGE);
 
-        // Haki Release Sound (from Divine Departure)
         entity.level.playSound((PlayerEntity)null, entity.blockPosition(),
                 (SoundEvent)ModSounds.HAKI_RELEASE_SFX.get(),
                 SoundCategory.PLAYERS, 3.0F, 0.5F + entity.getRandom().nextFloat());
 
-        // Haki Level Calculation (from Divine Departure)
         IHakiData hakiProps = HakiDataCapability.get(entity);
         float haoLevel = hakiProps.getTotalHakiExp() / 100.0F;
         if (haoLevel <= 1.0F) {
@@ -161,12 +163,10 @@ public class RadiantSliceAbility extends Ability {
             this.haoMastery = 2;
         }
 
-        // Haki Color (from Divine Departure)
         if (entity instanceof PlayerEntity) {
             this.color = new Color(HakiHelper.getHaoshokuColour(entity));
         }
 
-        // Lightning Discharge Effect (from Divine Departure)
         this.discharge = new LightningDischargeEntity(entity, entity.getX(),
                 entity.getY() + 1.5F, entity.getZ(), entity.yRot, entity.xRot);
         this.discharge.setAliveTicks(-1);
@@ -201,21 +201,18 @@ public class RadiantSliceAbility extends Ability {
             AbilityHelper.setDeltaMovement(entity, (double)0.0F, (double)0.0F, (double)0.0F);
         }
 
-        // Update Discharge Position (from Divine Departure)
         if (this.chargeComponent.getChargeTime() % 5.0F == 0.0F) {
             if (this.discharge != null) {
                 this.discharge.setPos(entity.getX(), entity.getY() + 1.0F, entity.getZ());
             }
         }
 
-        // Periodic Haki Sound (from Divine Departure)
         if (this.chargeComponent.getChargeTime() % 10.0F == 0.0F) {
             entity.level.playSound((PlayerEntity)null, entity.blockPosition(),
                     (SoundEvent)ModSounds.HAKI_RELEASE_SFX.get(),
                     SoundCategory.PLAYERS, 3.0F, 0.5F + entity.getRandom().nextFloat());
         }
 
-        // Kill Discharge if Entity Dies (from Divine Departure)
         if (this.discharge != null && !entity.isAlive()) {
             this.discharge.setAliveTicks(0);
         }
@@ -226,7 +223,6 @@ public class RadiantSliceAbility extends Ability {
     private void endChargeEvent(LivingEntity entity, IAbility ability) {
         animationComponent.stop(entity);
 
-        // Haki Release Sound and Lightning Effect (from Divine Departure)
         entity.level.playSound((PlayerEntity)null, entity.blockPosition(),
                 (SoundEvent)ModSounds.HAKI_RELEASE_SFX.get(),
                 SoundCategory.PLAYERS, 1.0F, 1.0F);
@@ -238,57 +234,18 @@ public class RadiantSliceAbility extends Ability {
             this.discharge.setAliveTicks(30);
         }
 
-        // START COMBO
-        comboUser = entity;
-        comboDashesRemaining = 3; // total dashes
-        comboDelay = 0;           // first dash instantly
+        dashComboComponent.startCombo(entity, 3, 15);
     }
 
     /* ================= COMBO TICK ================= */
 
     private void comboTick(LivingEntity entity, IAbility ability) {
-
-        if (comboUser == null || comboUser != entity)
-            return;
-
-        if (!comboUser.isAlive()) {
-            resetCombo();
-            return;
-        }
-
-        if (DevilFruitHelper.getDifferenceToFloor(entity) < (double)51.0F) {
-            AbilityHelper.slowEntityFall(entity);
-            AbilityHelper.setDeltaMovement(entity, (double)0.0F, (double)0.0F, (double)0.0F);
-        }
-
-        if (comboDelay > 0) {
-            comboDelay--;
-            return;
-        }
-
-        if (comboDashesRemaining > 0) {
-            performDash(comboUser);
-
-            comboDashesRemaining--;
-
-            if (comboDashesRemaining > 0) {
-                comboDelay = 15; // 10 ticks between dashes
-            } else {
-                cooldownComponent.startCooldown(comboUser, COOLDOWN);
-                resetCombo();
-            }
-        }
-    }
-
-    private void resetCombo() {
-        comboUser = null;
-        comboDashesRemaining = 0;
-        comboDelay = 0;
+        dashComboComponent.tick(ability);
     }
 
     /* ================= DASH LOGIC ================= */
 
-    private void performDash(LivingEntity entity) {
+    private void performDash(LivingEntity entity, IAbility ability) {
 
         hitTrackerComponent.clearHits();
 
@@ -307,6 +264,7 @@ public class RadiantSliceAbility extends Ability {
         AbilityDamageSource source =
                 (AbilityDamageSource)((ModDamageSource)
                         dealDamageComponent.getDamageSource(entity)).setSlash();
+        source.setUnavoidable();
 
         Vector3d startPos = entity.position();
         float actualDistance = 30.0F;
@@ -338,7 +296,6 @@ public class RadiantSliceAbility extends Ability {
 
         blockPos.set(WyHelper.rayTraceBlockSafe(entity, actualDistance));
 
-        // DAMAGE
         for (LivingEntity target :
                 rangeComponent.getTargetsInLine(entity, actualDistance, RANGE)) {
 
@@ -348,7 +305,6 @@ public class RadiantSliceAbility extends Ability {
                         dealDamageComponent.hurtTarget(entity, target, DAMAGE, source);
 
                 if (hit && !entity.level.isClientSide) {
-                    // Sweep Attack Particles (from Divine Departure)
                     WyHelper.spawnParticles(
                             ParticleTypes.SWEEP_ATTACK,
                             (ServerWorld) entity.level,
@@ -372,13 +328,20 @@ public class RadiantSliceAbility extends Ability {
                             new SAnimateHandPacket(entity, 0));
         }
 
-        // Dash Sound (from Divine Departure)
         entity.level.playSound(null,
                 entity.blockPosition(),
                 (SoundEvent) ModSounds.DASH_ABILITY_SWOOSH_SFX.get(),
                 SoundCategory.PLAYERS,
                 2.0F,
                 1.0F);
+
+        // Only after the final dash: clear the lock and start cooldown.
+        // isRunning is reset here so the cooldown component's own
+        // isCoolingDown() gate takes over from this point forward.
+        if (!dashComboComponent.isActive()) {
+            isRunning = false;
+            cooldownComponent.startCooldown(entity, COOLDOWN);
+        }
     }
 
     /* ================= UNLOCK ================= */

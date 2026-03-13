@@ -119,7 +119,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     implementation fg.deobf("curse.maven:mine-mine-no-mi-78726:7170763")
-    implementation fg.deobf("curse.maven:carts-mmnm-addon-1143743:7549643")
+    implementation fg.deobf("curse.maven:carts-mmnm-addon-1143743:7661122")
     implementation fg.deobf("curse.maven:curios-309927:4419403")
 
     implementation 'net.jodah:typetools:0.6.3'

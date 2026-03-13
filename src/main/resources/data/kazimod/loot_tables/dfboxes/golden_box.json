@@ -33,6 +33,26 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
+          "name": "kazimod:toki_toki_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "kazimod:tenki_tenki_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
           "name": "cartaddon:tori_tori_no_mi_model_nue"
         },
         {
@@ -75,16 +95,7 @@
           ],
           "name": "cartaddon:fuwa_fuwa_no_mi"
         },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
-          "name": "cartaddon:ishi_ishi_no_mi"
-        },
+
         {
           "type": "minecraft:item",
           "weight": 100,
@@ -225,6 +236,17 @@
           ],
           "name": "cartaddon:goru_goru_no_mi"
         },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "mineminenomi:gomu_gomu_no_mi"
+        },
+
         {
           "type": "minecraft:item",
           "weight": 100,

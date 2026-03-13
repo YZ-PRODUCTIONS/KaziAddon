@@ -8,7 +8,7 @@ license="All Rights Reserved"
 
 [[mods]] #mandatory
 modId="kazimod" #mandatory
-version="1.2" #mandatory
+version="3.0" #mandatory
 displayName="KazisAdditions" #mandatory
 authors="kazi" #optional
 
@@ -37,6 +37,13 @@ mandatory=true
 versionRange="[0.10.10,)"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.kazimod]]
+modId = "cartaddon"
+mandatory = false
+versionRange = "*"
+ordering = "BEFORE"
+side = "BOTH"
 
 
 # Optional link shown in the mods menu

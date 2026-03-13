@@ -65,9 +65,9 @@ import net.kazi.kazimod.entities.projectiles.KarmaProjectiles;
 import net.kazi.kazimod.entities.projectiles.KarmaExplosionProjectile;
 
 public class ExplodingKarmaAbility extends Ability {
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "exploding_karma", new Pair[]{ImmutablePair.of("Channels karma energy into a massive red sphere above the user that detonates after charging, dealing devastating damage in a massive area. Scales with karma. Requires Inga Zarashi to be active and at least 75 karma to use.", (Object)null)});
-    private static final TranslationTextComponent EXPLODING_KARMA_NAME = new TranslationTextComponent(WyRegistry.registerName("ability.mineminenomi.exploding_karma", "Exploding Karma"));
-    private static final ResourceLocation EXPLODING_KARMA_ICON = new ResourceLocation("mineminenomi", "textures/abilities/exploding_karma.png");
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "exploding_karma", new Pair[]{ImmutablePair.of("Channels karma energy into a massive red sphere above the user that detonates after charging, dealing devastating damage in a massive area. Scales with karma. Requires Inga Zarashi to be active and at least 75 karma to use.", (Object)null)});
+    private static final TranslationTextComponent EXPLODING_KARMA_NAME = new TranslationTextComponent(WyRegistry.registerName("ability.kazimod.exploding_karma", "Exploding Karma"));
+    private static final ResourceLocation EXPLODING_KARMA_ICON = new ResourceLocation("kazimod", "textures/abilities/exploding_karma.png");
     private static final float COOLDOWN = 1000.0F;
     private static final float CHARGE_TIME = 160.0F; // 8 seconds (160 ticks) - NON-CANCELLABLE
 

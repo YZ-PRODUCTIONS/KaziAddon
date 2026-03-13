@@ -43,7 +43,7 @@ public class WeakenedMovementEventHandler {
     private static float getMovementMultiplier(int amplifier) {
         // Each amplifier level reduces movement by an additional 10%
         // Amplifier 0 = 50%, Amplifier 1 = 40%, etc.
-        float reduction = 0.8F - (amplifier * 0.1F);
+        float reduction = 0.9F - (amplifier * 0.2F);
         return Math.max(0.1F, reduction); // Minimum 10% movement
     }
 

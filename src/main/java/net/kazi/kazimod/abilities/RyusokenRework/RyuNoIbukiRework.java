@@ -6,17 +6,15 @@
 package net.kazi.kazimod.abilities.RyusokenRework;
 
 import java.util.List;
-import net.MrMagicalCart.cartaddon.entities.mobs.quests.givers.RyusokenTrainerEntity;
 import net.MrMagicalCart.cartaddon.init.CartAbilityPools;
 import net.MrMagicalCart.cartaddon.init.CartQuests;
 import net.MrMagicalCart.cartaddon.init.CartValues;
 import net.MrMagicalCart.cartaddon.particles.effects.ryusoken.GroundCrackParticleEffect;
+import net.MrMagicalCart.cartaddon.particles.effects.ryusoken.IbukiGroundRangeEffect;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.play.server.SAnimateHandPacket;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
@@ -24,15 +22,23 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import xyz.pixelatedw.mineminenomi.api.abilities.*;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCategory;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityPool2;
+import xyz.pixelatedw.mineminenomi.api.abilities.DropHitAbility;
+import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
+import xyz.pixelatedw.mineminenomi.api.abilities.components.ChargeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.DealDamageComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.PoolComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent.RangeType;
 import xyz.pixelatedw.mineminenomi.api.damagesource.AbilityDamageSource;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.entitystats.EntityStatsCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.entitystats.IEntityStats;
@@ -45,120 +51,85 @@ import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
-public class DancingDragonSlamRework extends DropHitAbility {
-    public static final GroundCrackParticleEffect PARTICLES = new GroundCrackParticleEffect();
+public class RyuNoIbukiRework extends DropHitAbility {
+    public static final GroundCrackParticleEffect CRACK_PARTICLES = new GroundCrackParticleEffect();
+    public static final IbukiGroundRangeEffect RANGE_PARTICLES = new IbukiGroundRangeEffect();
     private static final int COOLDOWN = 240;
     private static final float RANGE = 6.0F;
     private static final float DAMAGE = 40.0F;
-    // Charge duration in ticks (20 ticks = 1 second)
-    private static final int CHARGE_TICKS = 20;
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "dancing_dragon_slam", new Pair[]{ImmutablePair.of("The user charges up and slams into the ground.", (Object)null)});
-    public static final AbilityCore<DancingDragonSlamRework> INSTANCE;
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "ryu_no_ibuki", new Pair[]{
+            ImmutablePair.of("The user slams into the ground, charging up a shockwave that dazes nearby enemies.", (Object) null)
+    });
+    public static final AbilityCore<RyuNoIbukiRework> INSTANCE;
     private final DealDamageComponent dealDamageComponent = new DealDamageComponent(this);
     private final RangeComponent rangeComponent = new RangeComponent(this);
     private final PoolComponent poolComponent;
+    private final ChargeComponent chargeComponent = (new ChargeComponent(this))
+            .addTickEvent(this::tickChargeEvent)
+            .addEndEvent(this::endChargeEvent);
 
-    // Tracks charge progress per entity (server-side)
-    private int chargeTicks = 0;
-    private boolean isCharging = false;
-    private boolean hasFiredDamage = false;
-
-    public DancingDragonSlamRework(AbilityCore<DancingDragonSlamRework> core) {
+    public RyuNoIbukiRework(AbilityCore<RyuNoIbukiRework> core) {
         super(core);
         this.poolComponent = new PoolComponent(this, CartAbilityPools.RYUSOKEN, new AbilityPool2[]{CartAbilityPools.INIT_JUMP});
-        this.addComponents(new AbilityComponent[]{this.poolComponent, this.dealDamageComponent, this.rangeComponent});
-        this.continuousComponent.addStartEvent(100, this::startContinuityEvent).addTickEvent(this::tickContinuityEvent).addEndEvent(100, this::endContinuityEvent);
+        this.addComponents(new AbilityComponent[]{this.poolComponent, this.chargeComponent, this.dealDamageComponent, this.rangeComponent});
+        this.continuousComponent.addStartEvent(100, this::startContinuityEvent).addEndEvent(100, this::endContinuityEvent);
         this.addCanUseCheck(AbilityHelper::canUseMomentumAbilities);
         super.addCanUseCheck(AbilityHelper::canUseBrawlerAbilities);
     }
 
-    /**
-     * Called when the entity lands on the ground.
-     * Instead of dealing damage immediately, it starts the charge phase.
-     */
-    @Override
+    // Copied straight from DancingDragonSlam - lands and starts the Ibuki charge
     public void onLanding(LivingEntity entity) {
-        if (!isCharging && !hasFiredDamage) {
-            isCharging = true;
-            chargeTicks = 0;
-
-            // Play a wind-up sound to signal the charge
-            entity.level.playSound((PlayerEntity) null, entity.blockPosition(),
-                    (SoundEvent) ModSounds.TELEPORT_SFX.get(), SoundCategory.PLAYERS, 3.0F, 0.75F);
-
-            // Freeze the entity in place during the charge
-            AbilityHelper.setDeltaMovement(entity, 0.0, 0.0, 0.0);
+        if (!this.chargeComponent.isCharging()) {
+            // Impact particles on landing, same as DancingDragonSlam
+            if (!entity.level.isClientSide) {
+                CRACK_PARTICLES.spawn(entity, entity.level, entity.getX(), entity.getY(), entity.getZ(), 60.0F, -90.0F, 0.0F);
+            }
+            // Start the 20 tick (1 second) Ibuki-style charge
+            this.chargeComponent.startCharging(entity, 20.0F);
         }
     }
 
-    /**
-     * Deals the actual AOE slam damage and triggers effects.
-     */
-    private void performSlam(LivingEntity entity) {
-        List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(entity, RANGE);
-        targets.remove(entity);
-        AbilityDamageSource source = (AbilityDamageSource) ModDamageSource.causeAbilityDamage(entity, this.getCore()).setFistDamage();
-
-        for (LivingEntity target : targets) {
-            if (this.hitTrackerComponent.canHit(target) && entity.canSee(target) && this.dealDamageComponent.hurtTarget(entity, target, DAMAGE, source)) {
-                target.addEffect(new EffectInstance((Effect) ModEffects.MOVEMENT_BLOCKED.get(), 15, 0));
-                AbilityHelper.disableAbilities(target, 100, (abl) -> abl.hasComponent(ModAbilityKeys.POOL)
-                        && ((PoolComponent) abl.getComponent(ModAbilityKeys.POOL).get()).containsPool(ModAbilityPools.TEKKAI_LIKE));
-            }
-        }
-
-        if (!entity.level.isClientSide) {
-            if (targets.size() > 0) {
-                ((ServerWorld) entity.level).getChunkSource().broadcastAndSend(entity, new SAnimateHandPacket(entity, 0));
-            }
-
-            PARTICLES.spawn(entity, entity.level, entity.getX(), entity.getY(), entity.getZ(), (double) 60.0F, -90.0F, 0.0F);
-        }
-    }
-
+    // Copied straight from DancingDragonSlam startContinuityEvent - slams down, no jump
     private void startContinuityEvent(LivingEntity entity, IAbility ability) {
-        // Reset charge state when the ability starts
-        isCharging = false;
-        hasFiredDamage = false;
-        chargeTicks = 0;
-
-        // Slam the entity straight down immediately (no jump)
-        Vector3d speed = WyHelper.propulsion(entity, 0.0, 0.0);
+        Vector3d speed = WyHelper.propulsion(entity, (double) 0.0F, (double) 0.0F);
         AbilityHelper.setDeltaMovement(entity, speed.x, -5.0, speed.z);
-
-        entity.level.playSound((PlayerEntity) null, entity.blockPosition(),
-                (SoundEvent) ModSounds.TELEPORT_SFX.get(), SoundCategory.PLAYERS, 5.0F, 1.25F);
-    }
-
-    private void tickContinuityEvent(LivingEntity entity, IAbility ability) {
-        // If RyusokenTrainer, keep regenerating as before
-        if (entity instanceof RyusokenTrainerEntity) {
-            entity.addEffect(new EffectInstance(Effects.REGENERATION, 200, 2));
-        }
-
-        // Handle charge countdown after landing
-        if (isCharging && !hasFiredDamage) {
-            chargeTicks++;
-
-            // Keep the entity locked in place during charge
-            AbilityHelper.setDeltaMovement(entity, 0.0, 0.0, 0.0);
-
-            // After 1 second (20 ticks), release the slam
-            if (chargeTicks >= CHARGE_TICKS) {
-                hasFiredDamage = true;
-                isCharging = false;
-                performSlam(entity);
-            }
-        }
+        entity.level.playSound((PlayerEntity) null, entity.blockPosition(), (SoundEvent) ModSounds.TELEPORT_SFX.get(), SoundCategory.PLAYERS, 5.0F, 1.25F);
     }
 
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
-        // Reset charge state on ability end in case it ended early
-        isCharging = false;
-        hasFiredDamage = false;
-        chargeTicks = 0;
-
         this.cooldownComponent.startCooldown(entity, 240.0F);
+    }
+
+    // Copied from Ibuki tickChargeEvent - freeze + dizzy nearby targets each tick
+    private void tickChargeEvent(LivingEntity entity, IAbility ability) {
+        entity.addEffect(new EffectInstance((Effect) ModEffects.MOVEMENT_BLOCKED.get(), 5, 0, false, false));
+
+        List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(entity, RANGE);
+        targets.remove(entity);
+        targets.forEach((target) -> {
+            target.addEffect(new EffectInstance((Effect) ModEffects.DIZZY.get(), 10, 0, false, false));
+        });
+    }
+
+    // Copied from Ibuki endChargeEvent - deal damage, dizzy, knockback
+    private void endChargeEvent(LivingEntity entity, IAbility ability) {
+        List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(entity, RANGE);
+        targets.remove(entity);
+
+        AbilityDamageSource source = (AbilityDamageSource) ModDamageSource.causeAbilityDamage(entity, this.getCore()).setFistDamage().bypassLogia().setPiercing(0.25F);
+
+        targets.forEach((target) -> {
+            if (this.dealDamageComponent.hurtTarget(entity, target, DAMAGE, source)) {
+                target.addEffect(new EffectInstance((Effect) ModEffects.DIZZY.get(), 40, 0, false, false));
+                AbilityHelper.setDeltaMovement(target, entity.position().subtract(target.position()).normalize().scale((double) 1.5F));
+            }
+        });
+
+        if (!entity.level.isClientSide) {
+            RANGE_PARTICLES.spawn(entity, entity.level, entity.getX(), entity.getY(), entity.getZ(), 150.0F, -90.0F, 0.0F);
+        }
+
+        entity.level.playSound((PlayerEntity) null, entity.blockPosition(), (SoundEvent) ModSounds.GURA_SFX.get(), SoundCategory.PLAYERS, 5.0F, 0.6F);
     }
 
     private static boolean canUnlock(LivingEntity entity) {
@@ -168,21 +139,23 @@ public class DancingDragonSlamRework extends DropHitAbility {
             PlayerEntity player = (PlayerEntity) entity;
             IEntityStats props = EntityStatsCapability.get(player);
             IQuestData questProps = QuestDataCapability.get(player);
-            return props.getFightingStyle().equals(CartValues.RYUSOKEN) && questProps.hasFinishedQuest(CartQuests.RYUSOKEN_TRIAL_03);
+            return props.getFightingStyle().equals(CartValues.RYUSOKEN) && questProps.hasFinishedQuest(CartQuests.RYUSOKEN_TRIAL_05);
         }
     }
 
     static {
-        INSTANCE = (new AbilityCore.Builder("Dancing Dragon Slam", AbilityCategory.STYLE, DancingDragonSlamRework::new))
+        INSTANCE = (new AbilityCore.Builder("Ryu No Ibuki", AbilityCategory.STYLE, RyuNoIbukiRework::new))
                 .addDescriptionLine(DESCRIPTION)
                 .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{
                         AbilityDescriptionLine.NEW_LINE,
-                        DealDamageComponent.getTooltip(40.0F),
+                        DealDamageComponent.getTooltip(DAMAGE),
                         CooldownComponent.getTooltip(240.0F),
-                        RangeComponent.getTooltip(6.0F, RangeType.AOE)
+                        RangeComponent.getTooltip(RANGE, RangeType.AOE)
                 })
+                .setSourceType(new SourceType[]{SourceType.FIST, SourceType.INDIRECT})
+                .setSourceElement(SourceElement.SHOCKWAVE)
                 .setSourceHakiNature(SourceHakiNature.HARDENING)
-                .setUnlockCheck(DancingDragonSlamRework::canUnlock)
+                .setUnlockCheck(RyuNoIbukiRework::canUnlock)
                 .build();
     }
 }

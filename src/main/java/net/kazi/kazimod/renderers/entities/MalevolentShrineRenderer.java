@@ -1,4 +1,4 @@
-package net.kazi.kazimod.renderers;
+package net.kazi.kazimod.renderers.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.kazi.kazimod.entities.MalevolentShrineEntity;

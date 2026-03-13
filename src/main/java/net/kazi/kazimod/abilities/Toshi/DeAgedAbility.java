@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import net.kazi.kazimod.init.KaziEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.EffectInstance;
@@ -25,12 +27,12 @@ public class DeAgedAbility extends PunchAbility2 {
 
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
             "kazimod",
-            "age_acceleration",
-            new Pair[]{ImmutablePair.of("Hit the target to rapidly age them, weakening and slowing them", (Object) null)}
+            "de_aged",
+            new Pair[]{ImmutablePair.of("Hit the target to reverse their age, making them smaller and more prone to damage", (Object) null)}
     );
 
     private static final int COOLDOWN = 40;
-    private static final long REAPPLY_COOLDOWN_MS = 30_000L; // 30 seconds in milliseconds
+    private static final long REAPPLY_COOLDOWN_MS = 15_000L; // 30 seconds in milliseconds
 
     // Tracks the last time each entity (by UUID) was hit
     private static final Map<UUID, Long> lastHitTime = new HashMap<>();
@@ -55,8 +57,7 @@ public class DeAgedAbility extends PunchAbility2 {
         }
 
         // Apply effects and record the hit time
-        target.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 1));
-        target.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 200, 1));
+        target.addEffect(new EffectInstance(KaziEffects.MINIATURIZED.get(), 200, 0));
         lastHitTime.put(targetId, currentTime);
 
         // Clean up expired entries to avoid memory leaks
@@ -81,7 +82,7 @@ public class DeAgedAbility extends PunchAbility2 {
     }
 
     static {
-        INSTANCE = (new AbilityCore.Builder("Age Acceleration", AbilityCategory.DEVIL_FRUITS, DeAgedAbility::new))
+        INSTANCE = (new AbilityCore.Builder("De Aged", AbilityCategory.DEVIL_FRUITS, DeAgedAbility::new))
                 .addDescriptionLine(DESCRIPTION)
                 .addDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE})
                 .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{

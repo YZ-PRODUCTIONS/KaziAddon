@@ -29,6 +29,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
@@ -94,6 +95,7 @@ public class KaziRegistry {
         RegistryObject<T> reg = PARTICLE_EFFECTS.register(resourceName, supplier);
         return reg;
     }
+
 
 
     public static RegistryObject<Attribute> registerAttribute(String localizedName, Supplier<Attribute> attr) {

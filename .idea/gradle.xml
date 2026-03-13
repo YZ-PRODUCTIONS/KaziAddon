@@ -13,6 +13,10 @@
         </option>
         <option name="resolveExternalAnnotations" value="true" />
       </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../../../../../cartaddon-0.7.5" />
+        <option name="gradleJvm" value="corretto-1.8" />
+      </GradleProjectSettings>
     </option>
   </component>
 </project>

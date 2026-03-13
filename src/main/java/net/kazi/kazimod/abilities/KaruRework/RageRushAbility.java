@@ -39,7 +39,7 @@ import xyz.pixelatedw.mineminenomi.packets.server.entities.SUnpinCameraPacket;
 import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 
 public class RageRushAbility extends Ability {
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "rage_rush", new Pair[]{ImmutablePair.of("The user charges forward in a rage, striking all enemies in their path and launching them high into the air. Scales with karma. Requires Inga Zarashi to be active.", (Object)null)});
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "rage_rush", new Pair[]{ImmutablePair.of("The user charges forward in a rage, striking all enemies in their path and launching them high into the air. Scales with karma. Requires Inga Zarashi to be active.", (Object)null)});
     private static final float CHARGE_TIME = 5.0F; // 0.25 seconds (5 ticks)
     private static final float CONTINUITY_TIME = 25.0F;
     private static final float MIN_COOLDOWN = 400.0F; // 8 seconds at 0 karma (low karma = low cooldown)

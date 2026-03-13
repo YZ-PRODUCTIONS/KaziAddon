@@ -100,7 +100,7 @@ public class SkySplitterRework extends Ability {
     /* ================= USE ================= */
 
     private void onUseEvent(LivingEntity entity, IAbility ability) {
-        if (!chargeComponent.isCharging()) {
+        if (!chargeComponent.isCharging() && comboUser == null) {
             chargeComponent.startCharging(entity, CHARGE_TIME);
         }
     }

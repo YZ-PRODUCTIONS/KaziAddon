@@ -37,9 +37,9 @@ public class DashComboComponent extends AbilityComponent<IAbility>
 
 
      public DashComboComponent(IAbility ability, DashAction action) {
-        super(KEY, ((DashComboComponent) ability).getAbility());
-        this.dashAction = action;
-    }
+         super(KEY, ability); // ✅
+         this.dashAction = action;
+     }
 
     public void startCombo(LivingEntity entity, int totalDashes, int delayBetweenTicks) {
         this.user = entity;
@@ -49,31 +49,37 @@ public class DashComboComponent extends AbilityComponent<IAbility>
         this.active = true;
     }
 
-    public void tick(IAbility ability) {
-        if (!active || user == null) return;
+     public void tick(IAbility ability) {
+         if (!active || user == null) return;
 
-        if (!user.isAlive()) {
-            stopCombo();
-            return;
-        }
+         if (!user.isAlive()) {
+             stopCombo();
+             return;
+         }
 
-        if (delayTicks > 0) {
-            delayTicks--;
-            return;
-        }
+         if (delayTicks > 0) {
+             delayTicks--;
+             return;
+         }
 
-        if (dashesRemaining > 0) {
-            dashAction.execute(user, ability);
-            dashesRemaining--;
+         if (dashesRemaining > 0) {
+             dashesRemaining--;
+             boolean isFinalDash = (dashesRemaining == 0);
 
-            if (dashesRemaining > 0) {
-                delayTicks = delayBetween;
-            } else {
-                stopCombo();
-            }
-        }
-    }
+             if (!isFinalDash) {
+                 delayTicks = delayBetween;
+             }
 
+             // Capture user before stopCombo() nulls it
+             LivingEntity currentUser = user;
+
+             if (isFinalDash) {
+                 stopCombo();
+             }
+
+             dashAction.execute(currentUser, ability);
+         }
+     }
     public boolean isActive() {
         return active;
     }

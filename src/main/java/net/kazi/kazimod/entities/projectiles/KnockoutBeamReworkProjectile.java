@@ -22,6 +22,7 @@ public class KnockoutBeamReworkProjectile extends AbilityProjectileEntity {
         super.setEntityCollisionSize((double)4.0F);
         super.setPassThroughEntities();
         super.setPassThroughBlocks();
+        this.setUnavoidable();
         super.onEntityImpactEvent = this::onEntityImpactEvent;
     }
 
