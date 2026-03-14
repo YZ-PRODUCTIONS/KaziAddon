@@ -177,7 +177,7 @@
   "ability.kazimod.time_acceleration": "Time Acceleration",
   "ability.kazimod.time_reversal": "Time Reversal",
   "ability.kazimod.time_theft": "Time Theft",
-  "ability.kazimod.chronostasis.description.0": "Charges up a temporal pulse, then releases a 1-second AOE burst. Any entity caught inside is frozen in time — suspended in a bubble,lifted into the air, and left unable to move or act for 5 seconds. Can be cancelled after the freeze begins, releasing all targets immediately.",
+  "ability.kazimod.chronostasis.description.0": "Charges up a pulse, then releases a 1-second AOE burst. Any entity caught inside is frozen in time — suspended in a bubble,lifted into the air, and left unable to move or act for 5 seconds. Can be cancelled after the freeze begins, releasing all targets immediately.",
   "ability.kazimod.chronostasis_grigora.description.0": "Freezes all projectiles within a 30-block radius in time, suspending each one inside a temporal bubble. After 5 seconds, the frozen projectiles are erased.",
   "ability.kazimod.time_acceleration.description.0": "Accelerates the user through time, greatly boosting movement speed, leaving after-images in their wake, and allowing them to phase through incoming attacks.",
   "ability.kazimod.time_reversal.description.0": "Passively records your position and HP every tick. On activation, reverts your position and HP back to what they were 2 seconds ago.",
