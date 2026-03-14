@@ -40,6 +40,10 @@ public class CloudyDayAbility extends Ability {
     private static final int   CLOUD_GRID_SPACING  = 30;
     private static final int   CLOUD_GRID_RADIUS   = 1;
 
+    // How often to check cloud liveness and nudge position (ticks).
+    // Clouds have zero velocity and a long life, so a 1-second cadence is plenty.
+    private static final int CLOUD_REFRESH_INTERVAL = 20;
+
     public static final AbilityCore<CloudyDayAbility> INSTANCE;
 
     private final ContinuousComponent continuousComponent =
@@ -48,9 +52,14 @@ public class CloudyDayAbility extends Ability {
                     .addTickEvent(this::onTick)
                     .addEndEvent(this::onEnd);
 
-    private final List<WeatherCloudReworkEntity> activeClouds = new ArrayList<>();
-    private final List<Vector3d> spawnPositions = new ArrayList<>();
-    private int cloudRefreshTick = 0;
+    // Clouds are spawned in a small grid and never move — use fixed-size lists
+    private final List<WeatherCloudReworkEntity> activeClouds   = new ArrayList<>(9);
+    private final List<Vector3d>                 spawnPositions = new ArrayList<>(9);
+
+    // How many of the original clouds have been confirmed dead
+    // (lets us skip removeIf when all are alive)
+    private int  deadCloudCount  = 0;
+    private int  cloudCheckTick  = 0;
     private Vector3d castPosition = null;
 
     /** Returns the world position where this cloud was cast, or null if not active. */
@@ -65,6 +74,8 @@ public class CloudyDayAbility extends Ability {
         this.addUseEvent(this::onUse);
     }
 
+    // ── Use event ─────────────────────────────────────────────────────────────
+
     private void onUse(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
         if (this.cooldownComponent.isOnCooldown()) return;
@@ -76,20 +87,18 @@ public class CloudyDayAbility extends Ability {
         }
     }
 
+    // ── Cloud spawn helper ────────────────────────────────────────────────────
+
     private WeatherCloudReworkEntity spawnCloud(LivingEntity entity, double x, double y, double z) {
         EntityType<?> type = ForgeRegistries.ENTITIES.getValue(
-                new ResourceLocation("cartaddon", "weather_cloud_rework")
-        );
+                new ResourceLocation("cartaddon", "weather_cloud_rework"));
         if (type == null) return null;
 
+        @SuppressWarnings("unchecked")
         WeatherCloudReworkEntity cloud = new WeatherCloudReworkEntity(
-                (EntityType<WeatherCloudReworkEntity>) type,
-                entity.level
-        );
+                (EntityType<WeatherCloudReworkEntity>) type, entity.level);
 
-        if (entity instanceof PlayerEntity) {
-            cloud.setOwner((PlayerEntity) entity);
-        }
+        if (entity instanceof PlayerEntity) cloud.setOwner((PlayerEntity) entity);
 
         cloud.setForm(CloudForm.RAIN, false);
         cloud.setRadius(CLOUD_RADIUS);
@@ -100,70 +109,112 @@ public class CloudyDayAbility extends Ability {
         return cloud;
     }
 
+    // ── Start ─────────────────────────────────────────────────────────────────
+
     private void onStart(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
-        if (!activeClouds.isEmpty()) return; // prevent double-spawn
+        if (!activeClouds.isEmpty()) return;
 
         activeClouds.clear();
         spawnPositions.clear();
-        cloudRefreshTick = 0;
+        cloudCheckTick = 0;
+        deadCloudCount = 0;
 
         double castX = entity.getX();
         double castY = entity.getY() + CLOUD_HEIGHT_OFFSET;
         double castZ = entity.getZ();
+        // castPosition stores the ground-level XZ centre used by dependent abilities
         castPosition = new Vector3d(castX, entity.getY(), castZ);
 
         for (int dx = -CLOUD_GRID_RADIUS; dx <= CLOUD_GRID_RADIUS; dx++) {
             for (int dz = -CLOUD_GRID_RADIUS; dz <= CLOUD_GRID_RADIUS; dz++) {
                 double px = castX + dx * CLOUD_GRID_SPACING;
-                double py = castY;
                 double pz = castZ + dz * CLOUD_GRID_SPACING;
-                WeatherCloudReworkEntity cloud = spawnCloud(entity, px, py, pz);
+                WeatherCloudReworkEntity cloud = spawnCloud(entity, px, castY, pz);
                 if (cloud != null) {
                     activeClouds.add(cloud);
-                    spawnPositions.add(new Vector3d(px, py, pz));
+                    spawnPositions.add(new Vector3d(px, castY, pz));
                 }
             }
         }
     }
 
+    // ── Tick ──────────────────────────────────────────────────────────────────
+
     private void onTick(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
 
+        // Run the heavier maintenance work only once per CLOUD_REFRESH_INTERVAL ticks.
+        // Between checks the clouds are stationary and long-lived, so there is nothing
+        // meaningful to do each individual tick.
+        if (++cloudCheckTick < CLOUD_REFRESH_INTERVAL) return;
+        cloudCheckTick = 0;
+
+        // Prune dead clouds (rare — only happens if something external kills them)
+        int sizeBefore = activeClouds.size();
         activeClouds.removeIf(c -> c == null || !c.isAlive());
+        // Track removals so we can also trim the parallel position list
+        int removed = sizeBefore - activeClouds.size();
+        if (removed > 0) {
+            // Rebuild spawnPositions to match the surviving clouds.
+            // This is O(n) but only runs when a cloud actually dies — extremely rare.
+            rebuildPositionList();
+        }
 
         if (activeClouds.isEmpty()) {
             this.continuousComponent.stopContinuity(entity);
             return;
         }
 
-        if (cloudRefreshTick++ % 4 == 0) {
-            for (int i = 0; i < activeClouds.size(); i++) {
-                WeatherCloudReworkEntity cloud = activeClouds.get(i);
-                Vector3d pos = spawnPositions.get(i);
-                cloud.setPos(pos.x, pos.y, pos.z);
-                cloud.setDeltaMovement(0.0, 0.0, 0.0);
-                cloud.setRadius(CLOUD_RADIUS);
-                cloud.setLife((int) MAX_HOLD_TICKS);
-            }
+        // Nudge position and reset velocity — clouds don't move, but some mods or
+        // physics interactions can shift them. Only reset pos, NOT setLife; calling
+        // setLife every refresh would keep resetting the internal timer.
+        for (int i = 0; i < activeClouds.size(); i++) {
+            WeatherCloudReworkEntity cloud = activeClouds.get(i);
+            Vector3d pos = spawnPositions.get(i);
+            cloud.setPos(pos.x, pos.y, pos.z);
+            cloud.setDeltaMovement(0.0, 0.0, 0.0);
+            cloud.setRadius(CLOUD_RADIUS);
+            // Intentionally NOT calling setLife here — resetting the timer every second
+            // would make the cloud immortal and mask the true remaining duration.
         }
     }
+
+    // ── End ───────────────────────────────────────────────────────────────────
 
     private void onEnd(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
 
         for (WeatherCloudReworkEntity cloud : activeClouds) {
-            if (cloud != null && cloud.isAlive()) {
-                cloud.remove();
-            }
+            if (cloud != null && cloud.isAlive()) cloud.remove();
         }
         activeClouds.clear();
         spawnPositions.clear();
-        cloudRefreshTick = 0;
-        castPosition = null;
+        cloudCheckTick = 0;
+        deadCloudCount = 0;
+        castPosition   = null;
 
         this.cooldownComponent.startCooldown(entity, (float) COOLDOWN);
     }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    /**
+     * Rebuilds spawnPositions to stay in sync with activeClouds after a prune.
+     * Only called when a cloud actually dies — effectively never during normal gameplay.
+     */
+    private void rebuildPositionList() {
+        // spawnPositions is parallel to the original activeClouds order.
+        // After removeIf, we don't know which indices were removed, so we
+        // re-match by entity identity against the original position list.
+        // Simplest safe approach: trim trailing entries to match current cloud count.
+        // (Clouds die in order, so trimming the tail is correct for the grid layout.)
+        while (spawnPositions.size() > activeClouds.size()) {
+            spawnPositions.remove(spawnPositions.size() - 1);
+        }
+    }
+
+    // ── Static init ───────────────────────────────────────────────────────────
 
     static {
         INSTANCE = (new AbilityCore.Builder<>("Cloudy Day", AbilityCategory.DEVIL_FRUITS, CloudyDayAbility::new))

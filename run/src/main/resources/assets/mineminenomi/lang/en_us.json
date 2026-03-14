@@ -1580,7 +1580,7 @@
 	"ability.mineminenomi.phoenix_assault_point.description.0": "Transforms the user into a half-phoenix hybrid, which focuses on speed and healing.",
 	"ability.mineminenomi.phoenix_flight": "Phoenix Flight",
 	"ability.mineminenomi.phoenix_fly_point": "Phoenix Fly Point",
-	"ability.mineminenomi.phoenix_fly_point.description.0": "Transforms the user into a phoenix, which focuses on speed and healing.",
+	"ability.mineminenomi.phoenix_fly_point.description.0": "Protects the user and heals them back up when damage is taken, has an initial reserve of §a%s Energy§r which increases with time and decreses with each heal.",
 	"ability.mineminenomi.phoenix_goen": "Phoenix Goen",
 	"ability.mineminenomi.phoenix_goen.description.0": "Launches high speed blue flames while midair.",
 	"ability.mineminenomi.pika_block_bypassing": "Pika Block Bypassing",
