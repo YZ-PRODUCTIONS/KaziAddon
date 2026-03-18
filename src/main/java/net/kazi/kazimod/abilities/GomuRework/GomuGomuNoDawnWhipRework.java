@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package net.kazi.kazimod.abilities.GomuRework;
 
 import net.minecraft.entity.LivingEntity;
@@ -52,6 +47,11 @@ public class GomuGomuNoDawnWhipRework extends Ability {
         this.addComponents(new AbilityComponent[]{this.continuousComponent, this.hitTrackerComponent, this.animationComponent, this.rangeComponent, this.dealDamageComponent});
         this.addCanUseCheck(this::canUse);
         this.addUseEvent(this::useEvent);
+    }
+
+    /** Exposes the continuous component so GearFifthRework can cancel this ability on end. */
+    public ContinuousComponent getContinuousComponent() {
+        return this.continuousComponent;
     }
 
     private void useEvent(LivingEntity entity, IAbility ability) {

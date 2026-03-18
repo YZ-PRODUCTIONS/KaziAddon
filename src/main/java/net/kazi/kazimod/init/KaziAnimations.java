@@ -1,5 +1,8 @@
 package net.kazi.kazimod.init;
 
+import net.kazi.kazimod.animations.gojo.GojoDomainAnimation;
+import net.kazi.kazimod.animations.gojo.GojoHollowPurpleAnimation;
+import net.kazi.kazimod.animations.gojo.GojoRedAnimation;
 import net.kazi.kazimod.animations.kama.SukunaDomainAnimation;
 import net.kazi.kazimod.animations.kama.FugaSukunaAnimation;
 import net.kazi.kazimod.animations.tenki.LightningFuryAnimation;
@@ -16,6 +19,10 @@ public class KaziAnimations {
     public static final AnimationId<LightningFuryAnimation> LIGHTNING_FURY  = register("lightning_fury");
     public static final AnimationId<ChronostasisAnimation>  CHRONOSTASIS    = register("chronostasis");
     public static final AnimationId<TimeTheftAnimation>     TIME_THEFT      = register("time_theft");
+    public static final AnimationId<GojoRedAnimation>       GOJO_RED        = register("gojo_red");
+    public static final AnimationId<GojoDomainAnimation>    GOJO_DOMAIN     = register("gojo_domain");
+    public static final AnimationId<GojoHollowPurpleAnimation> GOJO_HOLLOW_PURPLE = register("gojo_hollow_purple");
+
 
     public KaziAnimations() {
     }
@@ -30,5 +37,9 @@ public class KaziAnimations {
         AnimationId.register(new LightningFuryAnimation(LIGHTNING_FURY));
         AnimationId.register(new ChronostasisAnimation(CHRONOSTASIS));
         AnimationId.register(new TimeTheftAnimation(TIME_THEFT));
+        AnimationId.register(new GojoRedAnimation(GOJO_RED));
+        AnimationId.register(new GojoDomainAnimation(GOJO_DOMAIN));
+        AnimationId.register(new GojoHollowPurpleAnimation(GOJO_HOLLOW_PURPLE));
+
     }
 }

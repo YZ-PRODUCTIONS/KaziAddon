@@ -75,7 +75,7 @@ public class GomuGomuNoGigantRework extends MorphAbility2 {
         this.continuousComponent.addEndEvent(100, this::endContinuityEvent);
     }
 
-    /** Exposes the continuous component so the smoke layer can check if Gigant is active. */
+    /** Exposes the continuous component so GearFifthRework can cancel this ability on end. */
     public ContinuousComponent getContinuousComponent() {
         return this.continuousComponent;
     }

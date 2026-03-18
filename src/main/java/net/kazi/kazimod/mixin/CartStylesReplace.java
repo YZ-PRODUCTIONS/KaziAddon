@@ -16,6 +16,8 @@ import net.kazi.kazimod.abilities.AxeStyleRework.*;
 import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
 import net.kazi.kazimod.abilities.BrawlerRework.FistsOfLoveBarrageRework;
 import net.kazi.kazimod.abilities.BrawlerRework.GalaxyImpactRework;
+import net.kazi.kazimod.abilities.BrawlerRework.SpinningBrawlRework;
+import net.kazi.kazimod.abilities.BrawlerRework.SuplexRework;
 import net.kazi.kazimod.abilities.DoctorRework.*;
 import net.kazi.kazimod.abilities.NitoryuRework.NitoryuIaiRashomonRework;
 import net.kazi.kazimod.abilities.NitoryuRework.SaiKuruRework;
@@ -152,8 +154,8 @@ public abstract class CartStylesReplace {
                         ReworkedGenkotsuMeteorAbility.INSTANCE,
                         ReworkedHakaiHoAbility.INSTANCE,
                         ReworkedJishinHoAbility.INSTANCE,
-                        ReworkedSpinningBrawlAbility.INSTANCE,
-                        ReworkedSuplexAbility.INSTANCE
+                        SpinningBrawlRework.INSTANCE,
+                        SuplexRework.INSTANCE
                 });
 
                 info.addBottomAbilities(new AbilityCore[0]);

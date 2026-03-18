@@ -79,7 +79,7 @@ public class TornadoWrathAbility extends Ability {
     // ── Normal mode stats ─────────────────────────────────────────────────────
     private static final float  CHARGE_TIME     = 15.0F;
     private static final float  DASH_TIME       = 60.0F;
-    private static final float  DAMAGE          = 15.0F;
+    private static final float  DAMAGE          = 40.0F;
     private static final float  TORNADO_SIZE    = 10.0F;
     private static final int    COOLDOWN        = 250;
 

@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.kazi.kazimod.effects.BouncyEffect;
 import net.kazi.kazimod.init.KaziEffects;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
@@ -14,7 +13,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -47,10 +45,8 @@ import xyz.pixelatedw.mineminenomi.data.entity.haki.HakiDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.haki.IHakiData;
 import xyz.pixelatedw.mineminenomi.entities.LightningDischargeEntity;
 import xyz.pixelatedw.mineminenomi.init.ModAttributes;
-import xyz.pixelatedw.mineminenomi.init.ModParticleEffects;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
 import xyz.pixelatedw.mineminenomi.packets.server.ability.SToggleDrumsOfLiberationSoundPacket;
-import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 import net.minecraftforge.common.ForgeMod;
@@ -74,8 +70,6 @@ public class GearFifthRework extends Ability {
     private static final double BOUNCE_RADIUS = 50.0;
     private static final int EFFECT_DURATION = 10;
     private static final int CHARGE_TIME = 20;
-
-    private int particleTick = 0;
 
     private final ChargeComponent chargeComponent = (new ChargeComponent(this))
             .addStartEvent(this::startChargeEvent)
@@ -218,7 +212,6 @@ public class GearFifthRework extends Ability {
             WyNetwork.sendToAllTrackingAndSelf(new SToggleDrumsOfLiberationSoundPacket(entity, true), entity);
         }
         this.playJumpSound = false;
-        this.particleTick = 0;
 
         IAbilityData props = AbilityDataCapability.get(entity);
 
@@ -280,12 +273,6 @@ public class GearFifthRework extends Ability {
         }
 
         applyBouncyEffectToNearby(entity);
-
-        particleTick++;
-        if (particleTick >= 10) {
-            particleTick = 0;
-            spawnGroundParticles(entity);
-        }
     }
 
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
@@ -329,6 +316,21 @@ public class GearFifthRework extends Ability {
         GomuGomuNoRocketRework rocket = (GomuGomuNoRocketRework) props.getEquippedAbility(GomuGomuNoRocketRework.INSTANCE);
         if (rocket != null) rocket.switchNoGear(entity);
 
+        // Cancel Dawn Whip if active — uses the same reflection helper as vanilla gears
+        Ability dawnWhip = (Ability) props.getEquippedAbility(GomuGomuNoDawnWhipRework.INSTANCE);
+        if (dawnWhip != null) stopGear(dawnWhip, entity);
+
+        // Cancel Gigant if active
+        Ability gigant = (Ability) props.getEquippedAbility(GomuGomuNoGigantRework.INSTANCE);
+        if (gigant != null) stopGear(gigant, entity);
+
+        // Cancel Kaminari if charging OR firing — stop charge first, then continuity
+        Ability kaminari = (Ability) props.getEquippedAbility(GomuGomuNoKaminariAbility.INSTANCE);
+        if (kaminari != null) {
+            stopCharge(kaminari, entity);
+            stopGear(kaminari, entity);
+        }
+
         // Scale debuff duration based on how long the ability was active.
         // continueTime ranges from 0 to 1200 ticks; debuff clamps between 5s (100t) and 30s (600t).
         float activeTime = this.continuousComponent.getContinueTime();
@@ -360,45 +362,59 @@ public class GearFifthRework extends Ability {
         }
     }
 
-    private void spawnGroundParticles(LivingEntity user) {
-        int radius = (int) BOUNCE_RADIUS;
-        int step = 4;
-        for (int dx = -radius; dx <= radius; dx += step) {
-            for (int dz = -radius; dz <= radius; dz += step) {
-                if (dx * dx + dz * dz > radius * radius) continue;
-                int baseX = (int) user.getX() + dx;
-                int baseZ = (int) user.getZ() + dz;
-                int startY = (int) user.getY();
-                BlockPos groundPos = null;
-                for (int dy = 0; dy >= -10; dy--) {
-                    BlockPos check = new BlockPos(baseX, startY + dy, baseZ);
-                    BlockState state = user.level.getBlockState(check);
-                    if (state.isSolidRender(user.level, check)) {
-                        groundPos = check;
-                        break;
-                    }
-                }
-                if (groundPos != null) {
-                    WyHelper.spawnParticleEffect(
-                            (ParticleEffect) ModParticleEffects.GEAR_SECOND.get(),
-                            user, baseX + 0.5, groundPos.getY() + 0.05, baseZ + 0.5
-                    );
-                }
-            }
-        }
-    }
-
+    /**
+     * Stops the continuousComponent of any Ability via reflection.
+     * Walks the full class hierarchy so it works whether the field is declared
+     * on the concrete class (e.g. GomuGomuNoDawnWhipRework) or on a parent class
+     * (e.g. MorphAbility2, which is the superclass of GomuGomuNoGigantRework).
+     * Silently skips if no matching field is found anywhere in the hierarchy.
+     */
     private static void stopGear(Ability gearAbility, LivingEntity entity) {
+        java.lang.reflect.Field contField = findFieldInHierarchy(gearAbility.getClass(), "continuousComponent");
+        if (contField == null) return;
         try {
-            java.lang.reflect.Field contField = gearAbility.getClass().getDeclaredField("continuousComponent");
             contField.setAccessible(true);
             ContinuousComponent cont = (ContinuousComponent) contField.get(gearAbility);
-            if (cont != null && cont.getContinueTime() > 0) {
+            if (cont != null && cont.isContinuous()) {
                 cont.stopContinuity(entity);
             }
         } catch (Exception e) {
-            // skip
+            // skip any reflection error
         }
+    }
+
+    /**
+     * Stops the chargeComponent of any Ability via reflection.
+     * Used for Kaminari which has a charge phase before the beam fires.
+     * Silently skips if the field does not exist anywhere in the hierarchy.
+     */
+    private static void stopCharge(Ability gearAbility, LivingEntity entity) {
+        java.lang.reflect.Field chargeField = findFieldInHierarchy(gearAbility.getClass(), "chargeComponent");
+        if (chargeField == null) return;
+        try {
+            chargeField.setAccessible(true);
+            ChargeComponent charge = (ChargeComponent) chargeField.get(gearAbility);
+            if (charge != null && charge.isCharging()) {
+                charge.stopCharging(entity);
+            }
+        } catch (Exception e) {
+            // skip any reflection error
+        }
+    }
+
+    /**
+     * Walks the class hierarchy from {@code clazz} up to (but not including) Object,
+     * returning the first declared field with the given name, or null if not found.
+     */
+    private static java.lang.reflect.Field findFieldInHierarchy(Class<?> clazz, String fieldName) {
+        while (clazz != null && clazz != Object.class) {
+            try {
+                return clazz.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        return null;
     }
 
     private static void applyShortDisable(Ability gearAbility, LivingEntity entity) {

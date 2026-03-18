@@ -1,10 +1,6 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package net.kazi.kazimod.abilities.KitsuneRework;
 
+import net.MrMagicalCart.cartaddon.entities.projectiles.inukitsune.FoxfireExplosionProjectile;
 import net.MrMagicalCart.cartaddon.init.CartMorphs;
 import net.MrMagicalCart.cartaddon.init.CartParticleTypes;
 import net.kazi.kazimod.init.KaziEffects;
@@ -16,7 +12,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -28,7 +24,6 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
 import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.*;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent.RangeType;
-import xyz.pixelatedw.mineminenomi.api.damagesource.AbilityDamageSource;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
@@ -38,29 +33,53 @@ import xyz.pixelatedw.mineminenomi.init.ModSounds;
 import xyz.pixelatedw.mineminenomi.particles.data.SimpleParticleData;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 public class FoxfireExplosionRework extends Ability {
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "foxfire_explosion", new Pair[]{ImmutablePair.of("The user creates a cylindrical area of blue flames that damages and sets enemies on fire", (Object)null)});
-    private static final float COOLDOWN = 500.0F;
-    private static final int HOLD_TIME = 150;
-    public static final AbilityCore<FoxfireExplosionRework> INSTANCE;
-    private final AnimationComponent animationComponent;
-    private final RangeComponent rangeComponent = new RangeComponent(this);
-    private final RequireMorphComponent requireMorphComponent;
-    private final ContinuousComponent continuousComponent;
 
-    private final Map<UUID, Double> playerStartYPositions = new HashMap<>();
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
+            "cartaddon", "foxfire_explosion",
+            new Pair[]{ImmutablePair.of(
+                    "The user erects a fixed 25-block blue-fire barrier. Enemies inside are " +
+                            "scorched with Flaming Rot. Foxfire projectiles rain down from above, " +
+                            "exploding on impact. Neither enemies nor the user can leave the barrier.",
+                    (Object) null)});
+
+    // Hold time: 12 seconds = 240 ticks
+    private static final float HOLD_TIME     = 240.0F;
+    // Cooldown range based on how long the ability was held
+    private static final int   MIN_COOLDOWN  = 100;  //  5 seconds
+    private static final int   MAX_COOLDOWN  = 760;  // 38 seconds
+
+    // Barrier geometry — fixed at cast position, never moves
+    private static final double BARRIER_RADIUS    = 25.0;
+    private static final double BARRIER_RADIUS_SQ = BARRIER_RADIUS * BARRIER_RADIUS;
+    private static final double BARRIER_HEIGHT    = 14.0;
+
+    // Rain: one projectile every 4 ticks = ~5 per second
+    private static final int RAIN_INTERVAL = 4;
+    // How high above the cast position projectiles spawn
+    private static final double RAIN_HEIGHT = 35.0;
+
+    public static final AbilityCore<FoxfireExplosionRework> INSTANCE;
+
+    private final AnimationComponent    animationComponent;
+    private final RangeComponent        rangeComponent = new RangeComponent(this);
+    private final RequireMorphComponent requireMorphComponent;
+    private final ContinuousComponent   continuousComponent;
+
+    // Fixed at the moment the ability is activated — does NOT follow the caster
+    private Vector3d barrierCenter = null;
+    private int      rainTick      = 0;
 
     public FoxfireExplosionRework(AbilityCore<FoxfireExplosionRework> core) {
         super(core);
-        this.requireMorphComponent = new RequireMorphComponent(this, (MorphInfo)CartMorphs.KITSUNE_HYBRID.get(), new MorphInfo[]{(MorphInfo)CartMorphs.KITSUNE_WALK.get()});
+        this.requireMorphComponent = new RequireMorphComponent(
+                this,
+                (MorphInfo) CartMorphs.KITSUNE_HYBRID.get(),
+                new MorphInfo[]{(MorphInfo) CartMorphs.KITSUNE_WALK.get()});
         super.isNew = true;
         this.animationComponent = new AnimationComponent(this);
         this.continuousComponent = (new ContinuousComponent(this))
+                .addStartEvent(this::onContinuityStart)
                 .addTickEvent(this::duringContinuityEvent)
                 .addEndEvent(this::endContinuityEvent);
 
@@ -73,105 +92,152 @@ public class FoxfireExplosionRework extends Ability {
         super.addUseEvent(this::onUse);
     }
 
+    // ── Activation ────────────────────────────────────────────────────────────
+
     private void onUse(LivingEntity entity, IAbility ability) {
         this.animationComponent.start(entity, ModAnimations.POINT_RIGHT_ARM);
-        this.playerStartYPositions.put(entity.getUUID(), entity.getY());
-        this.continuousComponent.triggerContinuity(entity, (float)HOLD_TIME);
-        entity.level.playSound((PlayerEntity)null, entity.blockPosition(), (SoundEvent)ModSounds.MERA_SFX.get(), SoundCategory.PLAYERS, 3.0F, 1.0F);
+        this.continuousComponent.triggerContinuity(entity, HOLD_TIME);
+        entity.level.playSound(
+                (PlayerEntity) null, entity.blockPosition(),
+                (SoundEvent) ModSounds.MERA_SFX.get(),
+                SoundCategory.PLAYERS, 3.0F, 1.0F);
     }
+
+    // ── Lock barrier center at cast position ──────────────────────────────────
+
+    private void onContinuityStart(LivingEntity entity, IAbility ability) {
+        // Snapshot position right as it starts — never updated again
+        this.barrierCenter = new Vector3d(entity.getX(), entity.getY(), entity.getZ());
+        this.rainTick = 0;
+    }
+
+    // ── Per-tick logic ────────────────────────────────────────────────────────
 
     private void duringContinuityEvent(LivingEntity entity, IAbility ability) {
-        double currentX = entity.getX();
-        double currentY = entity.getY();
-        double currentZ = entity.getZ();
+        if (entity.level.isClientSide) return;
+        if (barrierCenter == null) return;
 
-        double radius = 15.0;
-        double height = 10.0;
+        double cx = barrierCenter.x;
+        double cy = barrierCenter.y;
+        double cz = barrierCenter.z;
 
-        // Particles (unchanged)
-        if (!entity.level.isClientSide) {
-            for (int i = 0; i < 80; i++) {
-                double angle = (2 * Math.PI * i) / 80;
-                double offsetX = Math.cos(angle) * radius;
-                double offsetZ = Math.sin(angle) * radius;
-                SimpleParticleData data = new SimpleParticleData((ParticleType)CartParticleTypes.BLUE_FIRE.get());
-                data.setLife(25);
-                data.setSize(7.0F);
-                WyHelper.spawnParticles(data, (ServerWorld)entity.level,
-                        currentX + offsetX, currentY + WyHelper.randomDouble() * height, currentZ + offsetZ);
-            }
-            for (int i = 0; i < 120; i++) {
-                double offsetX = (WyHelper.randomDouble() - 0.5) * radius * 2;
-                double offsetZ = (WyHelper.randomDouble() - 0.5) * radius * 2;
-                if (offsetX * offsetX + offsetZ * offsetZ <= radius * radius) {
-                    SimpleParticleData data = new SimpleParticleData((ParticleType)CartParticleTypes.BLUE_FIRE.get());
-                    data.setLife(20);
-                    data.setSize(6.0F);
-                    WyHelper.spawnParticles(data, (ServerWorld)entity.level,
-                            currentX + offsetX, currentY + WyHelper.randomDouble() * height, currentZ + offsetZ);
-                }
-            }
-            for (int i = 0; i < 40; i++) {
-                double spiralAngle = (entity.tickCount * 0.2 + i * 0.5) % (2 * Math.PI);
-                double spiralRadius = radius * 0.8 * (1.0 - (i / 40.0));
-                double offsetX = Math.cos(spiralAngle) * spiralRadius;
-                double offsetZ = Math.sin(spiralAngle) * spiralRadius;
-                double offsetY = (i / 40.0) * height;
-                SimpleParticleData data = new SimpleParticleData((ParticleType)CartParticleTypes.BLUE_FIRE.get());
-                data.setLife(30);
-                data.setSize(8.0F);
-                WyHelper.spawnParticles(data, (ServerWorld)entity.level,
-                        currentX + offsetX, currentY + offsetY, currentZ + offsetZ);
+        // ── 1. Push anyone (including the caster) who exits the barrier back in ─
+        // We check every living entity in the area, plus the caster explicitly.
+        pushBackIfOutside(entity, cx, cy, cz); // always check caster
+        for (LivingEntity nearby : this.rangeComponent.getTargetsInArea(entity, (float) BARRIER_RADIUS + 4)) {
+            pushBackIfOutside(nearby, cx, cy, cz);
+        }
+
+        // ── 2. Flaming Rot + weakness on enemies inside the barrier ───────────
+        for (LivingEntity target : this.rangeComponent.getTargetsInArea(entity, (float) BARRIER_RADIUS)) {
+            if (!isInBarrier(target, cx, cy, cz)) continue;
+            // Refresh every tick so it never lapses while inside
+            target.addEffect(new EffectInstance(
+                    (Effect) KaziEffects.FLAMING_ROT.get(), 40, 0, false, true));
+            if (!target.hasEffect(Effects.WEAKNESS)) {
+                target.addEffect(new EffectInstance(Effects.WEAKNESS, 60, 0));
             }
         }
 
-        // ✅ Use rangeComponent.getTargetsInArea() — automatically skips teammates
-        int power = 0;
-        int duration = 100;
-        float damage = 2.0F;
-
-        for (LivingEntity target : this.rangeComponent.getTargetsInArea(entity, 15.0F)) {
-            // Extra check: still enforce the cylinder height bound
-            if (!this.isInCylinder(target, currentX, currentY, currentZ, radius, height)) continue;
-
-            target.hurt(AbilityDamageSource.causeAbilityDamage(entity, this), damage);
-            target.setSecondsOnFire(5);
-
-            if (!target.hasEffect((Effect) KaziEffects.FLAMING_ROT.get())) {
-                target.addEffect(new EffectInstance((Effect)KaziEffects.FLAMING_ROT.get(), duration, 0));
+        // ── 3. Barrier wall particles — three height rings of big blue fire ────
+        for (int ring = 0; ring < 4; ring++) {
+            double ringY = cy + (ring * (BARRIER_HEIGHT / 3.0));
+            for (int i = 0; i < 48; i++) {
+                double angle = (2 * Math.PI * i) / 48.0;
+                double px    = cx + Math.cos(angle) * BARRIER_RADIUS;
+                double pz    = cz + Math.sin(angle) * BARRIER_RADIUS;
+                SimpleParticleData data = new SimpleParticleData(
+                        (ParticleType) CartParticleTypes.BLUE_FIRE.get());
+                data.setLife(18);
+                data.setSize(12.0F); // large, wall-filling particles
+                WyHelper.spawnParticles(data, (ServerWorld) entity.level, px, ringY, pz);
             }
+        }
 
-            if (!target.hasEffect(Effects.WEAKNESS)) {
-                target.addEffect(new EffectInstance(Effects.WEAKNESS, duration, power));
+        // ── 4. Foxfire rain ───────────────────────────────────────────────────
+        if (++rainTick >= RAIN_INTERVAL) {
+            rainTick = 0;
+            // Spawn 3 projectiles per interval for a heavy rain feel
+            for (int i = 0; i < 3; i++) {
+                spawnRainProjectile(entity, cx, cy, cz);
             }
         }
     }
+
+    // ── Spawn one falling foxfire projectile ──────────────────────────────────
+
+    private void spawnRainProjectile(LivingEntity caster, double cx, double cy, double cz) {
+        // Uniform random point inside the circle
+        double angle  = WyHelper.randomDouble() * 2 * Math.PI;
+        double r      = BARRIER_RADIUS * Math.sqrt(Math.abs(WyHelper.randomDouble()));
+        double spawnX = cx + Math.cos(angle) * r;
+        double spawnZ = cz + Math.sin(angle) * r;
+        double spawnY = cy + RAIN_HEIGHT;
+
+        FoxfireExplosionProjectile proj = new FoxfireExplosionProjectile(
+                caster.level, caster, this);
+        proj.setPos(spawnX, spawnY, spawnZ);
+        proj.setDeltaMovement(0.0, -2.5, 0.0);
+        caster.level.addFreshEntity(proj);
+    }
+
+    // ── Push entity back inside the barrier if they've crossed the wall ───────
+
+    private void pushBackIfOutside(LivingEntity target, double cx, double cy, double cz) {
+        double dx   = target.getX() - cx;
+        double dz   = target.getZ() - cz;
+        double distSq = dx * dx + dz * dz;
+
+        if (distSq > BARRIER_RADIUS_SQ) {
+            // Direction from entity back toward center
+            double dist = Math.sqrt(distSq);
+            double nx   = -dx / dist; // inward normal
+            double nz   = -dz / dist;
+            // Apply a firm push inward; keep existing Y velocity
+            double currentYVel = target.getDeltaMovement().y;
+            AbilityHelper.setDeltaMovement(target,
+                    new Vector3d(nx * 1.2, Math.max(currentYVel, 0.1), nz * 1.2));
+        }
+    }
+
+    // ── Cleanup + cooldown scaling ────────────────────────────────────────────
 
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
         this.animationComponent.stop(entity);
-        super.cooldownComponent.startCooldown(entity, COOLDOWN);
-        this.playerStartYPositions.remove(entity.getUUID());
+
+        // Scale cooldown linearly from MIN to MAX based on how long it was held
+        float heldTicks  = this.continuousComponent.getContinueTime();
+        float fraction   = Math.min(1.0f, heldTicks / HOLD_TIME);
+        int   cooldown   = MIN_COOLDOWN + (int) ((MAX_COOLDOWN - MIN_COOLDOWN) * fraction);
+        super.cooldownComponent.startCooldown(entity, (float) cooldown);
+
+        this.barrierCenter = null;
+        this.rainTick      = 0;
     }
 
-    // Helper method to check if an entity is within the cylinder
-    private boolean isInCylinder(LivingEntity target, double centerX, double baseY, double centerZ, double radius, double height) {
-        double dx = target.getX() - centerX;
-        double dz = target.getZ() - centerZ;
-        double distanceSquared = dx * dx + dz * dz;
+    // ── Cylinder containment check ────────────────────────────────────────────
 
-        return distanceSquared <= radius * radius &&
-                target.getY() >= baseY &&
-                target.getY() <= baseY + height;
+    private boolean isInBarrier(LivingEntity target, double cx, double cy, double cz) {
+        double dx = target.getX() - cx;
+        double dz = target.getZ() - cz;
+        return dx * dx + dz * dz <= BARRIER_RADIUS_SQ
+                && target.getY() >= cy
+                && target.getY() <= cy + BARRIER_HEIGHT;
     }
+
+    // ── Static init ───────────────────────────────────────────────────────────
 
     static {
-        INSTANCE = (new AbilityCore.Builder("Foxfire Explosion", AbilityCategory.DEVIL_FRUITS, FoxfireExplosionRework::new))
+        INSTANCE = (new AbilityCore.Builder<FoxfireExplosionRework>(
+                "Foxfire Explosion", AbilityCategory.DEVIL_FRUITS,
+                FoxfireExplosionRework::new))
                 .addDescriptionLine(DESCRIPTION)
                 .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{
                         AbilityDescriptionLine.NEW_LINE,
-                        RangeComponent.getTooltip(30.0F, 10.0F, RangeType.AOE),
-                        CooldownComponent.getTooltip(COOLDOWN),
-                        ContinuousComponent.getTooltip((float)HOLD_TIME)
+                        RangeComponent.getTooltip(
+                                (float) BARRIER_RADIUS, (float) BARRIER_HEIGHT, RangeType.AOE),
+                        CooldownComponent.getTooltip((float) MIN_COOLDOWN, (float) MAX_COOLDOWN),
+                        ContinuousComponent.getTooltip(HOLD_TIME)
                 })
                 .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{
                         AbilityDescriptionLine.NEW_LINE,

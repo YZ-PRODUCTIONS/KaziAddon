@@ -28,7 +28,7 @@ public class WindGustProjectile extends AbilityProjectileEntity {
 
     public WindGustProjectile(World world, LivingEntity player) {
         super((EntityType) TenkiProjectiles.WIND_GUST.get(), world, player, WindGustAbility.INSTANCE);
-        this.setDamage(4.0F);
+        this.setDamage(15.0F);
         this.setMaxLife(15);
         this.look = player.getLookAngle();
         this.setPassThroughBlocks();

@@ -1,5 +1,11 @@
 package net.kazi.kazimod.init;
 
+import net.kazi.kazimod.abilities.Gojo.*;
+import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
+import net.kazi.kazimod.abilities.Kake.LuckySlotAbility;
+import net.kazi.kazimod.abilities.Kake.SlotSpinAbility;
+import net.kazi.kazimod.abilities.Nusu.SkillHunterAbility;
+import net.kazi.kazimod.abilities.Nusu.SkillRemoverAbility;
 import net.kazi.kazimod.abilities.Tenki.*;
 import net.kazi.kazimod.abilities.Toki.*;
 import net.kazi.kazimod.abilities.Toshi.*;
@@ -13,6 +19,9 @@ public class KaziItems {
     public static RegistryObject<AkumaNoMiItem> TOSHI_TOSHI_NO_MI;
     public static RegistryObject<AkumaNoMiItem> TOKI_TOKI_NO_MI;
     public static RegistryObject<AkumaNoMiItem> TENKI_TENKI_NO_MI;
+    public static RegistryObject<AkumaNoMiItem> KOKU_KOKU_NO_MI;
+    public static RegistryObject<AkumaNoMiItem> KAKE_KAKE_NO_MI;
+    public static RegistryObject<AkumaNoMiItem> NUSU_NUSU_NO_MI;
 
     public static void register() {
         TOSHI_TOSHI_NO_MI = KaziRegistry.registerItem(
@@ -64,5 +73,55 @@ public class KaziItems {
 
                 )
         );
+
+        KOKU_KOKU_NO_MI = KaziRegistry.registerItem(
+                "koku_koku_no_mi",
+                () -> new AkumaNoMiItem(
+                        "Koku Koku no Mi",
+                        1,
+                        FruitType.PARAMECIA,
+                        RedAbility.INSTANCE,
+                        LapseBlueAbility.INSTANCE,
+                        MaxOutputLapseBlueAbility.INSTANCE,
+                        HollowPurpleAbility.INSTANCE,
+                        InfinityAbility.INSTANCE,
+                        DomainExpansionInfiniteVoidAbility.INSTANCE
+
+
+
+                )
+        );
+
+        KAKE_KAKE_NO_MI = KaziRegistry.registerItem(
+                "kake_kake_no_mi",
+                () -> new AkumaNoMiItem(
+                        "Kake Kake no Mi",
+                        2,
+                        FruitType.PARAMECIA,
+                        SlotSpinAbility.INSTANCE,
+                        LuckySlotAbility.INSTANCE,
+                        CasinoRollAbility.INSTANCE
+
+
+
+
+                )
+        );
+
+        NUSU_NUSU_NO_MI = KaziRegistry.registerItem(
+                "nusu_nusu_no_mi",
+                () -> new AkumaNoMiItem(
+                        "Nusu Nusu no Mi",
+                        1,
+                        FruitType.PARAMECIA,
+                        SkillHunterAbility.INSTANCE,
+                        SkillRemoverAbility.INSTANCE
+
+
+
+
+                )
+        );
+
     }
 }

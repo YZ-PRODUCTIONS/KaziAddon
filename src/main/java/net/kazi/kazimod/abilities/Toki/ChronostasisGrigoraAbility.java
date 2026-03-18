@@ -59,7 +59,7 @@ public class ChronostasisGrigoraAbility extends Ability {
     private static final int   BUBBLE_LIFE       = 110;
     /** Fixed display scale for the small bubble around a projectile. */
     private static final float PROJ_BUBBLE_SCALE = 0.6F;
-    private static final float TIME_COST         = 75.0F;
+    private static final float TIME_COST         = 150.0F;
     /** Maximum number of projectiles that can be frozen at once. */
     private static final int   MAX_FROZEN        = 20;
     private static final float BUBBLE_PITCH      = 1.8F;

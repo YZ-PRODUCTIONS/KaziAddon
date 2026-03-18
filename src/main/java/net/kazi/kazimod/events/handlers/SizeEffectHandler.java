@@ -24,11 +24,11 @@ public class SizeEffectHandler {
             return;
         }
 
-        float lastScale = entity.getPersistentData().getFloat("kazi_last_scale");
+        float lastScale = entity.getPersistentData().getFloat("kazi_scale"); // was "kazi_last_scale"
         if (lastScale == 0.0F) lastScale = 1.0F;
 
         if (Math.abs(targetScale - (double) lastScale) > 0.01) {
-            entity.getPersistentData().putFloat("kazi_last_scale", (float) targetScale);
+            entity.getPersistentData().putFloat("kazi_scale", (float) targetScale); // was "kazi_last_scale"
             entity.refreshDimensions();
         }
     }

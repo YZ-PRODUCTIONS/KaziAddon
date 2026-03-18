@@ -67,7 +67,7 @@ public class ChronostasisAbility extends Ability {
     private static final int    BUBBLE_LIFE     = 140; // stun(100) + aoe window(20) + extra second(20)
     private static final double FLOAT_HEIGHT    = 3.0;
     private static final double RISE_SPEED      = 0.12;
-    private static final float  TIME_COST       = 100.0F;
+    private static final float  TIME_COST       = 200.0F;
 
     public static final AbilityCore<ChronostasisAbility> INSTANCE;
 

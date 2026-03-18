@@ -4,6 +4,8 @@ import net.MrMagicalCart.cartaddon.abilities.axestyle.*;
 import net.MrMagicalCart.cartaddon.abilities.blacklegextra.CartPartyTableKickCourseAbility;
 import net.MrMagicalCart.cartaddon.abilities.brawlerextra.FistsOfLoveBarrageAbility;
 import net.MrMagicalCart.cartaddon.abilities.brawlerextra.GalaxyImpactAbility;
+import net.MrMagicalCart.cartaddon.abilities.brawlerextra.ReworkedSpinningBrawlAbility;
+import net.MrMagicalCart.cartaddon.abilities.brawlerextra.ReworkedSuplexAbility;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartElectricalMissileAbility;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartElectricalShowerAbility;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartElectricalTempestaAbility;
@@ -83,7 +85,9 @@ public abstract class AbilityUnlockBlocker {
                 || self == AbsolutePierceAbility.INSTANCE
                 || self == DrillJabAbility.INSTANCE
                 || self == SkySplitterDescentAbility.INSTANCE
-                || self == VaultAbility.INSTANCE)
+                || self == VaultAbility.INSTANCE
+                || self == ReworkedSpinningBrawlAbility.INSTANCE
+                || self == ReworkedSuplexAbility.INSTANCE)
 
         {
             cir.setReturnValue(false);

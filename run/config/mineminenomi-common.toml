@@ -78,25 +78,25 @@
 		#Percentage of bounty to keep after death
 		#Default: 33
 		#Range: 0 ~ 100
-		"Percentage of Bounty kept after death" = 33
+		"Percentage of Bounty kept after death" = 100
 		#Percentage of faction loyalty to keep after death
 		#Default: 50
 		#Range: 0 ~ 100
-		"Percentage of Loyalty kept after death" = 50
+		"Percentage of Loyalty kept after death" = 100
 		"Keep Faction" = true
 		#Percentage of belly to keep after death
 		#Default: 33
 		#Range: 0 ~ 100
-		"Percentage of Belly kept after death" = 33
+		"Percentage of Belly kept after death" = 100
 		#Percentage of haki exp to keep after death
 		#Default: 33
 		#Range: 0 ~ 100
-		"Percentage of Haki Exp kept after death" = 33
+		"Percentage of Haki Exp kept after death" = 100
 		"Keep Race" = true
 		#Percentage of doriki to keep after death
 		#Default: 33
 		#Range: 0 ~ 100
-		"Percentage of Doriki kept after death" = 33
+		"Percentage of Doriki kept after death" = 100
 
 	[General."Quests & Trials"]
 		#Allows quests to reward players with abilities, otherwise all abilities will be unlocked from the beginning

@@ -1,59 +1,60 @@
 package net.kazi.kazimod;
 
-import net.kazi.kazimod.api.KaziRegistry;
-import net.kazi.kazimod.renderers.entities.TimeBubbleRenderer;
+import net.kazi.kazimod.abilities.Nusu.NusuEvents;
+import net.kazi.kazimod.events.handlers.EntitySizeHandler;
+import net.kazi.kazimod.events.handlers.SizeEffectHandler;
 import net.kazi.kazimod.events.handlers.SizeRenderHandler;
+import net.kazi.kazimod.effects.FlashbangEffect;
 import net.kazi.kazimod.init.*;
-import net.kazi.kazimod.init.KaziAnimations;
-import net.kazi.kazimod.init.KaziEntities;
-import net.kazi.kazimod.init.KaziItemModelProps;
-import net.kazi.kazimod.models.projectiles.FugaProjectileRenderer;
-import net.kazi.kazimod.init.KaziPacketHandler;
-
+import net.kazi.kazimod.api.KaziRegistry;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.api.distmarker.Dist;
-import net.kazi.kazimod.init.KaziModPools;
-import net.kazi.kazimod.events.handlers.EntitySizeHandler;
-import net.kazi.kazimod.events.handlers.SizeEffectHandler;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(KaziMod.MODID)
+@Mod("kazimod")
 public class KaziMod {
 
     public static final String MODID = "kazimod";
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public KaziMod() {
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        KaziAbilities.register(modBus);
+        KaziAbilities.register(modEventBus);
         KaziItems.register();
-        KaziRegistry.ITEMS.register(modBus);
-        KaziParticleEffects.register(modBus);
-        KaziParticleTypes.register(modBus);
-        KaziEffects.register(modBus);
-        KaziSounds.register(modBus);
-        KaziEntities.ENTITY_TYPES.register(modBus);
+        KaziRegistry.ITEMS.register(modEventBus);
+        KaziParticleEffects.register(modEventBus);
+        KaziParticleTypes.register(modEventBus);
+        KaziEffects.register(modEventBus);
+        KaziSounds.register(modEventBus);
+        KaziEntities.ENTITY_TYPES.register(modEventBus);
         KaziModPools.init();
-        KaziAttributes.ATTRIBUTES.register(modBus);
+        KaziAttributes.ATTRIBUTES.register(modEventBus);
+        KaziBlocks.BLOCKS.register(modEventBus);
+        NusuEvents.register();
 
-        modBus.addListener(this::commonSetup);
+        // commonSetup listener — safe on both sides
+        modEventBus.addListener(this::commonSetup);
 
+        // Client-only event registrations — wrapped in DistExecutor so the
+        // lambda body is NEVER loaded on the dedicated server.
+        // All renderer registration lives in KaziRenderers (annotated CLIENT-only)
+        // so we only need to register the non-renderer client handlers here.
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            modBus.addListener(this::clientSetup);
+            MinecraftForge.EVENT_BUS.register(FlashbangEffect.class);
+            MinecraftForge.EVENT_BUS.register(new SizeRenderHandler());
         });
 
+        // Both-side Forge event bus registrations
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new EntitySizeHandler());
         MinecraftForge.EVENT_BUS.register(new SizeEffectHandler());
-        MinecraftForge.EVENT_BUS.register(new SizeRenderHandler());
 
         LOGGER.info("kazimod constructed");
     }
@@ -62,23 +63,26 @@ public class KaziMod {
         KaziPacketHandler.register();
     }
 
-    private void clientSetup(net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent event) {
-        net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(
-                KaziEntities.FUGA.get(), FugaProjectileRenderer::new
-        );
-        net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(
-                KaziEntities.TIME_BUBBLE.get(), TimeBubbleRenderer::new
-        );
-        net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(
-                KaziEntities.WHITE_TORNADO.get(),
-                manager -> new net.minecraft.client.renderer.entity.EntityRenderer<net.kazi.kazimod.entities.WhiteTornadoEntity>(manager) {
-                    @Override
-                    public net.minecraft.util.ResourceLocation getTextureLocation(net.kazi.kazimod.entities.WhiteTornadoEntity entity) {
-                        return new net.minecraft.util.ResourceLocation("kazimod", "textures/entity/empty.png");
-                    }
-                }
-        );
-        KaziItemModelProps.register();
-        KaziAnimations.clientInit();
-    }
+    // ── NOTE ──────────────────────────────────────────────────────────────────
+    // clientSetup() has been REMOVED from this class entirely.
+    //
+    // The following registrations that were previously in clientSetup() are now
+    // all handled by KaziRenderers.onClientSetup() which is annotated with
+    // @Mod.EventBusSubscriber(value = Dist.CLIENT) and therefore only ever
+    // loaded on the client:
+    //
+    //   - KaziEntities.FUGA          → FugaProjectileRenderer::new
+    //   - KaziEntities.TIME_BUBBLE   → TimeBubbleRenderer::new
+    //   - KaziEntities.WHITE_TORNADO → WhiteTornadoRenderer.Factory
+    //   - KaziEntities.INFINITE_VOID_BARRIER → InfiniteVoidBarrierRenderer::new
+    //   - KaziItemModelProps.register()
+    //   - KaziAnimations.clientInit()
+    //   - All casino projectile renderers (Dice, Coin, PlayingCard, GiantDice)
+    //   - All particle engine registrations
+    //
+    // The old inline anonymous EntityRenderer for WHITE_TORNADO caused the
+    // dedicated server crash because the anonymous class KaziMod$1 extended
+    // EntityRenderer (a client-only class) and was part of KaziMod.class,
+    // which the server classloader tried to verify — even inside DistExecutor.
+    // ─────────────────────────────────────────────────────────────────────────
 }

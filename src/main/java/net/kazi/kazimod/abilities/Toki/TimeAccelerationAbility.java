@@ -49,11 +49,11 @@ public class TimeAccelerationAbility extends Ability {
     private static final float HOLD_TIME       = 100.0F; // 10 s
     private static final float MIN_COOLDOWN    = 100.0F; // 5 s
     private static final float MAX_COOLDOWN    = 400.0F; // 35 s
-    private static final float MAX_SPEED       = 1.75F;
+    private static final float MAX_SPEED       = 1.0F;
     private static final float PROTECTION_TIME = 10.0F;
     /** Spawn one after-image every N ticks while moving. */
     private static final int   AFTERIMAGE_INTERVAL = 3;
-    private static final float TIME_COST           = 30.0F;
+    private static final float TIME_COST           = 60.0F;
 
     // ── Static instance ───────────────────────────────────────────────────────
     public static final AbilityCore<TimeAccelerationAbility> INSTANCE;

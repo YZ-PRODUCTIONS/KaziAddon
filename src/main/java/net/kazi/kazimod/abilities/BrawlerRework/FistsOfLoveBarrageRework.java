@@ -99,7 +99,7 @@ public class FistsOfLoveBarrageRework extends Ability {
     }
 
     private void repeaterTriggerEvent(LivingEntity entity, IAbility ability) {
-        float speed = 2.2F;
+        float speed = 4.4F;
         int projectileSpace = 2;
         float projDmageReduction = 0.6F;
 
@@ -123,7 +123,7 @@ public class FistsOfLoveBarrageRework extends Ability {
     private void duringContinuityEvent(LivingEntity entity, IAbility ability) {
         if (entity.isAlive()) {
             Vector3d look = entity.getLookAngle();
-            Vector3d speed = look.multiply(0.35, (double)0.0F, 0.35);
+            Vector3d speed = look.multiply(1.4, (double)0.0F, 1.4);
             entity.move(MoverType.SELF, speed);
         }
 
@@ -175,7 +175,7 @@ public class FistsOfLoveBarrageRework extends Ability {
 
         this.changeStatsComponent.removeModifiers(entity);
         this.animationComponent.stop(entity);
-        this.cooldownComponent.startCooldown(entity, 240.0F);
+        this.cooldownComponent.startCooldown(entity, 180.0F);
     }
 
     private void repeaterStopEvent(LivingEntity entity, IAbility ability) {
@@ -195,7 +195,7 @@ public class FistsOfLoveBarrageRework extends Ability {
     }
 
     static {
-        INSTANCE = (new AbilityCore.Builder("Fists of Love: Barrage", AbilityCategory.STYLE, FistsOfLoveBarrageRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, DealDamageComponent.getTooltip(8.0F), ChargeComponent.getTooltip(40.0F), CooldownComponent.getTooltip(240.0F), RangeComponent.getTooltip(3.25F, RangeType.LINE)}).setSourceHakiNature(SourceHakiNature.HARDENING).setUnlockCheck(FistsOfLoveBarrageRework::canUnlock).build();
+        INSTANCE = (new AbilityCore.Builder("Fists of Love: Barrage", AbilityCategory.STYLE, FistsOfLoveBarrageRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, DealDamageComponent.getTooltip(8.0F), ChargeComponent.getTooltip(40.0F), CooldownComponent.getTooltip(180.0F), RangeComponent.getTooltip(3.25F, RangeType.LINE)}).setSourceHakiNature(SourceHakiNature.HARDENING).setUnlockCheck(FistsOfLoveBarrageRework::canUnlock).build();
         STEP_HEIGHT_MODIFIER = new AbilityAttributeModifier(UUID.fromString("29b5b8cc-6507-42a6-bc2b-25c3e574e4b9"), INSTANCE, "Fists of Love: Barrage Step Height Modifier", (double)1.0F, Operation.ADDITION);
     }
 }

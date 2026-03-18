@@ -42,9 +42,9 @@ public class TimeReversalAbility extends Ability {
     );
 
     // ── Constants ─────────────────────────────────────────────────────────────
-    private static final float COOLDOWN      = 600.0F; // 10 s × 20 ticks/s
+    private static final float COOLDOWN      = 1200.0F; // 10 s × 20 ticks/s
     private static final int   HISTORY_TICKS = 40;    // 5 s × 20 ticks/s
-    private static final float TIME_COST     = 75.0F;
+    private static final float TIME_COST     = 200.0F;
 
     // ── Static instance ───────────────────────────────────────────────────────
     public static final AbilityCore<TimeReversalAbility> INSTANCE;

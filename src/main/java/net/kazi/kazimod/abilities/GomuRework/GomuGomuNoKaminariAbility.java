@@ -51,8 +51,8 @@ public class GomuGomuNoKaminariAbility extends Ability {
     });
 
     private static final int COOLDOWN    = 600;
-    private static final float CHARGE_TIME = 60.0F;   // matches BoloBreath exactly
-    private static final float BEAM_DURATION = 80.0F; // matches BoloBreath exactly
+    private static final float CHARGE_TIME = 60.0F;
+    private static final float BEAM_DURATION = 80.0F;
     private static final float VERTICAL_BOOST = 4.0F;
     private static final float RANGE     = 90.0F;
     private static final float DAMAGE    = 14.0F;
@@ -60,14 +60,12 @@ public class GomuGomuNoKaminariAbility extends Ability {
 
     public static final AbilityCore<GomuGomuNoKaminariAbility> INSTANCE;
 
-    // Exact same structure as BoloBreath: one ChargeComponent + one ContinuousComponent
     private final ChargeComponent chargeComponent =
             (new ChargeComponent(this))
                     .addStartEvent(this::startChargingEvent)
                     .addTickEvent(this::tickChargingEvent)
                     .addEndEvent(this::endChargingEvent);
 
-    // lock=true like BoloBreath so the player is locked in place while firing
     private final ContinuousComponent continuousComponent =
             (new ContinuousComponent(this, true))
                     .addTickEvent(this::tickBeamEvent)
@@ -98,10 +96,19 @@ public class GomuGomuNoKaminariAbility extends Ability {
         this.addUseEvent(this::useEvent);
     }
 
+    /** Exposes the charge component so GearFifthRework can cancel this ability on end. */
+    public ChargeComponent getChargeComponent() {
+        return this.chargeComponent;
+    }
+
+    /** Exposes the continuous component so GearFifthRework can cancel this ability on end. */
+    public ContinuousComponent getContinuousComponent() {
+        return this.continuousComponent;
+    }
+
     /* ==================== USE ==================== */
 
     private void useEvent(LivingEntity entity, IAbility ability) {
-        // Must be in Gear Fifth (awakening)
         IAbilityData props = AbilityDataCapability.get(entity);
         GearFifthRework gearFifth = (GearFifthRework) props.getEquippedAbility(GearFifthRework.INSTANCE);
         boolean gearFifthActive = gearFifth != null
@@ -122,16 +129,14 @@ public class GomuGomuNoKaminariAbility extends Ability {
         }
     }
 
-    /* ==================== CHARGE (mirrors BoloBreath) ==================== */
+    /* ==================== CHARGE ==================== */
 
     private void startChargingEvent(LivingEntity entity, IAbility ability) {
-        // Launch player upward at charge start — Red Roc style
         AbilityHelper.setDeltaMovement(entity,
                 entity.getDeltaMovement().x,
                 VERTICAL_BOOST,
                 entity.getDeltaMovement().z);
 
-        // El Thor-style raise arm animation during charge
         if (!entity.level.isClientSide) {
             this.animationComponent.start(entity, ModAnimations.RAISE_RIGHT_ARM);
         }
@@ -142,7 +147,6 @@ public class GomuGomuNoKaminariAbility extends Ability {
     }
 
     private void tickChargingEvent(LivingEntity entity, IAbility ability) {
-        // Slow fall while winding up so the player stays airborne
         AbilityHelper.slowEntityFall(entity);
 
         if (this.chargeComponent.getChargeTime() % 10.0F == 0.0F) {
@@ -153,11 +157,9 @@ public class GomuGomuNoKaminariAbility extends Ability {
     }
 
     private void endChargingEvent(LivingEntity entity, IAbility ability) {
-        // Stop the raise arm animation before beam fires
         if (!entity.level.isClientSide) {
             this.animationComponent.stop(entity);
         }
-        // Exactly like BoloBreath.endChargingEvent — start beam immediately after charge
         this.continuousComponent.startContinuity(entity, BEAM_DURATION);
         if (!entity.level.isClientSide) {
             ((ServerWorld) entity.level).getChunkSource()
@@ -165,14 +167,12 @@ public class GomuGomuNoKaminariAbility extends Ability {
         }
     }
 
-    /* ==================== BEAM (mirrors BoloBreath.tickBeamEvent exactly) ==================== */
+    /* ==================== BEAM ==================== */
 
     private void tickBeamEvent(LivingEntity entity, IAbility ability) {
         if (!entity.level.isClientSide) {
-            // Keep the player airborne while firing
             AbilityHelper.slowEntityFall(entity);
 
-            // Guide projectile — same call signature as BoloBreath
             this.projectileComponent.shoot(entity, 4.0F, 3.0F);
 
             BlockRayTraceResult trace = WyHelper.rayTraceBlocks(entity, (double) 0.25F);
@@ -191,7 +191,6 @@ public class GomuGomuNoKaminariAbility extends Ability {
                 this.boltOuter.moveTo(origin.x, origin.y, origin.z, entity.yRot, entity.xRot);
             }
 
-            // Light-blue SANGO particle at the beam's hit point
             if (this.particleInterval.canTick()) {
                 WyHelper.spawnParticleEffect(
                         (ParticleEffect) ModParticleEffects.SANGO.get(),
@@ -205,7 +204,6 @@ public class GomuGomuNoKaminariAbility extends Ability {
                 for (LivingEntity target : this.rangeComponent.getTargetsInLine(entity, RANGE, 3.5F)) {
                     boolean flag = this.dealDamageComponent.hurtTarget(entity, target, DAMAGE);
                     if (flag) {
-                        // Lightning slowness instead of fire
                         target.addEffect(new net.minecraft.potion.EffectInstance(
                                 net.minecraft.potion.Effects.MOVEMENT_SLOWDOWN, 40, 2));
                     }
@@ -217,13 +215,12 @@ public class GomuGomuNoKaminariAbility extends Ability {
     private void spawnBeam(LivingEntity entity, Vector3d origin, Vector3d hitVec) {
         int segments = (int) (RANGE * 0.6F);
 
-        // Inner bolt — icy white-blue core (analogous to BoloBreath's warm white core)
         this.boltInner = new LightningEntity(entity,
                 origin.x, origin.y, origin.z,
                 entity.yRot, entity.xRot,
                 RANGE, 20.0F, this.getCore());
         this.boltInner.setSize(BEAM_SIZE * 0.75F);
-        this.boltInner.setColor(new Color(200, 230, 255));  // pale icy white-blue
+        this.boltInner.setColor(new Color(200, 230, 255));
         this.boltInner.setDamage(0.0F);
         this.boltInner.setSegments(segments);
         this.boltInner.setBranches(2);
@@ -233,13 +230,12 @@ public class GomuGomuNoKaminariAbility extends Ability {
         this.boltInner.setLightningMimic(false);
         this.boltInner.setMaxLife(120);
 
-        // Outer bolt — vivid dodger blue (analogous to BoloBreath's orange outer bolt)
         this.boltOuter = new LightningEntity(entity,
                 origin.x, origin.y, origin.z,
                 entity.yRot, entity.xRot,
                 RANGE, 20.0F, this.getCore());
         this.boltOuter.setSize(BEAM_SIZE);
-        this.boltOuter.setColor(new Color(30, 144, 255));   // dodger blue
+        this.boltOuter.setColor(new Color(30, 144, 255));
         this.boltOuter.setDamage(DAMAGE);
         this.boltOuter.setSegments(segments + 4);
         this.boltOuter.setBranches(4);
@@ -250,7 +246,7 @@ public class GomuGomuNoKaminariAbility extends Ability {
         this.boltOuter.setCollideWithEntities(false);
         this.boltOuter.setLightningMimic(false);
         this.boltOuter.setMaxLife(120);
-        this.boltOuter.seed = this.boltInner.seed;  // sync seeds so bolts overlay cleanly
+        this.boltOuter.seed = this.boltInner.seed;
 
         entity.level.addFreshEntity(this.boltInner);
         entity.level.addFreshEntity(this.boltOuter);
@@ -274,7 +270,7 @@ public class GomuGomuNoKaminariAbility extends Ability {
         return new GomuGomuNoKaminariProjectile(entity.level, entity);
     }
 
-    /* ==================== AWAKENING UNLOCK CHECK ==================== */
+    /* ==================== UNLOCK CHECK ==================== */
 
     private static boolean canUnlock(LivingEntity user) {
         return DevilFruitCapability.get(user).hasAwakenedFruit();

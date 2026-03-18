@@ -58,7 +58,7 @@ public class ThunderstormAbility extends Ability {
     // Cap bolts per strike to avoid spawning dozens of entities at once
     private static final int   MAX_TARGETS_PER_STRIKE = 8;
 
-    private static final float BOLT_DAMAGE = 12.0F;
+    private static final float BOLT_DAMAGE = 20.0F;
     private static final int   INNER_LIFE  = 24;
     private static final int   OUTER_LIFE  = 36;
 

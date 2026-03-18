@@ -9,12 +9,16 @@ import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
 import net.kazi.kazimod.abilities.BomuRework.*;
 import net.kazi.kazimod.abilities.BrawlerRework.FistsOfLoveBarrageRework;
 import net.kazi.kazimod.abilities.BrawlerRework.GalaxyImpactRework;
+import net.kazi.kazimod.abilities.BrawlerRework.SpinningBrawlRework;
+import net.kazi.kazimod.abilities.BrawlerRework.SuplexRework;
+import net.kazi.kazimod.abilities.BuddhaRework.HitoDaibutsuPointRework;
 import net.kazi.kazimod.abilities.ChiyuRework.ChiyupopoRework;
 import net.kazi.kazimod.abilities.DekaRework.DekaDekaRework;
 import net.kazi.kazimod.abilities.DoctorRework.*;
 import net.kazi.kazimod.abilities.DokuRework.VenomRoadRework;
 import net.kazi.kazimod.abilities.GasuRework.GastilleRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
+import net.kazi.kazimod.abilities.Gojo.*;
 import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.GoroRework.ElThorRework;
 import net.kazi.kazimod.abilities.GoroRework.SangoRework;
@@ -25,6 +29,11 @@ import net.kazi.kazimod.abilities.ItoRework.GodThreadRework;
 import net.kazi.kazimod.abilities.JikiRework.DamnedPunkRework;
 import net.kazi.kazimod.abilities.JikiRework.GenocideRaidRework;
 import net.kazi.kazimod.abilities.JikiRework.PunkCrossRework;
+import net.kazi.kazimod.abilities.KachiRework.CruelSunAbility;
+import net.kazi.kazimod.abilities.KachiRework.SunshineAbility;
+import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
+import net.kazi.kazimod.abilities.Kake.LuckySlotAbility;
+import net.kazi.kazimod.abilities.Kake.SlotSpinAbility;
 import net.kazi.kazimod.abilities.KamaRework.*;
 import net.kazi.kazimod.abilities.KaruRework.ExplodingKarmaAbility;
 import net.kazi.kazimod.abilities.KaruRework.IngaZarashiRework;
@@ -49,6 +58,8 @@ import net.kazi.kazimod.abilities.NitoryuRework.SaiKuruRework;
 import net.kazi.kazimod.abilities.NitoryuRework.TakaNamiRework;
 import net.kazi.kazimod.abilities.NoroRework.NoroNoroBeamRework;
 import net.kazi.kazimod.abilities.NoroRework.NoroNoroBeamSwordRework;
+import net.kazi.kazimod.abilities.Nusu.SkillHunterAbility;
+import net.kazi.kazimod.abilities.Nusu.SkillRemoverAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
@@ -193,7 +204,28 @@ public class KaziAbilities {
             GaleStormAbility.INSTANCE,
             DamnedPunkRework.INSTANCE,
             GenocideRaidRework.INSTANCE,
-            PunkCrossRework.INSTANCE
+            PunkCrossRework.INSTANCE,
+            RedAbility.INSTANCE,
+            LapseBlueAbility.INSTANCE,
+            MaxOutputLapseBlueAbility.INSTANCE,
+            HollowPurpleAbility.INSTANCE,
+            InfinityAbility.INSTANCE,
+            DomainExpansionInfiniteVoidAbility.INSTANCE,
+            SpinningBrawlRework.INSTANCE,
+            SuplexRework.INSTANCE,
+            SunshineAbility.INSTANCE,
+            CruelSunAbility.INSTANCE,
+            HitoDaibutsuPointRework.INSTANCE,
+            LuckySlotAbility.INSTANCE,
+            SlotSpinAbility.INSTANCE,
+            CasinoRollAbility.INSTANCE,
+            SkillHunterAbility.INSTANCE,
+            SkillRemoverAbility.INSTANCE
+
+
+
+
+
 
 
 

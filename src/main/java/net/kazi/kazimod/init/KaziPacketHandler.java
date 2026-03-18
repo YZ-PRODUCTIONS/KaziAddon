@@ -1,6 +1,7 @@
 package net.kazi.kazimod.init;
 
 import net.kazi.kazimod.network.AfterImagePacket;
+import net.kazi.kazimod.network.FlashbangPacket;
 import net.kazi.kazimod.network.SyncEntitySizePacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -40,6 +41,14 @@ public class KaziPacketHandler {
                 AfterImagePacket::handle,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT)
         );
+        CHANNEL.registerMessage(
+                id++,
+                FlashbangPacket.class,
+                FlashbangPacket::encode,
+                FlashbangPacket::new,
+                FlashbangPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT)
+        );
     }
 
     public static void syncEntitySize(Entity entity) {
@@ -53,6 +62,13 @@ public class KaziPacketHandler {
         CHANNEL.send(
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
                 packet
+        );
+    }
+
+    public static void sendFlashbang(net.minecraft.entity.player.ServerPlayerEntity player) {
+        CHANNEL.send(
+                PacketDistributor.PLAYER.with(() -> player),
+                new FlashbangPacket()
         );
     }
 }
