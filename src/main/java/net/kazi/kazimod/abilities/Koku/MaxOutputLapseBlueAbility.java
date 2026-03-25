@@ -1,4 +1,4 @@
-package net.kazi.kazimod.abilities.Gojo;
+package net.kazi.kazimod.abilities.Koku;
 
 import net.kazi.kazimod.entities.projectiles.LapseBlueProjectile;
 import net.kazi.kazimod.init.KaziAnimations;
@@ -21,6 +21,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ProjectileComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.api.util.Interval;
@@ -61,12 +62,18 @@ public class MaxOutputLapseBlueAbility extends Ability {
         });
         this.addCanUseCheck(this::canUseCheck);
         this.addUseEvent(this::onUseEvent);
+        this.addTickEvent(this::onAbilityTick);
     }
 
     private AbilityUseResult canUseCheck(LivingEntity entity, IAbility ability) {
         IAbilityData data = AbilityDataCapability.get(entity);
         HollowPurpleAbility hollowPurple = (HollowPurpleAbility) data.getEquippedAbility(HollowPurpleAbility.INSTANCE);
         if (hollowPurple != null && hollowPurple.isCharging()) {
+            return AbilityUseResult.fail(null);
+        }
+        // Shared cooldown with Lapse: Blue
+        LapseBlueAbility lapseBlue = (LapseBlueAbility) data.getEquippedAbility(LapseBlueAbility.INSTANCE);
+        if (lapseBlue != null && lapseBlue.isOnCooldown()) {
             return AbilityUseResult.fail(null);
         }
         return AbilityUseResult.success();
@@ -92,6 +99,7 @@ public class MaxOutputLapseBlueAbility extends Ability {
     }
 
     private void onChargeTick(LivingEntity entity, IAbility ability) {
+        AbilityHelper.slowEntityFall(entity);
         if (!entity.level.isClientSide) {
             if (particleInterval.canTick()) {
                 WyHelper.spawnParticleEffect(
@@ -110,8 +118,20 @@ public class MaxOutputLapseBlueAbility extends Ability {
         }
     }
 
+    private void onAbilityTick(LivingEntity entity, IAbility ability) {
+        LapseBlueProjectile proj = LapseBlueProjectile.ACTIVE_PROJECTILES.get(entity.getUUID());
+        if (proj != null && proj.isAlive()) {
+            AbilityHelper.slowEntityFall(entity);
+        }
+    }
+
     private LapseBlueProjectile createProjectile(LivingEntity entity) {
         return new LapseBlueProjectile(entity.level, entity, this);
+    }
+
+    /** Expose cooldown state so LapseBlueAbility can check it. */
+    public boolean isOnCooldown() {
+        return this.cooldownComponent.isOnCooldown();
     }
 
     public void startCooldown(PlayerEntity entity) {
@@ -130,6 +150,7 @@ public class MaxOutputLapseBlueAbility extends Ability {
                         CooldownComponent.getTooltip(700.0F)
                 })
                 .setSourceElement(SourceElement.SHOCKWAVE)
+                .setSourceHakiNature(SourceHakiNature.SPECIAL)
                 .setSourceType(new SourceType[]{SourceType.INDIRECT})
                 .setIcon(MAX_OUTPUT_BLUE_ICON)
                 .build();

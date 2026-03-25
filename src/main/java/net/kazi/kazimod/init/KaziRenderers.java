@@ -4,6 +4,7 @@ import net.MrMagicalCart.cartaddon.abilities.aowrework.entities.projectiles.Weat
 import net.kazi.kazimod.entities.projectiles.CasinoProjectiles;
 import net.kazi.kazimod.entities.projectiles.CoinProjectile;
 import net.kazi.kazimod.entities.projectiles.PlayingCardProjectile;
+import net.kazi.kazimod.entities.ShadowDoppelmanEntity;
 import net.kazi.kazimod.models.projectiles.DiceProjectileRenderer;
 import net.kazi.kazimod.renderers.abilities.WeatherCloudReworkRenderer;
 import net.kazi.kazimod.renderers.abilities.WhiteTornadoRenderer;
@@ -11,8 +12,11 @@ import net.kazi.kazimod.renderers.entities.*;
 import net.kazi.kazimod.models.projectiles.FugaProjectileRenderer;
 import net.kazi.kazimod.init.KaziAnimations;
 import net.kazi.kazimod.init.KaziItemModelProps;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.entity.BipedRenderer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -56,6 +60,22 @@ public class KaziRenderers {
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.MALEVOLENT_SHRINE.get(),
                 new MalevolentShrineRenderer.Factory());
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.SHADOW_DOPPELMAN.get(),
+                manager -> new BipedRenderer<ShadowDoppelmanEntity, BipedModel<ShadowDoppelmanEntity>>(manager, new BipedModel<>(0.0F), 0.5F) {
+                    @Override
+                    protected void scale(ShadowDoppelmanEntity entity, MatrixStack matrixStack, float partialTicks) {
+                        float shadowsUsed = entity.getShadows();
+                        float scale = shadowsUsed > 0.0F ? 1.0F + shadowsUsed / 6.0F : 1.0F;
+                        matrixStack.scale(scale, scale, scale);
+                    }
+
+                    @Override
+                    public ResourceLocation getTextureLocation(ShadowDoppelmanEntity entity) {
+                        return new ResourceLocation("mineminenomi", "textures/models/doppelman.png");
+                    }
+                });
 
         RenderingRegistry.registerEntityRenderingHandler(
                 (net.minecraft.entity.EntityType<WeatherCloudReworkEntity>)

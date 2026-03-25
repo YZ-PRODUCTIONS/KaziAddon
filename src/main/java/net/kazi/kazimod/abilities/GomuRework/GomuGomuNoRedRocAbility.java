@@ -62,7 +62,7 @@ public class GomuGomuNoRedRocAbility extends Ability {
     private static final ResourceLocation GOMU_GOMU_NO_BAJRANG_GUN_ICON = new ResourceLocation("kazimod", "textures/abilities/gomu_gomu_no_bajrang_gun.png");
 
     private static final int RED_ROC_COOLDOWN = 800;
-    private static final int BAJRANG_GUN_COOLDOWN = 1600;
+    private static final int BAJRANG_GUN_COOLDOWN = 12000;
 
     // Red Roc charge/dash constants
     private static final int RED_ROC_CHARGE_TIME = 30;
@@ -70,13 +70,13 @@ public class GomuGomuNoRedRocAbility extends Ability {
     private static final float DASH_SPEED = 1.0F;
 
     // Bajrang Gun charge: 8 seconds = 160 ticks
-    private static final int BAJRANG_GUN_CHARGE_TIME = 160;
+    private static final int BAJRANG_GUN_CHARGE_TIME = 240;
 
     private static final float PROJECTILE_SPAWN_OFFSET = 3.0F;
 
     // Projectile speeds
     private static final float RED_ROC_PROJECTILE_SPEED = 2.0F;
-    private static final float BAJRANG_GUN_PROJECTILE_SPEED = 0.01F; // Half of Red Roc
+    private static final float BAJRANG_GUN_PROJECTILE_SPEED = 0.000001F; // Half of Red Roc
 
     // Vertical launch heights on charge start
     private static final float RED_ROC_VERTICAL_BOOST = 3.5F;

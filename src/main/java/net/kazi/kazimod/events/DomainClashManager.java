@@ -26,16 +26,19 @@ public class DomainClashManager {
         public ClashEntry(LivingEntity entity, LivingEntity opponent) {
             this.entity    = entity;
             this.opponent  = opponent;
-            this.threshold = entity.getMaxHealth() * 0.20F;
+            this.threshold = entity.getMaxHealth() * 0.30F;
         }
     }
 
     private static final Map<UUID, ClashEntry> clashes = new ConcurrentHashMap<>();
+    // Tracks UUIDs that are in post-clash cooldown state to prevent re-lock
+    private static final Set<UUID> resolvedIds = ConcurrentHashMap.newKeySet();
 
     public static boolean isInClash(UUID id) {
+        // Never block if this ID was already resolved — prevents the permanent lock bug
+        if (resolvedIds.contains(id)) return false;
         ClashEntry entry = clashes.get(id);
         if (entry == null) return false;
-        // Auto-clear stale entries where either side is dead or gone
         if (!entry.entity.isAlive() || !entry.opponent.isAlive()) {
             clashes.remove(entry.entity.getUUID());
             clashes.remove(entry.opponent.getUUID());
@@ -51,6 +54,8 @@ public class DomainClashManager {
     public static void startClash(LivingEntity e1, LivingEntity e2) {
         UUID id1 = e1.getUUID();
         UUID id2 = e2.getUUID();
+        resolvedIds.remove(id1);
+        resolvedIds.remove(id2);
         clashes.put(id1, new ClashEntry(e1, e2));
         clashes.put(id2, new ClashEntry(e2, e1));
         sendMessage(e1, TextFormatting.YELLOW + "Domain Clash Initiated!");
@@ -69,14 +74,22 @@ public class DomainClashManager {
     public static void endClash(UUID id1, UUID id2) {
         clashes.remove(id1);
         clashes.remove(id2);
+        // Mark as resolved so isInClash doesn't re-block them
+        resolvedIds.add(id1);
+        resolvedIds.add(id2);
     }
 
-    // Force-clears a single UUID from the clash map — used as a safety escape hatch
+    /** Call this after the ability has finished resolving win/loss so the ID is no longer flagged. */
+    public static void clearResolved(UUID id) {
+        resolvedIds.remove(id);
+    }
+
     public static void forceRemove(UUID id) {
         ClashEntry entry = clashes.remove(id);
         if (entry != null) {
-            // Also remove the opponent so they aren't stuck waiting
             clashes.remove(entry.opponent.getUUID());
+            resolvedIds.add(id);
+            resolvedIds.add(entry.opponent.getUUID());
         }
     }
 
@@ -98,21 +111,15 @@ public class DomainClashManager {
         }
     }
 
-    // Clean up clash entries when a player dies so they aren't permanently locked
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
         UUID id = event.getEntityLiving().getUUID();
-        if (clashes.containsKey(id)) {
-            forceRemove(id);
-        }
+        if (clashes.containsKey(id)) forceRemove(id);
     }
 
-    // Clean up clash entries when a player logs off
     @SubscribeEvent
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         UUID id = event.getPlayer().getUUID();
-        if (clashes.containsKey(id)) {
-            forceRemove(id);
-        }
+        if (clashes.containsKey(id)) forceRemove(id);
     }
 }

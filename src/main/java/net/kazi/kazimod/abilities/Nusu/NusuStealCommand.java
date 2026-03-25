@@ -14,13 +14,6 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * /nusu_steal <1-N>
- *
- * Called when the player clicks a line in the Skill Hunter observation UI.
- * Reads the pending choices stored by SkillHunterAbility, executes the steal,
- * then clears pending state.
- */
 public class NusuStealCommand {
 
     @SubscribeEvent
@@ -56,7 +49,6 @@ public class NusuStealCommand {
 
         AbilityCore<?> chosen = pending.get(index);
 
-        // Find the target among online players by UUID
         UUID targetUUID = NusuStolenData.getPendingStealTargetUUID(player);
         LivingEntity target = null;
         if (targetUUID != null && player.level != null) {
@@ -76,7 +68,7 @@ public class NusuStealCommand {
         }
 
         if (NusuStolenData.heldCount(player) >= NusuStolenData.MAX_SLOTS) {
-            send(player, "\u00a7cAll 4 stolen ability slots are full");
+            send(player, "\u00a7cAll " + NusuStolenData.MAX_SLOTS + " stolen ability slots are full");
             return;
         }
 
@@ -88,7 +80,7 @@ public class NusuStealCommand {
 
         String name = chosen.getLocalizedName().getString();
         int total = NusuStolenData.heldCount(player);
-        send(player, "\u00a7a" + name + " stolen! (" + total + "/4 slots used)");
+        send(player, "\u00a7a" + name + " stolen! (" + total + "/" + NusuStolenData.MAX_SLOTS + " slots used)");
         NusuEvents.sendMsg(target, "\u00a7c" + name + " was stolen by the Nusu user");
     }
 

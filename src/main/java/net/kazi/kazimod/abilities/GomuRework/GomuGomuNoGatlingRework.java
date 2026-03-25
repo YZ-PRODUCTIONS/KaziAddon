@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package net.kazi.kazimod.abilities.GomuRework;
 
 import net.kazi.kazimod.entities.projectiles.GomuGomuNoDawnGatlingProjectile;
@@ -47,63 +42,57 @@ import xyz.pixelatedw.mineminenomi.wypi.WyRegistry;
 
 public class GomuGomuNoGatlingRework extends RepeaterAbility2 {
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "gomu_gomu_no_gatling", new Pair[]{ImmutablePair.of("Rapidly punches enemies in front of the user.", (Object)null)});
-    private static final TranslationTextComponent GOMU_GOMU_NO_GATLING_NAME = new TranslationTextComponent(WyRegistry.registerName("ability.mineminenomi.gomu_gomu_no_gatling", "Gomu Gomu no Gatling"));
-    private static final TranslationTextComponent GOMU_GOMU_NO_JET_GATLING_NAME = new TranslationTextComponent(WyRegistry.registerName("ability.mineminenomi.gomu_gomu_no_jet_gatling", "Gomu Gomu no Jet Gatling"));
+    private static final TranslationTextComponent GOMU_GOMU_NO_GATLING_NAME        = new TranslationTextComponent(WyRegistry.registerName("ability.mineminenomi.gomu_gomu_no_gatling",        "Gomu Gomu no Gatling"));
+    private static final TranslationTextComponent GOMU_GOMU_NO_JET_GATLING_NAME    = new TranslationTextComponent(WyRegistry.registerName("ability.mineminenomi.gomu_gomu_no_jet_gatling",    "Gomu Gomu no Jet Gatling"));
     private static final TranslationTextComponent GOMU_GOMU_NO_ELEPHANT_GATLING_NAME = new TranslationTextComponent(WyRegistry.registerName("ability.mineminenomi.gomu_gomu_no_elephant_gatling", "Gomu Gomu no Elephant Gatling"));
-    private static final TranslationTextComponent GOMU_GOMU_NO_KONG_GATLING_NAME = new TranslationTextComponent(WyRegistry.registerName("ability.mineminenomi.gomu_gomu_no_kong_gatling", "Gomu Gomu no Kong Gatling"));
-    private static final TranslationTextComponent GOMU_GOMU_NO_DAWN_GATLING_NAME = new TranslationTextComponent(WyRegistry.registerName("ability.kazimod.gomu_gomu_no_dawn_gatling", "Gomu Gomu no Dawn Gatling"));
-    private static final ResourceLocation GOMU_GOMU_NO_GATLING_ICON = new ResourceLocation("mineminenomi", "textures/abilities/gomu_gomu_no_gatling.png");
-    private static final ResourceLocation GOMU_GOMU_NO_JET_GATLING_ICON = new ResourceLocation("mineminenomi", "textures/abilities/gomu_gomu_no_jet_gatling.png");
+    private static final TranslationTextComponent GOMU_GOMU_NO_KONG_GATLING_NAME   = new TranslationTextComponent(WyRegistry.registerName("ability.mineminenomi.gomu_gomu_no_kong_gatling",   "Gomu Gomu no Kong Gatling"));
+    private static final TranslationTextComponent GOMU_GOMU_NO_DAWN_GATLING_NAME   = new TranslationTextComponent(WyRegistry.registerName("ability.kazimod.gomu_gomu_no_dawn_gatling",        "Gomu Gomu no Dawn Gatling"));
+
+    private static final ResourceLocation GOMU_GOMU_NO_GATLING_ICON          = new ResourceLocation("mineminenomi", "textures/abilities/gomu_gomu_no_gatling.png");
+    private static final ResourceLocation GOMU_GOMU_NO_JET_GATLING_ICON      = new ResourceLocation("kazimod", "textures/abilities/gomu_gomu_no_jet_gatling.png");
     private static final ResourceLocation GOMU_GOMU_NO_ELEPHANT_GATLING_ICON = new ResourceLocation("mineminenomi", "textures/abilities/gomu_gomu_no_elephant_gatling.png");
-    private static final ResourceLocation GOMU_GOMU_NO_KONG_GATLING_ICON = new ResourceLocation("mineminenomi", "textures/abilities/gomu_gomu_no_kong_gatling.png");
-    private static final ResourceLocation GOMU_GOMU_NO_DAWN_GATLING_ICON = new ResourceLocation("kazimod", "textures/abilities/gomu_gomu_no_dawn_gatling.png");
-    private static final int NO_GEAR_COOLDOWN = 140;
-    private static final int NO_GEAR_TRIGGERS = 20;
-    private static final int NO_GEAR_INTERVAL = 3;
-    private static final int SECOND_GEAR_COOLDOWN = 100;
-    private static final int SECOND_GEAR_TRIGGERS = 35;
-    private static final int SECOND_GEAR_INTERVAL = 2;
-    private static final int THIRD_GEAR_COOLDOWN = 250;
-    private static final int THIRD_GEAR_TRIGGERS = 10;
-    private static final int THIRD_GEAR_INTERVAL = 5;
-    private static final int FOURTH_GEAR_COOLDOWN = 200;
-    private static final int FOURTH_GEAR_TRIGGERS = 8;
-    private static final int FOURTH_GEAR_INTERVAL = 5;
-    // Dawn Gatling shares Jet Gatling stats
-    private static final int FIFTH_GEAR_COOLDOWN = 240;
-    private static final int FIFTH_GEAR_TRIGGERS = 53;
-    private static final int FIFTH_GEAR_INTERVAL = 2;
+    private static final ResourceLocation GOMU_GOMU_NO_KONG_GATLING_ICON     = new ResourceLocation("mineminenomi", "textures/abilities/gomu_gomu_no_kong_gatling.png");
+    private static final ResourceLocation GOMU_GOMU_NO_DAWN_GATLING_ICON     = new ResourceLocation("kazimod",      "textures/abilities/gomu_gomu_no_dawn_gatling.png");
+
+    private static final int NO_GEAR_COOLDOWN     = 140, NO_GEAR_TRIGGERS     = 20, NO_GEAR_INTERVAL     = 3;
+    private static final int SECOND_GEAR_COOLDOWN = 100, SECOND_GEAR_TRIGGERS = 35, SECOND_GEAR_INTERVAL = 2;
+    private static final int THIRD_GEAR_COOLDOWN  = 250, THIRD_GEAR_TRIGGERS  = 10, THIRD_GEAR_INTERVAL  = 5;
+    private static final int FOURTH_GEAR_COOLDOWN = 200, FOURTH_GEAR_TRIGGERS =  8, FOURTH_GEAR_INTERVAL = 5;
+    private static final int FIFTH_GEAR_COOLDOWN  = 240, FIFTH_GEAR_TRIGGERS  = 53, FIFTH_GEAR_INTERVAL  = 2;
+
     private static final IDescriptionLine NO_GEAR_NAME_DESC;
     private static final IDescriptionLine SECOND_GEAR_NAME_DESC;
     private static final IDescriptionLine THIRD_GEAR_NAME_DESC;
     private static final IDescriptionLine FOURTH_GEAR_NAME_DESC;
     private static final IDescriptionLine FIFTH_GEAR_NAME_DESC;
+
     public static final AbilityCore<GomuGomuNoGatlingRework> INSTANCE;
-    private final AltModeComponent<GomuHelper.Gears> altModeComponent;
+
+    private final AltModeComponent<Gears> altModeComponent;
     private final AnimationComponent animationComponent;
-    private GomuHelper.Gears currentGear = Gears.NO_GEAR;
+    private Gears currentGear = Gears.NO_GEAR;
     private float projectileSpeed;
-    private int projectileSpread;
+    private int   projectileSpread;
     private float cooldown;
-    private int triggers;
-    private int interval;
+    private int   triggers;
+    private int   interval;
 
     public GomuGomuNoGatlingRework(AbilityCore<GomuGomuNoGatlingRework> core) {
         super(core);
-        this.altModeComponent = (new AltModeComponent<GomuHelper.Gears>(this, GomuHelper.Gears.class, Gears.NO_GEAR, true))
+        this.altModeComponent  = new AltModeComponent<>(this, Gears.class, Gears.NO_GEAR, true)
                 .addChangeModeEvent(this::altModeChangeEvent);
         this.animationComponent = new AnimationComponent(this);
-        this.projectileSpeed = 3.0F;
-        this.projectileSpread = 2;
-        this.cooldown = 140.0F;
-        this.triggers = 20;
-        this.interval = 3;
+        this.projectileSpeed    = 3.0F;
+        this.projectileSpread   = 2;
+        this.cooldown           = 140.0F;
+        this.triggers           = 20;
+        this.interval           = 3;
         this.isNew = true;
         this.addComponents(new AbilityComponent[]{this.altModeComponent, this.animationComponent});
         this.setCustomShootLogic((living) -> {
-            for (int i = 0; i < 5; ++i) {
-                AbilityProjectileEntity projectile = this.getProjectileFactory(living);
-                this.projectileComponent.shootWithSpread(projectile, living, this.projectileSpeed, 3.0F, this.projectileSpread);
+            for (int i = 0; i < 5; i++) {
+                AbilityProjectileEntity p = this.getProjectileFactory(living);
+                this.projectileComponent.shootWithSpread(p, living, this.projectileSpeed, 3.0F, this.projectileSpread);
             }
         });
         this.repeaterComponent.addTriggerEvent(100, this::triggerRepeaterEvent);
@@ -116,11 +105,7 @@ public class GomuGomuNoGatlingRework extends RepeaterAbility2 {
         this.animationComponent.start(entity, ModAnimations.PUNCH_RUSH);
     }
 
-    private void tickContinuityEvent(LivingEntity entity, IAbility ability) {
-        IAbilityData props = AbilityDataCapability.get(entity);
-        if (!GomuHelper.hasGearFourthActive(props) || !(entity instanceof PlayerEntity) || !((PlayerEntity) entity).abilities.flying) {
-        }
-    }
+    private void tickContinuityEvent(LivingEntity entity, IAbility ability) {}
 
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
         this.animationComponent.stop(entity);
@@ -128,126 +113,95 @@ public class GomuGomuNoGatlingRework extends RepeaterAbility2 {
 
     private void triggerRepeaterEvent(LivingEntity entity, IAbility ability) {
         entity.swing(Hand.MAIN_HAND, true);
-        entity.level.playSound((PlayerEntity) null, entity.blockPosition(), (SoundEvent) ModSounds.GOMU_SFX.get(), SoundCategory.PLAYERS, 2.0F, 0.6F + this.random.nextFloat() / 2.0F);
+        entity.level.playSound((PlayerEntity) null, entity.blockPosition(),
+                (SoundEvent) ModSounds.GOMU_SFX.get(), SoundCategory.PLAYERS,
+                2.0F, 0.6F + this.random.nextFloat() / 2.0F);
     }
 
-    private void altModeChangeEvent(LivingEntity entity, IAbility ability, GomuHelper.Gears mode) {
+    private void altModeChangeEvent(LivingEntity entity, IAbility ability, Gears mode) {
         this.currentGear = mode;
         switch (mode) {
             case GEAR_2:
                 this.setDisplayName(GOMU_GOMU_NO_JET_GATLING_NAME);
                 this.setDisplayIcon(GOMU_GOMU_NO_JET_GATLING_ICON);
-                this.cooldown = 100.0F;
-                this.triggers = 35;
-                this.interval = 2;
+                this.cooldown = 100.0F; this.triggers = 35; this.interval = 2;
                 break;
             case GEAR_3:
                 this.setDisplayName(GOMU_GOMU_NO_ELEPHANT_GATLING_NAME);
                 this.setDisplayIcon(GOMU_GOMU_NO_ELEPHANT_GATLING_ICON);
-                this.cooldown = 250.0F;
-                this.triggers = 10;
-                this.interval = 5;
+                this.cooldown = 250.0F; this.triggers = 10; this.interval = 5;
                 break;
             case GEAR_4:
                 this.setDisplayName(GOMU_GOMU_NO_KONG_GATLING_NAME);
                 this.setDisplayIcon(GOMU_GOMU_NO_KONG_GATLING_ICON);
-                this.cooldown = 200.0F;
-                this.triggers = 8;
-                this.interval = 5;
+                this.cooldown = 200.0F; this.triggers = 8; this.interval = 5;
                 break;
             case GEAR_5:
                 this.setDisplayName(GOMU_GOMU_NO_DAWN_GATLING_NAME);
                 this.setDisplayIcon(GOMU_GOMU_NO_DAWN_GATLING_ICON);
-                this.cooldown = 240.0F;
-                this.triggers = 53;
-                this.interval = 2;
-
+                this.cooldown = 240.0F; this.triggers = 53; this.interval = 2;
                 break;
             case NO_GEAR:
             default:
                 this.setDisplayIcon(GOMU_GOMU_NO_GATLING_ICON);
                 this.setDisplayName(GOMU_GOMU_NO_GATLING_NAME);
-                this.cooldown = 140.0F;
-                this.triggers = 20;
-                this.interval = 3;
+                this.cooldown = 140.0F; this.triggers = 20; this.interval = 3;
                 break;
         }
     }
 
-    public void switchNoGear(LivingEntity entity) {
-        this.altModeComponent.setMode(entity, Gears.NO_GEAR);
-    }
+    public void switchNoGear(LivingEntity entity)    { this.altModeComponent.setMode(entity, Gears.NO_GEAR); }
+    public void switchSecondGear(LivingEntity entity){ this.altModeComponent.setMode(entity, Gears.GEAR_2);  }
+    public void switchThirdGear(LivingEntity entity) { this.altModeComponent.setMode(entity, Gears.GEAR_3);  }
+    public void switchFourthGear(LivingEntity entity){ this.altModeComponent.setMode(entity, Gears.GEAR_4);  }
+    public void switchFifthGear(LivingEntity entity) { this.altModeComponent.setMode(entity, Gears.GEAR_5);  }
 
-    public void switchSecondGear(LivingEntity entity) {
-        this.altModeComponent.setMode(entity, Gears.GEAR_2);
-    }
-
-    public void switchThirdGear(LivingEntity entity) {
-        this.altModeComponent.setMode(entity, Gears.GEAR_3);
-    }
-
-    public void switchFourthGear(LivingEntity entity) {
-        this.altModeComponent.setMode(entity, Gears.GEAR_4);
-    }
-
-    public void switchFifthGear(LivingEntity entity) {
-        this.altModeComponent.setMode(entity, Gears.GEAR_5);
-    }
-
-    public int getMaxTriggers() {
-        return this.triggers;
-    }
-
-    public int getTriggerInterval() {
-        return this.interval;
-    }
-
-    public float getRepeaterCooldown() {
-        return this.cooldown;
-    }
+    @Override public int   getMaxTriggers()       { return this.triggers; }
+    @Override public int   getTriggerInterval()   { return this.interval; }
+    @Override public float getRepeaterCooldown()  { return this.cooldown; }
 
     public AbilityProjectileEntity getProjectileFactory(LivingEntity entity) {
         IAbilityData props = AbilityDataCapability.get(entity);
-        AbilityProjectileEntity projectile = null;
-        this.projectileSpeed = 3.0F;
-        float projDamageReduction = 0.8F;
+        AbilityProjectileEntity projectile;
+        this.projectileSpeed  = 3.0F;
+        float projDmgReduction = 0.8F;
         this.projectileSpread = 2;
 
         if (this.currentGear == Gears.GEAR_5) {
             projectile = new GomuGomuNoDawnGatlingProjectile(entity.level, entity, this);
-            this.projectileSpeed = 3.6F;
-            this.projectileSpread = 2;
-            projDamageReduction = 0.2F;
+            this.projectileSpeed = 3.6F; this.projectileSpread = 2; projDmgReduction = 0.2F;
         } else if (GomuHelper.hasGearFourthActive(props)) {
             projectile = new GomuGomuNoKingKongGunProjectile(entity.level, entity, this);
-            projectile.setEntityCollisionSize((double) 2.5F);
-            this.projectileSpeed = 2.2F;
-            this.projectileSpread = 6;
-            projDamageReduction = 0.6F;
+            projectile.setEntityCollisionSize(2.5D);
+            this.projectileSpeed = 2.2F; this.projectileSpread = 6; projDmgReduction = 0.6F;
         } else if (GomuHelper.hasGearThirdActive(props)) {
             projectile = new GomuGomuNoElephantGunProjectile(entity.level, entity, this);
-            projectile.setEntityCollisionSize((double) 2.5F);
-            this.projectileSpeed = 2.4F;
-            this.projectileSpread = 9;
-            projDamageReduction = 0.6F;
-        } else if (GomuHelper.hasGearSecondActive(props)) {
+            projectile.setEntityCollisionSize(2.5D);
+            this.projectileSpeed = 2.4F; this.projectileSpread = 9; projDmgReduction = 0.6F;
+        } else if (GomuHelper.hasGearSecondActive(props) || hasGearSecondReworkActive(props)) {
+            // FIX: also check GearSecondRework — GomuHelper only checks vanilla GearSecondAbility
             projectile = new GomuGomuNoJetPistolProjectile(entity.level, entity, this);
             this.projectileSpeed = 3.6F;
         } else {
             projectile = new GomuGomuNoPistolProjectile(entity.level, entity);
         }
 
-        projectile.setDamage(projectile.getDamage() * (1.0F - projDamageReduction));
-        projectile.setMaxLife((int) ((double) projectile.getMaxLife() * (double) 0.75F));
+        projectile.setDamage(projectile.getDamage() * (1.0F - projDmgReduction));
+        projectile.setMaxLife((int)(projectile.getMaxLife() * 0.75F));
         return projectile;
     }
 
+    private static boolean hasGearSecondReworkActive(IAbilityData props) {
+        GearSecondRework g2 = (GearSecondRework) props.getEquippedAbility(GearSecondRework.INSTANCE);
+        return g2 != null && g2.isContinuous();
+    }
+
     static {
-        NO_GEAR_NAME_DESC = IDescriptionLine.of(AbilityHelper.mentionText(GOMU_GOMU_NO_GATLING_NAME));
+        NO_GEAR_NAME_DESC     = IDescriptionLine.of(AbilityHelper.mentionText(GOMU_GOMU_NO_GATLING_NAME));
         SECOND_GEAR_NAME_DESC = IDescriptionLine.of(AbilityHelper.mentionText(GOMU_GOMU_NO_JET_GATLING_NAME));
-        THIRD_GEAR_NAME_DESC = IDescriptionLine.of(AbilityHelper.mentionText(GOMU_GOMU_NO_ELEPHANT_GATLING_NAME));
+        THIRD_GEAR_NAME_DESC  = IDescriptionLine.of(AbilityHelper.mentionText(GOMU_GOMU_NO_ELEPHANT_GATLING_NAME));
         FOURTH_GEAR_NAME_DESC = IDescriptionLine.of(AbilityHelper.mentionText(GOMU_GOMU_NO_KONG_GATLING_NAME));
-        FIFTH_GEAR_NAME_DESC = IDescriptionLine.of(AbilityHelper.mentionText(GOMU_GOMU_NO_DAWN_GATLING_NAME));
+        FIFTH_GEAR_NAME_DESC  = IDescriptionLine.of(AbilityHelper.mentionText(GOMU_GOMU_NO_DAWN_GATLING_NAME));
         INSTANCE = (new AbilityCore.Builder("Gomu Gomu no Gatling", AbilityCategory.DEVIL_FRUITS, GomuGomuNoGatlingRework::new))
                 .addDescriptionLine(DESCRIPTION)
                 .addAdvancedDescriptionLine(new IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, NO_GEAR_NAME_DESC, AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(140.0F)})

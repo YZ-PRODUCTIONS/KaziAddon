@@ -45,7 +45,7 @@ public class GaleStormAbility extends Ability {
             }
     );
 
-    private static final float  MAX_HOLD_TICKS      = 600.0F;
+    private static final float  MAX_HOLD_TICKS      = 400.0F;
     private static final int    MIN_COOLDOWN        = 100;
     private static final int    MAX_COOLDOWN        = 900;
     private static final int    EXIT_COOLDOWN       = 400;

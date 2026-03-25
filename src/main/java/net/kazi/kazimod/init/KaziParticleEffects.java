@@ -37,6 +37,8 @@ public class KaziParticleEffects {
             KaziRegistry.registerParticleEffect("gojo_purple_growing", GojoPurpleGrowingParticleEffect::new);
     public static final RegistryObject<ParticleEffect<?>> INFINITE_VOID =
             KaziRegistry.registerParticleEffect("infinite_void", InfiniteVoidParticleEffect::new);
+    public static final RegistryObject<ParticleEffect<?>> INFINITE_VOID_STREAK =
+            KaziRegistry.registerParticleEffect("infinite_void_streak", InfiniteVoidStreakParticleEffect::new);
     public static final RegistryObject<ParticleEffect<?>> LUCKY_SLOT_0 = KaziRegistry.registerParticleEffect("lucky_slot_0", () -> new LuckySlotParticleEffect(0));
     public static final RegistryObject<ParticleEffect<?>> LUCKY_SLOT_1 = KaziRegistry.registerParticleEffect("lucky_slot_1", () -> new LuckySlotParticleEffect(1));
     public static final RegistryObject<ParticleEffect<?>> LUCKY_SLOT_2 = KaziRegistry.registerParticleEffect("lucky_slot_2", () -> new LuckySlotParticleEffect(2));
@@ -49,13 +51,10 @@ public class KaziParticleEffects {
     public static final RegistryObject<ParticleEffect<?>> LUCKY_SLOT_9 = KaziRegistry.registerParticleEffect("lucky_slot_9", () -> new LuckySlotParticleEffect(9));
     public static final RegistryObject<ParticleEffect<?>> COIN =
             KaziRegistry.registerParticleEffect("coin", CoinParticleEffect::new);
-
     public static final RegistryObject<ParticleEffect<?>> CASINO_CHIP =
             KaziRegistry.registerParticleEffect("casino_chip", CasinoChipParticleEffect::new);
-
     public static final RegistryObject<ParticleEffect<?>> PLAYING_CARD =
             KaziRegistry.registerParticleEffect("playing_card", PlayingCardParticleEffect::new);
-
 
     public static void register(IEventBus eventBus) {
         KaziRegistry.PARTICLE_EFFECTS.register(eventBus);

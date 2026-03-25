@@ -48,5 +48,71 @@
     "category": "player",
     "subtitle": "kazimod.subtitle.chronostasis",
     "sounds": ["kazimod:chronostasis"]
+  },
+  "redcharge": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.redcharge",
+    "sounds": ["kazimod:redcharge"]
+  },
+  "redfire": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.redfire",
+    "sounds": ["kazimod:redfire"]
+  },
+  "blackflashhit": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.blackflashhit",
+    "sounds": ["kazimod:blackflashhit"]
+  },
+  "infinitevoid": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.infinitevoid",
+    "sounds": ["kazimod:infinitevoid"]
+  },
+  "infinitevoidmusic": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.infinitevoidmusic",
+    "sounds": [
+      {
+        "name": "kazimod:infinitevoidmusic",
+        "stream": true
+      }
+    ]
+  },
+  "purplechant": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.purplechant",
+    "sounds": ["kazimod:purplechant"]
+  },
+  "hollownukemusic": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.hollownukemusic",
+    "sounds": [
+      {
+        "name": "kazimod:hollownukemusic",
+        "stream": true
+      }
+    ]
+  },
+  "gojobossentrance": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.gojobossentrance",
+    "sounds": [
+      "kazimod:gojo_boss_entrance"
+    ]
+  },
+  "sukunabossentrance": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.sukunabossentrance",
+    "sounds": [
+      "kazimod:sukuna_boss_entrance"
+    ]
+  },
+  "luffybossentrance": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.luffybossentrance",
+    "sounds": [
+      "kazimod:luffy_boss_entrance"
+    ]
   }
 }

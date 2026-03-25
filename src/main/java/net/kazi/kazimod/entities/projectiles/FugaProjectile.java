@@ -2,7 +2,10 @@ package net.kazi.kazimod.entities.projectiles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import net.kazi.kazimod.abilities.KamaRework.FugaAbility;
 import net.kazi.kazimod.init.KaziEntities;
@@ -41,26 +44,20 @@ import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class FugaProjectile extends AbilityProjectileEntity implements IFlexibleSizeProjectile {
 
-    // 5 seconds = 100 ticks
-    private static final int    PARTICLE_DURATION = 100;
-    private static final double AOE_RADIUS        = 20.0;
-    private static final double MAX_RISE_HEIGHT   = 40.0;
+    // Static tracker so FugaAbility can check if a projectile is active
+    public static final Map<UUID, FugaProjectile> ACTIVE_PROJECTILES = new HashMap<>();
 
-    // Fire is placed all at once on impact; these control the periodic refresh
-    // Run every 20 ticks (once per second) instead of every 10
-    private static final int FIRE_REFRESH_INTERVAL = 20;
-    // How many random fire spots to (re)place per refresh — much lower than before
-    private static final int FIRE_REFRESH_COUNT    = 8;
+    private static final int MIN_AIR_TICKS = 10; // 1.5 seconds before manual detonation
 
-    // Particle counts per tick — kept low; visuals live mostly on the CLIENT
-    // Rising-front wave spawned every tick
-    private static final int PARTICLES_WAVE    = 40;
-    // Persistent ground layer spawned every tick
-    private static final int PARTICLES_GROUND  = 20;
-    // Column fill spawned every tick once the column is tall enough
-    private static final int PARTICLES_FILL    = 30;
-    // Vanilla FLAME particles spawned via spawnParticles every tick
-    private static final int PARTICLES_FLAME   = 20;
+    private static final int    PARTICLE_DURATION    = 100;
+    private static final double AOE_RADIUS           = 20.0;
+    private static final double MAX_RISE_HEIGHT      = 40.0;
+    private static final int    FIRE_REFRESH_INTERVAL = 20;
+    private static final int    FIRE_REFRESH_COUNT    = 8;
+    private static final int    PARTICLES_WAVE        = 40;
+    private static final int    PARTICLES_GROUND      = 20;
+    private static final int    PARTICLES_FILL        = 30;
+    private static final int    PARTICLES_FLAME       = 20;
 
     private static final DataParameter<Float>   SIZE;
     private static final DataParameter<Boolean> FINISHED;
@@ -70,6 +67,7 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
 
     public float   multiplier     = 0.0F;
     public boolean isChargeVisual = false;
+    private int    ticksInAir     = 0;
 
     public FugaProjectile(EntityType type, World world) {
         super(type, world);
@@ -84,13 +82,20 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
         this.onBlockImpactEvent = this::onBlockImpactEvent;
     }
 
+    @Override
     public void tick() {
         super.tick();
         this.noCulling = true;
 
-        // Only run the post-impact particle/fire logic on the SERVER.
-        // Particle helpers already forward data to clients via packets — we must NOT
-        // also run them on the client or every particle spawns twice.
+        if (!this.level.isClientSide) {
+            if (getThrower() != null && this.isAlive()) {
+                ACTIVE_PROJECTILES.put(getThrower().getUUID(), this);
+            }
+            if (!this.isFinished()) {
+                ticksInAir++;
+            }
+        }
+
         if (this.isPlayingParticles() && !this.level.isClientSide) {
             int    elapsed  = this.tickCount - this.getImpactTick();
             double progress = Math.min(1.0, elapsed / (double) PARTICLE_DURATION);
@@ -99,8 +104,6 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
             double z        = this.getZ();
             ServerWorld sw  = (ServerWorld) this.level;
 
-            // --- Fire refresh: runs every FIRE_REFRESH_INTERVAL ticks, places a small
-            //     number of spots rather than rebuilding the whole disc each time. ---
             if (elapsed % FIRE_REFRESH_INTERVAL == 0) {
                 for (int i = 0; i < FIRE_REFRESH_COUNT; i++) {
                     double angle = this.random.nextDouble() * Math.PI * 2.0;
@@ -121,7 +124,6 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
 
             double currentTop = MAX_RISE_HEIGHT * progress;
 
-            // --- Rising-front wave ---
             for (int i = 0; i < PARTICLES_WAVE; i++) {
                 double angle  = this.random.nextDouble() * Math.PI * 2.0;
                 double r      = Math.sqrt(this.random.nextDouble()) * AOE_RADIUS;
@@ -131,7 +133,6 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
                         x + Math.cos(angle) * r, Math.max(y, spawnY), z + Math.sin(angle) * r);
             }
 
-            // --- Persistent ground layer ---
             for (int i = 0; i < PARTICLES_GROUND; i++) {
                 double angle  = this.random.nextDouble() * Math.PI * 2.0;
                 double r      = Math.sqrt(this.random.nextDouble()) * AOE_RADIUS;
@@ -141,7 +142,6 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
                         x + Math.cos(angle) * r, spawnY, z + Math.sin(angle) * r);
             }
 
-            // --- Column fill (only once the column has meaningful height) ---
             if (currentTop > 4.0) {
                 for (int i = 0; i < PARTICLES_FILL; i++) {
                     double angle  = this.random.nextDouble() * Math.PI * 2.0;
@@ -153,7 +153,6 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
                 }
             }
 
-            // --- Vanilla FLAME particles ---
             WyHelper.spawnParticles(ParticleTypes.FLAME, sw,
                     x, y + currentTop * 0.5, z,
                     (float) AOE_RADIUS, (float)(currentTop * 0.5 + 1.0), (float) AOE_RADIUS,
@@ -165,85 +164,103 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
         }
     }
 
-    private void onBlockImpactEvent(BlockPos hit) {
-        if (!this.isFinished() && !this.isChargeVisual) {
-            if (KaziSounds.FUGA_HIT_SFX.get() != null) {
-                this.level.playSound((PlayerEntity) null, this.blockPosition(),
-                        (SoundEvent) KaziSounds.FUGA_HIT_SFX.get(), SoundCategory.PLAYERS, 10.0F, 0.25F);
-            }
+    @Override
+    public void remove() {
+        if (!this.level.isClientSide && getThrower() != null) {
+            ACTIVE_PROJECTILES.remove(getThrower().getUUID());
+        }
+        super.remove();
+    }
 
-            AbilityHelper.createSphere(this.level, this.blockPosition(), 55, 5, false, Blocks.AIR, 2, GRIEF_RULE);
-
-            List<LivingEntity> damageList    = WyHelper.getNearbyLiving(this.position(), this.level, 13.75F, ModEntityPredicates.getEnemyFactions(this.getThrower()));
-            List<LivingEntity> knockbackList = WyHelper.getNearbyLiving(this.position(), this.level, 22.0F,  ModEntityPredicates.getEnemyFactions(this.getThrower()));
-
-            ModDamageSource shockwaveSource = (new ModIndirectEntityDamageSource(super.getDamageSource().msgId, this, super.getThrower()))
-                    .setSourceElement(SourceElement.SHOCKWAVE)
-                    .setHakiNature(SourceHakiNature.IMBUING)
-                    .setSourceTypes(new ArrayList(Arrays.asList(SourceType.INTERNAL)))
-                    .setUnavoidable()
-                    .setPiercing(1.0F);
-
-            for (LivingEntity target : damageList) {
-                target.hurtTime = target.invulnerableTime = 0;
-                target.hurt(shockwaveSource, 85.0F);
-            }
-
-            for (LivingEntity target : knockbackList) {
-                Vector3d speed = target.getLookAngle()
-                        .multiply(-1.0, -1.0, -1.0)
-                        .multiply(1.0, 0.0, 1.0);
-                AbilityHelper.setDeltaMovement(target, speed.x, 0.25, speed.z);
-            }
-
-            if (!this.level.isClientSide) {
-                // Place fire across the disc once on impact using a single structured pass.
-                // We use a spiral of 20 angles × radius steps — same coverage as before but
-                // done once rather than per-tick, and capped at 20 radial spokes.
-                double ix = this.getX(), iy = this.getY(), iz = this.getZ();
-                for (int spoke = 0; spoke < 20; spoke++) {
-                    double angle = (spoke / 20.0) * Math.PI * 2.0;
-                    // Step every 2 blocks along each spoke — reduces block accesses by 4×
-                    for (double r = 1.0; r <= AOE_RADIUS; r += 2.0) {
-                        int fireX = (int)(ix + Math.cos(angle) * r);
-                        int fireZ = (int)(iz + Math.sin(angle) * r);
-                        for (int fireY = (int) iy; fireY >= (int) iy - 5; fireY--) {
-                            BlockPos below = new BlockPos(fireX, fireY - 1, fireZ);
-                            BlockPos above = new BlockPos(fireX, fireY,     fireZ);
-                            if (!this.level.getBlockState(below).isAir()
-                                    && this.level.getBlockState(above).isAir()) {
-                                this.level.setBlock(above, Blocks.FIRE.defaultBlockState(), 3);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                ServerWorld sw = (ServerWorld) this.level;
-
-                // Initial burst — greatly reduced from 800 to 80; still looks dramatic
-                // at ground level on impact.
-                for (int i = 0; i < 80; i++) {
-                    double angle = this.random.nextDouble() * Math.PI * 2.0;
-                    double r     = Math.sqrt(this.random.nextDouble()) * AOE_RADIUS;
-                    WyHelper.spawnParticleEffect(
-                            (ParticleEffect) ModParticleEffects.HEAT_DASH.get(), this,
-                            ix + Math.cos(angle) * r, iy + this.random.nextDouble() * 5.0, iz + Math.sin(angle) * r);
-                }
-
-                WyHelper.spawnParticles(ParticleTypes.FLAME, sw,
-                        ix, iy + 2.0, iz,
-                        (float) AOE_RADIUS, 3.0f, (float) AOE_RADIUS, 60);
-            }
-
-            this.setImpactTick(this.tickCount);
-            this.setFinished();
-            this.setPlayingParticles();
-            AbilityHelper.setDeltaMovement(this, 0, 0, 0);
-            this.teleportTo(this.getX(), this.getY(), this.getZ());
+    /** Manual detonation — only works after 1.5 seconds in the air. */
+    public void detonate() {
+        if (!this.isFinished() && ticksInAir >= MIN_AIR_TICKS) {
+            doImpact(this.blockPosition());
         }
     }
 
+    private void onBlockImpactEvent(BlockPos hit) {
+        if (!this.isFinished() && !this.isChargeVisual) {
+            doImpact(hit);
+        }
+    }
+
+    private void doImpact(BlockPos hit) {
+        if (KaziSounds.FUGA_HIT_SFX.get() != null) {
+            this.level.playSound((PlayerEntity) null, this.blockPosition(),
+                    (SoundEvent) KaziSounds.FUGA_HIT_SFX.get(), SoundCategory.PLAYERS, 10.0F, 0.25F);
+        }
+
+        AbilityHelper.createSphere(this.level, this.blockPosition(), 55, 5, false, Blocks.AIR, 2, GRIEF_RULE);
+
+        List<LivingEntity> damageList    = WyHelper.getNearbyLiving(this.position(), this.level, 13.75F, ModEntityPredicates.getEnemyFactions(this.getThrower()));
+        List<LivingEntity> knockbackList = WyHelper.getNearbyLiving(this.position(), this.level, 22.0F,  ModEntityPredicates.getEnemyFactions(this.getThrower()));
+
+        ModDamageSource shockwaveSource = (new ModIndirectEntityDamageSource(
+                super.getDamageSource().msgId, this, super.getThrower()))
+                .setSourceElement(SourceElement.SHOCKWAVE)
+                .setHakiNature(SourceHakiNature.IMBUING)
+                .setSourceTypes(new ArrayList<>(Arrays.asList(SourceType.INTERNAL)))
+                .setUnavoidable()
+                .setPiercing(1.0F);
+
+        for (LivingEntity target : damageList) {
+            target.hurtTime = target.invulnerableTime = 0;
+            target.hurt(shockwaveSource, 85.0F);
+        }
+
+        for (LivingEntity target : knockbackList) {
+            Vector3d speed = target.getLookAngle()
+                    .multiply(-1.0, -1.0, -1.0)
+                    .multiply(1.0, 0.0, 1.0);
+            AbilityHelper.setDeltaMovement(target, speed.x, 0.25, speed.z);
+        }
+
+        if (!this.level.isClientSide) {
+            double ix = this.getX(), iy = this.getY(), iz = this.getZ();
+            for (int spoke = 0; spoke < 20; spoke++) {
+                double angle = (spoke / 20.0) * Math.PI * 2.0;
+                for (double r = 1.0; r <= AOE_RADIUS; r += 2.0) {
+                    int fireX = (int)(ix + Math.cos(angle) * r);
+                    int fireZ = (int)(iz + Math.sin(angle) * r);
+                    for (int fireY = (int) iy; fireY >= (int) iy - 5; fireY--) {
+                        BlockPos below = new BlockPos(fireX, fireY - 1, fireZ);
+                        BlockPos above = new BlockPos(fireX, fireY,     fireZ);
+                        if (!this.level.getBlockState(below).isAir()
+                                && this.level.getBlockState(above).isAir()) {
+                            this.level.setBlock(above, Blocks.FIRE.defaultBlockState(), 3);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            ServerWorld sw = (ServerWorld) this.level;
+            for (int i = 0; i < 80; i++) {
+                double angle = this.random.nextDouble() * Math.PI * 2.0;
+                double r     = Math.sqrt(this.random.nextDouble()) * AOE_RADIUS;
+                WyHelper.spawnParticleEffect(
+                        (ParticleEffect) ModParticleEffects.HEAT_DASH.get(), this,
+                        ix + Math.cos(angle) * r, iy + this.random.nextDouble() * 5.0, iz + Math.sin(angle) * r);
+            }
+
+            WyHelper.spawnParticles(ParticleTypes.FLAME, sw,
+                    ix, iy + 2.0, iz,
+                    (float) AOE_RADIUS, 3.0f, (float) AOE_RADIUS, 60);
+        }
+
+        if (getThrower() != null) {
+            net.kazi.kazimod.abilities.KamaRework.FugaAbility.triggerCooldownForEntity(getThrower());
+        }
+
+        this.setImpactTick(this.tickCount);
+        this.setFinished();
+        this.setPlayingParticles();
+        AbilityHelper.setDeltaMovement(this, 0, 0, 0);
+        this.teleportTo(this.getX(), this.getY(), this.getZ());
+    }
+
+    @Override
     public void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SIZE,              0.0F);
@@ -252,11 +269,11 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
         this.entityData.define(IMPACT_TICK,       0);
     }
 
-    public void setSize(float size)  { this.entityData.set(SIZE, size); }
-    public float getSize()           { return (Float) this.entityData.get(SIZE); }
+    @Override public void setSize(float size) { this.entityData.set(SIZE, size); }
+    @Override public float getSize()          { return (Float) this.entityData.get(SIZE); }
 
-    public boolean isFinished()      { return (Boolean) this.entityData.get(FINISHED); }
-    public void setFinished()        { this.entityData.set(FINISHED, true); }
+    public boolean isFinished()         { return (Boolean) this.entityData.get(FINISHED); }
+    public void setFinished()           { this.entityData.set(FINISHED, true); }
 
     public boolean isPlayingParticles() { return (Boolean) this.entityData.get(PLAYING_PARTICLES); }
     public void setPlayingParticles()   { this.entityData.set(PLAYING_PARTICLES, true); }

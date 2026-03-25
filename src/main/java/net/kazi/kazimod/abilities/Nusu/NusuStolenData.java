@@ -10,24 +10,13 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-/**
- * Persistent NBT storage for the Nusu Nusu no Mi steal tracking.
- *
- * NUSU USER — stored on the user's getPersistentData() under "nusu_held":
- *   Comma-separated resource location strings of abilities they stole.
- *   Max 4. When user dies, all are returned.
- *
- * VICTIM — stored on the victim's getPersistentData() under "nusu_stolen_from":
- *   Comma-separated resource location strings of abilities stolen from them.
- *   Every tick these are stripped from their unlocked set so they can never
- *   be re-saved or re-granted.
- */
 public class NusuStolenData {
 
     public static final String HELD_KEY   = "nusu_held";
     public static final String VICTIM_KEY = "nusu_stolen_from";
-    public static final int    MAX_SLOTS  = 4;
+    public static final int    MAX_SLOTS  = 2; // reduced from 4 to 2
 
     // ── victim ────────────────────────────────────────────────────────────────
 
@@ -60,7 +49,6 @@ public class NusuStolenData {
         nbt.put(VICTIM_KEY, list);
     }
 
-    /** All abilities currently marked as stolen from this entity. */
     public static List<AbilityCore<?>> getStolenFrom(LivingEntity victim) {
         return parseList(readList(victim.getPersistentData(), VICTIM_KEY));
     }
@@ -71,7 +59,6 @@ public class NusuStolenData {
         return readList(user.getPersistentData(), HELD_KEY).size();
     }
 
-    /** Add to held list. Returns slot index 0-3, or -1 if full. */
     public static int addHeld(LivingEntity user, AbilityCore<?> core) {
         ResourceLocation rl = ModRegistries.ABILITIES.getKey(core);
         if (rl == null) return -1;
@@ -111,17 +98,15 @@ public class NusuStolenData {
         user.getPersistentData().put(HELD_KEY, new ListNBT());
     }
 
-    // ── pending steal (set by SkillHunter, consumed by /nusu_steal) ──────────
+    // ── pending steal ─────────────────────────────────────────────────────────
 
     public static final String PENDING_TARGET_KEY  = "nusu_pending_target";
     public static final String PENDING_CHOICES_KEY = "nusu_pending_choices";
 
-    /** Store the UUID of the target whose abilities are pending selection. */
     public static void setPendingStealTarget(LivingEntity user, LivingEntity target) {
         user.getPersistentData().putUUID(PENDING_TARGET_KEY, target.getUUID());
     }
 
-    /** Store the list of ability cores the user may choose from. */
     public static void setPendingChoices(LivingEntity user, List<AbilityCore<?>> choices) {
         ListNBT list = new ListNBT();
         for (AbilityCore<?> core : choices) {
@@ -131,19 +116,16 @@ public class NusuStolenData {
         user.getPersistentData().put(PENDING_CHOICES_KEY, list);
     }
 
-    /** Get the pending choices list. Returns empty list if none. */
     public static List<AbilityCore<?>> getPendingChoices(LivingEntity user) {
         return parseList(readList(user.getPersistentData(), PENDING_CHOICES_KEY));
     }
 
-    /** Get the pending target UUID, or null if none. */
-    public static java.util.UUID getPendingStealTargetUUID(LivingEntity user) {
+    public static UUID getPendingStealTargetUUID(LivingEntity user) {
         CompoundNBT nbt = user.getPersistentData();
         if (!nbt.contains(PENDING_TARGET_KEY)) return null;
         try { return nbt.getUUID(PENDING_TARGET_KEY); } catch (Exception e) { return null; }
     }
 
-    /** Clear pending steal state after selection or expiry. */
     public static void clearPending(LivingEntity user) {
         CompoundNBT nbt = user.getPersistentData();
         nbt.remove(PENDING_TARGET_KEY);

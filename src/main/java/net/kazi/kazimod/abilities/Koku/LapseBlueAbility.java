@@ -1,4 +1,4 @@
-package net.kazi.kazimod.abilities.Gojo;
+package net.kazi.kazimod.abilities.Koku;
 
 import net.kazi.kazimod.entities.projectiles.HollowNukeProjectile;
 import net.kazi.kazimod.init.KaziAnimations;
@@ -107,8 +107,12 @@ public class LapseBlueAbility extends Ability {
         if (hollowPurple != null && hollowPurple.isCharging()) {
             return AbilityUseResult.fail(null);
         }
-        // Block Lapse Blue while a Hollow Nuke is active
         if (HollowNukeProjectile.ACTIVE_PROJECTILES.containsKey(entity.getUUID())) {
+            return AbilityUseResult.fail(null);
+        }
+        // Shared cooldown with Max Output: Lapse Blue
+        MaxOutputLapseBlueAbility maxBlue = (MaxOutputLapseBlueAbility) data.getEquippedAbility(MaxOutputLapseBlueAbility.INSTANCE);
+        if (maxBlue != null && maxBlue.isOnCooldown()) {
             return AbilityUseResult.fail(null);
         }
         return AbilityUseResult.success();
@@ -124,7 +128,6 @@ public class LapseBlueAbility extends Ability {
         }
     }
 
-    // ── Pull phase ────────────────────────────────────────────────────────────
     private void onPullStart(LivingEntity entity, IAbility ability) {
         this.hitTrackerComponent.clearHits();
         this.slamTarget = null;
@@ -187,7 +190,6 @@ public class LapseBlueAbility extends Ability {
         }
     }
 
-    // ── Punch & slam phase ────────────────────────────────────────────────────
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         this.teleported = false;
         this.slammed = false;
@@ -282,6 +284,10 @@ public class LapseBlueAbility extends Ability {
             this.animationComponent.stop(entity);
             super.cooldownComponent.startCooldown(entity, COOLDOWN);
         }
+    }
+
+    public boolean isOnCooldown() {
+        return this.cooldownComponent.isOnCooldown();
     }
 
     public void startCooldown(LivingEntity entity) {

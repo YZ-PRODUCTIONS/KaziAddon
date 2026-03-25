@@ -43,6 +43,26 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
+          "name": "kazimod:koku_koku_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "kazimod:nusu_nusu_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
           "name": "kazimod:tenki_tenki_no_mi"
         },
         {

@@ -28,7 +28,7 @@ public class RedProjectile extends AbilityProjectileEntity {
         this.setHurtTime(5);
         this.setUnavoidable();
         this.setBlocksAffectedLimit(2048);
-        this.setEntityCollisionSize((double) 4.0F, (double) 4.0F, (double) 4.0F);
+        this.setEntityCollisionSize((double) 5.0F, (double) 5.0F, (double) 5.0F);
         this.onEntityImpactEvent = this::onEntityImpactEvent;
         this.onBlockImpactEvent = this::onBlockImpactEvent;
         this.onTickEvent = this::onTickEvent;

@@ -28,15 +28,13 @@ public class KaziParticleTypesClient {
         manager.register((ParticleType) KaziParticleTypes.FUGA.get(),                       new SimpleParticle.Factory(KaziResources.Fuga));
         manager.register((ParticleType) KaziParticleTypes.GREEN_SWEEP.get(),                new SimpleParticle.Factory(KaziResources.GreenSweep));
         manager.register((ParticleType) KaziParticleTypes.GREEN_TORNADO.get(),              new SimpleParticle.Factory(KaziResources.GreenTornado));
-
-        // IParticleMetaFactory (sprite atlas) — same as GojoRed which works
         manager.register((ParticleType) KaziParticleTypes.GOJORED.get(),                    GojoRedParticle.Factory::new);
         manager.register((ParticleType) KaziParticleTypes.GOJO_BLUE.get(),                  GojoBlueParticle.Factory::new);
         manager.register((ParticleType) KaziParticleTypes.GOJO_BLUE_PROJECTILE.get(),       GojoBlueProjectileParticle.Factory::new);
         manager.register((ParticleType) KaziParticleTypes.GOJO_PURPLE.get(),                GojoPurpleParticle.Factory::new);
         manager.register((ParticleType) KaziParticleTypes.GOJO_PURPLE_GROWING.get(),        GojoPurpleGrowingParticle.Factory::new);
         manager.register((ParticleType) KaziParticleTypes.INFINITE_VOID.get(),              InfiniteVoidParticle.Factory::new);
-
-
+        manager.register((ParticleType) KaziParticleTypes.INFINITE_VOID_STREAK.get(),       InfiniteVoidStreakParticle.Factory::new);
+        manager.register((ParticleType) KaziParticleTypes.INFINITE_VOID_STREAK_PINK.get(),  InfiniteVoidStreakParticle.Factory::new);
     }
 }

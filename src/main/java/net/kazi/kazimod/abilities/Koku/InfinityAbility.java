@@ -1,4 +1,4 @@
-package net.kazi.kazimod.abilities.Gojo;
+package net.kazi.kazimod.abilities.Koku;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,7 +32,7 @@ public class InfinityAbility extends Ability {
             new Pair[]{ImmutablePair.of("Activates Infinity, an infinite convergence that slows all matter to a halt before it can reach Gojo. Negates all incoming damage while active.", (Object) null)}
     );
 
-    private static final float COOLDOWN_PER_STACK = 120.0F;
+    private static final float COOLDOWN_PER_STACK = 180.0F;
     private static final int   MAX_STACKS         = 6;
 
     public static final AbilityCore<InfinityAbility> INSTANCE;
@@ -65,7 +65,6 @@ public class InfinityAbility extends Ability {
                 this.stackComponent,
                 this.poolComponent
         });
-        this.addCanUseCheck(AbilityHelper::canUseMomentumAbilities);
         this.addUseEvent(this::onUseEvent);
         this.addEquipEvent(this::onEquip);
     }

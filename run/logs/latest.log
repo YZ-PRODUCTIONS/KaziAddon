@@ -1,220 +1,222 @@
-[18Mar2026 15:10:25.586] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--mixin.config, kazimod.mixins.json, --gameDir, ., --launchTarget, fmluserdevclient, --fml.mcpVersion, 20210115.111550, --fml.mcVersion, 1.16.5, --fml.forgeGroup, net.minecraftforge, --fml.forgeVersion, 36.2.39, --assetIndex, 1.16, --assetsDir, C:\Users\User\.gradle\caches\forge_gradle\assets, --version, MOD_DEV, --username, Dev, --accessToken, ❄❄❄❄❄❄❄❄, --userProperties, {}]
-[18Mar2026 15:10:25.588] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 8.1.3+8.1.3+main-8.1.x.c94d18ec starting: java version 1.8.0_482 by Amazon.com Inc.
-[18Mar2026 15:10:25.834] [main/INFO] [net.minecraftforge.fml.loading.FixSSL/CORE]: Added Lets Encrypt root certificates as additional trust
-[18Mar2026 15:10:25.870] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.4 Source=file:/C:/Users/User/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.4/4ec7d77d9ab32596ca0b78bb123956734767e3a/mixin-0.8.4.jar Service=ModLauncher Env=CLIENT
-[18Mar2026 15:10:27.119] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'fmluserdevclient' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, C:\Users\User\.gradle\caches\forge_gradle\assets, --assetIndex, 1.16, --username, Dev, --accessToken, ❄❄❄❄❄❄❄❄, --userProperties, {}]
-[18Mar2026 15:10:27.152] [main/WARN] [mixin/]: Reference map 'MineMineNoMiAddonTemplate.refmap.json' for kazimod.mixins.json could not be read. If this is a development environment you can ignore this message
-[18Mar2026 15:10:27.217] [main/INFO] [mixin/]: Remapping refMap mine-mine-no-mi.refmap.json using C:\Users\User\Downloads\KaziAddon\KaziAddon\build\createSrgToMcp\output.srg
-[18Mar2026 15:10:27.218] [main/INFO] [mixin/]: Remapping refMap cartaddon.refmap.json using C:\Users\User\Downloads\KaziAddon\KaziAddon\build\createSrgToMcp\output.srg
-[18Mar2026 15:10:27.407] [main/WARN] [mixin/]: Error loading class: org/valkyrienskies/core/util/assertions/stages/TickStageEnforcerImpl (java.lang.ClassNotFoundException: null)
-[18Mar2026 15:10:27.407] [main/WARN] [mixin/]: @Mixin target org.valkyrienskies.core.util.assertions.stages.TickStageEnforcerImpl was not found mine-mine-no-mi.mixins.json:valkyrienskies.TickStageEnforcerImplMixin
-[18Mar2026 15:10:30.424] [Render thread/ERROR] [mixin/]: Write access detected to @Final field hardcore:Z in mine-mine-no-mi.mixins.json:client.DeathScreenMixin::handler$zce000$init
-[18Mar2026 15:10:30.505] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[18Mar2026 15:10:30.900] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
-[18Mar2026 15:10:30.937] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.2.2 build 10
-[18Mar2026 15:10:31.340] [modloading-worker-18/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 36.2.39, for MC 1.16.5 with MCP 20210115.111550
-[18Mar2026 15:10:31.341] [modloading-worker-18/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v36.2.39 Initialized
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field GURA_GURA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field GASU_GASU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field YUKI_YUKI_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field HIE_HIE_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field JIKI_JIKI_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field MOKU_MOKU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field PIKA_PIKA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field HITO_HITO_NO_MI_DAIBUTSU:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.828] [modloading-worker-11/WARN] [mixin/]: @Final field KIRA_KIRA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field DOKU_DOKU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field MAGU_MAGU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field TORI_TORI_NO_MI_PHOENIX:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field GORO_GORO_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field GOE_GOE_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field CHIYU_CHIYU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field NIKYU_NIKYU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field SUNA_SUNA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field RYU_RYU_NO_MI_PTERANODON:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field MINI_MINI_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field OTO_OTO_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field SARA_SARA_NO_MI_AXOLOTL:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field OPE_OPE_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field RYU_RYU_NO_MI_BRACHIOSAURUS:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field KAGE_KAGE_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field ITO_ITO_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.829] [modloading-worker-11/WARN] [mixin/]: @Final field DEKA_DEKA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.830] [modloading-worker-11/WARN] [mixin/]: @Final field MERA_MERA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.830] [modloading-worker-11/WARN] [mixin/]: @Final field RYU_RYU_NO_MI_ALLOSAURUS:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.830] [modloading-worker-11/WARN] [mixin/]: @Final field DORU_DORU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:31.830] [modloading-worker-11/WARN] [mixin/]: @Final field YAMI_YAMI_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
-[18Mar2026 15:10:32.126] [modloading-worker-4/INFO] [net.kazi.kazimod.KaziMod/]: kazimod constructed
-[18Mar2026 15:10:33.449] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]: Permissions registered:
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.ability
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.ability.reset_cooldown
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.ability_protection
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.belly
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.bounty
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.challenge
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.change_character
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.check_fruits.history
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.check_fruits.list
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.check_player
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.doriki
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.events
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.extol
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.hakiexp
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.issue_bounty
-[18Mar2026 15:10:33.451] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.loyalty
-[18Mar2026 15:10:33.452] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.quest
-[18Mar2026 15:10:33.452] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.removedf
-[18Mar2026 15:10:33.452] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.removedf.self
-[18Mar2026 15:10:33.452] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.item.buster_call
-[18Mar2026 15:10:33.524] [modloading-worker-11/WARN] [mixin/]: @Final field forwards:Lnet/minecraft/util/math/vector/Vector3f; in mine-mine-no-mi.mixins.json:client.ActiveRenderInfoMixin should be final
-[18Mar2026 15:10:35.485] [Render thread/INFO] [com.mojang.text2speech.NarratorWindows/]: Narrator library for x64 successfully loaded
-[18Mar2026 15:10:35.512] [Render thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, Mod Resources
-[18Mar2026 15:10:35.548] [Worker-Main-10/INFO] [kazimod/]: piraterecruits Common Setup Starting
-[18Mar2026 15:10:35.550] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
-[18Mar2026 15:10:35.619] [Worker-Main-8/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:35.619] [Worker-Main-13/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:35.620] [Worker-Main-9/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:35.706] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 36.2.39 Target: 36.2.42
-[18Mar2026 15:10:35.709] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/oshizumaria.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/oshizumaria.png
-[18Mar2026 15:10:35.715] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/ability_off.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/ability_off.png
-[18Mar2026 15:10:35.716] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/soot.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/soot.png
-[18Mar2026 15:10:35.719] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/impact_frame.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/impact_frame.png
-[18Mar2026 15:10:35.722] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/enhanced_movement.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/enhanced_movement.png
-[18Mar2026 15:10:35.723] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/butter.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/butter.png
-[18Mar2026 15:10:35.725] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/swim_slowdown.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/swim_slowdown.png
-[18Mar2026 15:10:35.726] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/hunger.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/hunger.png
-[18Mar2026 15:10:35.728] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/petrified.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/petrified.png
-[18Mar2026 15:10:35.740] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/guarding_with_movement.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/guarding_with_movement.png
-[18Mar2026 15:10:35.756] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/anti_knockback.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/anti_knockback.png
-[18Mar2026 15:10:35.758] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/tired.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/tired.png
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@4c905af3' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@802afb1' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@74ba0af8' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@ead43b5' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@701da164' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@4c905af3' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@802afb1' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@74ba0af8' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@ead43b5' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@701da164' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@4c905af3' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/mochi_covered.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/mochi_covered.png
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@802afb1' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@74ba0af8' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@ead43b5' to registry
-[18Mar2026 15:10:35.763] [Worker-Main-11/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@701da164' to registry
-[18Mar2026 15:10:35.765] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/custom_lighting.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/custom_lighting.png
-[18Mar2026 15:10:35.770] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/weakened_movement.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/weakened_movement.png
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: Setting up custom fruit abilities
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Awa Awa no Mi (2 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Awa Awa no Mi (3 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Goro Goro no Mi (12 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Goro Goro no Mi (14 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Tori Tori no Mi, Model: Nue (9 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Tori Tori no Mi, Model: Nue (11 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Uo Uo no Mi, Model: Seiryu (9 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Uo Uo no Mi, Model: Seiryu (10 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Inu Inu no Mi, Model: Kyubi No Kitsune (1 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Inu Inu no Mi, Model: Kyubi No Kitsune (5 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Nikyu Nikyu no Mi (4 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Nikyu Nikyu no Mi (7 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Gasu Gasu no Mi (8 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Gasu Gasu no Mi (10 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Ryu Ryu no Mi, Model: Kirin (5 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Ryu Ryu no Mi, Model: Kirin (8 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Karu Karu no Mi (1 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Karu Karu no Mi (4 total abilities)
-[18Mar2026 15:10:35.774] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Yami Yami no Mi (6 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Yami Yami no Mi (7 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Ito Ito no Mi (14 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Ito Ito no Mi (15 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Suna Suna no Mi (14 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Gomu Gomu no Mi (5 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Gomu Gomu no Mi (14 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kama Kama no Mi (2 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kama Kama no Mi (7 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Noro Noro no Mi (1 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Noro Noro no Mi (3 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Chiyu Chiyu no Mi (3 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Chiyu Chiyu no Mi (4 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Bane Bane no Mi (3 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Bane Bane no Mi (4 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Deka Deka no Mi (1 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Deka Deka no Mi (2 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Doku Doku no Mi (6 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Doku Doku no Mi (7 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Bomu Bomu no Mi (4 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Bomu Bomu no Mi (10 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Horo Horo no Mi (1 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Horo Horo no Mi (4 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Beta Beta no Mi (4 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Soru Soru no Mi (19 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Soru Soru no Mi (20 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kobu Kobu No Mi (1 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kobu Kobu No Mi (2 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Jiki Jiki no Mi (10 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Jiki Jiki no Mi (13 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kachi Kachi no Mi (5 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Hito Hito no Mi, Model: Daibutsu (6 total abilities)
-[18Mar2026 15:10:35.775] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Hito Hito no Mi, Model: Daibutsu (7 total abilities)
-[18Mar2026 15:10:35.783] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/reduced_fall.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/reduced_fall.png
-[18Mar2026 15:10:35.786] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/flaming_rot.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/flaming_rot.png
-[18Mar2026 15:10:35.786] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/marked.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/marked.png
-[18Mar2026 15:10:35.788] [Worker-Main-11/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/miniaturized.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/miniaturized.png
-[18Mar2026 15:10:35.794] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/bouncy.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/bouncy.png
-[18Mar2026 15:10:35.827] [Worker-Main-11/INFO] [kazimod/]: piraterecruits Client Setup Starting
-[18Mar2026 15:10:35.888] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/swampy.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/swampy.png
-[18Mar2026 15:10:35.895] [Worker-Main-14/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/physical_guarding.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/physical_guarding.png
-[18Mar2026 15:10:36.575] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: mineminenomi:blockstates/structure_air.json: java.io.FileNotFoundException: mineminenomi:blockstates/structure_air.json
-[18Mar2026 15:10:36.575] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: 'mineminenomi:blockstates/structure_air.json' missing model for variant: 'mineminenomi:structure_air#'
-[18Mar2026 15:10:36.576] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: mineminenomi:blockstates/challenge_air.json: java.io.FileNotFoundException: mineminenomi:blockstates/challenge_air.json
-[18Mar2026 15:10:36.576] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: 'mineminenomi:blockstates/challenge_air.json' missing model for variant: 'mineminenomi:challenge_air#'
-[18Mar2026 15:10:36.580] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: cartaddon:blockstates/ito.json: java.io.FileNotFoundException: cartaddon:blockstates/ito.json
-[18Mar2026 15:10:36.580] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: 'cartaddon:blockstates/ito.json' missing model for variant: 'cartaddon:ito#'
-[18Mar2026 15:10:36.905] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'mineminenomi:structure_air#inventory' referenced from: mineminenomi:structure_air#inventory: java.io.FileNotFoundException: mineminenomi:models/item/structure_air.json
-[18Mar2026 15:10:36.905] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'mineminenomi:challenge_air#inventory' referenced from: mineminenomi:challenge_air#inventory: java.io.FileNotFoundException: mineminenomi:models/item/challenge_air.json
-[18Mar2026 15:10:36.921] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'cartaddon:item/katakuri_cape_overlay' referenced from: cartaddon:katakuri_cape#inventory: java.io.FileNotFoundException: cartaddon:models/item/katakuri_cape_overlay.json
-[18Mar2026 15:10:36.926] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'cartaddon:ito#inventory' referenced from: cartaddon:ito#inventory: java.io.FileNotFoundException: cartaddon:models/item/ito.json
-[18Mar2026 15:10:36.926] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'cartaddon:blocks/string_block' referenced from: cartaddon:string_block#inventory: java.io.FileNotFoundException: cartaddon:models/blocks/string_block.json
-[18Mar2026 15:10:37.012] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #down in mineminenomi:block/flag
-[18Mar2026 15:10:37.012] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #up in mineminenomi:block/flag
-[18Mar2026 15:10:37.012] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #north in mineminenomi:block/flag
-[18Mar2026 15:10:37.012] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #south in mineminenomi:block/flag
-[18Mar2026 15:10:37.012] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #west in mineminenomi:block/flag
-[18Mar2026 15:10:37.012] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #east in mineminenomi:block/flag
-[18Mar2026 15:10:37.012] [Worker-Main-12/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #missingno in cartaddon:item/string_block
-[18Mar2026 15:10:37.013] [Worker-Main-12/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:37.123] [Worker-Main-12/WARN] [net.minecraft.client.renderer.texture.AtlasTexture/]: Texture cartaddon:items/sentomaru_axe with size 200x200 limits mip level from 4 to 3
-[18Mar2026 15:10:37.123] [Worker-Main-12/WARN] [net.minecraft.client.renderer.texture.AtlasTexture/]: Texture mineminenomi:models/blocks/milky with size 100x50 limits mip level from 3 to 1
-[18Mar2026 15:10:37.350] [Worker-Main-12/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:37.353] [Worker-Main-12/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:37.361] [Worker-Main-12/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:37.368] [Worker-Main-12/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:37.371] [Worker-Main-12/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:37.376] [Worker-Main-12/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
-[18Mar2026 15:10:37.381] [Worker-Main-9/INFO] [kazimod/]: piraterecruits IMC Enqueue
-[18Mar2026 15:10:37.841] [Render thread/INFO] [net.minecraft.client.audio.SoundSystem/]: OpenAL initialized.
-[18Mar2026 15:10:37.842] [Render thread/INFO] [net.minecraft.client.audio.SoundEngine/SOUNDS]: Sound engine started
-[18Mar2026 15:10:37.944] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 4096x2048x4 minecraft:textures/atlas/blocks.png-atlas
-[18Mar2026 15:10:38.010] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 256x128x4 minecraft:textures/atlas/signs.png-atlas
-[18Mar2026 15:10:38.013] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
-[18Mar2026 15:10:38.014] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
-[18Mar2026 15:10:38.014] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
-[18Mar2026 15:10:38.014] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
-[18Mar2026 15:10:38.014] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
-[18Mar2026 15:10:38.983] [Render thread/WARN] [net.minecraft.client.shader.ShaderInstance/]: Could not find uniform named InSize in the specified shader program.
-[18Mar2026 15:10:39.080] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
-[18Mar2026 15:10:39.082] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
-[18Mar2026 15:10:39.082] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 1024x512x0 minecraft:textures/atlas/mob_effects.png-atlas
-[18Mar2026 15:10:39.286] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: DONT_CRASH
-[18Mar2026 15:10:48.323] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18Mar2026 15:10:48.324] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18Mar2026 15:10:48.324] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18Mar2026 15:10:48.325] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18Mar2026 15:10:48.325] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18Mar2026 15:10:48.328] [Render thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar, mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar, main, curios-309927-4419403_mapped_official_1.16.5.jar, carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar
-[18Mar2026 15:10:48.783] [Render thread/ERROR] [net.minecraft.tags.TagCollectionReader/]: Couldn't load entity_type tag mineminenomi:magnetic as it is missing following references: cartaddom:pacifista_mark_two (from carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar),cartaddom:pacifista_world_boss (from carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar)
-[18Mar2026 15:10:48.798] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:zoro_robe
+[24Mar2026 18:08:02.613] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--mixin.config, kazimod.mixins.json, --gameDir, ., --launchTarget, fmluserdevclient, --fml.mcpVersion, 20210115.111550, --fml.mcVersion, 1.16.5, --fml.forgeGroup, net.minecraftforge, --fml.forgeVersion, 36.2.39, --assetIndex, 1.16, --assetsDir, C:\Users\User\.gradle\caches\forge_gradle\assets, --version, MOD_DEV, --username, Dev, --accessToken, ❄❄❄❄❄❄❄❄, --userProperties, {}]
+[24Mar2026 18:08:02.615] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 8.1.3+8.1.3+main-8.1.x.c94d18ec starting: java version 1.8.0_482 by Amazon.com Inc.
+[24Mar2026 18:08:02.868] [main/INFO] [net.minecraftforge.fml.loading.FixSSL/CORE]: Added Lets Encrypt root certificates as additional trust
+[24Mar2026 18:08:02.902] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.4 Source=file:/C:/Users/User/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.4/4ec7d77d9ab32596ca0b78bb123956734767e3a/mixin-0.8.4.jar Service=ModLauncher Env=CLIENT
+[24Mar2026 18:08:04.159] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'fmluserdevclient' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, C:\Users\User\.gradle\caches\forge_gradle\assets, --assetIndex, 1.16, --username, Dev, --accessToken, ❄❄❄❄❄❄❄❄, --userProperties, {}]
+[24Mar2026 18:08:04.194] [main/WARN] [mixin/]: Reference map 'MineMineNoMiAddonTemplate.refmap.json' for kazimod.mixins.json could not be read. If this is a development environment you can ignore this message
+[24Mar2026 18:08:04.254] [main/INFO] [mixin/]: Remapping refMap mine-mine-no-mi.refmap.json using C:\Users\User\Downloads\KaziAddon\KaziAddon\build\createSrgToMcp\output.srg
+[24Mar2026 18:08:04.255] [main/INFO] [mixin/]: Remapping refMap cartaddon.refmap.json using C:\Users\User\Downloads\KaziAddon\KaziAddon\build\createSrgToMcp\output.srg
+[24Mar2026 18:08:04.441] [main/WARN] [mixin/]: Error loading class: org/valkyrienskies/core/util/assertions/stages/TickStageEnforcerImpl (java.lang.ClassNotFoundException: null)
+[24Mar2026 18:08:04.441] [main/WARN] [mixin/]: @Mixin target org.valkyrienskies.core.util.assertions.stages.TickStageEnforcerImpl was not found mine-mine-no-mi.mixins.json:valkyrienskies.TickStageEnforcerImplMixin
+[24Mar2026 18:08:07.681] [Render thread/ERROR] [mixin/]: Write access detected to @Final field hardcore:Z in mine-mine-no-mi.mixins.json:client.DeathScreenMixin::handler$zce000$init
+[24Mar2026 18:08:07.786] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[24Mar2026 18:08:08.292] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[24Mar2026 18:08:08.345] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.2.2 build 10
+[24Mar2026 18:08:08.862] [modloading-worker-18/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 36.2.39, for MC 1.16.5 with MCP 20210115.111550
+[24Mar2026 18:08:08.862] [modloading-worker-18/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v36.2.39 Initialized
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field GURA_GURA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field GASU_GASU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field YUKI_YUKI_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field HIE_HIE_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field JIKI_JIKI_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field MOKU_MOKU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field PIKA_PIKA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field HITO_HITO_NO_MI_DAIBUTSU:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field KIRA_KIRA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field DOKU_DOKU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field MAGU_MAGU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field TORI_TORI_NO_MI_PHOENIX:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.417] [modloading-worker-11/WARN] [mixin/]: @Final field GORO_GORO_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field GOE_GOE_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field CHIYU_CHIYU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field NIKYU_NIKYU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field SUNA_SUNA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field RYU_RYU_NO_MI_PTERANODON:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field MINI_MINI_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field OTO_OTO_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field SARA_SARA_NO_MI_AXOLOTL:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field OPE_OPE_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field RYU_RYU_NO_MI_BRACHIOSAURUS:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field KAGE_KAGE_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field ITO_ITO_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field DEKA_DEKA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field MERA_MERA_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field RYU_RYU_NO_MI_ALLOSAURUS:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field DORU_DORU_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.418] [modloading-worker-11/WARN] [mixin/]: @Final field YAMI_YAMI_NO_MI:Lxyz/pixelatedw/mineminenomi/items/AkumaNoMiItem; in cartaddon.mixins.json:ReworkAbilitiesMixin should be final
+[24Mar2026 18:08:09.817] [modloading-worker-29/INFO] [net.kazi.kazimod.KaziMod/]: kazimod constructed
+[24Mar2026 18:08:11.374] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]: Permissions registered:
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.ability
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.ability.reset_cooldown
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.ability_protection
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.belly
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.bounty
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.challenge
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.change_character
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.check_fruits.history
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.check_fruits.list
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.check_player
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.doriki
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.events
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.extol
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.hakiexp
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.issue_bounty
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.loyalty
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.quest
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.removedf
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.command.removedf.self
+[24Mar2026 18:08:11.375] [modloading-worker-11/INFO] [xyz.pixelatedw.mineminenomi.ModMain/]:   mineminenomi.item.buster_call
+[24Mar2026 18:08:11.444] [modloading-worker-11/WARN] [mixin/]: @Final field forwards:Lnet/minecraft/util/math/vector/Vector3f; in mine-mine-no-mi.mixins.json:client.ActiveRenderInfoMixin should be final
+[24Mar2026 18:08:14.032] [Render thread/INFO] [com.mojang.text2speech.NarratorWindows/]: Narrator library for x64 successfully loaded
+[24Mar2026 18:08:14.058] [Render thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, Mod Resources
+[24Mar2026 18:08:14.099] [Worker-Main-9/INFO] [kazimod/]: piraterecruits Common Setup Starting
+[24Mar2026 18:08:14.102] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[24Mar2026 18:08:14.200] [Worker-Main-8/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:14.200] [Worker-Main-11/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:14.200] [Worker-Main-12/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:14.293] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 36.2.39 Target: 36.2.42
+[24Mar2026 18:08:14.322] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@2b7ac1c1' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@1b31f6e' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@781f03b9' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@6e7efebc' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@1f1a090b' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@2b7ac1c1' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@1b31f6e' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@781f03b9' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@6e7efebc' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@1f1a090b' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@2b7ac1c1' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@1b31f6e' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@781f03b9' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@6e7efebc' to registry
+[24Mar2026 18:08:14.323] [Worker-Main-13/ERROR] [net.minecraft.util.registry.SimpleRegistry/]: Adding duplicate value 'net.minecraft.world.gen.feature.jigsaw.JigsawPattern@1f1a090b' to registry
+[24Mar2026 18:08:14.328] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/oshizumaria.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/oshizumaria.png
+[24Mar2026 18:08:14.337] [Worker-Main-10/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/ability_off.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/ability_off.png
+[24Mar2026 18:08:14.337] [Worker-Main-10/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/soot.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/soot.png
+[24Mar2026 18:08:14.338] [Render thread/INFO] [kazimod/]: Setting up custom fruit abilities
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Awa Awa no Mi (2 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Awa Awa no Mi (3 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Goro Goro no Mi (12 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Goro Goro no Mi (14 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Tori Tori no Mi, Model: Nue (9 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Tori Tori no Mi, Model: Nue (11 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Uo Uo no Mi, Model: Seiryu (9 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Uo Uo no Mi, Model: Seiryu (10 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Inu Inu no Mi, Model: Kyubi No Kitsune (1 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Inu Inu no Mi, Model: Kyubi No Kitsune (5 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Nikyu Nikyu no Mi (4 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Nikyu Nikyu no Mi (7 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Gasu Gasu no Mi (8 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Gasu Gasu no Mi (10 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Ryu Ryu no Mi, Model: Kirin (5 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Ryu Ryu no Mi, Model: Kirin (8 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Karu Karu no Mi (1 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Karu Karu no Mi (4 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Yami Yami no Mi (6 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Yami Yami no Mi (7 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Ito Ito no Mi (14 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Ito Ito no Mi (15 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Suna Suna no Mi (13 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Gomu Gomu no Mi (4 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Gomu Gomu no Mi (14 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kama Kama no Mi (2 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kama Kama no Mi (7 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Noro Noro no Mi (1 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Noro Noro no Mi (3 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Chiyu Chiyu no Mi (3 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Chiyu Chiyu no Mi (4 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Bane Bane no Mi (3 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Bane Bane no Mi (4 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Deka Deka no Mi (1 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Deka Deka no Mi (2 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Doku Doku no Mi (6 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Doku Doku no Mi (7 total abilities)
+[24Mar2026 18:08:14.339] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Bomu Bomu no Mi (4 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Bomu Bomu no Mi (10 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Horo Horo no Mi (1 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Horo Horo no Mi (4 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Beta Beta no Mi (4 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Soru Soru no Mi (19 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Soru Soru no Mi (20 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kobu Kobu No Mi (1 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kobu Kobu No Mi (2 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Jiki Jiki no Mi (10 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Jiki Jiki no Mi (13 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kachi Kachi no Mi (5 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Hito Hito no Mi, Model: Daibutsu (6 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Hito Hito no Mi, Model: Daibutsu (7 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kage Kage no Mi (9 total abilities)
+[24Mar2026 18:08:14.340] [Render thread/INFO] [kazimod/]: [FruitAbilityInjector] Updated Kage Kage no Mi (10 total abilities)
+[24Mar2026 18:08:14.343] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/impact_frame.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/impact_frame.png
+[24Mar2026 18:08:14.397] [Worker-Main-13/INFO] [kazimod/]: piraterecruits Client Setup Starting
+[24Mar2026 18:08:14.422] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/enhanced_movement.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/enhanced_movement.png
+[24Mar2026 18:08:14.426] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/butter.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/butter.png
+[24Mar2026 18:08:14.439] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/swim_slowdown.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/swim_slowdown.png
+[24Mar2026 18:08:14.472] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/hunger.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/hunger.png
+[24Mar2026 18:08:14.480] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/petrified.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/petrified.png
+[24Mar2026 18:08:14.495] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/guarding_with_movement.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/guarding_with_movement.png
+[24Mar2026 18:08:14.501] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/anti_knockback.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/anti_knockback.png
+[24Mar2026 18:08:14.504] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/tired.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/tired.png
+[24Mar2026 18:08:14.515] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/mochi_covered.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/mochi_covered.png
+[24Mar2026 18:08:14.517] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/custom_lighting.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/custom_lighting.png
+[24Mar2026 18:08:14.539] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/weakened_movement.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/weakened_movement.png
+[24Mar2026 18:08:14.573] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/reduced_fall.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/reduced_fall.png
+[24Mar2026 18:08:14.574] [Worker-Main-11/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/marked.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/marked.png
+[24Mar2026 18:08:14.575] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/flaming_rot.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/flaming_rot.png
+[24Mar2026 18:08:14.576] [Worker-Main-12/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/miniaturized.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/miniaturized.png
+[24Mar2026 18:08:14.578] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load kazimod:textures/mob_effect/bouncy.png : java.io.FileNotFoundException: kazimod:textures/mob_effect/bouncy.png
+[24Mar2026 18:08:14.578] [Worker-Main-11/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load cartaddon:textures/mob_effect/swampy.png : java.io.FileNotFoundException: cartaddon:textures/mob_effect/swampy.png
+[24Mar2026 18:08:14.578] [Worker-Main-13/ERROR] [net.minecraft.client.renderer.texture.AtlasTexture/]: Using missing texture, unable to load mineminenomi:textures/mob_effect/physical_guarding.png : java.io.FileNotFoundException: mineminenomi:textures/mob_effect/physical_guarding.png
+[24Mar2026 18:08:15.553] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: mineminenomi:blockstates/structure_air.json: java.io.FileNotFoundException: mineminenomi:blockstates/structure_air.json
+[24Mar2026 18:08:15.553] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: 'mineminenomi:blockstates/structure_air.json' missing model for variant: 'mineminenomi:structure_air#'
+[24Mar2026 18:08:15.554] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: mineminenomi:blockstates/challenge_air.json: java.io.FileNotFoundException: mineminenomi:blockstates/challenge_air.json
+[24Mar2026 18:08:15.554] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: 'mineminenomi:blockstates/challenge_air.json' missing model for variant: 'mineminenomi:challenge_air#'
+[24Mar2026 18:08:15.559] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: cartaddon:blockstates/ito.json: java.io.FileNotFoundException: cartaddon:blockstates/ito.json
+[24Mar2026 18:08:15.559] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Exception loading blockstate definition: 'cartaddon:blockstates/ito.json' missing model for variant: 'cartaddon:ito#'
+[24Mar2026 18:08:15.918] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'mineminenomi:structure_air#inventory' referenced from: mineminenomi:structure_air#inventory: java.io.FileNotFoundException: mineminenomi:models/item/structure_air.json
+[24Mar2026 18:08:15.918] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'mineminenomi:challenge_air#inventory' referenced from: mineminenomi:challenge_air#inventory: java.io.FileNotFoundException: mineminenomi:models/item/challenge_air.json
+[24Mar2026 18:08:15.937] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'cartaddon:item/katakuri_cape_overlay' referenced from: cartaddon:katakuri_cape#inventory: java.io.FileNotFoundException: cartaddon:models/item/katakuri_cape_overlay.json
+[24Mar2026 18:08:15.942] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'cartaddon:ito#inventory' referenced from: cartaddon:ito#inventory: java.io.FileNotFoundException: cartaddon:models/item/ito.json
+[24Mar2026 18:08:15.942] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to load model: 'cartaddon:blocks/string_block' referenced from: cartaddon:string_block#inventory: java.io.FileNotFoundException: cartaddon:models/blocks/string_block.json
+[24Mar2026 18:08:16.100] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #down in mineminenomi:block/flag
+[24Mar2026 18:08:16.100] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #up in mineminenomi:block/flag
+[24Mar2026 18:08:16.100] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #north in mineminenomi:block/flag
+[24Mar2026 18:08:16.100] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #south in mineminenomi:block/flag
+[24Mar2026 18:08:16.100] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #west in mineminenomi:block/flag
+[24Mar2026 18:08:16.100] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #east in mineminenomi:block/flag
+[24Mar2026 18:08:16.100] [Worker-Main-14/WARN] [net.minecraft.client.renderer.model.ModelBakery/]: Unable to resolve texture reference: #missingno in cartaddon:item/string_block
+[24Mar2026 18:08:16.101] [Worker-Main-14/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:16.268] [Worker-Main-14/WARN] [net.minecraft.client.renderer.texture.AtlasTexture/]: Texture cartaddon:items/sentomaru_axe with size 200x200 limits mip level from 4 to 3
+[24Mar2026 18:08:16.268] [Worker-Main-14/WARN] [net.minecraft.client.renderer.texture.AtlasTexture/]: Texture mineminenomi:models/blocks/milky with size 100x50 limits mip level from 3 to 1
+[24Mar2026 18:08:16.516] [Worker-Main-14/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:16.518] [Worker-Main-14/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:16.529] [Worker-Main-14/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:16.538] [Worker-Main-14/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:16.542] [Worker-Main-14/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:16.549] [Worker-Main-14/INFO] [kazimod/]: piraterecruits Texture Stitch (Pre)
+[24Mar2026 18:08:16.572] [Worker-Main-9/INFO] [kazimod/]: piraterecruits IMC Enqueue
+[24Mar2026 18:08:17.070] [Render thread/INFO] [net.minecraft.client.audio.SoundSystem/]: OpenAL initialized.
+[24Mar2026 18:08:17.071] [Render thread/INFO] [net.minecraft.client.audio.SoundEngine/SOUNDS]: Sound engine started
+[24Mar2026 18:08:17.177] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 4096x2048x4 minecraft:textures/atlas/blocks.png-atlas
+[24Mar2026 18:08:17.246] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 256x128x4 minecraft:textures/atlas/signs.png-atlas
+[24Mar2026 18:08:17.250] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[24Mar2026 18:08:17.250] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[24Mar2026 18:08:17.250] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[24Mar2026 18:08:17.250] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[24Mar2026 18:08:17.250] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[24Mar2026 18:08:18.255] [Render thread/WARN] [net.minecraft.client.shader.ShaderInstance/]: Could not find uniform named InSize in the specified shader program.
+[24Mar2026 18:08:18.382] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[24Mar2026 18:08:18.384] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[24Mar2026 18:08:18.384] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 1024x512x0 minecraft:textures/atlas/mob_effects.png-atlas
+[24Mar2026 18:08:18.562] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: DONT_CRASH
+[24Mar2026 18:08:34.390] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[24Mar2026 18:08:34.390] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[24Mar2026 18:08:34.390] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[24Mar2026 18:08:34.392] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[24Mar2026 18:08:34.392] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[24Mar2026 18:08:34.395] [Render thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar, mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar, main, curios-309927-4419403_mapped_official_1.16.5.jar, carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar
+[24Mar2026 18:08:34.839] [Render thread/ERROR] [net.minecraft.tags.TagCollectionReader/]: Couldn't load entity_type tag mineminenomi:magnetic as it is missing following references: cartaddom:pacifista_mark_two (from carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar),cartaddom:pacifista_world_boss (from carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar)
+[24Mar2026 18:08:34.854] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:zoro_robe
 com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:zoro_robe'
 	at net.minecraft.item.crafting.ShapedRecipe.lambda$itemFromJson$0(ShapedRecipe.java:262) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
 	at java.util.Optional.orElseThrow(Optional.java:290) ~[?:1.8.0_482]
@@ -265,7 +267,7 @@ com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:zoro_robe'
 	at cpw.mods.modlauncher.Launcher.run(Launcher.java:82) [modlauncher-8.1.3.jar:?]
 	at cpw.mods.modlauncher.Launcher.main(Launcher.java:66) [modlauncher-8.1.3.jar:?]
 	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:94) [forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
-[18Mar2026 15:10:48.808] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:reinforced_striker_from_smithing
+[24Mar2026 18:08:34.866] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:reinforced_striker_from_smithing
 com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:reinforced_striker'
 	at net.minecraft.item.crafting.ShapedRecipe.lambda$itemFromJson$0(ShapedRecipe.java:262) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
 	at java.util.Optional.orElseThrow(Optional.java:290) ~[?:1.8.0_482]
@@ -316,17 +318,17 @@ com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:reinforced_striker'
 	at cpw.mods.modlauncher.Launcher.run(Launcher.java:82) [modlauncher-8.1.3.jar:?]
 	at cpw.mods.modlauncher.Launcher.main(Launcher.java:66) [modlauncher-8.1.3.jar:?]
 	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:94) [forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
-[18Mar2026 15:10:48.811] [Render thread/INFO] [net.minecraft.item.crafting.RecipeManager/]: Loaded 7 recipes
-[18Mar2026 15:10:49.251] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1058 advancements
-[18Mar2026 15:10:49.406] [Render thread/INFO] [net.minecraftforge.registries.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
-[18Mar2026 15:10:49.685] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18Mar2026 15:10:49.685] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18Mar2026 15:10:49.685] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18Mar2026 15:10:49.685] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[18Mar2026 15:10:49.686] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[18Mar2026 15:10:49.686] [Render thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar, mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar, main, curios-309927-4419403_mapped_official_1.16.5.jar, carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar
-[18Mar2026 15:10:50.125] [Render thread/ERROR] [net.minecraft.tags.TagCollectionReader/]: Couldn't load entity_type tag mineminenomi:magnetic as it is missing following references: cartaddom:pacifista_mark_two (from carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar),cartaddom:pacifista_world_boss (from carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar)
-[18Mar2026 15:10:50.129] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:zoro_robe
+[24Mar2026 18:08:34.870] [Render thread/INFO] [net.minecraft.item.crafting.RecipeManager/]: Loaded 7 recipes
+[24Mar2026 18:08:35.388] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1058 advancements
+[24Mar2026 18:08:35.506] [Render thread/INFO] [net.minecraftforge.registries.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
+[24Mar2026 18:08:35.797] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[24Mar2026 18:08:35.798] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[24Mar2026 18:08:35.798] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[24Mar2026 18:08:35.799] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[24Mar2026 18:08:35.799] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[24Mar2026 18:08:35.799] [Render thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar, mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar, main, curios-309927-4419403_mapped_official_1.16.5.jar, carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar
+[24Mar2026 18:08:36.252] [Render thread/ERROR] [net.minecraft.tags.TagCollectionReader/]: Couldn't load entity_type tag mineminenomi:magnetic as it is missing following references: cartaddom:pacifista_mark_two (from carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar),cartaddom:pacifista_world_boss (from carts-mmnm-addon-1143743-7661122_mapped_official_1.16.5.jar)
+[24Mar2026 18:08:36.256] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:zoro_robe
 com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:zoro_robe'
 	at net.minecraft.item.crafting.ShapedRecipe.lambda$itemFromJson$0(ShapedRecipe.java:262) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
 	at java.util.Optional.orElseThrow(Optional.java:290) ~[?:1.8.0_482]
@@ -377,7 +379,7 @@ com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:zoro_robe'
 	at cpw.mods.modlauncher.Launcher.run(Launcher.java:82) [modlauncher-8.1.3.jar:?]
 	at cpw.mods.modlauncher.Launcher.main(Launcher.java:66) [modlauncher-8.1.3.jar:?]
 	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:94) [forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
-[18Mar2026 15:10:50.129] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:reinforced_striker_from_smithing
+[24Mar2026 18:08:36.257] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:reinforced_striker_from_smithing
 com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:reinforced_striker'
 	at net.minecraft.item.crafting.ShapedRecipe.lambda$itemFromJson$0(ShapedRecipe.java:262) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
 	at java.util.Optional.orElseThrow(Optional.java:290) ~[?:1.8.0_482]
@@ -428,28 +430,33 @@ com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:reinforced_striker'
 	at cpw.mods.modlauncher.Launcher.run(Launcher.java:82) [modlauncher-8.1.3.jar:?]
 	at cpw.mods.modlauncher.Launcher.main(Launcher.java:66) [modlauncher-8.1.3.jar:?]
 	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:94) [forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
-[18Mar2026 15:10:50.131] [Render thread/INFO] [net.minecraft.item.crafting.RecipeManager/]: Loaded 7 recipes
-[18Mar2026 15:10:50.459] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1058 advancements
-[18Mar2026 15:10:50.532] [Render thread/INFO] [net.minecraftforge.registries.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
-[18Mar2026 15:10:50.923] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[18Mar2026 15:10:50.944] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Starting integrated minecraft server version 1.16.5
-[18Mar2026 15:10:50.944] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
-[18Mar2026 15:10:51.058] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
-[18Mar2026 15:10:51.253] [Render thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
-[18Mar2026 15:10:51.377] [Render thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Time elapsed: 302 ms
-[18Mar2026 15:10:52.234] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Changing view distance to 11, from 10
-[18Mar2026 15:10:52.988] [Netty Local Client IO #0/INFO] [net.minecraftforge.fml.network.NetworkHooks/]: Connected to a modded server.
-[18Mar2026 15:10:53.037] [Server thread/INFO] [net.minecraftforge.common.AdvancementLoadFix/]: Using new advancement loading for net.minecraft.advancements.PlayerAdvancements@2d29ba54
-[18Mar2026 15:10:53.071] [Server thread/INFO] [net.minecraft.server.management.PlayerList/]: Dev[local:E:d0e72c03] logged in with entity id 2 at (95.29458697343026, 3.892943612620443, 23.149381321854005)
-[18Mar2026 15:10:53.085] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
-[18Mar2026 15:10:53.286] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
-[18Mar2026 15:10:53.300] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
-[18Mar2026 15:10:53.351] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
-[18Mar2026 15:10:53.352] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
-[18Mar2026 15:10:53.353] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
-[18Mar2026 15:10:53.370] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 121 advancements
-[18Mar2026 15:10:53.937] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
-[18Mar2026 15:10:53.952] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
-[18Mar2026 15:10:53.965] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
-[18Mar2026 15:10:53.966] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
-[18Mar2026 15:10:53.966] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
+[24Mar2026 18:08:36.260] [Render thread/INFO] [net.minecraft.item.crafting.RecipeManager/]: Loaded 7 recipes
+[24Mar2026 18:08:36.614] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1058 advancements
+[24Mar2026 18:08:36.697] [Render thread/INFO] [net.minecraftforge.registries.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
+[24Mar2026 18:08:37.076] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[24Mar2026 18:08:37.096] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Starting integrated minecraft server version 1.16.5
+[24Mar2026 18:08:37.096] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[24Mar2026 18:08:37.230] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[24Mar2026 18:08:37.441] [Render thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[24Mar2026 18:08:37.565] [Render thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Time elapsed: 328 ms
+[24Mar2026 18:08:38.269] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Changing view distance to 11, from 10
+[24Mar2026 18:08:39.073] [Netty Local Client IO #0/INFO] [net.minecraftforge.fml.network.NetworkHooks/]: Connected to a modded server.
+[24Mar2026 18:08:39.147] [Server thread/INFO] [net.minecraftforge.common.AdvancementLoadFix/]: Using new advancement loading for net.minecraft.advancements.PlayerAdvancements@42927de3
+[24Mar2026 18:08:39.175] [Server thread/INFO] [net.minecraft.server.management.PlayerList/]: Dev[local:E:3460a479] logged in with entity id 1 at (243.12503312477713, 4.657671363115926, 34.24861712439746)
+[24Mar2026 18:08:39.191] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
+[24Mar2026 18:08:39.402] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[24Mar2026 18:08:39.425] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[24Mar2026 18:08:39.462] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 136 advancements
+[24Mar2026 18:08:39.484] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[24Mar2026 18:08:39.485] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[24Mar2026 18:08:39.485] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
+[24Mar2026 18:09:12.771] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[24Mar2026 18:09:12.786] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[24Mar2026 18:09:12.811] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[24Mar2026 18:09:12.812] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[24Mar2026 18:09:12.812] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
+[24Mar2026 18:10:55.572] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[24Mar2026 18:10:55.586] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[24Mar2026 18:10:55.587] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[24Mar2026 18:10:55.587] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[24Mar2026 18:10:55.589] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges

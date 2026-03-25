@@ -1,121 +1,135 @@
-package net.kazi.kazimod.entities.boss.gojo;
+package net.kazi.kazimod.entities.boss.gojo.goals;
 
-import net.kazi.kazimod.KaziMod;
 import net.kazi.kazimod.abilities.Koku.DomainExpansionInfiniteVoidAbility;
+import net.kazi.kazimod.entities.boss.gojo.GojoBossEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.Goal;
-import xyz.pixelatedw.mineminenomi.api.abilities.components.ChargeComponent;
-import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
+import net.minecraft.util.math.vector.Vector3d;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.init.ModAbilityKeys;
 
+import net.minecraft.entity.ai.attributes.Attributes;
+
 import java.util.EnumSet;
 
-/**
- * Triggers Domain Expansion: Infinite Void once below 50% HP.
- * After the domain finishes, sets boss.domainFinished = true so that
- * GojoBossRedGoal switches Red to MAX_OUTPUT mode permanently.
- */
 public class GojoBossDomainGoal extends Goal {
 
     private final GojoBossEntity boss;
-    private boolean domainUsed = false;
-    private boolean wasActive  = false;
-    private static final float HP_THRESHOLD = 0.50f;
+    private boolean domainUsed    = false;
+    private boolean domainStarted = false;
+    private boolean speedApplied  = false;
+    private double  savedBaseSpeed = -1.0;
 
-    public GojoBossDomainGoal(GojoBossEntity boss) {
+    public GojoBossDomainGoal(final GojoBossEntity boss) {
         this.boss = boss;
-        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+    }
+
+    private DomainExpansionInfiniteVoidAbility getDomain() {
+        IAbilityData data = AbilityDataCapability.get(this.boss);
+        if (data == null) return null;
+        return (DomainExpansionInfiniteVoidAbility) data.getEquippedAbility(
+                (AbilityCore) DomainExpansionInfiniteVoidAbility.INSTANCE);
     }
 
     @Override
     public boolean canUse() {
-        if (domainUsed) return false;
-        if (boss.hollowNukeQueued) return false;
+        if (this.domainUsed || this.boss.hollowNukeQueued) return false;
+        if (!this.boss.hollowPurpleFired) return false;
 
-        LivingEntity target = boss.getTarget();
+        final LivingEntity target = this.boss.getTarget();
         if (target == null || !target.isAlive()) return false;
+        if (this.boss.getHealth() / this.boss.getMaxHealth() > 0.5f) return false;
 
-        float hpFraction = boss.getHealth() / boss.getMaxHealth();
-        if (hpFraction > HP_THRESHOLD) return false;
-
-        IAbilityData data = AbilityDataCapability.get(boss);
-        if (data == null) return false;
-
-        DomainExpansionInfiniteVoidAbility domain =
-                data.getEquippedAbility(DomainExpansionInfiniteVoidAbility.INSTANCE);
+        final DomainExpansionInfiniteVoidAbility domain = getDomain();
         if (domain == null) return false;
         if (domain.isDomainActive() || domain.isCharging()) return false;
+        if (domain.getComponent(ModAbilityKeys.COOLDOWN)
+                .map(c -> c.isOnCooldown()).orElse(false)) return false;
 
-        boolean onCooldown = domain.getComponent(ModAbilityKeys.COOLDOWN)
-                .map(c -> ((CooldownComponent) c).isOnCooldown())
-                .orElse(false);
-        return !onCooldown;
+        return true;
     }
 
     @Override
-    // Keep running while domain is active so we can detect when it finishes.
     public boolean canContinueToUse() {
-        if (!domainUsed) return false;
-        IAbilityData data = AbilityDataCapability.get(boss);
-        if (data == null) return false;
-        DomainExpansionInfiniteVoidAbility domain =
-                data.getEquippedAbility(DomainExpansionInfiniteVoidAbility.INSTANCE);
-        if (domain == null) return false;
-        // Continue until both domain ends AND the flag hasn't been set yet
-        return (domain.isDomainActive() || domain.isCharging()) && !boss.domainFinished;
+        if (!this.domainUsed) return false;
+        final DomainExpansionInfiniteVoidAbility domain = getDomain();
+        return domain != null && (!domainStarted || domain.isDomainActive() || domain.isCharging());
     }
 
     @Override
     public void start() {
-        IAbilityData data = AbilityDataCapability.get(boss);
-        if (data == null) return;
+        final LivingEntity target = this.boss.getTarget();
 
-        DomainExpansionInfiniteVoidAbility domain =
-                data.getEquippedAbility(DomainExpansionInfiniteVoidAbility.INSTANCE);
+        // ── Teleport directly behind the player ───────────────────────────────
+        if (target != null && target.isAlive()) {
+            // Get the direction the player is looking and teleport 2 blocks behind them
+            Vector3d lookDir   = target.getLookAngle();
+            double   behindDist = 2.0;
+            double   teleX = target.getX() - lookDir.x * behindDist;
+            double   teleZ = target.getZ() - lookDir.z * behindDist;
+            double   teleY = target.getY();
+            this.boss.teleportTo(teleX, teleY, teleZ);
+
+            // Face the player after teleport
+            double dx = target.getX() - this.boss.getX();
+            double dz = target.getZ() - this.boss.getZ();
+            this.boss.yRot     = (float)(Math.toDegrees(Math.atan2(dz, dx)) - 90.0);
+            this.boss.yHeadRot = this.boss.yRot;
+        }
+
+        // ── Apply 3× speed boost ──────────────────────────────────────────────
+        applySpeedBoost();
+
+        // ── Start domain ──────────────────────────────────────────────────────
+        final DomainExpansionInfiniteVoidAbility domain = getDomain();
         if (domain == null) return;
 
-        boolean chargeStarted = domain.getComponent(ModAbilityKeys.CHARGE)
-                .filter(c -> c instanceof ChargeComponent)
-                .map(c -> {
-                    ((ChargeComponent) c).startCharging(boss, 60.0f);
-                    return true;
-                })
-                .orElse(false);
-
-        if (chargeStarted) {
-            domainUsed = true;
-            wasActive  = false;
-        } else {
-            KaziMod.LOGGER.warn("[GojoBossDomainGoal] No CHARGE component — attempting direct use().");
-            try {
-                domain.use(boss);
-                domainUsed = true;
-                wasActive  = false;
-            } catch (Exception e) {
-                KaziMod.LOGGER.error("[GojoBossDomainGoal] Direct use() failed: {}", e.getMessage());
-            }
+        try {
+            domain.use(this.boss);
+        } catch (final Exception ex) {
+            domain.getComponent(ModAbilityKeys.CHARGE)
+                    .ifPresent(c -> c.startCharging(this.boss, 60.0f));
         }
+
+        this.domainUsed    = true;
+        this.domainStarted = false;
     }
 
     @Override
     public void tick() {
-        // Detect domain becoming active then finishing — that's when we
-        // set domainFinished so Red switches to MAX_OUTPUT.
-        IAbilityData data = AbilityDataCapability.get(boss);
-        if (data == null) return;
-
-        DomainExpansionInfiniteVoidAbility domain =
-                data.getEquippedAbility(DomainExpansionInfiniteVoidAbility.INSTANCE);
+        final DomainExpansionInfiniteVoidAbility domain = getDomain();
         if (domain == null) return;
+        if (domain.isDomainActive()) domainStarted = true;
+    }
 
-        boolean active = domain.isDomainActive();
-        if (active) wasActive = true;
-
-        // Domain was active and is now done — switch Red to MAX_OUTPUT.
-        if (wasActive && !active && !boss.domainFinished) {
+    @Override
+    public void stop() {
+        removeSpeedBoost();
+        if (domainStarted) {
             boss.domainFinished = true;
         }
+    }
+
+    // ── Speed boost helpers ───────────────────────────────────────────────────
+
+    private void applySpeedBoost() {
+        if (speedApplied) return;
+        ModifiableAttributeInstance attr = this.boss.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (attr == null) return;
+        savedBaseSpeed = attr.getBaseValue();
+        attr.setBaseValue(savedBaseSpeed * 3.0);
+        speedApplied = true;
+    }
+
+    private void removeSpeedBoost() {
+        if (!speedApplied) return;
+        ModifiableAttributeInstance attr = this.boss.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (attr != null && savedBaseSpeed > 0)
+            attr.setBaseValue(savedBaseSpeed);
+        speedApplied = false;
     }
 }

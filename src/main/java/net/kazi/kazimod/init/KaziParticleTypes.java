@@ -35,6 +35,10 @@ public class KaziParticleTypes {
             KaziRegistry.registerParticleType("gojo_purple_growing", SimpleParticleData::new);
     public static final RegistryObject<ParticleType<SimpleParticleData>> INFINITE_VOID =
             KaziRegistry.registerParticleType("infinite_void", SimpleParticleData::new);
+    public static final RegistryObject<ParticleType<SimpleParticleData>> INFINITE_VOID_STREAK =
+            KaziRegistry.registerParticleType("infinite_void_streak", SimpleParticleData::new);
+    public static final RegistryObject<ParticleType<SimpleParticleData>> INFINITE_VOID_STREAK_PINK =
+            KaziRegistry.registerParticleType("infinite_void_streak_pink", SimpleParticleData::new);
     public static final RegistryObject<ParticleType<SimpleParticleData>> LUCKY_SLOT_0 = KaziRegistry.registerParticleType("lucky_slot_0_particle", SimpleParticleData::new);
     public static final RegistryObject<ParticleType<SimpleParticleData>> LUCKY_SLOT_1 = KaziRegistry.registerParticleType("lucky_slot_1_particle", SimpleParticleData::new);
     public static final RegistryObject<ParticleType<SimpleParticleData>> LUCKY_SLOT_2 = KaziRegistry.registerParticleType("lucky_slot_2_particle", SimpleParticleData::new);
@@ -47,18 +51,10 @@ public class KaziParticleTypes {
     public static final RegistryObject<ParticleType<SimpleParticleData>> LUCKY_SLOT_9 = KaziRegistry.registerParticleType("lucky_slot_9_particle", SimpleParticleData::new);
     public static final RegistryObject<ParticleType<SimpleParticleData>> COIN =
             KaziRegistry.registerParticleType("coin_particle", SimpleParticleData::new);
-
     public static final RegistryObject<ParticleType<SimpleParticleData>> CASINO_CHIP =
             KaziRegistry.registerParticleType("casino_chip_particle", SimpleParticleData::new);
-
     public static final RegistryObject<ParticleType<SimpleParticleData>> PLAYING_CARD =
             KaziRegistry.registerParticleType("playing_card_particle", SimpleParticleData::new);
-
-
-
-
-
-
 
     public static void register(IEventBus eventBus) {
         KaziRegistry.PARTICLE_TYPES.register(eventBus);

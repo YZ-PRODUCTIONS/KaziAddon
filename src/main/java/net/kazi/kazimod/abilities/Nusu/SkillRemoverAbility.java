@@ -19,21 +19,13 @@ import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 
 import java.util.List;
 
-/**
- * Nusu Nusu no Mi - Skill Remover
- *
- * Activate to open a chat menu listing all currently stolen abilities.
- * Click any entry (or type /nusu_remove <1-4>) to return that ability
- * to its original owner (or discard it if they are offline).
- */
 public class SkillRemoverAbility extends Ability {
 
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
             "kazimod", "skill_remover",
             new Pair[]{
                     ImmutablePair.of(
-                            "Opens a menu to return stolen abilities to their owners. " +
-                                    "Click an ability in chat to return it.",
+                            "Requires the Skill Book in hand. Opens a menu to return stolen abilities to their owners.",
                             (Object) null)
             });
 
@@ -49,40 +41,41 @@ public class SkillRemoverAbility extends Ability {
         if (!(user instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) user;
 
+        // Require skill book in hand
+        if (!SkillHunterAbility.hasSkillBook(user)) {
+            sendMsg(player, "\u00a7cYou need the Skill Book in your hand");
+            return;
+        }
+
         List<AbilityCore<?>> held = NusuStolenData.getHeld(user);
         if (held.isEmpty()) {
             sendMsg(player, "\u00a7eYou have no stolen abilities to remove.");
             return;
         }
 
-        // Header
         sendMsg(player, "\u00a76--- Skill Remover - Click to return ---");
-
         for (int i = 0; i < held.size(); i++) {
             AbilityCore<?> core = held.get(i);
             String name = core.getLocalizedName().getString();
             int slotNum = i + 1;
-
-            // Build a clickable chat component that runs /nusu_remove <slot>
             StringTextComponent line = new StringTextComponent(
                     "\u00a7e[" + slotNum + "] \u00a7c" + name + " \u00a77(click to return)");
-
             line.withStyle(style -> style
-                    .withClickEvent(new ClickEvent(
-                            ClickEvent.Action.RUN_COMMAND,
-                            "/nusu_remove " + slotNum))
-                    .withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nusu_remove " + slotNum))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             new StringTextComponent("Return " + name + " to its owner"))));
-
             player.sendMessage(line, player.getUUID());
         }
-
         sendMsg(player, "\u00a76----------------------------------------");
     }
 
-    /** Called by the /nusu_remove command (slot is 1-based). */
     public static void removeBySlot(PlayerEntity player, int slot) {
+        // Require skill book in hand for the command too
+        if (!SkillHunterAbility.hasSkillBook(player)) {
+            sendMsg(player, "\u00a7cYou need the Skill Book in your hand");
+            return;
+        }
+
         int index = slot - 1;
         List<AbilityCore<?>> held = NusuStolenData.getHeld(player);
 
@@ -94,7 +87,6 @@ public class SkillRemoverAbility extends Ability {
         AbilityCore<?> core = held.get(index);
         String name = core.getLocalizedName().getString();
 
-        // Find victim among online players
         LivingEntity victim = null;
         if (player.level != null) {
             for (PlayerEntity p : player.level.players()) {
@@ -107,7 +99,6 @@ public class SkillRemoverAbility extends Ability {
 
         if (victim != null) {
             NusuEvents.returnToVictim(victim, core);
-            // Remove from Nusu user
             IAbilityData nusuData = AbilityDataCapability.get(player);
             if (nusuData != null) nusuData.removeUnlockedAbility(core);
             NusuStolenData.removeHeld(player, core);
@@ -124,8 +115,8 @@ public class SkillRemoverAbility extends Ability {
     }
 
     static {
-        INSTANCE = (new AbilityCore.Builder<SkillRemoverAbility>(
-                "Skill Remover", AbilityCategory.DEVIL_FRUITS, SkillRemoverAbility::new))
+        INSTANCE = new AbilityCore.Builder<SkillRemoverAbility>(
+                "Skill Remover", AbilityCategory.DEVIL_FRUITS, SkillRemoverAbility::new)
                 .addDescriptionLine(DESCRIPTION)
                 .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{
                         AbilityDescriptionLine.NEW_LINE

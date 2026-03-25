@@ -2,8 +2,8 @@ package net.kazi.kazimod.abilities.Nusu;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,10 +23,13 @@ import xyz.pixelatedw.mineminenomi.api.events.ability.UnlockAbilityEvent;
 import xyz.pixelatedw.mineminenomi.api.events.onefruit.LostDevilFruitEvent;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.IDevilFruit;
 import xyz.pixelatedw.mineminenomi.init.ModAbilityKeys;
 import xyz.pixelatedw.mineminenomi.items.AkumaNoMiItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,13 +50,10 @@ public class NusuEvents {
         PlayerEntity player = (PlayerEntity) event.getEntityLiving();
         if (player.level.isClientSide) return;
 
-        // Strip stolen abilities from victims every tick (still needed for
-        // online victims so the ability doesn't briefly re-appear on them)
         if (player.getPersistentData().contains(NusuStolenData.VICTIM_KEY)) {
             stripStolen(player);
         }
 
-        // Apply morph bypass and cooldown penalty to held stolen abilities
         if (player.getPersistentData().contains(NusuStolenData.HELD_KEY)) {
             IAbilityData data = AbilityDataCapability.get(player);
             if (data != null) {
@@ -61,28 +61,44 @@ public class NusuEvents {
                     applyNusuModifiers(player, core, data);
                 }
             }
+
+            if (!hasSkillBookInInventory(player)) {
+                IAbilityData data2 = AbilityDataCapability.get(player);
+                if (data2 != null) {
+                    for (AbilityCore<?> core : NusuStolenData.getHeld(player)) {
+                        IAbility inst = data2.getEquippedAbility(core);
+                        if (inst == null) inst = data2.getPassiveAbility(core);
+                        if (inst == null) continue;
+                        inst.getComponent(ModAbilityKeys.DISABLE).ifPresent(c ->
+                                ((AbilityComponent<?>) c).setDisabled(true));
+                    }
+                }
+            } else {
+                IAbilityData data2 = AbilityDataCapability.get(player);
+                if (data2 != null) {
+                    for (AbilityCore<?> core : NusuStolenData.getHeld(player)) {
+                        IAbility inst = data2.getEquippedAbility(core);
+                        if (inst == null) inst = data2.getPassiveAbility(core);
+                        if (inst == null) continue;
+                        inst.getComponent(ModAbilityKeys.DISABLE).ifPresent(c ->
+                                ((AbilityComponent<?>) c).setDisabled(false));
+                    }
+                }
+            }
         }
     }
 
-    /**
-     * Block stolen ability grant for ANYONE — not just the original victim.
-     * This is the critical fix: we check the global world data, so even a brand
-     * new player who eats the respawned fruit cannot receive the stolen ability.
-     */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onUnlockAbility(UnlockAbilityEvent event) {
         LivingEntity entity = event.getEntityLiving();
         AbilityCore<?> core = event.getAbilityCore();
         if (core == null) return;
 
-        // Check per-victim NBT (original victim still alive)
         if (NusuStolenData.isStolen(entity, core)) {
             event.setResult(Event.Result.DENY);
             return;
         }
 
-// Only relevant on one-fruit-per-world servers — on multi-fruit servers the
-// same ability can legitimately exist on multiple players, so we don't block it.
         if (entity.level instanceof ServerWorld
                 && xyz.pixelatedw.mineminenomi.config.CommonConfig.INSTANCE.hasOneFruitPerWorldSimpleLogic()) {
             NusuWorldData worldData = NusuWorldData.get((ServerWorld) entity.level);
@@ -128,19 +144,14 @@ public class NusuEvents {
             IAbilityData nusuData = AbilityDataCapability.get(dead);
             if (nusuData != null) nusuData.removeUnlockedAbility(core);
 
-            // Try to return to victim if they're online
-            boolean returned = false;
             for (PlayerEntity p : dead.level.players()) {
                 if (NusuStolenData.isStolen(p, core)) {
                     returnToVictim(p, core);
                     sendMsg(p, "\u00a7a" + core.getLocalizedName().getString()
                             + " has been returned to you");
-                    returned = true;
                     break;
                 }
             }
-            // Whether or not victim was online, unmark from global world data
-            // so the fruit can be re-eaten freely again
             if (dead.level instanceof ServerWorld) {
                 NusuWorldData.get((ServerWorld) dead.level).unmarkStolen(core);
             }
@@ -156,10 +167,8 @@ public class NusuEvents {
         IAbilityData victimData = AbilityDataCapability.get(victim);
         if (victimData != null) victimData.removeUnlockedAbility(core);
 
-        // Mark on victim entity NBT (strips ability every tick while they're online)
         NusuStolenData.markStolen(victim, core);
 
-        // Mark globally in world data (blocks any new player from getting this ability)
         if (nusuUser.level instanceof ServerWorld) {
             NusuWorldData.get((ServerWorld) nusuUser.level).markStolen(core);
         }
@@ -178,11 +187,29 @@ public class NusuEvents {
         if (inst == null) inst = data.getPassiveAbility(core);
         if (inst == null) return;
 
-        inst.getComponent(ModAbilityKeys.REQUIRE_MORPH)
-                .ifPresent(c -> ((AbilityComponent<?>) c).setDisabled(true));
-        inst.getComponent(ModAbilityKeys.REQUIRE_ABILITY)
-                .ifPresent(c -> ((AbilityComponent<?>) c).setDisabled(true));
+        // The RequireMorphComponent.postInit() adds a canUse lambda directly onto
+        // the ability via addCanUseCheck(). setDisabled() has no effect because
+        // the lambda never reads isDisabled. The only fix is to remove that lambda
+        // from the ability's onCanUseEvents list using reflection.
+        if (inst instanceof xyz.pixelatedw.mineminenomi.api.abilities.Ability) {
+            try {
+                java.lang.reflect.Field eventsField =
+                        xyz.pixelatedw.mineminenomi.api.abilities.Ability.class
+                                .getDeclaredField("onCanUseEvents");
+                eventsField.setAccessible(true);
+                @SuppressWarnings("unchecked")
+                java.util.List<Object> events = (java.util.List<Object>) eventsField.get(inst);
+                // Remove any canUse check whose class name contains RequireMorphComponent
+                // (these are lambdas captured by RequireMorphComponent.postInit)
+                events.removeIf(e -> e.getClass().getName().contains("RequireMorphComponent"));
+            } catch (Exception ignored) {}
+        }
 
+        // Disable pool component — this one does respect setDisabled
+        inst.getComponent(ModAbilityKeys.POOL).ifPresent(c ->
+                ((AbilityComponent<?>) c).setDisabled(true));
+
+        // Cooldown penalty
         inst.getComponent(ModAbilityKeys.COOLDOWN).ifPresent(c -> {
             if (c instanceof CooldownComponent) {
                 ((CooldownComponent) c).getBonusManager().addBonus(
@@ -196,19 +223,34 @@ public class NusuEvents {
 
     public static void returnToVictim(LivingEntity victim, AbilityCore<?> core) {
         NusuStolenData.unmarkStolen(victim, core);
-        // Also clear global lock so the ability is fully free again
         if (victim.level instanceof ServerWorld) {
             NusuWorldData.get((ServerWorld) victim.level).unmarkStolen(core);
         }
-        IAbilityData victimData = AbilityDataCapability.get(victim);
-        if (victimData != null) victimData.addUnlockedAbility(core, AbilityUnlock.PROGRESSION);
+
+        if (victimStillHasFruitForAbility(victim, core)) {
+            IAbilityData victimData = AbilityDataCapability.get(victim);
+            if (victimData != null) victimData.addUnlockedAbility(core, AbilityUnlock.PROGRESSION);
+        }
+    }
+
+    private static boolean victimStillHasFruitForAbility(LivingEntity victim, AbilityCore<?> core) {
+        try {
+            IDevilFruit devilFruit = DevilFruitCapability.get(victim);
+            if (devilFruit == null) return false;
+            Item item = devilFruit.getDevilFruitItem();
+            if (!(item instanceof AkumaNoMiItem)) return false;
+            AbilityCore<?>[] abilities = ((AkumaNoMiItem) item).getAbilities();
+            if (abilities == null) return false;
+            return Arrays.asList(abilities).contains(core);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static void discardAbility(LivingEntity nusuUser, AbilityCore<?> core) {
         IAbilityData nusuData = AbilityDataCapability.get(nusuUser);
         if (nusuData != null) nusuData.removeUnlockedAbility(core);
         NusuStolenData.removeHeld(nusuUser, core);
-        // Also clear global lock when manually discarding
         if (nusuUser.level instanceof ServerWorld) {
             NusuWorldData.get((ServerWorld) nusuUser.level).unmarkStolen(core);
         }
@@ -226,6 +268,16 @@ public class NusuEvents {
         }
     }
 
+    public static boolean hasSkillBookInInventory(PlayerEntity player) {
+        for (ItemStack stack : player.inventory.items) {
+            if (stack.getItem() instanceof net.kazi.kazimod.items.SkillBookItem) return true;
+        }
+        for (ItemStack stack : player.inventory.offhand) {
+            if (stack.getItem() instanceof net.kazi.kazimod.items.SkillBookItem) return true;
+        }
+        return false;
+    }
+
     static void sendMsg(LivingEntity entity, String text) {
         if (entity instanceof PlayerEntity) {
             ((PlayerEntity) entity).sendMessage(
@@ -233,14 +285,6 @@ public class NusuEvents {
         }
     }
 
-    // ── Add this handler inside NusuEvents ───────────────────────────────────────
-
-    /**
-     * If the Nusu user loses their devil fruit (sea prism, admin remove, curse death
-     * from eating another fruit, inactivity wipe, etc.), return all stolen abilities
-     * immediately. The entity on LostDevilFruitEvent is the one who lost the fruit,
-     * so we check if THEY are a Nusu user holding stolen abilities.
-     */
     @SubscribeEvent
     public void onLostDevilFruit(LostDevilFruitEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) return;
@@ -249,9 +293,6 @@ public class NusuEvents {
         if (entity.level == null || entity.level.isClientSide) return;
         if (NusuStolenData.heldCount(entity) == 0) return;
 
-        // Check if the lost fruit IS the Nusu fruit specifically.
-        // If an admin wipes someone else's fruit this event fires for that other
-        // player — we only care when it fires for a Nusu user losing Nusu no Mi.
         Item lostItem = event.getItem();
         if (!(lostItem instanceof AkumaNoMiItem)) return;
 
@@ -264,13 +305,11 @@ public class NusuEvents {
         }
         if (!isNusuFruit) return;
 
-        // Return every stolen ability
         List<AbilityCore<?>> held = new ArrayList<>(NusuStolenData.getHeld(entity));
         for (AbilityCore<?> core : held) {
             IAbilityData nusuData = AbilityDataCapability.get(entity);
             if (nusuData != null) nusuData.removeUnlockedAbility(core);
 
-            // Return to victim if online
             for (PlayerEntity p : entity.level.players()) {
                 if (NusuStolenData.isStolen(p, core)) {
                     returnToVictim(p, core);
@@ -280,7 +319,6 @@ public class NusuEvents {
                 }
             }
 
-            // Clear global lock regardless of whether victim was online
             if (entity.level instanceof ServerWorld) {
                 NusuWorldData.get((ServerWorld) entity.level).unmarkStolen(core);
             }

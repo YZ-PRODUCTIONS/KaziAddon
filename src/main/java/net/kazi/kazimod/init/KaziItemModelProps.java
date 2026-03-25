@@ -11,10 +11,6 @@ import xyz.pixelatedw.mineminenomi.items.AkumaNoMiItem;
 
 public class KaziItemModelProps {
 
-    // Mirrors CartAddon's CartItemModelProps.DEVIL_FRUITS_RANDOMIZER.
-    // Reads the "type" int from the item NBT (set by Mine Mine no Mi's randomizer),
-    // applies randomness if not yet assigned, and returns it as a float so the
-    // model overrides in the item JSON (generic_fruit_1 through 10) resolve correctly.
     @OnlyIn(Dist.CLIENT)
     public static final IItemPropertyGetter DEVIL_FRUITS_RANDOMIZER = (stack, world, entity) -> {
         CompoundNBT nbt = stack.getTag();
@@ -23,7 +19,6 @@ public class KaziItemModelProps {
             return nbt.getInt("type");
         }
 
-        // Not yet randomized - let Mine Mine no Mi apply randomness
         if (world != null) {
             ((AkumaNoMiItem) stack.getItem()).applyRandomness(world, stack);
         }
@@ -37,12 +32,24 @@ public class KaziItemModelProps {
     };
 
     public static void register() {
-        ItemModelsProperties.register(
-                KaziItems.TOSHI_TOSHI_NO_MI.get(),
-                new ResourceLocation("type"),
-                DEVIL_FRUITS_RANDOMIZER
-        );
+        ResourceLocation type = new ResourceLocation("type");
+
+        if (KaziItems.TOSHI_TOSHI_NO_MI != null && KaziItems.TOSHI_TOSHI_NO_MI.get() != null)
+            ItemModelsProperties.register(KaziItems.TOSHI_TOSHI_NO_MI.get(), type, DEVIL_FRUITS_RANDOMIZER);
+
+        if (KaziItems.TOKI_TOKI_NO_MI != null && KaziItems.TOKI_TOKI_NO_MI.get() != null)
+            ItemModelsProperties.register(KaziItems.TOKI_TOKI_NO_MI.get(), type, DEVIL_FRUITS_RANDOMIZER);
+
+        if (KaziItems.TENKI_TENKI_NO_MI != null && KaziItems.TENKI_TENKI_NO_MI.get() != null)
+            ItemModelsProperties.register(KaziItems.TENKI_TENKI_NO_MI.get(), type, DEVIL_FRUITS_RANDOMIZER);
+
+        if (KaziItems.KOKU_KOKU_NO_MI != null && KaziItems.KOKU_KOKU_NO_MI.get() != null)
+            ItemModelsProperties.register(KaziItems.KOKU_KOKU_NO_MI.get(), type, DEVIL_FRUITS_RANDOMIZER);
+
+        if (KaziItems.KAKE_KAKE_NO_MI != null && KaziItems.KAKE_KAKE_NO_MI.get() != null)
+            ItemModelsProperties.register(KaziItems.KAKE_KAKE_NO_MI.get(), type, DEVIL_FRUITS_RANDOMIZER);
+
+        if (KaziItems.NUSU_NUSU_NO_MI != null && KaziItems.NUSU_NUSU_NO_MI.get() != null)
+            ItemModelsProperties.register(KaziItems.NUSU_NUSU_NO_MI.get(), type, DEVIL_FRUITS_RANDOMIZER);
     }
-
 }
-

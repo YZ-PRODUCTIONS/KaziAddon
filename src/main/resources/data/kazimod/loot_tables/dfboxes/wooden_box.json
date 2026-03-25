@@ -694,16 +694,6 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
-          "name": "mineminenomi:kachi_kachi_no_mi"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
           "name": "mineminenomi:chiyu_chiyu_no_mi"
         },
         {

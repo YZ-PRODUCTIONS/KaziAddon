@@ -2,12 +2,13 @@ package net.kazi.kazimod.entities.projectiles;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
 import net.kazi.kazimod.particles.CasinoChipParticleEffect;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
-import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
+import xyz.pixelatedw.mineminenomi.init.ModEffects;
 
 public class CasinoChipProjectile extends AbilityProjectileEntity {
 
@@ -39,6 +40,10 @@ public class CasinoChipProjectile extends AbilityProjectileEntity {
         this.onEntityImpactEvent = (target) -> {
             if (!this.level.isClientSide) {
                 this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.2f, false, Explosion.Mode.NONE);
+                if (target instanceof LivingEntity) {
+                    ((LivingEntity) target).addEffect(
+                            new EffectInstance(ModEffects.DIZZY.get(), 40, 0, false, true));
+                }
                 this.remove();
             }
         };

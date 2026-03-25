@@ -17,6 +17,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -55,30 +56,25 @@ public class ChronostasisAbility extends Ability {
             }
     );
 
-    // ── Constants ─────────────────────────────────────────────────────────────
     private static final float  COOLDOWN        = 600.0F;
     private static final float  CHARGE_TICKS    = 40.0F;
     private static final float  RANGE           = 20.0F;
-    /** Ticks 0‒19: AOE window open (1 second). */
     private static final int    AOE_WINDOW_END  = 20;
-    /** Ticks 20‒119: stun + float (5 seconds). Total hold = 120 ticks. */
     private static final float  TOTAL_HOLD      = 120.0F;
     private static final int    STUN_DURATION   = 5;
-    private static final int    BUBBLE_LIFE     = 140; // stun(100) + aoe window(20) + extra second(20)
+    private static final int    BUBBLE_LIFE     = 140;
     private static final double FLOAT_HEIGHT    = 3.0;
     private static final double RISE_SPEED      = 0.12;
     private static final float  TIME_COST       = 200.0F;
 
     public static final AbilityCore<ChronostasisAbility> INSTANCE;
 
-    // ── Components ────────────────────────────────────────────────────────────
     private final ChargeComponent chargeComponent =
             (new ChargeComponent(this))
                     .addStartEvent(this::onChargeStart)
                     .addTickEvent(this::onChargeTick)
                     .addEndEvent(this::onChargeEnd);
 
-    /** Single continuous component handles both the AOE window and the stun phase. */
     private final ContinuousComponent continuousComponent =
             (new ContinuousComponent(this, true))
                     .addTickEvent(this::onContinuousTick)
@@ -87,14 +83,11 @@ public class ChronostasisAbility extends Ability {
     private final RangeComponent rangeComponent = new RangeComponent(this);
     private final AnimationComponent animationComponent = new AnimationComponent(this);
 
-    // ── Runtime state ─────────────────────────────────────────────────────────
     private SphereEntity sphereEntity;
     private final List<Integer>        caughtIds    = new ArrayList<>();
     private final Map<Integer, Double> targetFloatY = new HashMap<>();
-    /** Counts up from 0 each tick of the continuous phase. */
     private int continuousTick = 0;
 
-    // ── Constructor ───────────────────────────────────────────────────────────
     public ChronostasisAbility(AbilityCore<ChronostasisAbility> core) {
         super(core);
         this.isNew = true;
@@ -107,7 +100,6 @@ public class ChronostasisAbility extends Ability {
         this.addUseEvent(this::onUseEvent);
     }
 
-    // ── Use ───────────────────────────────────────────────────────────────────
     private void onUseEvent(LivingEntity entity, IAbility ability) {
         if (this.chargeComponent.isCharging()) return;
 
@@ -132,7 +124,6 @@ public class ChronostasisAbility extends Ability {
         this.chargeComponent.startCharging(entity, CHARGE_TICKS);
     }
 
-    // ── Phase 1: Charge ───────────────────────────────────────────────────────
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         this.animationComponent.start(entity, KaziAnimations.CHRONOSTASIS);
 
@@ -165,12 +156,6 @@ public class ChronostasisAbility extends Ability {
         if (entity.level.isClientSide) return;
 
         this.animationComponent.stop(entity);
-
-        // Do NOT remove the sphere here — let it stay visible during the AOE window.
-        // It will be removed at the end of tick AOE_WINDOW_END - 1.
-
-
-
         this.caughtIds.clear();
         this.targetFloatY.clear();
         this.continuousTick = 0;
@@ -178,26 +163,29 @@ public class ChronostasisAbility extends Ability {
         this.continuousComponent.startContinuity(entity, TOTAL_HOLD);
     }
 
-    // ── Phase 2 + 3: Single continuous tick ───────────────────────────────────
     private void onContinuousTick(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
 
         if (this.continuousTick < AOE_WINDOW_END) {
-            // ── Phase 2: AOE window (ticks 0‒19) ─────────────────────────────
-            // Move sphere back to entity center and expand outward rapidly.
+            // Phase 2: AOE window — expand sphere
             if (CommonConfig.INSTANCE.isExperiementalSpheresEnabled() && this.sphereEntity != null) {
                 this.sphereEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
                 float expandT = (float) this.continuousTick / (float) AOE_WINDOW_END;
                 this.sphereEntity.setRadius(0.5F + (RANGE - 0.5F) * expandT);
             }
 
-            // Use rangeComponent.getTargetsInArea() instead of WyHelper.getNearbyEntities()
-            // so that the mod's built-in team/ally check is applied automatically.
-            List<LivingEntity> nearby = this.rangeComponent.getTargetsInArea(entity, RANGE);
+            // Grab ALL living entities in range, excluding only the user
+            AxisAlignedBB box = new AxisAlignedBB(
+                    entity.getX() - RANGE, entity.getY() - RANGE, entity.getZ() - RANGE,
+                    entity.getX() + RANGE, entity.getY() + RANGE, entity.getZ() + RANGE);
+            List<LivingEntity> nearby = entity.level.getEntitiesOfClass(
+                    LivingEntity.class, box,
+                    t -> t != entity && t.isAlive()
+                            && t.distanceTo(entity) <= RANGE
+                            && !this.caughtIds.contains(t.getId())
+            );
 
             for (LivingEntity target : nearby) {
-                if (target == entity || this.caughtIds.contains(target.getId())) continue;
-
                 this.caughtIds.add(target.getId());
                 this.targetFloatY.put(target.getId(), target.getY() + FLOAT_HEIGHT);
 
@@ -211,32 +199,28 @@ public class ChronostasisAbility extends Ability {
                 );
             }
 
-            // At the last AOE tick: collapse sphere and play close sound.
             if (this.continuousTick == AOE_WINDOW_END - 1) {
                 removeSphere();
             }
 
         } else {
-            // ── Phase 3: Stun + float (ticks 20‒119) ─────────────────────────
+            // Phase 3: Stun + float
             for (int id : this.caughtIds) {
                 Entity raw = entity.level.getEntity(id);
                 if (!(raw instanceof LivingEntity)) continue;
                 LivingEntity target = (LivingEntity) raw;
                 if (!target.isAlive()) continue;
 
-                // Stun effects.
                 target.addEffect(new EffectInstance(
                         (Effect) ModEffects.MOVEMENT_BLOCKED.get(), STUN_DURATION, 1, false, false
                 ));
                 target.addEffect(new EffectInstance(
                         (Effect) ModEffects.NO_HANDS.get(), STUN_DURATION, 0, false, false
                 ));
-                // Resistance III — amplifier 2 = Resistance III in 1.16.5 (0-indexed).
                 target.addEffect(new EffectInstance(
                         Effects.DAMAGE_RESISTANCE, STUN_DURATION, 2, false, false
                 ));
 
-                // Float.
                 Double floatY = this.targetFloatY.get(id);
                 if (floatY == null) continue;
 
@@ -260,7 +244,6 @@ public class ChronostasisAbility extends Ability {
         this.cooldownComponent.startCooldown(entity, COOLDOWN);
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
     private void removeSphere() {
         if (this.sphereEntity != null) {
             this.sphereEntity.remove();
@@ -268,10 +251,6 @@ public class ChronostasisAbility extends Ability {
         }
     }
 
-    /**
-     * Returns [x, y, z] of the position in front of and at the height of the
-     * entity's hands — chest height, offset 0.8 blocks forward along look direction.
-     */
     private static double[] getHandPos(LivingEntity entity) {
         double handY    = entity.getY() + entity.getBbHeight() * 0.82;
         double forwardX = -Math.sin(Math.toRadians(entity.yRot)) * 0.8;
@@ -283,7 +262,6 @@ public class ChronostasisAbility extends Ability {
         };
     }
 
-    // ── Time Bar helper ───────────────────────────────────────────────────────
     private static TimeBarAbility getTimeBar(LivingEntity entity) {
         if (!(entity instanceof PlayerEntity)) return null;
         xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData data =
@@ -296,7 +274,6 @@ public class ChronostasisAbility extends Ability {
         return null;
     }
 
-    // ── Static initialiser ────────────────────────────────────────────────────
     static {
         INSTANCE = (new AbilityCore.Builder<>(
                 "Chronostasis",

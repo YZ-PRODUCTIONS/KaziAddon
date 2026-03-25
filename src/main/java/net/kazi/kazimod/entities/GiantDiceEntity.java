@@ -25,6 +25,8 @@ public class GiantDiceEntity extends Entity {
     private static final double HOVER_HEIGHT  = 10.0;
     private static final double STOMP_RADIUS  = 4.0;
     private static final int    STUN_TICKS    = 60;
+    // How many blocks per tick the dice drops during descent
+    private static final double STOMP_SPEED   = 4.0;
 
     private UUID    ownerUUID;
     private UUID    targetUUID;
@@ -59,19 +61,25 @@ public class GiantDiceEntity extends Entity {
         if (target == null || !target.isAlive()) { this.remove(); return; }
 
         if (!descending) {
-            // Hover and track
+            // Hover and track target position
             double lx = this.getX() + (target.getX() - this.getX()) * 0.25;
             double ly = this.getY() + ((target.getY() + HOVER_HEIGHT) - this.getY()) * 0.25;
             double lz = this.getZ() + (target.getZ() - this.getZ()) * 0.25;
             this.moveTo(lx, ly, lz);
-            // No particle — renderer handles visuals
             if (ticksAlive >= HOVER_TICKS) descending = true;
         } else {
-            double newY = this.getY() - 2.0;
+            // During descent: track the target's X/Z every tick so they can't run away,
+            // then drop straight down at STOMP_SPEED blocks per tick
+            double newX = this.getX() + (target.getX() - this.getX()) * 0.4;
+            double newZ = this.getZ() + (target.getZ() - this.getZ()) * 0.4;
+            double newY = this.getY() - STOMP_SPEED;
+
             if (newY <= target.getY()) {
+                // Snap to target position before stomping so it always lands on them
+                this.moveTo(target.getX(), target.getY(), target.getZ());
                 doStomp(target);
             } else {
-                this.moveTo(this.getX(), newY, this.getZ());
+                this.moveTo(newX, newY, newZ);
             }
         }
     }

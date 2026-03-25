@@ -12,27 +12,7 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
-          "name": "cartaddon:pamu_pamu_no_mi"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
           "name": "cartaddon:uta_uta_no_mi"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
-          "name": "kazimod:toshi_toshi_no_mi"
         },
         {
           "type": "minecraft:item",
@@ -785,6 +765,26 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
+          "name": "kazimod:toshi_toshi_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "mineminenomi:kachi_kachi_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
           "name": "cartaddon:pamu_pamu_no_mi"
         },
         {
@@ -816,6 +816,16 @@
             }
           ],
           "name": "mineminenomi:bara_bara_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "kazimod:kake_kake_no_mi"
         },
         {
           "type": "minecraft:item",

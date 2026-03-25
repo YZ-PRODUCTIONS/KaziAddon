@@ -15,16 +15,12 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityType;
 import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
-import xyz.pixelatedw.mineminenomi.api.abilities.components.AltModeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.DealDamageComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ProjectileComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.SwingTriggerComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
-import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
-import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
-import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
@@ -63,16 +59,15 @@ public class CasinoRollAbility extends Ability {
     private static final float JACKPOT_DAMAGE     = 40.0f;
     private static final float LUCKY_SEVEN_RADIUS = 30.0f;
     private static final float JACKPOT_RADIUS     = 30.0f;
-    private static final int   JACKPOT_STUN_TICKS = 100;
     private static final int   JACKPOT_BUFF_TICKS = 200;
     private static final float JACKPOT_SHOT_DUR   = 200.0f;
     private static final float CHIP_RAIN_DUR      = 240.0f;
     private static final float STORM_DUR          = 600.0f;
     private static final float JACKPOT_DUR        = 900.0f;
-    private static final float COIN_FLICK_DAMAGE    = 40.0f;
-    private static final float LOADED_DICE_DAMAGE   = 40.0f;
-    private static final float CARD_SLASH_DAMAGE    = 60.0f;
-    private static final float JACKPOT_SHOT_DAMAGE  = 15.0f;
+    private static final float COIN_FLICK_DAMAGE  = 40.0f;
+    private static final float LOADED_DICE_DAMAGE = 40.0f;
+    private static final float CARD_SLASH_DAMAGE  = 60.0f;
+    private static final float JACKPOT_SHOT_DAMAGE = 15.0f;
 
     private static final double STORM_RADIUS    = 30.0;
     private static final double STORM_RADIUS_SQ = STORM_RADIUS * STORM_RADIUS;
@@ -94,7 +89,7 @@ public class CasinoRollAbility extends Ability {
     );
     public static final AbilityCore<CasinoRollAbility> INSTANCE;
 
-    private final AltModeComponent<Mode> altModeComponent;
+    private Mode currentMode = Mode.NONE;
     private final RangeComponent         rangeComponent;
     private final DealDamageComponent    damageComponent;
     private final ProjectileComponent    coinProjectile;
@@ -103,17 +98,15 @@ public class CasinoRollAbility extends Ability {
     private final ContinuousComponent    continuousComponent;
     private final SwingTriggerComponent  swingTrigger;
 
-    private ActiveMode   activeMode  = ActiveMode.NONE;
-    private int          contTick    = 0;
-    private Vector3d     stormOrigin = null;
-    private AxisAlignedBB stormBox   = null;
+    private ActiveMode    activeMode  = ActiveMode.NONE;
+    private int           contTick    = 0;
+    private Vector3d      stormOrigin = null;
+    private AxisAlignedBB stormBox    = null;
 
     public CasinoRollAbility(AbilityCore<CasinoRollAbility> core) {
         super(core);
         this.isNew = true;
 
-        altModeComponent = new AltModeComponent<>(this, Mode.class, Mode.NONE);
-        altModeComponent.addChangeModeEvent(this::onModeChange);
         rangeComponent  = new RangeComponent(this);
         damageComponent = new DealDamageComponent(this);
         coinProjectile  = new ProjectileComponent(this, s -> new CoinProjectile(s.level, s));
@@ -128,33 +121,28 @@ public class CasinoRollAbility extends Ability {
         swingTrigger.addSwingEvent(this::onSwing);
 
         super.addComponents(new AbilityComponent[]{
-                altModeComponent, rangeComponent, damageComponent,
+                rangeComponent, damageComponent,
                 coinProjectile, diceProjectile, cardProjectile,
                 continuousComponent, swingTrigger
         });
         super.addUseEvent(this::onUse);
     }
 
-    private void onModeChange(LivingEntity entity, IAbility ability, Mode mode) {
-        setDisplayName(mode.getDisplayName());
-    }
-
     private void onUse(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
         if (continuousComponent.isContinuous()) { continuousComponent.stopContinuity(entity); return; }
 
-        Mode mode = altModeComponent.getCurrentMode();
+        Mode mode = currentMode;
         if (mode == Mode.NONE) return;
 
         IAbilityData data = AbilityDataCapability.get(entity);
         if (data != null) {
             LuckySlotAbility ls = data.getPassiveAbility(LuckySlotAbility.INSTANCE);
             if (ls != null && !ls.hasRolled()) {
-                altModeComponent.setMode(entity, Mode.NONE);
+                currentMode = Mode.NONE;
                 return;
             }
         }
-
 
         switch (mode) {
             case COIN_FLICK:       doCoinFlick(entity);      break;
@@ -170,7 +158,8 @@ public class CasinoRollAbility extends Ability {
         }
 
         clearSlotBar(entity);
-        altModeComponent.setMode(entity, Mode.NONE);
+        currentMode = Mode.NONE;
+        setDisplayName(Mode.NONE.getDisplayName());
 
         if (mode != Mode.JACKPOT_SHOT && mode != Mode.CASINO_CHIP_RAIN
                 && mode != Mode.CASINO_STORM && mode != Mode.JACKPOT) {
@@ -182,6 +171,7 @@ public class CasinoRollAbility extends Ability {
         if (entity.level.isClientSide) return;
         contTick++;
         switch (activeMode) {
+            case JACKPOT_SHOT: tickJackpotShot(entity); break;
             case CHIP_RAIN: tickChipRain(entity); break;
             case STORM:     tickStorm(entity);    break;
             case JACKPOT:   tickJackpot(entity);  break;
@@ -198,13 +188,7 @@ public class CasinoRollAbility extends Ability {
     }
 
     private void onSwing(LivingEntity entity, IAbility ability) {
-        if (entity.level.isClientSide || activeMode != ActiveMode.JACKPOT_SHOT || !continuousComponent.isContinuous()) return;
-        for (int i = 0; i < 6; i++) {
-            CoinProjectile coin = new CoinProjectile(entity.level, entity);
-            coin.setDamage(JACKPOT_SHOT_DAMAGE);
-            coin.setMaxLife(35);
-            coinProjectile.shoot(coin, entity, 2.8f, (random.nextFloat()-0.5f)*20f + (random.nextFloat()-0.5f)*10f);
-        }
+        // Jackpot Shot fires continuously in onContinuousTick, not on swing
     }
 
     private void doCoinFlick(LivingEntity entity) {
@@ -238,6 +222,15 @@ public class CasinoRollAbility extends Ability {
     private void startJackpotShot(LivingEntity entity) {
         activeMode = ActiveMode.JACKPOT_SHOT; contTick = 0;
         continuousComponent.startContinuity(entity, JACKPOT_SHOT_DUR);
+    }
+
+    private void tickJackpotShot(LivingEntity entity) {
+        // Fire a coin projectile every tick toward the look direction, like Kaminari's beam
+        // Spread slightly each tick for a shotgun feel
+        CoinProjectile coin = new CoinProjectile(entity.level, entity);
+        coin.setDamage(JACKPOT_SHOT_DAMAGE);
+        coin.setMaxLife(40);
+        coinProjectile.shoot(coin, entity, 3.2f, (random.nextFloat()-0.5f)*8f);
     }
 
     private void startChipRain(LivingEntity entity) {
@@ -281,7 +274,6 @@ public class CasinoRollAbility extends Ability {
         if (stormOrigin == null) return;
         double bx = stormOrigin.x, by = stormOrigin.y, bz = stormOrigin.z;
 
-        // Barrier push every 2 ticks
         if (contTick % 2 == 0 && stormBox != null) {
             entity.level.getEntitiesOfClass(LivingEntity.class, stormBox, t -> t!=entity && t.isAlive())
                     .forEach(t -> {
@@ -291,7 +283,6 @@ public class CasinoRollAbility extends Ability {
                     });
         }
 
-        // Barrier ring: playing card particles every 4 ticks
         if (contTick % 4 == 0) {
             ParticleEffect<?> cardFx = (ParticleEffect<?>) KaziParticleEffects.PLAYING_CARD.get();
             double[] yLayers = { by+1, by+9, by+17 };
@@ -304,7 +295,6 @@ public class CasinoRollAbility extends Ability {
             }
         }
 
-        // Card rain every 3 ticks
         if (contTick % 3 == 0) {
             for (int i = 0; i < 6; i++) {
                 double ox = (random.nextDouble()-0.5)*STORM_RADIUS*1.8;
@@ -318,9 +308,7 @@ public class CasinoRollAbility extends Ability {
             }
         }
 
-        // Coin + chip rain every 8 ticks
         if (contTick % 8 == 0) {
-            // Coins
             for (int i = 0; i < 3; i++) {
                 double ox = (random.nextDouble()-0.5)*STORM_RADIUS*1.6;
                 double oz = (random.nextDouble()-0.5)*STORM_RADIUS*1.6;
@@ -331,7 +319,6 @@ public class CasinoRollAbility extends Ability {
                 entity.level.addFreshEntity(coin);
                 coin.setDeltaMovement(0, -0.9, 0);
             }
-            // Casino chips
             for (int i = 0; i < 4; i++) {
                 double ox = (random.nextDouble()-0.5)*STORM_RADIUS*1.6;
                 double oz = (random.nextDouble()-0.5)*STORM_RADIUS*1.6;
@@ -343,7 +330,6 @@ public class CasinoRollAbility extends Ability {
                 chip.setDeltaMovement((random.nextDouble()-0.5)*0.3, -0.9, (random.nextDouble()-0.5)*0.3);
             }
 
-            // Damage tick
             entity.level.getEntitiesOfClass(LivingEntity.class,
                             new AxisAlignedBB(bx-STORM_RADIUS, by-2, bz-STORM_RADIUS, bx+STORM_RADIUS, by+26, bz+STORM_RADIUS),
                             t -> t!=entity && t.isAlive())
@@ -352,7 +338,6 @@ public class CasinoRollAbility extends Ability {
     }
 
     private void startJackpot(LivingEntity entity) {
-        // Effects are applied continuously in tickJackpot — no need to set duration here
         entity.getPersistentData().putBoolean("kazi_jackpot_dmg_buff", true);
         entity.getPersistentData().putInt("kazi_jackpot_dmg_ticks", JACKPOT_BUFF_TICKS);
         activeMode = ActiveMode.JACKPOT; contTick = 0;
@@ -360,22 +345,10 @@ public class CasinoRollAbility extends Ability {
     }
 
     private void tickJackpot(LivingEntity entity) {
-        // Refresh effects every tick to keep them active for the full continuity duration
+        // Refresh buffs every tick
         entity.addEffect(new EffectInstance(KaziEffects.ENHANCED_MOVEMENT.get(), 10, 0, false, false));
         entity.addEffect(new EffectInstance(net.minecraft.potion.Effects.REGENERATION, 10, 1, false, false));
         entity.addEffect(new EffectInstance(net.minecraft.potion.Effects.DAMAGE_RESISTANCE, 10, 0, false, false));
-
-        // Knockback aoe every 2 ticks
-        if (contTick % 2 == 0) {
-            List<LivingEntity> nearby = entity.level.getEntitiesOfClass(LivingEntity.class,
-                    new AxisAlignedBB(entity.getX()-7, entity.getY()-2, entity.getZ()-7,
-                            entity.getX()+7, entity.getY()+6, entity.getZ()+7),
-                    t -> t != entity && t.isAlive());
-            for (LivingEntity target : nearby) {
-                Vector3d dirVec = entity.position().subtract(target.position()).normalize();
-                AbilityHelper.setDeltaMovement(target, -dirVec.x * 2.0, 1.0, -dirVec.z * 2.0);
-            }
-        }
 
         // Coin eruption every 5 ticks
         if (contTick % 5 == 0) {
@@ -412,16 +385,13 @@ public class CasinoRollAbility extends Ability {
             }
         }
 
-        // AoE damage + dizzy every 20 ticks
+        // AoE damage every 20 ticks — no dizzy, no knockback
         if (contTick % 20 == 0) {
             entity.level.getEntitiesOfClass(LivingEntity.class,
                             new AxisAlignedBB(entity.getX()-JACKPOT_RADIUS, entity.getY()-2, entity.getZ()-JACKPOT_RADIUS,
                                     entity.getX()+JACKPOT_RADIUS, entity.getY()+10, entity.getZ()+JACKPOT_RADIUS),
                             t -> t!=entity && t.isAlive())
-                    .forEach(t -> {
-                        damageComponent.hurtTarget(entity, t, JACKPOT_DAMAGE*0.05f);
-                        t.addEffect(new EffectInstance(ModEffects.DIZZY.get(), JACKPOT_STUN_TICKS, 0, false, true));
-                    });
+                    .forEach(t -> damageComponent.hurtTarget(entity, t, JACKPOT_DAMAGE*0.05f));
         }
     }
 
@@ -434,15 +404,14 @@ public class CasinoRollAbility extends Ability {
     }
 
     public void setModeForRoll(LivingEntity entity, int roll) {
-        Mode mode;
         switch (roll) {
-            case 1: mode=Mode.COIN_FLICK; break; case 2: mode=Mode.LOADED_DICE; break;
-            case 3: mode=Mode.CARD_SLASH; break; case 4: mode=Mode.DOUBLE_DOWN; break;
-            case 5: mode=Mode.JACKPOT_SHOT; break; case 6: mode=Mode.CASINO_CHIP_RAIN; break;
-            case 7: mode=Mode.LUCKY_SEVEN; break; case 8: mode=Mode.CASINO_STORM; break;
-            case 9: mode=Mode.JACKPOT; break; default: mode=Mode.NONE; break;
+            case 1: currentMode=Mode.COIN_FLICK; break; case 2: currentMode=Mode.LOADED_DICE; break;
+            case 3: currentMode=Mode.CARD_SLASH; break; case 4: currentMode=Mode.DOUBLE_DOWN; break;
+            case 5: currentMode=Mode.JACKPOT_SHOT; break; case 6: currentMode=Mode.CASINO_CHIP_RAIN; break;
+            case 7: currentMode=Mode.LUCKY_SEVEN; break; case 8: currentMode=Mode.CASINO_STORM; break;
+            case 9: currentMode=Mode.JACKPOT; break; default: currentMode=Mode.NONE; break;
         }
-        altModeComponent.setMode(entity, mode);
+        setDisplayName(currentMode.getDisplayName());
     }
 
     public boolean isStormActive()   { return activeMode==ActiveMode.STORM   && continuousComponent.isContinuous(); }

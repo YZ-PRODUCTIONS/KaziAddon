@@ -18,7 +18,8 @@ import net.kazi.kazimod.abilities.DoctorRework.*;
 import net.kazi.kazimod.abilities.DokuRework.VenomRoadRework;
 import net.kazi.kazimod.abilities.GasuRework.GastilleRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
-import net.kazi.kazimod.abilities.Gojo.*;
+import net.kazi.kazimod.abilities.KageRework.DoppelmanRework;
+import net.kazi.kazimod.abilities.Koku.*;
 import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.GoroRework.ElThorRework;
 import net.kazi.kazimod.abilities.GoroRework.SangoRework;
@@ -58,6 +59,7 @@ import net.kazi.kazimod.abilities.NitoryuRework.SaiKuruRework;
 import net.kazi.kazimod.abilities.NitoryuRework.TakaNamiRework;
 import net.kazi.kazimod.abilities.NoroRework.NoroNoroBeamRework;
 import net.kazi.kazimod.abilities.NoroRework.NoroNoroBeamSwordRework;
+import net.kazi.kazimod.abilities.Nusu.SkillBookCreationAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillHunterAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillRemoverAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
@@ -76,6 +78,13 @@ import net.kazi.kazimod.abilities.ToriNueRework.ImperialFlameRIngCommandmentRewo
 import net.kazi.kazimod.abilities.Toshi.*;
 import net.kazi.kazimod.abilities.UoSeiryuRework.SeiryuHeavyPointRework;
 import net.kazi.kazimod.abilities.YamiRework.BlackHoleRework;
+import net.kazi.kazimod.abilities.boss.gojo.BossHollowPurpleAbility;
+import net.kazi.kazimod.abilities.boss.gojo.BossLapseBlueAbility;
+import net.kazi.kazimod.abilities.boss.gojo.BossMaxOutputLapseBlueAbility;
+import net.kazi.kazimod.abilities.boss.gojo.BossRedAbility;
+import net.kazi.kazimod.abilities.boss.sukuna.BossDismantleAbility;
+import net.kazi.kazimod.abilities.boss.sukuna.BossFugaAbility;
+import net.kazi.kazimod.abilities.boss.sukuna.BossMalevolentShrineAbility;
 import net.kazi.kazimod.abilities.onirework.SkullBasherRework;
 import net.kazi.kazimod.abilities.onirework.ViciousRoarRework;
 import net.kazi.kazimod.abilities.swordsmanrework.*;
@@ -220,7 +229,17 @@ public class KaziAbilities {
             SlotSpinAbility.INSTANCE,
             CasinoRollAbility.INSTANCE,
             SkillHunterAbility.INSTANCE,
-            SkillRemoverAbility.INSTANCE
+            SkillRemoverAbility.INSTANCE,
+            BossDismantleAbility.INSTANCE,
+            BossFugaAbility.INSTANCE,
+            BossMalevolentShrineAbility.INSTANCE,
+            BossHollowPurpleAbility.INSTANCE,
+            BossLapseBlueAbility.INSTANCE,
+            BossMaxOutputLapseBlueAbility.INSTANCE,
+            BossRedAbility.INSTANCE,
+            SkillBookCreationAbility.INSTANCE,
+            GearSecondRework.INSTANCE,
+            DoppelmanRework.INSTANCE
 
 
 

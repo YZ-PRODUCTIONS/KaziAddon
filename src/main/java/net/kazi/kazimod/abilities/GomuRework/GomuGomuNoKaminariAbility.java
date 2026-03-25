@@ -53,7 +53,7 @@ public class GomuGomuNoKaminariAbility extends Ability {
     private static final int COOLDOWN    = 600;
     private static final float CHARGE_TIME = 60.0F;
     private static final float BEAM_DURATION = 80.0F;
-    private static final float VERTICAL_BOOST = 4.0F;
+    private static final float VERTICAL_BOOST = 3.0F;
     private static final float RANGE     = 90.0F;
     private static final float DAMAGE    = 14.0F;
     private static final float BEAM_SIZE = 0.45F;

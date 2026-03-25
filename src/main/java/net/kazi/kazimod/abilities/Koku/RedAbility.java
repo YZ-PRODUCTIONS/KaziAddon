@@ -1,5 +1,6 @@
-package net.kazi.kazimod.abilities.Gojo;
+package net.kazi.kazimod.abilities.Koku;
 
+import net.kazi.kazimod.abilities.GomuRework.GearFifthRework;
 import net.kazi.kazimod.entities.projectiles.MaxOutputRedProjectile;
 import net.kazi.kazimod.entities.projectiles.RedProjectile;
 import net.kazi.kazimod.init.KaziAnimations;
@@ -29,11 +30,13 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.ChargeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ProjectileComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.api.util.Interval;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import xyz.pixelatedw.mineminenomi.wypi.WyRegistry;
@@ -185,6 +188,10 @@ public class RedAbility extends Ability {
         return new MaxOutputRedProjectile(entity.level, entity, this);
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = (new AbilityCore.Builder<>("Red", AbilityCategory.DEVIL_FRUITS, RedAbility::new))
                 .addDescriptionLine(DESCRIPTION)
@@ -194,8 +201,10 @@ public class RedAbility extends Ability {
                         CooldownComponent.getTooltip(COOLDOWN)
                 })
                 .addAdvancedDescriptionLine(ProjectileComponent.getProjectileTooltips())
+                .setSourceHakiNature(SourceHakiNature.SPECIAL)
                 .setSourceElement(SourceElement.SHOCKWAVE)
                 .setSourceType(new SourceType[]{SourceType.INDIRECT, SourceType.PROJECTILE})
+                .setUnlockCheck(RedAbility::canUnlock)
                 .build();
     }
 }

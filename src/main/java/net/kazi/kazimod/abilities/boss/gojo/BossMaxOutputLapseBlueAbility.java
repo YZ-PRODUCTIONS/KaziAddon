@@ -1,6 +1,7 @@
 package net.kazi.kazimod.abilities.boss.gojo;
 
 import net.kazi.kazimod.entities.boss.BossAimHelper;
+import net.kazi.kazimod.entities.boss.gojo.GojoCooldownTracker;
 import net.kazi.kazimod.entities.projectiles.LapseBlueProjectile;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -11,57 +12,59 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AnimationComponent;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 
-/**
- * Boss Max Output Lapse Blue.
- *
- * The original MaxOutputLapseBlueAbility uses ProjectileComponent.shoot() which
- * fires along entity.xRot/entity.yRot — same root cause as HollowPurple's miss.
- *
- * This version fires LapseBlueProjectile directly using BossAimHelper.leadTarget()
- * so it always tracks the target correctly regardless of boss facing angle.
- *
- * Used by BossMaxOutputLapseBlueWrapperGoal as a wrapper goal.
- */
 public class BossMaxOutputLapseBlueAbility extends Ability {
 
-    private static final float   COOLDOWN         = 400.0F; // 20 seconds
-    private static final double  PROJECTILE_SPEED = 2.0;
+    private static final float  COOLDOWN         = 400.0f;
+    private static final double PROJECTILE_SPEED = 2.0;
 
     public static final AbilityCore<BossMaxOutputLapseBlueAbility> INSTANCE;
 
-    private final AnimationComponent animationComponent = new AnimationComponent(this);
+    private final AnimationComponent animationComponent;
 
-    public BossMaxOutputLapseBlueAbility(AbilityCore<BossMaxOutputLapseBlueAbility> core) {
+    public BossMaxOutputLapseBlueAbility(final AbilityCore<BossMaxOutputLapseBlueAbility> core) {
         super(core);
+        this.animationComponent = new AnimationComponent(this);
         this.isNew = true;
         this.addComponents(new AbilityComponent[]{ this.animationComponent });
-        // NO canUseCheck — works freely for mobs via AbilityWrapperGoal
         this.addUseEvent(this::onUseEvent);
     }
 
-    private void onUseEvent(LivingEntity entity, IAbility ability) {
+    private void onUseEvent(final LivingEntity entity, final IAbility ability) {
         if (entity.level.isClientSide) return;
 
-        LivingEntity target = entity instanceof MobEntity
+        final LivingEntity target = (entity instanceof MobEntity)
                 ? ((MobEntity) entity).getTarget() : null;
         if (target == null || !target.isAlive()) return;
 
-        Vector3d firePos = entity.position().add(0, entity.getEyeHeight() * 0.9, 0);
-        Vector3d dir     = BossAimHelper.leadTarget(entity, target, PROJECTILE_SPEED);
+        final Vector3d firePos = entity.position().add(0, entity.getEyeHeight() * 0.9, 0);
+        final Vector3d dir     = BossAimHelper.leadTarget(entity, target, PROJECTILE_SPEED);
 
-        LapseBlueProjectile proj = new LapseBlueProjectile(
-                entity.level, entity, (Ability) ability);
+        final LapseBlueProjectile proj = new LapseBlueProjectile(entity.level, entity, (Ability) ability);
         proj.setPos(firePos.x, firePos.y, firePos.z);
         proj.setDeltaMovement(dir.scale(PROJECTILE_SPEED));
         entity.level.addFreshEntity(proj);
 
         super.cooldownComponent.startCooldown(entity, COOLDOWN);
+
+        // ── Record timestamp for the mutual 5-second cooldown gate ──────────
+        GojoCooldownTracker.recordMaxBlue(entity.getUUID());
     }
 
     static {
-        INSTANCE = new AbilityCore.Builder<>("Boss: Max Output Lapse Blue",
-                AbilityCategory.DEVIL_FRUITS, BossMaxOutputLapseBlueAbility::new)
+        INSTANCE = new AbilityCore.Builder<>(
+                "Boss: Max Output Lapse Blue",
+                AbilityCategory.DEVIL_FRUITS,
+                BossMaxOutputLapseBlueAbility::new
+        ).setSourceHakiNature(SourceHakiNature.SPECIAL).setSourceElement(SourceElement.SHOCKWAVE)
+                .setSourceType(SourceType.INDIRECT, SourceType.PROJECTILE)
+                // Mirror the BossHollowPurpleAbility safeguard so MMNM packet encoding
+                // always has a non-null identifier even if the boss ability instance is
+                // serialized outside the normal registry-backed lifecycle.
+                .setPhantomKey(new net.minecraft.util.ResourceLocation("kazimod", "boss_max_output_lapse_blue"))
                 .build();
     }
 }

@@ -1,5 +1,6 @@
-package net.kazi.kazimod.abilities.Gojo;
+package net.kazi.kazimod.abilities.Koku;
 
+import net.kazi.kazimod.abilities.GomuRework.GearFifthRework;
 import net.kazi.kazimod.animations.gojo.GojoHollowPurpleAnimation;
 import net.kazi.kazimod.entities.projectiles.HollowPurpleProjectile;
 import net.kazi.kazimod.init.KaziAnimations;
@@ -24,11 +25,13 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.ChargeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ProjectileComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.api.util.Interval;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
@@ -41,7 +44,6 @@ public class HollowPurpleAbility extends Ability {
 
     private static final float CHARGE_TIME  = 140.0F;
     private static final float COOLDOWN     = 1800.0F;
-    private static final float LAUNCH_HEIGHT = 3.0F;
 
     public static final AbilityCore<HollowPurpleAbility> INSTANCE;
 
@@ -55,8 +57,8 @@ public class HollowPurpleAbility extends Ability {
     private ProjectileComponent projectileComponent;
 
     private final Interval particleInterval = new Interval(2);
-    private boolean fireAnimTriggered  = false;
-    private boolean chantTriggered     = false; // tracks whether purplechant has played this charge
+    private boolean fireAnimTriggered = false;
+    private boolean chantTriggered    = false;
 
     public HollowPurpleAbility(AbilityCore<HollowPurpleAbility> core) {
         super(core);
@@ -83,16 +85,22 @@ public class HollowPurpleAbility extends Ability {
     }
 
     private void onUseEvent(LivingEntity entity, IAbility ability) {
+        if (!entity.level.isClientSide) {
+            // If a projectile is already live, detonate it instead of charging again
+            HollowPurpleProjectile proj =
+                    HollowPurpleProjectile.ACTIVE_PROJECTILES.get(entity.getUUID());
+            if (proj != null && proj.isAlive()) {
+                proj.detonate();
+                return;
+            }
+        }
         if (!this.chargeComponent.isCharging()) {
             this.chargeComponent.startCharging(entity, CHARGE_TIME);
         }
     }
 
     private void onChargeStart(LivingEntity entity, IAbility ability) {
-        AbilityHelper.setDeltaMovement(entity,
-                entity.getDeltaMovement().x,
-                (double) LAUNCH_HEIGHT,
-                entity.getDeltaMovement().z);
+        // No launch — just start the animation and reset flags
         this.animationComponent.start(entity, KaziAnimations.GOJO_HOLLOW_PURPLE);
         fireAnimTriggered = false;
         chantTriggered    = false;
@@ -102,6 +110,7 @@ public class HollowPurpleAbility extends Ability {
     }
 
     private void onChargeTick(LivingEntity entity, IAbility ability) {
+        // Float in place like El Thor — slow fall every tick instead of launching up
         AbilityHelper.slowEntityFall(entity);
 
         if (!entity.level.isClientSide && particleInterval.canTick()) {
@@ -145,7 +154,6 @@ public class HollowPurpleAbility extends Ability {
                         entity.getX(), entity.getY() + 1.5, entity.getZ()
                 );
 
-                // Play purplechant exactly once when the purple particle first appears
                 if (!chantTriggered) {
                     chantTriggered = true;
                     entity.level.playSound(
@@ -172,7 +180,7 @@ public class HollowPurpleAbility extends Ability {
         projectile.moveTo(entity.getX(), entity.getY() + 8.0, entity.getZ());
         entity.level.addFreshEntity(projectile);
         projectile.shootFromRotation(entity, entity.xRot, entity.yRot, 0.0F, 4.5F, 0.0F);
-        super.cooldownComponent.startCooldown(entity, COOLDOWN);
+        // Cooldown starts when the projectile detonates, not when fired
         this.animationComponent.stop(entity);
         fireAnimTriggered = false;
         chantTriggered    = false;
@@ -196,12 +204,24 @@ public class HollowPurpleAbility extends Ability {
         }
     }
 
+    public static void triggerCooldownForEntity(LivingEntity entity) {
+        IAbilityData data = AbilityDataCapability.get(entity);
+        if (data == null) return;
+        HollowPurpleAbility ability = (HollowPurpleAbility) data.getEquippedAbility(INSTANCE);
+        if (ability == null) return;
+        ability.cooldownComponent.startCooldown(entity, COOLDOWN);
+    }
+
     public boolean isOnCooldown(LivingEntity entity) {
         return this.cooldownComponent.isOnCooldown();
     }
 
     public boolean isCharging() {
         return this.chargeComponent.isCharging();
+    }
+
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
     }
 
     static {
@@ -214,7 +234,9 @@ public class HollowPurpleAbility extends Ability {
                         CooldownComponent.getTooltip(COOLDOWN)
                 })
                 .setSourceElement(SourceElement.SHOCKWAVE)
+                .setSourceHakiNature(SourceHakiNature.SPECIAL)
                 .setSourceType(new SourceType[]{SourceType.INDIRECT, SourceType.PROJECTILE})
+                .setUnlockCheck(HollowPurpleAbility::canUnlock)
                 .build();
     }
 }

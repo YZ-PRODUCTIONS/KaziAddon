@@ -1,8 +1,8 @@
 package net.kazi.kazimod.entities.projectiles;
 
-import net.kazi.kazimod.abilities.Gojo.DomainExpansionInfiniteVoidAbility;
-import net.kazi.kazimod.abilities.Gojo.HollowPurpleAbility;
-import net.kazi.kazimod.abilities.Gojo.MaxOutputLapseBlueAbility;
+import net.kazi.kazimod.abilities.Koku.DomainExpansionInfiniteVoidAbility;
+import net.kazi.kazimod.abilities.Koku.HollowPurpleAbility;
+import net.kazi.kazimod.abilities.Koku.MaxOutputLapseBlueAbility;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -14,14 +14,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import xyz.pixelatedw.mineminenomi.api.abilities.Ability;
-import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.config.CommonConfig;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.data.world.ProtectedAreasData;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
 import xyz.pixelatedw.mineminenomi.init.ModEntityPredicates;
-import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 import java.util.HashMap;
@@ -226,6 +224,11 @@ public class LapseBlueProjectile extends AbilityProjectileEntity {
                             if (domain != null && domain.isDomainActive()) {
                                 domainActive = true;
                             }
+                        }
+
+                        LivingEntity redThrower = ((AbilityProjectileEntity) e).getThrower();
+                        if (redThrower == null || !redThrower.getUUID().equals(this.caster.getUUID())) {
+                            continue;
                         }
 
                         if (!hollowPurpleOnCooldown && !domainActive && this.storedAbility != null) {

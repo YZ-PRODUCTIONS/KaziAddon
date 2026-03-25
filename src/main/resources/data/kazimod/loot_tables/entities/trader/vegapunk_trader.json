@@ -1,0 +1,141 @@
+{
+  "pools": [
+    {
+      "name": "kazimod:awakening_essence",
+      "rolls": {
+        "min": 1.0,
+        "max": 1.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:set_price",
+              "price_range": {
+                "min": 300000.0,
+                "max": 300000.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "kazimod:awakening_essence"
+        }
+      ]
+    },
+    {
+      "name": "kazimod:canister_poison",
+      "rolls": {
+        "min": 1.0,
+        "max": 1.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:infinite_stock"
+            },
+            {
+              "function": "mineminenomi:set_price",
+              "price_range": {
+                "min": 50000.0,
+                "max": 50000.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "cartaddon:poison_pink_canister"
+        }
+      ]
+    },
+    {
+      "name": "kazimod:canister_electric",
+      "rolls": {
+        "min": 1.0,
+        "max": 1.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:infinite_stock"
+            },
+            {
+              "function": "mineminenomi:set_price",
+              "price_range": {
+                "min": 50000.0,
+                "max": 50000.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "cartaddon:electric_shock_blue_canister"
+        }
+      ]
+    },
+    {
+      "name": "kazimod:canister_stealth",
+      "rolls": {
+        "min": 1.0,
+        "max": 1.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:infinite_stock"
+            },
+            {
+              "function": "mineminenomi:set_price",
+              "price_range": {
+                "min": 50000.0,
+                "max": 50000.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "cartaddon:stealth_black_canister"
+        }
+      ]
+    },
+    {
+      "name": "kazimod:canister_winch",
+      "rolls": {
+        "min": 1.0,
+        "max": 1.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:infinite_stock"
+            },
+            {
+              "function": "mineminenomi:set_price",
+              "price_range": {
+                "min": 50000.0,
+                "max": 50000.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "cartaddon:winch_green_canister"
+        }
+      ]
+    }
+  ]
+}

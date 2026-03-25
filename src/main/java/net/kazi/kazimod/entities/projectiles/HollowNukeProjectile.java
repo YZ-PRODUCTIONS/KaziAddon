@@ -11,6 +11,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -42,7 +44,6 @@ import java.util.UUID;
 
 public class HollowNukeProjectile extends AbilityProjectileEntity {
 
-    // Static tracker so LapseBlueAbility can check if a nuke is active
     public static final Map<UUID, HollowNukeProjectile> ACTIVE_PROJECTILES = new HashMap<>();
 
     private boolean dealtAOE = false;
@@ -73,6 +74,7 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
         this.setPassThroughEntities();
         this.setPassThroughBlocks();
         this.setUnavoidable();
+        this.setHurtThrower();
         this.onTickEvent = this::onTickEvent;
     }
 
@@ -81,7 +83,6 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
         this.setDeltaMovement(this.getDeltaMovement().x, 0, this.getDeltaMovement().z);
         super.tick();
         this.noCulling = true;
-        // Register in active map so other abilities can check
         if (!this.level.isClientSide && getThrower() != null && this.isAlive()) {
             ACTIVE_PROJECTILES.put(getThrower().getUUID(), this);
         }
@@ -109,8 +110,8 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
 
         sendFlashbang();
 
-        int explosionRadius  = 48;
-        int shockwaveRadius  = 54;
+        int explosionRadius = 48;
+        int shockwaveRadius = 54;
 
         if (CommonConfig.INSTANCE.isAbilityGriefingEnabled()) {
             AbilityHelper.createSphere(
@@ -128,26 +129,40 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
             );
         }
 
+        LivingEntity thrower = getThrower();
+
         List<Entity> list = WyHelper.getNearbyEntities(
                 this.position(), this.level, (double) shockwaveRadius,
                 null, new Class[]{Entity.class}
         );
-        list.remove(this.getThrower());
 
         for (Entity target : list) {
+            if (target == this) continue;
+
             if (target instanceof ThrowableEntity || target instanceof AbstractArrowEntity) {
                 target.remove();
                 continue;
             }
+
             if (target instanceof LivingEntity) {
+                LivingEntity livingTarget = (LivingEntity) target;
+
+                // Only apply Instant Damage to the thrower themselves, not allies
+                if (target == thrower) {
+                    livingTarget.addEffect(new EffectInstance(
+                            Effects.HARM, 20, 3, false, false));
+                    continue;
+                }
+
                 ModDamageSource source = (ModDamageSource) (new ModIndirectEntityDamageSource(
-                        this.getDamageSource().msgId, this, this.getThrower()))
+                        this.getDamageSource().msgId, this, thrower))
                         .setSourceElement(SourceElement.SHOCKWAVE)
                         .setHakiNature(SourceHakiNature.SPECIAL)
                         .setSourceTypes(new ArrayList<>(Arrays.asList(SourceType.INTERNAL)))
                         .setUnavoidable()
                         .setPiercing(1.00F);
-                target.hurt(source, this.getDamage());
+
+                livingTarget.hurt(source, this.getDamage());
 
                 Vector3d speed = target.getLookAngle().scale(-1.0F).multiply(5.0F, 0.0F, 5.0F);
                 AbilityHelper.setDeltaMovement(target, speed.x, 1.0F, speed.z);
@@ -161,7 +176,6 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
         if (!this.level.isClientSide) {
             this.setDeltaMovement(Vector3d.ZERO);
 
-            // Play music and spawn growing particle on the very first tick
             if (this.tickCount <= 2) {
                 if (this.tickCount == 1) {
                     net.minecraft.network.play.server.SPlaySoundEffectPacket musicPacket =
@@ -188,7 +202,6 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
                 }
             }
 
-            // Trigger explosion at tick 100
             if (this.tickCount == EXPLOSION_DELAY) {
                 doExplosion();
             }

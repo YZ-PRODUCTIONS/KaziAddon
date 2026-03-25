@@ -24,6 +24,13 @@ public class KaziSounds {
     public static final RegistryObject<SoundEvent> INFINITE_VOID_MUSIC_SFX = KaziRegistry.registerSound("infinitevoidmusic");
     public static final RegistryObject<SoundEvent> PURPLE_CHANT_SFX = KaziRegistry.registerSound("purplechant");
     public static final RegistryObject<SoundEvent> HOLLOW_NUKE_MUSIC_SFX = KaziRegistry.registerSound("hollownukemusic");
+    public static final RegistryObject<SoundEvent> GOJO_BOSS_ENTRANCE_SFX   =
+            KaziRegistry.registerSound("gojobossentrance");
+    public static final RegistryObject<SoundEvent> SUKUNA_BOSS_ENTRANCE_SFX =
+            KaziRegistry.registerSound("sukunabossentrance");
+    public static final RegistryObject<SoundEvent> LUFFY_BOSS_ENTRANCE_SFX  =
+            KaziRegistry.registerSound("luffybossentrance");
+
 
     public static void register(IEventBus eventBus) {
         KaziRegistry.SOUNDS.register(eventBus);

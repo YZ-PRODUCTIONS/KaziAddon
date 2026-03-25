@@ -1,6 +1,6 @@
 package net.kazi.kazimod.events.handlers;
 
-import net.kazi.kazimod.abilities.Gojo.DomainExpansionInfiniteVoidAbility;
+import net.kazi.kazimod.abilities.Koku.DomainExpansionInfiniteVoidAbility;
 import net.kazi.kazimod.abilities.KamaRework.DomainExpansionMalevolentShrine;
 import net.kazi.kazimod.events.DomainClashManager;
 import net.kazi.kazimod.events.DomainClashManager.ClashEntry;
@@ -68,6 +68,8 @@ public class DomainClashTickHandler {
                 clashAge.remove(idB);
                 processed.add(idA);
                 processed.add(idB);
+                cleanupForEntity(entry.entity);
+                cleanupForEntity(entry.opponent);
                 continue;
             }
 
@@ -114,6 +116,23 @@ public class DomainClashTickHandler {
         if (shrine != null) {
             if (won) shrine.resolveClashWin(entity);
             else     shrine.resolveClashLoss(entity);
+        }
+    }
+
+    private static void cleanupForEntity(LivingEntity entity) {
+        IAbilityData data = AbilityDataCapability.get(entity);
+        if (data == null) return;
+
+        DomainExpansionInfiniteVoidAbility voidAbility = (DomainExpansionInfiniteVoidAbility)
+                data.getEquippedAbility(DomainExpansionInfiniteVoidAbility.INSTANCE);
+        if (voidAbility != null) {
+            voidAbility.cleanupClash(entity);
+        }
+
+        DomainExpansionMalevolentShrine shrine = (DomainExpansionMalevolentShrine)
+                data.getEquippedAbility(DomainExpansionMalevolentShrine.INSTANCE);
+        if (shrine != null) {
+            shrine.cleanupClash(entity);
         }
     }
 }

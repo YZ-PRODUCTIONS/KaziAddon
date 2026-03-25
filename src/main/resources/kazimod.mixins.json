@@ -2,6 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.kazi.kazimod.mixin",
+  "plugin": "net.kazi.kazimod.mixin.KaziMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "MineMineNoMiAddonTemplate.refmap.json",
   "mixins": [
