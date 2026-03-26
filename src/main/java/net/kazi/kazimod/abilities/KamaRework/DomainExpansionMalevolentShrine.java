@@ -83,7 +83,8 @@ public class DomainExpansionMalevolentShrine extends Ability {
             .addEndEvent(100, this::onEndContinuousEvent);
     private final DealDamageComponent dealDamageComponent = new DealDamageComponent(this);
     private final RangeComponent      rangeComponent      = new RangeComponent(this);
-    private final CooldownComponent   cooldownComponent   = new CooldownComponent(this);
+    private final CooldownComponent   cooldownComponent   = new CooldownComponent(this)
+            .addEndEvent(this::onCooldownEnd);
 
     private final Interval damageInterval   = new Interval(DAMAGE_INTERVAL_TICKS);
     private final Interval particleInterval = new Interval(PARTICLE_INTERVAL_TICKS);
@@ -157,35 +158,12 @@ public class DomainExpansionMalevolentShrine extends Ability {
                                 DomainExpansionInfiniteVoidAbility.INSTANCE);
                 if (voidAbility != null && voidAbility.isCharging()) {
                     DomainClashManager.startClash(entity, other);
-
-                    Vector3d look = entity.getLookAngle();
-                    this.clashShrineEntity = new MalevolentShrineEntity(
-                            KaziEntities.MALEVOLENT_SHRINE.get(), entity.level);
-                    this.clashShrineEntity.moveTo(
-                            entity.getX() - look.x * SPAWN_BEHIND_DISTANCE,
-                            entity.getY(),
-                            entity.getZ() - look.z * SPAWN_BEHIND_DISTANCE,
-                            entity.yRot + 180.0F, 0.0F);
-                    this.clashShrineEntity.yBodyRot = entity.yRot + 180.0F;
-                    this.clashShrineEntity.setDeltaMovement(Vector3d.ZERO);
-                    this.clashShrineEntity.setNoGravity(true);
-                    this.clashShrineEntity.setInvulnerable(true);
-                    entity.level.addFreshEntity(this.clashShrineEntity);
-
-                    double distToVoidUser = entity.distanceTo(other);
-                    double barrierRadius  = 30.0;
-                    if (distToVoidUser > barrierRadius) {
-                        Vector3d toVoid    = other.position().subtract(entity.position()).normalize();
-                        double   spawnDist = barrierRadius * 0.75;
-                        entity.teleportTo(
-                                other.getX() - toVoid.x * spawnDist,
-                                other.getY(),
-                                other.getZ() - toVoid.z * spawnDist);
-                    }
+                    voidAbility.startClashVisuals(other);
+                    this.startClashVisuals(entity, other);
 
                     // FIX: stopCooldown first so startCooldown isn't silently ignored
-                    super.cooldownComponent.stopCooldown(entity);
-                    super.cooldownComponent.startCooldown(entity, COOLDOWN);
+                    this.cooldownComponent.stopCooldown(entity);
+                    this.cooldownComponent.startCooldown(entity, COOLDOWN);
                     voidAbility.startCooldownForClash(other);
 
                     this.chargeComponent.stopCharging(entity);
@@ -206,6 +184,18 @@ public class DomainExpansionMalevolentShrine extends Ability {
             this.particleInterval.restartIntervalToZero();
             this.continuousComponent.triggerContinuity(entity, HOLD_TIME);
         }
+    }
+
+    private void onCooldownEnd(LivingEntity entity, IAbility ability) {
+        this.animationComponent.stop(entity);
+        if (this.chargeComponent.isCharging()) {
+            this.chargeComponent.forceStopCharging(entity);
+        }
+        if (this.continuousComponent.isContinuous()) {
+            this.continuousComponent.stopContinuity(entity);
+        }
+        this.activeTicks = 0;
+        this.cleanedUpEarly = false;
     }
 
     private void onStartContinuousEvent(LivingEntity entity, IAbility ability) {
@@ -308,7 +298,8 @@ public class DomainExpansionMalevolentShrine extends Ability {
         if (!entity.level.isClientSide && !this.cleanedUpEarly) {
             float ratio    = Math.min(1.0F, (float) held / HOLD_TIME);
             float cooldown = MIN_COOLDOWN + ratio * (MAX_COOLDOWN - MIN_COOLDOWN);
-            super.cooldownComponent.startCooldown(entity, cooldown);
+            this.cooldownComponent.stopCooldown(entity);
+            this.cooldownComponent.startCooldown(entity, cooldown);
         }
         this.cleanedUpEarly = false;
     }
@@ -342,8 +333,8 @@ public class DomainExpansionMalevolentShrine extends Ability {
      * FIX: stopCooldown first so the new value isn't silently ignored.
      */
     public void startCooldownForClash(LivingEntity entity) {
-        super.cooldownComponent.stopCooldown(entity);
-        super.cooldownComponent.startCooldown(entity, COOLDOWN);
+        this.cooldownComponent.stopCooldown(entity);
+        this.cooldownComponent.startCooldown(entity, COOLDOWN);
     }
 
     public void stopChargingNoCD(LivingEntity entity) {
@@ -356,7 +347,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
     public void resolveClashWin(LivingEntity entity) {
         cleanupClash(entity);
         // Winner: clear cooldown entirely
-        super.cooldownComponent.stopCooldown(entity);
+        this.cooldownComponent.stopCooldown(entity);
         DomainClashManager.clearResolved(entity.getUUID());
         sendMessage(entity, TextFormatting.GREEN + "You have won the domain clash!");
     }
@@ -366,8 +357,8 @@ public class DomainExpansionMalevolentShrine extends Ability {
         // FIX: stopCooldown first — startCooldown is ignored if already on cooldown.
         // Without this, the loser stays locked at the COOLDOWN set during clash start
         // and the MIN_COOLDOWN intended here was silently swallowed.
-        super.cooldownComponent.stopCooldown(entity);
-        super.cooldownComponent.startCooldown(entity, MIN_COOLDOWN);
+        this.cooldownComponent.stopCooldown(entity);
+        this.cooldownComponent.startCooldown(entity, MIN_COOLDOWN);
         DomainClashManager.clearResolved(entity.getUUID());
         sendMessage(entity, TextFormatting.RED + "You have lost the domain clash.");
     }
@@ -375,6 +366,41 @@ public class DomainExpansionMalevolentShrine extends Ability {
     public void stopChargingAndCooldown(LivingEntity entity) {
         stopChargingNoCD(entity);
         resolveClashLoss(entity);
+    }
+
+    public void startClashVisuals(LivingEntity entity, LivingEntity voidUser) {
+        if (entity.level.isClientSide) return;
+        cleanupClash(entity);
+
+        Vector3d look = entity.getLookAngle();
+        this.clashShrineEntity = new MalevolentShrineEntity(
+                KaziEntities.MALEVOLENT_SHRINE.get(), entity.level);
+        this.clashShrineEntity.moveTo(
+                entity.getX() - look.x * SPAWN_BEHIND_DISTANCE,
+                entity.getY(),
+                entity.getZ() - look.z * SPAWN_BEHIND_DISTANCE,
+                entity.yRot + 180.0F, 0.0F);
+        this.clashShrineEntity.yBodyRot = entity.yRot + 180.0F;
+        this.clashShrineEntity.setDeltaMovement(Vector3d.ZERO);
+        this.clashShrineEntity.setNoGravity(true);
+        this.clashShrineEntity.setInvulnerable(true);
+        entity.level.addFreshEntity(this.clashShrineEntity);
+
+        if (voidUser != null && voidUser.isAlive()) {
+            double barrierRadius = 30.0;
+            double distToVoidUser = entity.distanceTo(voidUser);
+            if (distToVoidUser > barrierRadius) {
+                Vector3d toVoid = voidUser.position().subtract(entity.position());
+                if (toVoid.lengthSqr() > 0.001D) {
+                    toVoid = toVoid.normalize();
+                    double spawnDist = barrierRadius * 0.75;
+                    entity.teleportTo(
+                            voidUser.getX() - toVoid.x * spawnDist,
+                            voidUser.getY(),
+                            voidUser.getZ() - toVoid.z * spawnDist);
+                }
+            }
+        }
     }
 
     public void cleanupClash(LivingEntity entity) {

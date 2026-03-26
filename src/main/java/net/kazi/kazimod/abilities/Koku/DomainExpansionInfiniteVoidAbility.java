@@ -135,8 +135,8 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
                         otherData.getEquippedAbility(DomainExpansionMalevolentShrine.INSTANCE);
                 if (shrine != null && shrine.isCharging()) {
                     DomainClashManager.startClash(entity, other);
-                    // Spawn barrier + sphere for visual during clash
                     startClashVisuals(entity);
+                    shrine.startClashVisuals(other, entity);
                     this.chargeComponent.stopCharging(entity);
                     this.animationComponent.stop(entity);
                     shrine.stopChargingNoCD(other);
@@ -161,8 +161,9 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
 
     // ── Clash visual management ───────────────────────────────────────────────
 
-    private void startClashVisuals(final LivingEntity entity) {
+    public void startClashVisuals(final LivingEntity entity) {
         if (entity.level.isClientSide) return;
+        stopClashVisuals(entity);
         this.clashPosition = new Vector3d(entity.getX(), entity.getY(), entity.getZ());
 
         this.clashSphere = new SphereEntity(entity.level, entity);

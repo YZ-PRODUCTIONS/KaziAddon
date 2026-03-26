@@ -38,6 +38,8 @@ import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class DismantleAbility extends Ability {
+    private static final ResourceLocation NORMAL_ICON = new ResourceLocation("kazimod", "textures/abilities/dismantle.png");
+    private static final ResourceLocation BARRAGE_ICON = new ResourceLocation("kazimod", "textures/abilities/dismantle_barrage.png");
 
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
             "kazimod", "dismantle",
@@ -191,7 +193,7 @@ public class DismantleAbility extends Ability {
     }
 
     private void onAltModeChange(LivingEntity entity, IAbility ability, Mode mode) {
-        super.setDisplayIcon(INSTANCE);
+        super.setDisplayIcon(mode == Mode.BARRAGE ? BARRAGE_ICON : NORMAL_ICON);
     }
 
     static {

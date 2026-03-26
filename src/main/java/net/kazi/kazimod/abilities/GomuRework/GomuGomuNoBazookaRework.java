@@ -67,8 +67,8 @@ public class GomuGomuNoBazookaRework extends Ability {
     private static final int   SECOND_GEAR_COOLDOWN    = 140, SECOND_GEAR_CHARGE_TIME    = 30;
     private static final int   THIRD_GEAR_COOLDOWN     = 300, THIRD_GEAR_CHARGE_TIME     = 60;
     private static final int   FOURTH_GEAR_COOLDOWN    = 240, FOURTH_GEAR_CHARGE_TIME    = 40;
-    private static final int   DAWN_CYMBAL_COOLDOWN    = 400, DAWN_CYMBAL_CHARGE_TIME    = 40;
-    private static final float DAWN_CYMBAL_GRAB_RADIUS   = 15.0F;
+    private static final int   DAWN_CYMBAL_COOLDOWN    = 300, DAWN_CYMBAL_CHARGE_TIME    = 40;
+    private static final float DAWN_CYMBAL_GRAB_RADIUS   = 22.0F;
     private static final float DAWN_CYMBAL_GRAB_DURATION = 10.0F;
     private static final float DAWN_CYMBAL_DAMAGE        = 65.0F;
     private static final double DAWN_CYMBAL_LAUNCH_DISTANCE = 20.0;

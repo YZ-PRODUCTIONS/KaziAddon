@@ -21,6 +21,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -46,8 +47,6 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
 
     // Static tracker so FugaAbility can check if a projectile is active
     public static final Map<UUID, FugaProjectile> ACTIVE_PROJECTILES = new HashMap<>();
-
-    private static final int MIN_AIR_TICKS = 10; // 1.5 seconds before manual detonation
 
     private static final int    PARTICLE_DURATION    = 100;
     private static final double AOE_RADIUS           = 20.0;
@@ -75,7 +74,7 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
 
     public FugaProjectile(World world, LivingEntity player) {
         super((EntityType) KaziEntities.FUGA.get(), world, player, FugaAbility.INSTANCE);
-        this.setDamage(15.0F);
+        this.setDamage(30.0F);
         this.setMaxLife(400);
         this.setArmorPiercing(1.0F);
         this.setCanGetStuckInGround();
@@ -86,6 +85,24 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
     public void tick() {
         super.tick();
         this.noCulling = true;
+
+        if (!this.isFinished()) {
+            Vector3d motion = this.getDeltaMovement();
+            if (motion.lengthSqr() > 1.0E-6D) {
+                double horizontal = Math.sqrt(motion.x * motion.x + motion.z * motion.z);
+                float targetYaw = (float) (MathHelper.atan2(motion.x, motion.z) * (180.0D / Math.PI));
+                float targetPitch = (float) (MathHelper.atan2(motion.y, horizontal) * (180.0D / Math.PI));
+                if (this.tickCount <= 1) {
+                    this.yRotO = targetYaw;
+                    this.xRotO = targetPitch;
+                } else {
+                    this.yRotO = this.yRot;
+                    this.xRotO = this.xRot;
+                }
+                this.yRot = targetYaw;
+                this.xRot = targetPitch;
+            }
+        }
 
         if (!this.level.isClientSide) {
             if (getThrower() != null && this.isAlive()) {
@@ -172,11 +189,9 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
         super.remove();
     }
 
-    /** Manual detonation — only works after 1.5 seconds in the air. */
+    /** Manual detonation is disabled for Fuga. */
     public void detonate() {
-        if (!this.isFinished() && ticksInAir >= MIN_AIR_TICKS) {
-            doImpact(this.blockPosition());
-        }
+        // Intentionally disabled: Fuga now only detonates on impact.
     }
 
     private void onBlockImpactEvent(BlockPos hit) {
@@ -206,7 +221,7 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
 
         for (LivingEntity target : damageList) {
             target.hurtTime = target.invulnerableTime = 0;
-            target.hurt(shockwaveSource, 85.0F);
+            target.hurt(shockwaveSource, 95.0F);
         }
 
         for (LivingEntity target : knockbackList) {
@@ -247,10 +262,6 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
             WyHelper.spawnParticles(ParticleTypes.FLAME, sw,
                     ix, iy + 2.0, iz,
                     (float) AOE_RADIUS, 3.0f, (float) AOE_RADIUS, 60);
-        }
-
-        if (getThrower() != null) {
-            net.kazi.kazimod.abilities.KamaRework.FugaAbility.triggerCooldownForEntity(getThrower());
         }
 
         this.setImpactTick(this.tickCount);

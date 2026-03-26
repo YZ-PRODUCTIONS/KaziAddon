@@ -22,12 +22,14 @@ public class FugaProjectileRenderer extends EntityRenderer<FugaProjectile> {
     public void render(FugaProjectile entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         matrixStack.pushPose();
 
-        float yaw   = entity.yRotO  + (entity.yRot  - entity.yRotO)  * partialTicks;
-        float pitch = entity.xRotO  + (entity.xRot  - entity.xRotO)  * partialTicks;
+        float yaw = entity.yRotO + (entity.yRot - entity.yRotO) * partialTicks;
+        float pitch = entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks;
 
-        // Match vanilla arrow rotation: yaw around Y, then pitch around X
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-(yaw - 180.0F)));
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(pitch));
+        // Match vanilla arrow-style rotation first.
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(yaw - 90.0F));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(pitch));
+        // Then correct for this model's local forward axis.
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(90.0F));
 
         RenderType renderType = RenderType.entityCutoutNoCull(TEXTURE);
         model.renderToBuffer(matrixStack, buffer.getBuffer(renderType), packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

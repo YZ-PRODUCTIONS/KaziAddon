@@ -76,7 +76,7 @@ public class GomuGomuNoRedRocAbility extends Ability {
 
     // Projectile speeds
     private static final float RED_ROC_PROJECTILE_SPEED = 2.0F;
-    private static final float BAJRANG_GUN_PROJECTILE_SPEED = 0.000001F; // Half of Red Roc
+    private static final float BAJRANG_GUN_PROJECTILE_SPEED = 0.01F; // Half of Red Roc
 
     // Vertical launch heights on charge start
     private static final float RED_ROC_VERTICAL_BOOST = 3.5F;

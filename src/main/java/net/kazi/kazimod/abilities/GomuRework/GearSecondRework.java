@@ -109,7 +109,7 @@ public class GearSecondRework extends Ability {
                 }
 
                 // Speed nerfed by 40%: 1.75 * 0.6 = 1.05
-                float maxSpeed = 1.05F;
+                float maxSpeed = 1.2F;
                 Vector3d vec = entity.getLookAngle();
                 if (entity.isOnGround()) {
                     AbilityHelper.setDeltaMovement(entity,

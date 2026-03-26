@@ -166,7 +166,8 @@ public class SkillHunterAbility extends PunchAbility2 {
         }
 
         List<AbilityCore<?>> choices = new ArrayList<>();
-        for (IAbility a : targetData.getEquippedAndPassiveAbilities()) {
+        for (IAbility a : targetData.getRawEquippedAbilities()) {
+            if (a == null) continue;
             // Must be a devil fruit ability
             if (!AbilityCategory.DEVIL_FRUITS.isAbilityPartofCategory().test(a)) continue;
             // Skip morph abilities (transformation points etc.)

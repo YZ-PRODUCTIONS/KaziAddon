@@ -50,8 +50,6 @@ public class UrsusShockReworkProjectile extends AbilityProjectileEntity implemen
                     OreBlockProtectionRule.INSTANCE
             })).build();
 
-    private static final int MIN_AIR_TICKS = 10; // 1.5 seconds
-
     public float multiplier = 0.0F;
     private int ticksInAir  = 0;
 
@@ -62,7 +60,7 @@ public class UrsusShockReworkProjectile extends AbilityProjectileEntity implemen
     public UrsusShockReworkProjectile(World world, LivingEntity player) {
         super((EntityType) NikyuReworkProjectiles.URSUS_SHOCK.get(), world, player,
                 net.kazi.kazimod.abilities.NikyuRework.UrsusShockRework.INSTANCE);
-        this.setDamage(15.0F);
+        this.setDamage(9.0F);
         this.setMaxLife(400);
         this.setArmorPiercing(1.0F);
         this.setCanGetStuckInGround();
@@ -101,9 +99,9 @@ public class UrsusShockReworkProjectile extends AbilityProjectileEntity implemen
         super.remove();
     }
 
-    /** Manual detonation — only works after 1.5 seconds in the air. */
+    /** Manual detonation from the ability's second use. */
     public void detonate() {
-        if (!this.isFinished() && ticksInAir >= MIN_AIR_TICKS) {
+        if (!this.isFinished()) {
             doExplosion();
         }
     }
@@ -138,7 +136,7 @@ public class UrsusShockReworkProjectile extends AbilityProjectileEntity implemen
 
         for (LivingEntity target : damageList) {
             target.hurtTime = target.invulnerableTime = 0;
-            target.hurt(shockwaveSource, 85.0F);
+            target.hurt(shockwaveSource, 51.0F);
         }
 
         for (LivingEntity target : knockbackList) {

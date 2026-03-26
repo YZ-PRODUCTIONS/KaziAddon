@@ -58,7 +58,7 @@ public class GomuGomuNoGatlingRework extends RepeaterAbility2 {
     private static final int SECOND_GEAR_COOLDOWN = 100, SECOND_GEAR_TRIGGERS = 35, SECOND_GEAR_INTERVAL = 2;
     private static final int THIRD_GEAR_COOLDOWN  = 250, THIRD_GEAR_TRIGGERS  = 10, THIRD_GEAR_INTERVAL  = 5;
     private static final int FOURTH_GEAR_COOLDOWN = 200, FOURTH_GEAR_TRIGGERS =  8, FOURTH_GEAR_INTERVAL = 5;
-    private static final int FIFTH_GEAR_COOLDOWN  = 240, FIFTH_GEAR_TRIGGERS  = 53, FIFTH_GEAR_INTERVAL  = 2;
+    private static final int FIFTH_GEAR_COOLDOWN  = 200, FIFTH_GEAR_TRIGGERS  = 53, FIFTH_GEAR_INTERVAL  = 2;
 
     private static final IDescriptionLine NO_GEAR_NAME_DESC;
     private static final IDescriptionLine SECOND_GEAR_NAME_DESC;
@@ -139,7 +139,7 @@ public class GomuGomuNoGatlingRework extends RepeaterAbility2 {
             case GEAR_5:
                 this.setDisplayName(GOMU_GOMU_NO_DAWN_GATLING_NAME);
                 this.setDisplayIcon(GOMU_GOMU_NO_DAWN_GATLING_ICON);
-                this.cooldown = 240.0F; this.triggers = 53; this.interval = 2;
+                this.cooldown = 200.0F; this.triggers = 53; this.interval = 2;
                 break;
             case NO_GEAR:
             default:

@@ -1,6 +1,5 @@
 package net.kazi.kazimod.abilities.KamaRework;
 
-import net.kazi.kazimod.abilities.Koku.RedAbility;
 import net.kazi.kazimod.entities.projectiles.FugaProjectile;
 import net.kazi.kazimod.init.KaziAnimations;
 import net.kazi.kazimod.init.KaziParticleEffects;
@@ -53,14 +52,6 @@ public class FugaAbility extends Ability {
     }
 
     private void useEvent(LivingEntity entity, IAbility ability) {
-        if (!entity.level.isClientSide) {
-            // If a projectile is already live, detonate it instead of charging again
-            FugaProjectile proj = FugaProjectile.ACTIVE_PROJECTILES.get(entity.getUUID());
-            if (proj != null && proj.isAlive() && !proj.isFinished()) {
-                proj.detonate();
-                return;
-            }
-        }
         this.chargeComponent.startCharging(entity, CHARGE_TIME);
     }
 
@@ -91,7 +82,8 @@ public class FugaAbility extends Ability {
         entity.level.addFreshEntity(projectile);
         projectile.shootFromRotation(entity, entity.xRot, entity.yRot, 0.0F, 4.0F, 0.0F);
 
-        // Cooldown starts when the projectile detonates, not when fired
+        super.cooldownComponent.stopCooldown(entity);
+        super.cooldownComponent.startCooldown(entity, COOLDOWN);
     }
 
     private FugaProjectile createProjectile(LivingEntity entity) {

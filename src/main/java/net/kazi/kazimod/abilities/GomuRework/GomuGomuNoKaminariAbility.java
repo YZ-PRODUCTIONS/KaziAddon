@@ -50,7 +50,7 @@ public class GomuGomuNoKaminariAbility extends Ability {
             ImmutablePair.of("The user launches into the air, winds up, and unleashes a devastating light-blue lightning beam.", (Object) null)
     });
 
-    private static final int COOLDOWN    = 600;
+    private static final int COOLDOWN    = 400;
     private static final float CHARGE_TIME = 60.0F;
     private static final float BEAM_DURATION = 80.0F;
     private static final float VERTICAL_BOOST = 3.0F;

@@ -68,7 +68,7 @@ public class GomuGomuNoPistolRework extends Ability {
     private static final int   STAR_GUN_COOLDOWN     = 200;
     private static final float STAR_GUN_CHARGE_TICKS = 7.0F;
     private static final float STAR_GUN_SPEED        = 3.5F;
-    private static final double LOCK_ON_RANGE        = 50.0;
+    private static final double LOCK_ON_RANGE        = 100.0;
 
     private static final IDescriptionLine NO_GEAR_NAME_DESC;
     private static final IDescriptionLine SECOND_GEAR_NAME_DESC;

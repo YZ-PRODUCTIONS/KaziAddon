@@ -53,14 +53,14 @@ public class GomuGomuNoRocketRework extends Ability {
     // Upward boost on grab start — same as Blue Hole's startChargeEvent
     private static final float LAUNCH_UP       = 3.0F;
     // Radius to grab nearby enemies — matches Blue Hole feel but wider for Nika
-    private static final float GRAB_RADIUS     = 7.0F;
+    private static final float GRAB_RADIUS     = 12.0F;
     // Downward throw velocity for grabbed targets
     private static final float THROW_DOWN      = 30.0F;
     private static final float THROW_LATERAL   = 4.0F;
     // Damage on ground slam — same as Blue Hole's final hit
     private static final float SLAM_DAMAGE     = 65.0F;
     // 15 seconds cooldown for Dawn Rocket
-    private static final float DAWN_COOLDOWN   = 300.0F;
+    private static final float DAWN_COOLDOWN   = 200.0F;
 
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
             "mineminenomi", "gomu_gomu_no_rocket",

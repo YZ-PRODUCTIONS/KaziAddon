@@ -22,7 +22,7 @@ public class GomuGomuNoStarGunProjectile extends AbilityProjectileEntity {
 
     public GomuGomuNoStarGunProjectile(World world, LivingEntity player) {
         super((EntityType) GomuReworkProjectiles.GOMU_GOMU_NO_STAR_GUN.get(), world, player, GomuGomuNoPistolRework.INSTANCE);
-        this.setDamage(55.0F);
+        this.setDamage(85.0F);
         this.setMaxLife(200);
         super.setFist();
         this.setEntityCollisionSize((double) 1.0F);

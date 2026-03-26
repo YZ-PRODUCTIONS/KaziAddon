@@ -26,7 +26,7 @@ import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 
 public class DoppelmanRework extends Ability {
     private static final int HOLD_TIME = 12000;
-    private static final int MIN_COOLDOWN = 40;
+    private static final int MIN_COOLDOWN = 600;
     private static final int MAX_COOLDOWN = 6000;
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "doppelman", new Pair[]{ImmutablePair.of("Creates a living version of the user's shadow to help them fight", (Object)null)});
     public static final AbilityCore<DoppelmanRework> INSTANCE;
@@ -77,7 +77,7 @@ public class DoppelmanRework extends Ability {
         }
 
         this.prevShadowsUsed = 0;
-        float cooldown = MathHelper.clamp(this.continuousComponent.getContinueTime(), 40.0F, 6000.0F);
+        float cooldown = MathHelper.clamp(this.continuousComponent.getContinueTime(), 600.0F, 6000.0F);
         this.cooldownComponent.startCooldown(entity, cooldown);
     }
 

@@ -1,5 +1,6 @@
 package net.kazi.kazimod.entities.projectiles;
 
+import net.kazi.kazimod.init.KaziEffects;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectInstance;
@@ -23,7 +24,7 @@ public class CasinoChipProjectile extends AbilityProjectileEntity {
         this.setDamage(DEFAULT_DAMAGE);
         this.setMaxLife(80);
         this.setGravity(0.07f);
-        this.setEntityCollisionSize(6.3);
+        this.setEntityCollisionSize(4.3);
         super.setUnavoidable();
 
         this.onTickEvent = () -> {
@@ -42,7 +43,7 @@ public class CasinoChipProjectile extends AbilityProjectileEntity {
                 this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.2f, false, Explosion.Mode.NONE);
                 if (target instanceof LivingEntity) {
                     ((LivingEntity) target).addEffect(
-                            new EffectInstance(ModEffects.DIZZY.get(), 40, 0, false, true));
+                            new EffectInstance(KaziEffects.WEAKENED_MOVEMENT.get(), 100, 0, false, true));
                 }
                 this.remove();
             }

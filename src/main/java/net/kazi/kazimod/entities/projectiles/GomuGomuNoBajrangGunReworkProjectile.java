@@ -20,7 +20,7 @@ public class GomuGomuNoBajrangGunReworkProjectile extends AbilityProjectileEntit
     // Base explosion radius — will be scaled by getSize() just like Dai Entei uses 0.6F * size
     private static final float EXPLOSION_RADIUS_MULTIPLIER = 0.3F;  // was 0.6F
     // Base static damage — also scaled by getSize()
-    private static final float DAMAGE_MULTIPLIER           = 2.0F;
+    private static final float DAMAGE_MULTIPLIER           = 3.0F;
 
     public GomuGomuNoBajrangGunReworkProjectile(EntityType type, World world) {
         super(type, world);
@@ -28,7 +28,7 @@ public class GomuGomuNoBajrangGunReworkProjectile extends AbilityProjectileEntit
 
     public GomuGomuNoBajrangGunReworkProjectile(World world, LivingEntity player) {
         super((EntityType) BigGomuReworkProjectiles.GOMU_GOMU_NO_BAJRANG_GUN_REWORK.get(), world, player, GomuGomuNoRedRocAbility.INSTANCE);
-        this.setDamage(220.0F);
+        this.setDamage(230.0F);
         this.setMaxLife(30);
         // Raised from 100k to match Dai Entei's 42875 — but since Bajrang is bigger,
         // keep it high so the destruction isn't prematurely capped.

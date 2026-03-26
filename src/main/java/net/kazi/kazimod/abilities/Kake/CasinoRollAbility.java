@@ -57,7 +57,7 @@ public class CasinoRollAbility extends Ability {
     private static final float COOLDOWN           = 300.0f;
     private static final float STORM_DAMAGE       = 20.0f;
     private static final float JACKPOT_DAMAGE     = 40.0f;
-    private static final float LUCKY_SEVEN_RADIUS = 30.0f;
+    private static final float LUCKY_SEVEN_RADIUS = 65.0f;
     private static final float JACKPOT_RADIUS     = 30.0f;
     private static final int   JACKPOT_BUFF_TICKS = 200;
     private static final float JACKPOT_SHOT_DUR   = 200.0f;
@@ -69,7 +69,7 @@ public class CasinoRollAbility extends Ability {
     private static final float CARD_SLASH_DAMAGE  = 60.0f;
     private static final float JACKPOT_SHOT_DAMAGE = 15.0f;
 
-    private static final double STORM_RADIUS    = 30.0;
+    private static final double STORM_RADIUS    = 40.0;
     private static final double STORM_RADIUS_SQ = STORM_RADIUS * STORM_RADIUS;
     private static final int    STORM_POINTS    = 16;
     private static final double[] STORM_COS     = new double[STORM_POINTS];
