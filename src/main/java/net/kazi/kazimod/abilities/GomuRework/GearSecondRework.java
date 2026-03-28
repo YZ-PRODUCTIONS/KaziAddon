@@ -13,12 +13,14 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import xyz.pixelatedw.mineminenomi.abilities.gomu.GearFourthAbility;
 import xyz.pixelatedw.mineminenomi.abilities.gomu.GomuHelper;
 import xyz.pixelatedw.mineminenomi.api.abilities.Ability;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityAttributeModifier;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCategory;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityUseResult;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityOverlay;
 import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityOverlay.OverlayPart;
@@ -68,6 +70,7 @@ public class GearSecondRework extends Ability {
         this.changeStatsComponent.addAttributeModifier(Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER);
         this.changeStatsComponent.addAttributeModifier(ModAttributes.PUNCH_DAMAGE, STRENGTH_MODIFIER);
         this.addCanUseCheck(GomuHelper.canUseGearCheck(INSTANCE));
+        this.addCanUseCheck(this::canUseWithGearFifth);
         this.addUseEvent(this::useEvent);
     }
 
@@ -96,6 +99,17 @@ public class GearSecondRework extends Ability {
     }
 
     private void duringContinuityEvent(LivingEntity entity, IAbility ability) {
+        IAbilityData props = AbilityDataCapability.get(entity);
+        GearFourthAbility gearFourth = (GearFourthAbility) props.getEquippedAbility(GearFourthAbility.INSTANCE);
+        if (gearFourth != null) {
+            applyShortDisable(gearFourth, entity);
+        }
+
+        GearFifthRework gearFifth = (GearFifthRework) props.getEquippedAbility(GearFifthRework.INSTANCE);
+        if (gearFifth != null) {
+            applyShortDisable(gearFifth, entity);
+        }
+
         if (this.continuousComponent.getContinueTime() % 10.0F == 0.0F) {
             WyHelper.spawnParticleEffect((ParticleEffect) ModParticleEffects.GEAR_SECOND.get(),
                     entity, entity.getX(), entity.getY(), entity.getZ());
@@ -148,6 +162,28 @@ public class GearSecondRework extends Ability {
         // Cooldown = 2x the time held (400 ticks held → 800 ticks = 40s cooldown, minimum 5s)
         float cooldown = Math.max(MIN_COOLDOWN, this.continuousComponent.getContinueTime() * 2.0F);
         this.cooldownComponent.startCooldown(entity, cooldown);
+    }
+
+    private AbilityUseResult canUseWithGearFifth(LivingEntity entity, IAbility ability) {
+        IAbilityData props = AbilityDataCapability.get(entity);
+        GearFifthRework gearFifth = (GearFifthRework) props.getEquippedAbility(GearFifthRework.INSTANCE);
+        if (gearFifth != null && gearFifth.getContinuousComponent() != null && gearFifth.getContinuousComponent().isContinuous()) {
+            return AbilityUseResult.fail((ITextComponent) null);
+        }
+        return AbilityUseResult.success();
+    }
+
+    private static void applyShortDisable(Ability gearAbility, LivingEntity entity) {
+        try {
+            java.lang.reflect.Field disableField = Ability.class.getDeclaredField("disableComponent");
+            disableField.setAccessible(true);
+            Object disable = disableField.get(gearAbility);
+            if (disable != null) {
+                disable.getClass().getMethod("startDisable", LivingEntity.class, float.class).invoke(disable, entity, 10.0F);
+            }
+        } catch (Exception e) {
+            // skip
+        }
     }
 
     static {

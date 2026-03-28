@@ -5,7 +5,9 @@ import java.util.function.Supplier;
 
 import net.MrMagicalCart.cartaddon.abilities.electroextra.*;
 import net.MrMagicalCart.cartaddon.abilities.oni.*;
+import net.MrMagicalCart.cartaddon.abilities.rokushikiextra.*;
 import net.MrMagicalCart.cartaddon.init.CartResources;
+import net.kazi.kazimod.abilities.HumanRework.KamieRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalMissileRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalShowerRework;
@@ -90,6 +92,30 @@ public abstract class CartRaceReplace {
                                 ElectricalShowerRework.INSTANCE,
                                 ElectricalBurstRework.INSTANCE,
                                 ElectricalTempestaRework.INSTANCE
+                        });
+
+                        return (I) new RaceId(info, true, 4);
+                    };
+                }
+                return null;
+            };
+        }
+        if (resourceName.equalsIgnoreCase("human")) {
+            modifiedRace[0] = () -> {
+                if (resourceName.equalsIgnoreCase("human")) {
+
+                    modifiedRace[0] = () -> {
+                        CharacterCreatorSelectionMap.SelectionInfo info =
+                                new CharacterCreatorSelectionMap.SelectionInfo(ModResources.HUMAN);
+
+                        info.addTopAbilities(new AbilityCore[]{
+                                KamieRework.INSTANCE,
+                                ReworkedGeppoAbility.INSTANCE,
+                                ReworkedRankyakuAbility.INSTANCE,
+                                ReworkedRokuoganAbility.INSTANCE,
+                                ReworkedShiganAbility.INSTANCE,
+                                ReworkedSoruAbility.INSTANCE,
+                                ReworkedTekkaiAbility.INSTANCE
                         });
 
                         return (I) new RaceId(info, true, 4);

@@ -244,5 +244,17 @@
   "entity.kazimod.sukuna_boss": "Ryomen Sukuna",
   "ability.kazimod.gear_second": "Gear Second",
   "entity.kazimod.luffy_boss": "Monkey D Luffy",
-  "ability.kazimod.doppelman": "Doppelman"
+  "ability.kazimod.doppelman": "Doppelman",
+  "ability.kazimod.barrier_guard.description.0": "Creates a barrier sphere around the user or an ally, providing heavy protection",
+  "ability.kazimod.barrier_guard": "Barrier Guard",
+  "ability.kazimod.takt": "Takt",
+  "ability.mineminenomi.takt.description.1": "§aEMERGENCE§r Summons a spike from the ground.",
+  "ability.mineminenomi.takt.description.2": "§aTOSS§r Lifts a chunk of earth to throw at enemies.",
+  "ability.kazimod.kroom": "K Room",
+  "ability.kazimod.puncture_wille": "Puncture Wille",
+  "ability.kazimod.shock_wille": "Shock Wille",
+  "ability.kazimod.shambles": "Shambles",
+  "ability.kazimod.max_acceleration": "Max Acceleration",
+  "ability.kazimod.kamie": "Kami-E",
+  "ability.kazimod.radio_knife": "Radio Knife"
 }

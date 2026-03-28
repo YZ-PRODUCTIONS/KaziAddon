@@ -15,6 +15,7 @@ import net.MrMagicalCart.cartaddon.abilities.nitoryu.SaiKuruAbility;
 import net.MrMagicalCart.cartaddon.abilities.nitoryu.TakaNamiAbility;
 import net.MrMagicalCart.cartaddon.abilities.oni.SkullBasherAbility;
 import net.MrMagicalCart.cartaddon.abilities.oni.ViciousRoarAbility;
+import net.MrMagicalCart.cartaddon.abilities.rokushikiextra.ReworkedKamieAbility;
 import net.MrMagicalCart.cartaddon.abilities.ryusoken.*;
 import net.MrMagicalCart.cartaddon.abilities.swordsmenextra.*;
 
@@ -87,7 +88,8 @@ public abstract class AbilityUnlockBlocker {
                 || self == SkySplitterDescentAbility.INSTANCE
                 || self == VaultAbility.INSTANCE
                 || self == ReworkedSpinningBrawlAbility.INSTANCE
-                || self == ReworkedSuplexAbility.INSTANCE)
+                || self == ReworkedSuplexAbility.INSTANCE
+                || self == ReworkedKamieAbility.INSTANCE)
 
         {
             cir.setReturnValue(false);

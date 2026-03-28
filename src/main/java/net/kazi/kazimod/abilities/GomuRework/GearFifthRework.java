@@ -3,6 +3,7 @@ package net.kazi.kazimod.abilities.GomuRework;
 import java.awt.Color;
 import java.util.List;
 
+import net.kazi.kazimod.config.KaziConfig;
 import net.kazi.kazimod.effects.BouncyEffect;
 import net.kazi.kazimod.init.KaziEffects;
 import net.minecraft.entity.LivingEntity;
@@ -21,13 +22,7 @@ import xyz.pixelatedw.mineminenomi.abilities.gomu.GearSecondAbility;
 import xyz.pixelatedw.mineminenomi.abilities.gomu.GearThirdAbility;
 import xyz.pixelatedw.mineminenomi.abilities.gomu.GomuGomuNoPistolAbility;
 import xyz.pixelatedw.mineminenomi.abilities.gomu.GomuHelper;
-import xyz.pixelatedw.mineminenomi.api.abilities.Ability;
-import xyz.pixelatedw.mineminenomi.api.abilities.AbilityAttributeModifier;
-import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCategory;
-import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
-import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
-import xyz.pixelatedw.mineminenomi.api.abilities.AbilityOverlay;
-import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
+import xyz.pixelatedw.mineminenomi.api.abilities.*;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityOverlay.RenderType;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ChangeStatsComponent;
@@ -45,6 +40,7 @@ import xyz.pixelatedw.mineminenomi.data.entity.haki.HakiDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.haki.IHakiData;
 import xyz.pixelatedw.mineminenomi.entities.LightningDischargeEntity;
 import xyz.pixelatedw.mineminenomi.init.ModAttributes;
+import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
 import xyz.pixelatedw.mineminenomi.packets.server.ability.SToggleDrumsOfLiberationSoundPacket;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
@@ -61,6 +57,8 @@ public class GearFifthRework extends Ability {
     // Debuff duration scaling constants (in ticks)
     private static final int DEBUFF_MIN_TICKS = 100;  // 5 seconds
     private static final int DEBUFF_MAX_TICKS = 600;  // 30 seconds
+    private static final int UNCONSCIOUS_MIN_TICKS = 10;   // 1 second
+    private static final int UNCONSCIOUS_MAX_TICKS = 80;  // 8 seconds
 
     public static final AbilityCore<GearFifthRework> INSTANCE;
     private static final AbilityOverlay OVERLAY;
@@ -106,6 +104,7 @@ public class GearFifthRework extends Ability {
         this.changeStatsComponent.addAttributeModifier((Attribute) ForgeMod.ENTITY_GRAVITY.get(), GRAVITY_MODIFIER);
         this.changeStatsComponent.addAttributeModifier(ModAttributes.JUMP_HEIGHT, JUMP_BOOST_MODIFIER);
         this.addCanUseCheck(GomuHelper.canUseGearCheck(INSTANCE));
+        this.addCanUseCheck(this::canUseWithGearSecond);
         this.addUseEvent(this::useEvent);
     }
 
@@ -113,10 +112,31 @@ public class GearFifthRework extends Ability {
         return this.continuousComponent;
     }
 
+    private static int getConfiguredHoldTime() {
+        return KaziConfig.INSTANCE.gearFifthMaxHoldTime.get();
+    }
+
     private void useEvent(LivingEntity entity, IAbility ability) {
+        IAbilityData props = AbilityDataCapability.get(entity);
+        GomuGomuNoRedRocAbility redRoc = (GomuGomuNoRedRocAbility) props.getEquippedAbility(GomuGomuNoRedRocAbility.INSTANCE);
+        if (redRoc != null && redRoc.isBusy()) {
+            if (entity instanceof PlayerEntity) {
+                entity.sendMessage(new net.minecraft.util.text.StringTextComponent("Gear Fifth cannot be activated while Red Roc is being used!"), entity.getUUID());
+            }
+            return;
+        }
         if (!this.chargeComponent.isCharging()) {
             this.chargeComponent.startCharging(entity, CHARGE_TIME);
         }
+    }
+
+    private AbilityUseResult canUseWithGearSecond(LivingEntity entity, IAbility ability) {
+        IAbilityData props = AbilityDataCapability.get(entity);
+        GearSecondRework gearSecondRework = (GearSecondRework) props.getEquippedAbility(GearSecondRework.INSTANCE);
+        if (gearSecondRework != null && gearSecondRework.isContinuous()) {
+            return AbilityUseResult.fail((ITextComponent) null);
+        }
+        return AbilityUseResult.success();
     }
 
     // =========================================================
@@ -198,7 +218,7 @@ public class GearFifthRework extends Ability {
             this.discharge.setAliveTicks(30);
         }
 
-        this.continuousComponent.triggerContinuity(entity, 1200.0F);
+        this.continuousComponent.triggerContinuity(entity, (float) getConfiguredHoldTime());
     }
 
     // =========================================================
@@ -332,14 +352,16 @@ public class GearFifthRework extends Ability {
         }
 
         // Scale debuff duration based on how long the ability was active.
-        // continueTime ranges from 0 to 1200 ticks; debuff clamps between 5s (100t) and 30s (600t).
+        // continueTime ranges from 0 to the configured max hold time; debuff clamps between 5s (100t) and 30s (600t).
         float activeTime = this.continuousComponent.getContinueTime();
-        float ratio = Math.min(1.0F, activeTime / 1200.0F);
+        float ratio = Math.min(1.0F, activeTime / (float) getConfiguredHoldTime());
         int debuffDuration = (int) (DEBUFF_MIN_TICKS + ratio * (DEBUFF_MAX_TICKS - DEBUFF_MIN_TICKS));
+        int unconsciousDuration = (int) (UNCONSCIOUS_MIN_TICKS + ratio * (UNCONSCIOUS_MAX_TICKS - UNCONSCIOUS_MIN_TICKS));
 
         entity.addEffect(new EffectInstance(net.minecraft.potion.Effects.MOVEMENT_SLOWDOWN, debuffDuration, 1, false, true, true));
         entity.addEffect(new EffectInstance(net.minecraft.potion.Effects.WEAKNESS, debuffDuration, 1, false, true, true));
         entity.addEffect(new EffectInstance(KaziEffects.WEAKENED_MOVEMENT.get(), debuffDuration, 1, false, true, true));
+        entity.addEffect(new EffectInstance((net.minecraft.potion.Effect) ModEffects.UNCONSCIOUS.get(), unconsciousDuration, 0, false, true, true));
 
         float cooldown = Math.max(200.0F, activeTime);
         this.cooldownComponent.startCooldown(entity, cooldown);
@@ -445,7 +467,7 @@ public class GearFifthRework extends Ability {
                         AbilityDescriptionLine.NEW_LINE,
                         CooldownComponent.getTooltip(200.0F, 800.0F),
                         ChargeComponent.getTooltip(CHARGE_TIME),
-                        ContinuousComponent.getTooltip(1200.0F),
+                        ContinuousComponent.getTooltip((float) KaziConfig.INSTANCE.gearFifthMaxHoldTime.get()),
                         ChangeStatsComponent.getTooltip()
                 })
                 .setUnlockCheck(GearFifthRework::canUnlock)

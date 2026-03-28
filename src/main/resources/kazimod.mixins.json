@@ -4,12 +4,16 @@
   "package": "net.kazi.kazimod.mixin",
   "plugin": "net.kazi.kazimod.mixin.KaziMixinPlugin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "MineMineNoMiAddonTemplate.refmap.json",
+  "refmap": "kazimod.refmap.json",
   "mixins": [
     "CartStylesReplace",
     "CartRaceReplace",
     "AbilityUnlockBlocker",
     "AkumaNoMiBoxMixin"
+  ],
+  "client": [
+    "client.KRoomSwordItemRendererMixin",
+    "client.PunctureWilleSwordRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

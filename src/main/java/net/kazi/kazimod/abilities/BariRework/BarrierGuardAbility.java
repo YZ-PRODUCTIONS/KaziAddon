@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class BariAwaken extends Ability {
+public class BarrierGuardAbility extends Ability {
 
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
             "kazimod", "barrier_guard",
@@ -55,7 +55,7 @@ public class BariAwaken extends Ability {
     private static final ResourceLocation GUARD_ICON = new ResourceLocation("kazimod", "textures/abilities/barrier_guard.png");
     private static final ResourceLocation ALLY_ICON  = new ResourceLocation("kazimod", "textures/abilities/barrier_guard_ally.png");
 
-    public static final AbilityCore<BariAwaken> INSTANCE;
+    public static final AbilityCore<BarrierGuardAbility> INSTANCE;
 
     private final ContinuousComponent continuousComponent = (new ContinuousComponent(this, true))
             .addStartEvent(100, this::onContinuityStart)
@@ -71,7 +71,7 @@ public class BariAwaken extends Ability {
 
     private final Map<UUID, AllyShield> allyShields = new HashMap<>();
 
-    public BariAwaken(AbilityCore<BariAwaken> core) {
+    public BarrierGuardAbility(AbilityCore<BarrierGuardAbility> core) {
         super(core);
         this.altModeComponent   = (new AltModeComponent<>(this, Mode.class, Mode.GUARD)).addChangeModeEvent(this::onAltModeChange);
         this.animationComponent = new AnimationComponent(this);
@@ -290,7 +290,7 @@ public class BariAwaken extends Ability {
     // ── Static init ───────────────────────────────────────────────────────────
 
     static {
-        INSTANCE = (new AbilityCore.Builder<>("Barrier Guard", AbilityCategory.DEVIL_FRUITS, BariAwaken::new))
+        INSTANCE = (new AbilityCore.Builder<>("Barrier Guard", AbilityCategory.DEVIL_FRUITS, BarrierGuardAbility::new))
                 .addDescriptionLine(DESCRIPTION)
                 .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{
                         AbilityDescriptionLine.NEW_LINE,

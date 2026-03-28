@@ -87,7 +87,7 @@ public class SeiryuHeavyPointRework extends MorphAbility2 {
         if (AbilityHelper.isDodging(entity)) {
             return damage;
         } else if (this.continuousComponent.isContinuous()) {
-            return damageSource == DamageSource.FALL ? 0.0F : damage * 0.85F;
+            return damageSource == DamageSource.FALL ? 0.0F : damage * 0.95F;
         } else {
             return damage;
         }

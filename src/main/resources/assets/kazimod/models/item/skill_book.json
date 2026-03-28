@@ -43,11 +43,13 @@
     },
     "firstperson_righthand": {
       "rotation": [0, 173, 0],
-      "translation": [-4.5, 4, -1]
+      "translation": [-4.25, 4, 2.75],
+      "scale": [0.5, 0.5, 0.5]
     },
     "firstperson_lefthand": {
       "rotation": [0, 173, 0],
-      "translation": [-3.75, 4, -1]
+      "translation": [-3, 4, 2.75],
+      "scale": [0.5, 0.5, 0.5]
     },
     "gui": {
       "rotation": [0, -51, 0],

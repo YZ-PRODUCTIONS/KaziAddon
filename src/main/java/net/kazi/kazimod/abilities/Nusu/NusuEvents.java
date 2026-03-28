@@ -136,27 +136,30 @@ public class NusuEvents {
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
         LivingEntity dead = event.getEntityLiving();
-        if (NusuStolenData.heldCount(dead) == 0) return;
         if (dead.level == null || dead.level.isClientSide) return;
 
-        List<AbilityCore<?>> held = new ArrayList<>(NusuStolenData.getHeld(dead));
-        for (AbilityCore<?> core : held) {
-            IAbilityData nusuData = AbilityDataCapability.get(dead);
-            if (nusuData != null) nusuData.removeUnlockedAbility(core);
+        tryOpenKillStealSelection(event);
 
-            for (PlayerEntity p : dead.level.players()) {
-                if (NusuStolenData.isStolen(p, core)) {
-                    returnToVictim(p, core);
-                    sendMsg(p, "\u00a7a" + core.getLocalizedName().getString()
-                            + " has been returned to you");
-                    break;
+        if (NusuStolenData.heldCount(dead) > 0) {
+            List<AbilityCore<?>> held = new ArrayList<>(NusuStolenData.getHeld(dead));
+            for (AbilityCore<?> core : held) {
+                IAbilityData nusuData = AbilityDataCapability.get(dead);
+                if (nusuData != null) nusuData.removeUnlockedAbility(core);
+
+                for (PlayerEntity p : dead.level.players()) {
+                    if (NusuStolenData.isStolen(p, core)) {
+                        returnToVictim(p, core);
+                        sendMsg(p, "\u00a7a" + core.getLocalizedName().getString()
+                                + " has been returned to you");
+                        break;
+                    }
+                }
+                if (dead.level instanceof ServerWorld) {
+                    NusuWorldData.get((ServerWorld) dead.level).unmarkStolen(core);
                 }
             }
-            if (dead.level instanceof ServerWorld) {
-                NusuWorldData.get((ServerWorld) dead.level).unmarkStolen(core);
-            }
+            NusuStolenData.clearHeld(dead);
         }
-        NusuStolenData.clearHeld(dead);
     }
 
     // ── Static API ────────────────────────────────────────────────────────────
@@ -282,6 +285,45 @@ public class NusuEvents {
         if (entity instanceof PlayerEntity) {
             ((PlayerEntity) entity).sendMessage(
                     new StringTextComponent(text), entity.getUUID());
+        }
+    }
+
+    private void tryOpenKillStealSelection(LivingDeathEvent event) {
+        if (!(event.getEntityLiving() instanceof PlayerEntity)) return;
+        if (!(event.getSource().getEntity() instanceof PlayerEntity)) return;
+
+        PlayerEntity victim = (PlayerEntity) event.getEntityLiving();
+        PlayerEntity killer = (PlayerEntity) event.getSource().getEntity();
+        if (killer == victim) return;
+        if (!isNusuUser(killer)) return;
+        if (NusuStolenData.heldCount(killer) >= NusuStolenData.MAX_SLOTS) {
+            sendMsg(killer, "\u00a7cAll " + NusuStolenData.MAX_SLOTS + " stolen ability slots are full");
+            return;
+        }
+
+        List<AbilityCore<?>> choices = SkillHunterAbility.getEligibleStealChoices(killer, victim);
+        if (choices.isEmpty()) return;
+
+        SkillHunterAbility.openStealSelection(
+                killer,
+                victim,
+                choices,
+                "Nusu Kill - Choose ability to steal"
+        );
+        sendMsg(killer, "\u00a76You killed " + victim.getName().getString() + " - choose a fruit ability to steal");
+    }
+
+    private static boolean isNusuUser(LivingEntity entity) {
+        try {
+            IDevilFruit devilFruit = DevilFruitCapability.get(entity);
+            if (devilFruit == null) return false;
+            Item item = devilFruit.getDevilFruitItem();
+            if (!(item instanceof AkumaNoMiItem)) return false;
+            AbilityCore<?>[] abilities = ((AkumaNoMiItem) item).getAbilities();
+            if (abilities == null) return false;
+            return Arrays.asList(abilities).contains(SkillHunterAbility.INSTANCE);
+        } catch (Exception e) {
+            return false;
         }
     }
 

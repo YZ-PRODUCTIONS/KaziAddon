@@ -10,7 +10,12 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import xyz.pixelatedw.mineminenomi.api.abilities.*;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCategory;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
+import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
+import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
+import xyz.pixelatedw.mineminenomi.api.abilities.MorphAbility2;
+import xyz.pixelatedw.mineminenomi.api.abilities.PunchAbility2;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
@@ -38,34 +43,24 @@ public class SkillHunterAbility extends PunchAbility2 {
                             (Object) null)
             });
 
-    public static final float  COOLDOWN      = 200.0F;
-    private static final int   OBSERVE_TICKS = 600;  // 30 seconds
+    public static final float COOLDOWN = 200.0F;
+    private static final int OBSERVE_TICKS = 600;
     private static final double OBSERVE_RANGE = 35.0D;
 
     public static final AbilityCore<SkillHunterAbility> INSTANCE;
 
-    // ── Fruits that are entirely off-limits for Nusu stealing ─────────────────
-    // Each entry is the display name as registered in the AkumaNoMiItem constructor
-    // ("name" field), matched case-insensitively.
     private static final List<String> BLOCKED_FRUIT_NAMES = Arrays.asList(
-            // Soru Soru no Mi — Cart addon
             "soru soru no mi",
-            // Ope Ope no Mi — mine-mine-no-mi (base mod)
             "ope ope no mi",
-            // Kake Kake no Mi — KaziMod
             "kake kake no mi",
-            // Tenki Tenki no Mi — KaziMod
             "tenki tenki no mi",
-            // Toki Toki no Mi — KaziMod
             "toki toki no mi",
-            // Koku Koku no Mi — KaziMod (Gojo fruit, has Domain Expansion: Infinite Void)
             "koku koku no mi",
-            // Kama Kama no Mi — KaziMod (Sukuna fruit, has Domain Expansion: Malevolent Shrine)
             "kama kama no mi"
     );
 
     private LivingEntity observeTarget = null;
-    private int          ticksLeft     = 0;
+    private int ticksLeft = 0;
 
     public SkillHunterAbility(AbilityCore<SkillHunterAbility> core) {
         super(core);
@@ -88,7 +83,6 @@ public class SkillHunterAbility extends PunchAbility2 {
         IDevilFruit fruit = DevilFruitCapability.get(target);
         if (fruit == null || !fruit.hasAnyDevilFruit()) return false;
 
-        // ── Block entire protected fruits ──────────────────────────────────────
         if (isFruitBlocked(target)) {
             sendMsg(user, "\u00a7cThat devil fruit cannot be stolen");
             return false;
@@ -105,13 +99,12 @@ public class SkillHunterAbility extends PunchAbility2 {
         }
 
         this.observeTarget = target;
-        this.ticksLeft     = OBSERVE_TICKS;
-        sendMsg(user, "\u00a7eTracking started — keep the Skill Book in hand and stay within 35 blocks for 30 seconds");
+        this.ticksLeft = OBSERVE_TICKS;
+        sendMsg(user, "\u00a7eTracking started - keep the Skill Book in hand and stay within 35 blocks for 30 seconds");
         return false;
     }
 
-    // ── Returns true if the target's devil fruit is on the blocked list ────────
-    private static boolean isFruitBlocked(LivingEntity target) {
+    public static boolean isFruitBlocked(LivingEntity target) {
         try {
             IDevilFruit devilFruit = DevilFruitCapability.get(target);
             if (devilFruit == null) return false;
@@ -129,66 +122,35 @@ public class SkillHunterAbility extends PunchAbility2 {
         }
     }
 
-    private void onTick(LivingEntity user, IAbility ability) {
-        if (this.observeTarget == null) return;
-
-        if (!hasSkillBook(user)) {
-            sendMsg(user, "\u00a7cTracking failed — Skill Book must be in hand");
-            resetWindow();
-            return;
-        }
-
-        if (!this.observeTarget.isAlive()
-                || user.distanceTo(this.observeTarget) > OBSERVE_RANGE) {
-            sendMsg(user, "\u00a7cTracking failed — target left range");
-            resetWindow();
-            return;
-        }
-
-        this.ticksLeft--;
-        if (this.ticksLeft == 300) sendMsg(user, "\u00a7e15 seconds remaining...");
-        if (this.ticksLeft == 100) sendMsg(user, "\u00a7e5 seconds remaining...");
-        if (this.ticksLeft <= 0) finishTracking(user);
-    }
-
-    private void finishTracking(LivingEntity user) {
-        super.cooldownComponent.startCooldown(user, COOLDOWN);
-
-        if (!(user instanceof PlayerEntity)) { resetWindow(); return; }
-        PlayerEntity player = (PlayerEntity) user;
-
-        // Collect all eligible devil fruit abilities from the target now
-        IAbilityData targetData = AbilityDataCapability.get(this.observeTarget);
-        if (targetData == null) {
-            sendMsg(user, "\u00a7cFailed to read target abilities");
-            resetWindow();
-            return;
-        }
-
+    public static List<AbilityCore<?>> getEligibleStealChoices(LivingEntity user, LivingEntity target) {
         List<AbilityCore<?>> choices = new ArrayList<>();
-        for (IAbility a : targetData.getRawEquippedAbilities()) {
-            if (a == null) continue;
-            // Must be a devil fruit ability
-            if (!AbilityCategory.DEVIL_FRUITS.isAbilityPartofCategory().test(a)) continue;
-            // Skip morph abilities (transformation points etc.)
-            if (a instanceof MorphAbility2) continue;
-            AbilityCore<?> core = a.getCore();
+        if (user == null || target == null || isFruitBlocked(target)) return choices;
+
+        IAbilityData targetData = AbilityDataCapability.get(target);
+        if (targetData == null) return choices;
+
+        for (IAbility ability : targetData.getRawEquippedAbilities()) {
+            if (ability == null) continue;
+            if (!AbilityCategory.DEVIL_FRUITS.isAbilityPartofCategory().test(ability)) continue;
+            if (ability instanceof MorphAbility2) continue;
+
+            AbilityCore<?> core = ability.getCore();
+            if (core == null) continue;
             if (NusuStolenData.isHeld(user, core)) continue;
+            if (NusuStolenData.isStolen(target, core)) continue;
             choices.add(core);
         }
 
-        if (choices.isEmpty()) {
-            sendMsg(user, "\u00a7cTarget has no eligible abilities to steal");
-            resetWindow();
-            return;
-        }
+        return choices;
+    }
 
-        NusuStolenData.setPendingChoices(user, choices);
-        NusuStolenData.setPendingStealTarget(user, this.observeTarget);
+    public static boolean openStealSelection(PlayerEntity player, LivingEntity target, List<AbilityCore<?>> choices, String title) {
+        if (player == null || target == null || choices == null || choices.isEmpty()) return false;
 
-        player.sendMessage(new StringTextComponent(
-                        "\u00a76=== Skill Hunter — Choose ability to steal ==="),
-                player.getUUID());
+        NusuStolenData.setPendingChoices(player, choices);
+        NusuStolenData.setPendingStealTarget(player, target);
+
+        player.sendMessage(new StringTextComponent("\u00a76=== " + title + " ==="), player.getUUID());
 
         for (int i = 0; i < choices.size(); i++) {
             String name = choices.get(i).getLocalizedName().getString();
@@ -203,16 +165,61 @@ public class SkillHunterAbility extends PunchAbility2 {
         }
 
         player.sendMessage(new StringTextComponent(
-                        "\u00a76==============================================="),
-                player.getUUID());
+                "\u00a76==============================================="), player.getUUID());
+        return true;
+    }
 
+    private void onTick(LivingEntity user, IAbility ability) {
+        if (this.observeTarget == null) return;
+
+        if (!hasSkillBook(user)) {
+            sendMsg(user, "\u00a7cTracking failed - Skill Book must be in hand");
+            resetWindow();
+            return;
+        }
+
+        if (!this.observeTarget.isAlive() || user.distanceTo(this.observeTarget) > OBSERVE_RANGE) {
+            sendMsg(user, "\u00a7cTracking failed - target left range");
+            resetWindow();
+            return;
+        }
+
+        this.ticksLeft--;
+        if (this.ticksLeft == 300) sendMsg(user, "\u00a7e15 seconds remaining...");
+        if (this.ticksLeft == 100) sendMsg(user, "\u00a7e5 seconds remaining...");
+        if (this.ticksLeft <= 0) finishTracking(user);
+    }
+
+    private void finishTracking(LivingEntity user) {
+        super.cooldownComponent.startCooldown(user, COOLDOWN);
+
+        if (!(user instanceof PlayerEntity) || this.observeTarget == null) {
+            resetWindow();
+            return;
+        }
+
+        PlayerEntity player = (PlayerEntity) user;
+        if (AbilityDataCapability.get(this.observeTarget) == null) {
+            sendMsg(user, "\u00a7cFailed to read target abilities");
+            resetWindow();
+            return;
+        }
+
+        List<AbilityCore<?>> choices = getEligibleStealChoices(user, this.observeTarget);
+        if (choices.isEmpty()) {
+            sendMsg(user, "\u00a7cTarget has no eligible abilities to steal");
+            resetWindow();
+            return;
+        }
+
+        openStealSelection(player, this.observeTarget, choices, "Skill Hunter - Choose ability to steal");
         resetWindow();
     }
 
     public static boolean hasSkillBook(LivingEntity entity) {
         if (!(entity instanceof PlayerEntity)) return false;
         PlayerEntity player = (PlayerEntity) entity;
-        ItemStack main    = player.getMainHandItem();
+        ItemStack main = player.getMainHandItem();
         ItemStack offhand = player.getOffhandItem();
         return main.getItem() instanceof net.kazi.kazimod.items.SkillBookItem
                 || offhand.getItem() instanceof net.kazi.kazimod.items.SkillBookItem;
@@ -220,19 +227,29 @@ public class SkillHunterAbility extends PunchAbility2 {
 
     static void sendMsg(LivingEntity entity, String text) {
         if (entity instanceof PlayerEntity) {
-            ((PlayerEntity) entity).sendMessage(
-                    new StringTextComponent(text), entity.getUUID());
+            ((PlayerEntity) entity).sendMessage(new StringTextComponent(text), entity.getUUID());
         }
     }
 
     private void resetWindow() {
         this.observeTarget = null;
-        this.ticksLeft     = 0;
+        this.ticksLeft = 0;
     }
 
-    @Override public Predicate<LivingEntity> canActivate() { return e -> true; }
-    @Override public int   getUseLimit()      { return 1; }
-    @Override public float getPunchCooldown() { return COOLDOWN; }
+    @Override
+    public Predicate<LivingEntity> canActivate() {
+        return e -> true;
+    }
+
+    @Override
+    public int getUseLimit() {
+        return 1;
+    }
+
+    @Override
+    public float getPunchCooldown() {
+        return COOLDOWN;
+    }
 
     static {
         INSTANCE = new AbilityCore.Builder<SkillHunterAbility>(
@@ -242,7 +259,7 @@ public class SkillHunterAbility extends PunchAbility2 {
                         AbilityDescriptionLine.NEW_LINE,
                         CooldownComponent.getTooltip(COOLDOWN)
                 })
-                .setSourceType(new SourceType[]{ SourceType.FIST })
+                .setSourceType(new SourceType[]{SourceType.FIST})
                 .build();
     }
 }

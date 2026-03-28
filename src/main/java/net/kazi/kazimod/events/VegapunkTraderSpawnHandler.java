@@ -1,5 +1,6 @@
 package net.kazi.kazimod.events;
 
+import net.kazi.kazimod.config.KaziConfig;
 import net.kazi.kazimod.entities.VegapunkTraderEntity;
 import net.kazi.kazimod.init.KaziEntities;
 import net.minecraft.entity.EntityType;
@@ -32,6 +33,7 @@ public class VegapunkTraderSpawnHandler {
         // Only run on the server-side overworld to avoid double-counting
         if (event.world.isClientSide) return;
         if (event.world.dimension() != World.OVERWORLD) return;
+        if (KaziConfig.INSTANCE.disableVegapunkSpawns.get()) return;
 
         tickCounter++;
         if (tickCounter < SPAWN_INTERVAL) return;

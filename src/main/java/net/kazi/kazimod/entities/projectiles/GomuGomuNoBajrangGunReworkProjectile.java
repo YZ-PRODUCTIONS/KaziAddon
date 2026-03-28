@@ -28,7 +28,7 @@ public class GomuGomuNoBajrangGunReworkProjectile extends AbilityProjectileEntit
 
     public GomuGomuNoBajrangGunReworkProjectile(World world, LivingEntity player) {
         super((EntityType) BigGomuReworkProjectiles.GOMU_GOMU_NO_BAJRANG_GUN_REWORK.get(), world, player, GomuGomuNoRedRocAbility.INSTANCE);
-        this.setDamage(230.0F);
+        this.setDamage(170.0F);
         this.setMaxLife(30);
         // Raised from 100k to match Dai Entei's 42875 — but since Bajrang is bigger,
         // keep it high so the destruction isn't prematurely capped.

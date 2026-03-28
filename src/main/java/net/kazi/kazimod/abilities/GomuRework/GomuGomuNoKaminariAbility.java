@@ -124,6 +124,15 @@ public class GomuGomuNoKaminariAbility extends Ability {
             return;
         }
 
+        if (!entity.level.isRaining() && !entity.level.isThundering()) {
+            if (entity instanceof PlayerEntity) {
+                entity.sendMessage(
+                        new StringTextComponent("Gomu Gomu no Kaminari can only be used while it's raining or thundering!"),
+                        entity.getUUID());
+            }
+            return;
+        }
+
         if (!this.chargeComponent.isCharging() && !this.continuousComponent.isContinuous()) {
             this.chargeComponent.startCharging(entity, CHARGE_TIME);
         }

@@ -177,7 +177,9 @@ public class GomuGomuNoRedRocAbility extends Ability {
             }
 
             IAbilityData props = AbilityDataCapability.get(entity);
-            if (GomuHelper.hasGearSecondActive(props) || GomuHelper.hasGearThirdActive(props) || GomuHelper.hasGearFourthActive(props)) {
+            GearFifthRework gearFifth = (GearFifthRework) props.getEquippedAbility(GearFifthRework.INSTANCE);
+            boolean gearFifthActive = gearFifth != null && gearFifth.getContinuousComponent() != null && gearFifth.getContinuousComponent().isContinuous();
+            if (GomuHelper.hasGearSecondActive(props) || GomuHelper.hasGearThirdActive(props) || GomuHelper.hasGearFourthActive(props) || gearFifthActive) {
                 if (entity instanceof PlayerEntity) {
                     entity.sendMessage(new StringTextComponent("Red Roc cannot be used while a Gear is active!"), entity.getUUID());
                 }
@@ -285,6 +287,9 @@ public class GomuGomuNoRedRocAbility extends Ability {
 
         int cooldown = (this.currentMode == RedRocMode.BAJRANG_GUN) ? BAJRANG_GUN_COOLDOWN : RED_ROC_COOLDOWN;
         this.cooldownComponent.startCooldown(entity, (float) cooldown);
+        if (this.currentMode == RedRocMode.BAJRANG_GUN) {
+            entity.addEffect(new EffectInstance((Effect) ModEffects.UNCONSCIOUS.get(), 200, 0, false, true, true));
+        }
     }
 
     /* ================= PROJECTILE ================= */
@@ -301,6 +306,10 @@ public class GomuGomuNoRedRocAbility extends Ability {
     // Exposed so GearFifthRework can switch the alt mode when Gear Fifth activates/ends
     public AltModeComponent<RedRocMode> getAltModeComponent() {
         return this.altModeComponent;
+    }
+
+    public boolean isBusy() {
+        return this.chargeComponent.isCharging() || this.continuousComponent.isContinuous();
     }
 
     static {

@@ -30,6 +30,22 @@ public class KaziEntities {
                             .clientTrackingRange(64)
                             .build("fuga"));
 
+    public static final RegistryObject<EntityType<ShockWilleProjectile>> SHOCK_WILLE =
+            ENTITY_TYPES.register("shock_wille", () ->
+                    EntityType.Builder.<ShockWilleProjectile>of(ShockWilleProjectile::new, EntityClassification.MISC)
+                            .sized(2.5f, 2.5f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("shock_wille"));
+
+    public static final RegistryObject<EntityType<PunctureWilleProjectile>> PUNCTURE_WILLE =
+            ENTITY_TYPES.register("puncture_wille", () ->
+                    EntityType.Builder.<PunctureWilleProjectile>of(PunctureWilleProjectile::new, EntityClassification.MISC)
+                            .sized(2.75f, 2.75f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("puncture_wille"));
+
     public static final RegistryObject<EntityType<TimeBubbleEntity>> TIME_BUBBLE =
             ENTITY_TYPES.register("time_bubble", () ->
                     EntityType.Builder.<TimeBubbleEntity>of(TimeBubbleEntity::new, EntityClassification.MISC)

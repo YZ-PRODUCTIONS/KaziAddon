@@ -139,7 +139,7 @@ public class GomuGomuNoGigantRework extends MorphAbility2 {
         STEP_HEIGHT = new AbilityAttributeModifier(AttributeHelper.MORPH_STEP_HEIGHT_UUID, INSTANCE, "Gomu Gomu no Gigant Step Height Modifier", (double) 1.5F, Operation.ADDITION);
         KNOCKBACK_RESISTANCE = new AbilityAttributeModifier(AttributeHelper.MORPH_KNOCKBACK_RESISTANCE_UUID, INSTANCE, "Gomu Gomu no Gigant Knockback Resistance Modifier", (double) 1.0F, Operation.ADDITION);
         FALL_RESISTANCE_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_FALL_RESISTANCE_UUID, INSTANCE, "Gomu Gomu no Gigant Fall Resistance Modifier", (double) 10.0F, Operation.ADDITION);
-        TOUGHNESS_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_TOUGHNESS_UUID, INSTANCE, "Gomu Gomu no Gigant Toughness Modifier", (double) 2.0F, Operation.ADDITION);
+        TOUGHNESS_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_TOUGHNESS_UUID, INSTANCE, "Gomu Gomu no Gigant Toughness Modifier", (double) 0.0F, Operation.ADDITION);
         HEALTH_BOOST_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_HEALTH_UUID, INSTANCE, "Gomu Gomu no Gigant Health Modifier", (double) 150.0F, Operation.ADDITION);
     }
 }

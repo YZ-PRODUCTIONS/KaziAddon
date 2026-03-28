@@ -1,10 +1,10 @@
 package net.kazi.kazimod.init;
 
 
-
 import net.kazi.kazimod.abilities.AwaRework.GoldenHourRework;
 import net.kazi.kazimod.abilities.AxeStyleRework.*;
 import net.kazi.kazimod.abilities.BaneRework.SpringSnipeRework;
+import net.kazi.kazimod.abilities.BariRework.BarrierGuardAbility;
 import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
 import net.kazi.kazimod.abilities.BomuRework.*;
 import net.kazi.kazimod.abilities.BrawlerRework.FistsOfLoveBarrageRework;
@@ -18,20 +18,20 @@ import net.kazi.kazimod.abilities.DoctorRework.*;
 import net.kazi.kazimod.abilities.DokuRework.VenomRoadRework;
 import net.kazi.kazimod.abilities.GasuRework.GastilleRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
-import net.kazi.kazimod.abilities.KageRework.DoppelmanRework;
-import net.kazi.kazimod.abilities.Koku.*;
 import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.GoroRework.ElThorRework;
 import net.kazi.kazimod.abilities.GoroRework.SangoRework;
 import net.kazi.kazimod.abilities.HoroRework.MiniHollowRework;
 import net.kazi.kazimod.abilities.HoroRework.NegativeHollowRework;
 import net.kazi.kazimod.abilities.HoroRework.TokuHollowRework;
+import net.kazi.kazimod.abilities.HumanRework.KamieRework;
 import net.kazi.kazimod.abilities.ItoRework.GodThreadRework;
 import net.kazi.kazimod.abilities.JikiRework.DamnedPunkRework;
 import net.kazi.kazimod.abilities.JikiRework.GenocideRaidRework;
 import net.kazi.kazimod.abilities.JikiRework.PunkCrossRework;
 import net.kazi.kazimod.abilities.KachiRework.CruelSunAbility;
 import net.kazi.kazimod.abilities.KachiRework.SunshineAbility;
+import net.kazi.kazimod.abilities.KageRework.DoppelmanRework;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
 import net.kazi.kazimod.abilities.Kake.LuckySlotAbility;
 import net.kazi.kazimod.abilities.Kake.SlotSpinAbility;
@@ -39,14 +39,16 @@ import net.kazi.kazimod.abilities.KamaRework.*;
 import net.kazi.kazimod.abilities.KaruRework.ExplodingKarmaAbility;
 import net.kazi.kazimod.abilities.KaruRework.IngaZarashiRework;
 import net.kazi.kazimod.abilities.KaruRework.RageRushAbility;
-import net.kazi.kazimod.abilities.KirinRework.KirinHeavyPointRework;
+import net.kazi.kazimod.abilities.KiraRework.DiamondAwaken;
 import net.kazi.kazimod.abilities.KirinRework.DreamwavePulseAbility;
+import net.kazi.kazimod.abilities.KirinRework.KirinHeavyPointRework;
 import net.kazi.kazimod.abilities.KirinRework.SlumberFieldAbility;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxAssaultRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireBallRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireExplosionRework;
 import net.kazi.kazimod.abilities.KitsuneRework.InuKitsuneWalkPointRework;
 import net.kazi.kazimod.abilities.KobuRework.ShoureiRework;
+import net.kazi.kazimod.abilities.Koku.*;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalMissileRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalShowerRework;
@@ -62,6 +64,8 @@ import net.kazi.kazimod.abilities.NoroRework.NoroNoroBeamSwordRework;
 import net.kazi.kazimod.abilities.Nusu.SkillBookCreationAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillHunterAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillRemoverAbility;
+import net.kazi.kazimod.abilities.OpeRework.*;
+import net.kazi.kazimod.abilities.PikaRework.MaxAccelerationRework;
 import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
@@ -239,7 +243,17 @@ public class KaziAbilities {
             BossRedAbility.INSTANCE,
             SkillBookCreationAbility.INSTANCE,
             GearSecondRework.INSTANCE,
-            DoppelmanRework.INSTANCE
+            DoppelmanRework.INSTANCE,
+            BarrierGuardAbility.INSTANCE,
+            DiamondAwaken.INSTANCE,
+            KRoomAnesthesiaRework.INSTANCE,
+            TaktRework.INSTANCE,
+            ShockWilleRework.INSTANCE,
+            PunctureWilleRework.INSTANCE,
+            ShamblesRework.INSTANCE,
+            MaxAccelerationRework.INSTANCE,
+            RadioKnifeRework.INSTANCE,
+            KamieRework.INSTANCE
 
 
 

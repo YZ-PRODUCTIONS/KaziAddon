@@ -8,6 +8,10 @@ public class KaziConfig {
     public static final KaziConfig INSTANCE;
 
     public final ForgeConfigSpec.BooleanValue disableFruitChanges;
+    public final ForgeConfigSpec.IntValue gearFifthMaxHoldTime;
+    public final ForgeConfigSpec.BooleanValue disableVegapunkSpawns;
+    public final ForgeConfigSpec.BooleanValue awakeningEssenceRequirePlayerKills;
+    public final ForgeConfigSpec.IntValue awakeningEssenceRequiredPlayerKills;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -25,6 +29,35 @@ public class KaziConfig {
                         "Requires a restart to take effect."
                 )
                 .define("disableFruitChanges", false);
+
+        gearFifthMaxHoldTime = builder
+                .comment(
+                        "Maximum hold time for Gear Fifth Rework, in ticks.",
+                        "20 ticks = 1 second.",
+                        "Default: 1200 (60 seconds)."
+                )
+                .defineInRange("gearFifthMaxHoldTime", 1200, 20, 72000);
+
+        disableVegapunkSpawns = builder
+                .comment(
+                        "Set to true to completely disable Vegapunk Trader spawning.",
+                        "Default: false."
+                )
+                .define("disableVegapunkSpawns", false);
+
+        awakeningEssenceRequirePlayerKills = builder
+                .comment(
+                        "Set to true to require player kills before Awakening Essence can be used.",
+                        "Default: false."
+                )
+                .define("awakeningEssenceRequirePlayerKills", false);
+
+        awakeningEssenceRequiredPlayerKills = builder
+                .comment(
+                        "How many player kills are required to use Awakening Essence when the requirement is enabled.",
+                        "Default: 5."
+                )
+                .defineInRange("awakeningEssenceRequiredPlayerKills", 5, 0, 100000);
 
         builder.pop();
     }

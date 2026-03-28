@@ -1,5 +1,6 @@
 package net.kazi.kazimod.items;
 
+import net.kazi.kazimod.config.KaziConfig;
 import net.kazi.kazimod.entities.InfiniteVoidBarrierEntity;
 import net.kazi.kazimod.init.KaziEntities;
 import net.minecraft.entity.Entity;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -80,6 +82,17 @@ public class AwakeningEssenceItem extends Item {
             player.sendMessage(new StringTextComponent("\u00a7eYour fruit is already awakened."),
                     player.getUUID());
             return ActionResult.fail(stack);
+        }
+
+        if (KaziConfig.INSTANCE.awakeningEssenceRequirePlayerKills.get()) {
+            int requiredKills = KaziConfig.INSTANCE.awakeningEssenceRequiredPlayerKills.get();
+            int playerKills = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAYER_KILLS));
+            if (playerKills < requiredKills) {
+                player.sendMessage(new StringTextComponent(
+                                "\u00a7cYou need at least " + requiredKills + " player kills to use Awakening Essence. Current: " + playerKills),
+                        player.getUUID());
+                return ActionResult.fail(stack);
+            }
         }
 
         List<ServerPlayerEntity> nearbyPlayers = serverWorld.players();

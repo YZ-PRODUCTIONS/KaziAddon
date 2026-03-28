@@ -24,6 +24,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import xyz.pixelatedw.mineminenomi.models.abilities.CubeModel;
+import xyz.pixelatedw.mineminenomi.renderers.abilities.AbilityProjectileRenderer;
 import xyz.pixelatedw.mineminenomi.particles.SimpleParticle;
 
 @Mod.EventBusSubscriber(modid = "kazimod", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -40,6 +42,14 @@ public class KaziRenderers {
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.FUGA.get(),
                 FugaProjectileRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.PUNCTURE_WILLE.get(),
+                (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.SHOCK_WILLE.get(),
+                (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
 
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.TIME_BUBBLE.get(),

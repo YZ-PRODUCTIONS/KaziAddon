@@ -58,7 +58,7 @@ public class GomuGomuNoRocketRework extends Ability {
     private static final float THROW_DOWN      = 30.0F;
     private static final float THROW_LATERAL   = 4.0F;
     // Damage on ground slam — same as Blue Hole's final hit
-    private static final float SLAM_DAMAGE     = 65.0F;
+    private static final float SLAM_DAMAGE     = 30.0F;
     // 15 seconds cooldown for Dawn Rocket
     private static final float DAWN_COOLDOWN   = 200.0F;
 
@@ -241,6 +241,7 @@ public class GomuGomuNoRocketRework extends Ability {
 
         // Keep shooter floating
         AbilityHelper.slowEntityFall(entity);
+        entity.addEffect(new EffectInstance((Effect) ModEffects.NO_HANDS.get(), 5, 0, false, false));
 
         for (LivingEntity target : this.grabbedTargets) {
             if (!target.isAlive()) continue;

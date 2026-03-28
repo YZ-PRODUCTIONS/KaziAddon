@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -40,16 +41,13 @@ import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.init.ModParticleEffects;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effect;
-import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class BlackHoleRework extends Ability {
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "black_hole", new Pair[]{ImmutablePair.of("The user spreads darkness over the target area, which engulfs and suffocates anyone and anything inside of it.", (Object)null)});
     private static final int RANGE = 32;
     private static final int CHARGE_TIME = 100;
-    private static final int RELEASE_TIME = 200;
+    private static final int RELEASE_TIME = 400;
     private static final int MAX_COOLDOWN = 400;
     private static final int RELEASE_PER_TICK = 40;
     public static final AbilityCore<BlackHoleRework> INSTANCE;
@@ -163,7 +161,7 @@ public class BlackHoleRework extends Ability {
                 }
 
                 this.state = BlackHoleRework.State.RELEASING;
-                this.continuousComponent.startContinuity(entity, 200.0F);
+                this.continuousComponent.startContinuity(entity, (float)RELEASE_TIME);
             } else {
                 this.state = BlackHoleRework.State.ABSORBING;
                 this.cooldownComponent.startCooldown(entity, 400.0F);
@@ -174,6 +172,7 @@ public class BlackHoleRework extends Ability {
 
     private void onContinuityTick(LivingEntity entity, IAbility ability) {
         if (!entity.level.isClientSide) {
+            entity.addEffect(new EffectInstance((Effect)ModEffects.MOVEMENT_BLOCKED.get(), 5, 1, false, false));
             IAbilityData data = AbilityDataCapability.get(entity);
             ReworkedAbsorbedBlocksAbility absorbed = (ReworkedAbsorbedBlocksAbility)data.getPassiveAbility(ReworkedAbsorbedBlocksAbility.INSTANCE);
             if (absorbed == null || absorbed.getUncompressedBlocks().isEmpty()) {
