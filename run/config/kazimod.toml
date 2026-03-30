@@ -1,0 +1,23 @@
+
+#KaziMod Configuration
+[kazimod]
+	#Maximum hold time for Gear Fifth Rework, in ticks.
+	#20 ticks = 1 second.
+	#Default: 1200 (60 seconds).
+	#Range: 20 ~ 72000
+	gearFifthMaxHoldTime = 1200
+	#Set to true to require player kills before Awakening Essence can be used.
+	#Default: false.
+	awakeningEssenceRequirePlayerKills = false
+	#How many player kills are required to use Awakening Essence when the requirement is enabled.
+	#Default: 5.
+	#Range: 0 ~ 100000
+	awakeningEssenceRequiredPlayerKills = 5
+	#Set to true to disable ALL fruit ability reworks and ALL custom fruits added by KaziMod.
+	#Default: false (all changes are active).
+	#Requires a restart to take effect.
+	disableFruitChanges = false
+	#Set to true to completely disable Vegapunk Trader spawning.
+	#Default: false.
+	disableVegapunkSpawns = false
+

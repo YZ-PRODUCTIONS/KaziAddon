@@ -1,0 +1,143 @@
+---- Minecraft Crash Report ----
+// Sorry :(
+
+Time: 3/7/26 4:01 PM
+Description: Ticking player
+
+java.lang.ExceptionInInitializerError: null
+	at net.kazi.kazimod.abilities.Toki.TimeAccelerationAbility.onContinuityTick(TimeAccelerationAbility.java:169) ~[main/:?] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent.lambda$doTick$5(ContinuousComponent.java:155) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183) ~[?:1.8.0_482] {}
+	at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193) ~[?:1.8.0_482] {}
+	at java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472) ~[?:1.8.0_482] {}
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150) ~[?:1.8.0_482] {}
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:1.8.0_482] {}
+	at java.util.stream.ReferencePipeline.forEachOrdered(ReferencePipeline.java:490) ~[?:1.8.0_482] {}
+	at xyz.pixelatedw.mineminenomi.api.util.PriorityEventPool.dispatch(PriorityEventPool.java:71) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent.doTick(ContinuousComponent.java:155) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent.tick(AbilityComponent.java:64) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.Ability.lambda$tick$9(Ability.java:700) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at java.util.LinkedHashMap$LinkedValues.forEach(LinkedHashMap.java:608) ~[?:1.8.0_482] {}
+	at xyz.pixelatedw.mineminenomi.api.abilities.Ability.tick(Ability.java:700) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at xyz.pixelatedw.mineminenomi.events.abilities.AbilitiesEvents.onLivingUpdate(AbilitiesEvents.java:174) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at net.minecraftforge.eventbus.ASMEventHandler_138_AbilitiesEvents_onLivingUpdate_LivingUpdateEvent.invoke(.dynamic) ~[?:?] {}
+	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:85) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:302) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:283) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.common.ForgeHooks.onLivingUpdate(ForgeHooks.java:326) ~[forge:?] {re:classloading}
+	at net.minecraft.entity.LivingEntity.tick(LivingEntity.java:2114) ~[forge:?] {re:mixin,re:classloading,pl:mixin:APP:mine-mine-no-mi.mixins.json:LivingEntityMixin,pl:mixin:APP:mine-mine-no-mi.mixins.json:ILivingEntityMixin,pl:mixin:A}
+	at net.minecraft.entity.player.PlayerEntity.tick(PlayerEntity.java:223) ~[forge:?] {re:mixin,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B,pl:mixin:APP:mine-mine-no-mi.mixins.json:PlayerEntityMixin,pl:mixin:A,re:computing_frames,pl:accesstransformer:B}
+	at net.minecraft.entity.player.ServerPlayerEntity.doTick(ServerPlayerEntity.java:404) ~[forge:?] {re:computing_frames,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.network.play.ServerPlayNetHandler.tick(ServerPlayNetHandler.java:207) ~[forge:?] {re:mixin,re:classloading,pl:mixin:A}
+	at net.minecraft.network.NetworkManager.tick(NetworkManager.java:226) ~[forge:?] {re:classloading}
+	at net.minecraft.network.NetworkSystem.tick(NetworkSystem.java:134) ~[forge:?] {re:classloading}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:865) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:787) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.integrated.IntegratedServer.tickServer(IntegratedServer.java:78) ~[forge:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:642) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:232) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:750) [?:1.8.0_482] {}
+Caused by: java.lang.IllegalArgumentException: Registration of network channels is locked
+	at net.minecraftforge.fml.network.NetworkRegistry.createInstance(NetworkRegistry.java:136) ~[forge:?] {re:classloading}
+	at net.minecraftforge.fml.network.NetworkRegistry.newSimpleChannel(NetworkRegistry.java:103) ~[forge:?] {re:classloading}
+	at net.kazi.kazimod.network.KaziNetwork.<clinit>(KaziNetwork.java:16) ~[?:?] {re:classloading}
+	... 35 more
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at net.kazi.kazimod.abilities.Toki.TimeAccelerationAbility.onContinuityTick(TimeAccelerationAbility.java:169) ~[main/:?] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent.lambda$doTick$5(ContinuousComponent.java:155) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183) ~[?:1.8.0_482] {}
+	at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193) ~[?:1.8.0_482] {}
+	at java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472) ~[?:1.8.0_482] {}
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150) ~[?:1.8.0_482] {}
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:1.8.0_482] {}
+	at java.util.stream.ReferencePipeline.forEachOrdered(ReferencePipeline.java:490) ~[?:1.8.0_482] {}
+	at xyz.pixelatedw.mineminenomi.api.util.PriorityEventPool.dispatch(PriorityEventPool.java:71) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent.doTick(ContinuousComponent.java:155) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent.tick(AbilityComponent.java:64) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.Ability.lambda$tick$9(Ability.java:700) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at java.util.LinkedHashMap$LinkedValues.forEach(LinkedHashMap.java:608) ~[?:1.8.0_482] {}
+	at xyz.pixelatedw.mineminenomi.api.abilities.Ability.tick(Ability.java:700) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at xyz.pixelatedw.mineminenomi.events.abilities.AbilitiesEvents.onLivingUpdate(AbilitiesEvents.java:174) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at net.minecraftforge.eventbus.ASMEventHandler_138_AbilitiesEvents_onLivingUpdate_LivingUpdateEvent.invoke(.dynamic) ~[?:?] {}
+	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:85) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:302) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:283) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.common.ForgeHooks.onLivingUpdate(ForgeHooks.java:326) ~[forge:?] {re:classloading}
+	at net.minecraft.entity.LivingEntity.tick(LivingEntity.java:2114) ~[forge:?] {re:mixin,re:classloading,pl:mixin:APP:mine-mine-no-mi.mixins.json:LivingEntityMixin,pl:mixin:APP:mine-mine-no-mi.mixins.json:ILivingEntityMixin,pl:mixin:A}
+	at net.minecraft.entity.player.PlayerEntity.tick(PlayerEntity.java:223) ~[forge:?] {re:mixin,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B,pl:mixin:APP:mine-mine-no-mi.mixins.json:PlayerEntityMixin,pl:mixin:A,re:computing_frames,pl:accesstransformer:B}
+-- Player being ticked --
+Details:
+	Entity Type: minecraft:player (net.minecraft.entity.player.ServerPlayerEntity)
+	Entity ID: 3
+	Entity Name: Dev
+	Entity's Exact location: -226.36, 1.00, 55.23
+	Entity's Block location: World: (-227,1,55), Chunk: (at 13,0,7 in -15,3; contains blocks -240,0,48 to -225,255,63), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,0,0 to -1,255,511)
+	Entity's Momentum: 0.89, -0.08, -1.50
+	Entity's Passengers: []
+	Entity's Vehicle: ~~ERROR~~ NullPointerException: null
+Stacktrace:
+	at net.minecraft.entity.player.ServerPlayerEntity.doTick(ServerPlayerEntity.java:404) ~[forge:?] {re:computing_frames,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.network.play.ServerPlayNetHandler.tick(ServerPlayNetHandler.java:207) ~[forge:?] {re:mixin,re:classloading,pl:mixin:A}
+	at net.minecraft.network.NetworkManager.tick(NetworkManager.java:226) ~[forge:?] {re:classloading}
+	at net.minecraft.network.NetworkSystem.tick(NetworkSystem.java:134) ~[forge:?] {re:classloading}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:865) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:787) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.integrated.IntegratedServer.tickServer(IntegratedServer.java:78) ~[forge:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:642) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:232) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:750) [?:1.8.0_482] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.5
+	Minecraft Version ID: 1.16.5
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_482, Amazon.com Inc.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Amazon.com Inc.
+	Memory: 1268373688 bytes (1209 MB) / 3829399552 bytes (3652 MB) up to 7581728768 bytes (7230 MB)
+	CPUs: 32
+	JVM Flags: 2 total; -XX:+IgnoreUnrecognizedVMOptions -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	ModLauncher: 8.1.3+8.1.3+main-8.1.x.c94d18ec
+	ModLauncher launch target: fmluserdevclient
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		/mixin-0.8.4.jar mixin PLUGINSERVICE 
+		/eventbus-4.0.0.jar eventbus PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar object_holder_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar runtime_enum_extender PLUGINSERVICE 
+		/accesstransformers-3.0.1.jar accesstransformer PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar capability_inject_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar runtimedistcleaner PLUGINSERVICE 
+		/mixin-0.8.4.jar mixin TRANSFORMATIONSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar fml TRANSFORMATIONSERVICE 
+	FML: 36.2
+	Forge: net.minecraftforge:36.2.39
+	FML Language Providers: 
+		javafml@36.2
+		minecraft@1
+	Mod List: 
+		client-extra.jar                                  |Minecraft                     |minecraft                     |1.16.5              |DONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp|Forge                         |forge                         |36.2.39             |DONE      |Manifest: NOSIGNATURE
+		mine-mine-no-mi-78726-7170763_mapped_official_1.16|Mine Mine no Mi               |mineminenomi                  |0.10.10             |DONE      |Manifest: NOSIGNATURE
+		main                                              |KazisAdditions                |kazimod                       |2.41                |DONE      |Manifest: NOSIGNATURE
+		curios-309927-4419403_mapped_official_1.16.5.jar  |Curios API                    |curios                        |1.16.5-4.1.0.0      |DONE      |Manifest: NOSIGNATURE
+		carts-mmnm-addon-1143743-7661122_mapped_official_1|Cart's mmnm Addon             |cartaddon                     |0.7.51              |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: 9f1b803c-62f2-48b5-a045-88d165017bfe
+	Player Count: 1 / 8; [ServerPlayerEntity['Dev'/3, l='ServerLevel[New World]', x=-226.36, y=1.00, z=55.23]]
+	Data Packs: vanilla, mod:forge, mod:mineminenomi, mod:kazimod, mod:curios, mod:cartaddon
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'forge'

@@ -1,0 +1,104 @@
+---- Minecraft Crash Report ----
+// Who set us up the TNT?
+
+Time: 2/20/26 4:01 PM
+Description: Exception in server tick loop
+
+java.lang.ExceptionInInitializerError: null
+	at net.kazi.kazimod.abilities.KamaRework.DismantleAbility.onUseEvent(DismantleAbility.java:62) ~[main/:?] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.Ability.lambda$use$0(Ability.java:185) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183) ~[?:1.8.0_482] {}
+	at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193) ~[?:1.8.0_482] {}
+	at java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472) ~[?:1.8.0_482] {}
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150) ~[?:1.8.0_482] {}
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173) ~[?:1.8.0_482] {}
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:1.8.0_482] {}
+	at java.util.stream.ReferencePipeline.forEachOrdered(ReferencePipeline.java:490) ~[?:1.8.0_482] {}
+	at xyz.pixelatedw.mineminenomi.api.util.PriorityEventPool.dispatch(PriorityEventPool.java:71) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.Ability.use(Ability.java:185) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at xyz.pixelatedw.mineminenomi.api.abilities.Ability.use(Ability.java:135) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:mixin,re:classloading}
+	at xyz.pixelatedw.mineminenomi.packets.client.ability.CUseAbilityPacket.lambda$handle$0(CUseAbilityPacket.java:99) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at net.minecraftforge.fml.network.NetworkEvent$Context.enqueueWork(NetworkEvent.java:201) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.packets.client.ability.CUseAbilityPacket.handle(CUseAbilityPacket.java:46) ~[mine-mine-no-mi-78726-7170763_mapped_official_1.16.5.jar:0.10.10] {re:classloading}
+	at net.minecraftforge.fml.network.simple.IndexedMessageCodec.lambda$tryDecode$3(IndexedMessageCodec.java:114) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?] {re:classloading}
+	at java.util.Optional.ifPresent(Optional.java:159) ~[?:1.8.0_482] {}
+	at net.minecraftforge.fml.network.simple.IndexedMessageCodec.tryDecode(IndexedMessageCodec.java:114) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?] {re:classloading}
+	at net.minecraftforge.fml.network.simple.IndexedMessageCodec.consume(IndexedMessageCodec.java:148) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?] {re:classloading}
+	at net.minecraftforge.fml.network.simple.SimpleChannel.networkEventListener(SimpleChannel.java:66) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?] {re:classloading}
+	at net.minecraftforge.eventbus.EventBus.doCastFilter(EventBus.java:247) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.lambda$addListener$11(EventBus.java:239) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:302) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:283) ~[eventbus-4.0.0.jar:?] {}
+	at net.minecraftforge.fml.network.NetworkInstance.dispatch(NetworkInstance.java:72) ~[forge:?] {re:classloading}
+	at net.minecraftforge.fml.network.NetworkHooks.lambda$onCustomPayload$1(NetworkHooks.java:77) ~[forge:?] {re:classloading}
+	at java.util.Optional.map(Optional.java:215) ~[?:1.8.0_482] {}
+	at net.minecraftforge.fml.network.NetworkHooks.onCustomPayload(NetworkHooks.java:77) ~[forge:?] {re:classloading}
+	at net.minecraft.network.play.ServerPlayNetHandler.handleCustomPayload(ServerPlayNetHandler.java:1413) ~[forge:?] {re:mixin,re:classloading,pl:mixin:APP:mine-mine-no-mi.mixins.json:ServerPlayNetHandlerMixin,pl:mixin:A}
+	at net.minecraft.network.play.client.CCustomPayloadPacket.handle(CCustomPayloadPacket.java:42) ~[forge:?] {re:classloading}
+	at net.minecraft.network.play.client.CCustomPayloadPacket.handle(CCustomPayloadPacket.java:12) ~[forge:?] {re:classloading}
+	at net.minecraft.network.PacketThreadUtil.lambda$ensureRunningOnSameThread$0(PacketThreadUtil.java:19) ~[forge:?] {re:classloading}
+	at net.minecraft.util.concurrent.TickDelayedTask.run(TickDelayedTask.java:17) ~[forge:?] {re:classloading}
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.doRunTask(ThreadTaskExecutor.java:136) ~[forge:?] {re:mixin,pl:accesstransformer:B,re:computing_frames,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B}
+	at net.minecraft.util.concurrent.RecursiveEventLoop.doRunTask(RecursiveEventLoop.java:22) ~[forge:?] {re:mixin,re:computing_frames,re:classloading}
+	at net.minecraft.server.MinecraftServer.doRunTask(MinecraftServer.java:734) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.doRunTask(MinecraftServer.java:159) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.pollTask(ThreadTaskExecutor.java:109) ~[forge:?] {re:mixin,pl:accesstransformer:B,re:computing_frames,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.pollTaskInternal(MinecraftServer.java:717) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.pollTask(MinecraftServer.java:711) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.managedBlock(ThreadTaskExecutor.java:119) ~[forge:?] {re:mixin,pl:accesstransformer:B,re:computing_frames,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.waitUntilNextTick(MinecraftServer.java:697) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:646) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:232) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:750) [?:1.8.0_482] {}
+Caused by: java.lang.IllegalStateException: Cannot register new entries to DeferredRegister after RegistryEvent.Register has been fired.
+	at net.minecraftforge.registries.DeferredRegister.register(DeferredRegister.java:97) ~[forge:?] {re:classloading,re:mixin}
+	at net.kazi.kazimod.api.KaziRegistry.registerSound(KaziRegistry.java:168) ~[?:?] {re:classloading}
+	at net.kazi.kazimod.init.KaziSounds.<clinit>(KaziSounds.java:10) ~[?:?] {re:classloading}
+	... 47 more
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.5
+	Minecraft Version ID: 1.16.5
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_482, Amazon.com Inc.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Amazon.com Inc.
+	Memory: 878925400 bytes (838 MB) / 3637510144 bytes (3469 MB) up to 7581728768 bytes (7230 MB)
+	CPUs: 32
+	JVM Flags: 2 total; -XX:+IgnoreUnrecognizedVMOptions -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	ModLauncher: 8.1.3+8.1.3+main-8.1.x.c94d18ec
+	ModLauncher launch target: fmluserdevclient
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		/mixin-0.8.4.jar mixin PLUGINSERVICE 
+		/eventbus-4.0.0.jar eventbus PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar object_holder_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar runtime_enum_extender PLUGINSERVICE 
+		/accesstransformers-3.0.1.jar accesstransformer PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar capability_inject_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar runtimedistcleaner PLUGINSERVICE 
+		/mixin-0.8.4.jar mixin TRANSFORMATIONSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar fml TRANSFORMATIONSERVICE 
+	FML: 36.2
+	Forge: net.minecraftforge:36.2.39
+	FML Language Providers: 
+		javafml@36.2
+		minecraft@1
+	Mod List: 
+		client-extra.jar                                  |Minecraft                     |minecraft                     |1.16.5              |DONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp|Forge                         |forge                         |36.2.39             |DONE      |Manifest: NOSIGNATURE
+		mine-mine-no-mi-78726-7170763_mapped_official_1.16|Mine Mine no Mi               |mineminenomi                  |0.10.10             |DONE      |Manifest: NOSIGNATURE
+		main                                              |KazisAdditions                |kazimod                       |1.2                 |DONE      |Manifest: NOSIGNATURE
+		curios-309927-4419403_mapped_official_1.16.5.jar  |Curios API                    |curios                        |1.16.5-4.1.0.0      |DONE      |Manifest: NOSIGNATURE
+		carts-mmnm-addon-1143743-7642424_mapped_official_1|Cart's mmnm Addon             |cartaddon                     |0.7.5               |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: bf450f96-dafd-447b-8ea0-fc12a5818833
+	Player Count: 1 / 8; [ServerPlayerEntity['Dev'/2, l='ServerLevel[New World]', x=-142.81, y=2.18, z=61.38]]
+	Data Packs: vanilla, mod:forge, mod:mineminenomi, mod:kazimod, mod:curios, mod:cartaddon
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'forge'
