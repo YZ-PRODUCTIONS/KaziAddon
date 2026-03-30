@@ -5,6 +5,7 @@
 
 package net.kazi.kazimod.events.handlers;
 
+import net.MrMagicalCart.cartaddon.abilities.modifiedhuman.ModifiedHumanHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -135,6 +136,10 @@ public class WeakenedMovementEventHandler {
         Effect effect = getWeakenedMovementEffect();
         if (effect == null) {
             return;
+        }
+
+        if (!entity.level.isClientSide && ModifiedHumanHelper.hasSuitActive(entity)) {
+            entity.addEffect(new EffectInstance(effect, 5, 1, false, false));
         }
 
         // Check if entity has the weakened movement effect

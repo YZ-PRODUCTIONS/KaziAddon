@@ -8,6 +8,7 @@ import net.kazi.kazimod.events.AwakeningAbilityLoginFix;
 import net.kazi.kazimod.events.BossWaterCancelHandler;
 import net.kazi.kazimod.events.handlers.*;
 import net.kazi.kazimod.init.*;
+import net.kazi.kazimod.setup.HakiAbilityInjector;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -66,6 +67,9 @@ public class KaziMod {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        KaziPacketHandler.register();
+        event.enqueueWork(() -> {
+            KaziPacketHandler.register();
+            HakiAbilityInjector.inject();
+        });
     }
 }

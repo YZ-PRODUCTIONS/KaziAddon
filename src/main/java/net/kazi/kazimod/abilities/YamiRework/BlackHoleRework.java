@@ -5,7 +5,12 @@
 
 package net.kazi.kazimod.abilities.YamiRework;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import net.MrMagicalCart.cartaddon.abilities.yamiextra.ReworkedAbsorbedBlocksAbility;
 import net.MrMagicalCart.cartaddon.init.CartBlocks;
@@ -18,8 +23,13 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import xyz.pixelatedw.mineminenomi.api.abilities.Ability;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCategory;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
@@ -52,6 +62,7 @@ public class BlackHoleRework extends Ability {
     private static final int RELEASE_PER_TICK = 40;
     public static final AbilityCore<BlackHoleRework> INSTANCE;
     private static final BlockProtectionRule.IReplaceBlockRule PLACE_RULE = (world, pos, state) -> !state.getMaterial().isSolid() && world.getBlockState(pos.below()).getMaterial().isSolid();
+    private static final Map<UUID, Deque<BlockPos>> TRACKED_DARKNESS = new HashMap<>();
     private final AnimationComponent animationComponent = new AnimationComponent(this);
     private BlockPos origin;
     private State state;
@@ -105,6 +116,9 @@ public class BlackHoleRework extends Ability {
                                     if (surface.getBlock() == CartBlocks.REWORKED_DARKNESS_BLOCK.get()) {
                                         break;
                                     }
+                                    if (surface.getBlock() == Blocks.BLUE_ICE) {
+                                        break;
+                                    }
 
                                     if (surface.getMaterial().isSolidBlocking()) {
                                         BlockPos darknessPos = scan.above();
@@ -113,8 +127,18 @@ public class BlackHoleRework extends Ability {
                                             BlockPos absorbedPos = scan.below(1);
                                             if (absorbedPos.getY() >= 0) {
                                                 BlockState absorbedState = entity.level.getBlockState(absorbedPos);
-                                                if (AbilityHelper.placeBlockIfAllowed(entity, darknessPos, ((Block)CartBlocks.REWORKED_DARKNESS_BLOCK.get()).defaultBlockState(), 3, DefaultProtectionRules.AIR_FOLIAGE)) {
+                                                if (absorbedState.getBlock() == Blocks.BLUE_ICE) {
+                                                    break;
+                                                }
+                                                BlockState darknessState = ((Block)CartBlocks.REWORKED_DARKNESS_BLOCK.get()).defaultBlockState();
+                                                boolean placed = AbilityHelper.placeBlockIfAllowed(entity, darknessPos, darknessState, 3, DefaultProtectionRules.AIR_FOLIAGE);
+                                                if (!placed) {
+                                                    entity.level.setBlock(darknessPos, darknessState, 3);
+                                                    placed = entity.level.getBlockState(darknessPos).getBlock() == CartBlocks.REWORKED_DARKNESS_BLOCK.get();
+                                                }
+                                                if (placed) {
                                                     WyHelper.spawnParticleEffect((ParticleEffect)ModParticleEffects.BLACK_HOLE.get(), entity, (double)darknessPos.getX(), (double)((float)darknessPos.getY() + 0.5F), (double)darknessPos.getZ());
+                                                    trackDarkness(entity, darknessPos);
                                                     absorbed.addAbsorbedBlock(absorbedState, absorbedPos, darknessPos);
                                                 }
                                             }
@@ -135,13 +159,19 @@ public class BlackHoleRework extends Ability {
                 } else if (this.state == BlackHoleRework.State.RELEASING) {
                     List<ReworkedAbsorbedBlocksAbility.BlockData> blocks = absorbed.getUncompressedBlocks();
 
-                    ReworkedAbsorbedBlocksAbility.BlockData dataBlock;
-                    for(int remaining = 40; remaining-- > 0 && !blocks.isEmpty(); absorbed.removeAbsorbedBlock(dataBlock)) {
-                        dataBlock = (ReworkedAbsorbedBlocksAbility.BlockData)blocks.remove(blocks.size() - 1);
-                        BlockPos darknessPos = dataBlock.getDarknessPos();
-                        if (entity.level.getBlockState(darknessPos).getBlock() == CartBlocks.REWORKED_DARKNESS_BLOCK.get()) {
-                            entity.level.setBlock(darknessPos, Blocks.AIR.defaultBlockState(), 3);
-                            WyHelper.spawnParticleEffect((ParticleEffect)ModParticleEffects.BLACK_HOLE.get(), entity, (double)darknessPos.getX(), (double)((float)darknessPos.getY() + 0.5F), (double)darknessPos.getZ());
+                    for(int remaining = RELEASE_PER_TICK; remaining-- > 0; ) {
+                        if (!blocks.isEmpty()) {
+                            ReworkedAbsorbedBlocksAbility.BlockData dataBlock = (ReworkedAbsorbedBlocksAbility.BlockData)blocks.get(blocks.size() - 1);
+                            BlockPos darknessPos = dataBlock.getDarknessPos();
+                            retractDarkness(entity, darknessPos);
+                            absorbed.removeAbsorbedBlock(dataBlock);
+                            untrackDarkness(entity, darknessPos);
+                        } else {
+                            BlockPos darknessPos = pollTrackedDarkness(entity);
+                            if (darknessPos == null) {
+                                break;
+                            }
+                            retractDarkness(entity, darknessPos);
                         }
                     }
                 }
@@ -156,13 +186,14 @@ public class BlackHoleRework extends Ability {
             IAbilityData data = AbilityDataCapability.get(entity);
             ReworkedAbsorbedBlocksAbility absorbed = (ReworkedAbsorbedBlocksAbility)data.getPassiveAbility(ReworkedAbsorbedBlocksAbility.INSTANCE);
             if (this.state == BlackHoleRework.State.ABSORBING) {
-                if (absorbed == null || absorbed.getUncompressedBlocks().isEmpty()) {
+                if ((absorbed == null || absorbed.getUncompressedBlocks().isEmpty()) && !hasTrackedDarkness(entity)) {
                     return;
                 }
 
                 this.state = BlackHoleRework.State.RELEASING;
                 this.continuousComponent.startContinuity(entity, (float)RELEASE_TIME);
             } else {
+                cleanupTrackedDarkness(entity);
                 this.state = BlackHoleRework.State.ABSORBING;
                 this.cooldownComponent.startCooldown(entity, 400.0F);
             }
@@ -175,7 +206,7 @@ public class BlackHoleRework extends Ability {
             entity.addEffect(new EffectInstance((Effect)ModEffects.MOVEMENT_BLOCKED.get(), 5, 1, false, false));
             IAbilityData data = AbilityDataCapability.get(entity);
             ReworkedAbsorbedBlocksAbility absorbed = (ReworkedAbsorbedBlocksAbility)data.getPassiveAbility(ReworkedAbsorbedBlocksAbility.INSTANCE);
-            if (absorbed == null || absorbed.getUncompressedBlocks().isEmpty()) {
+            if ((absorbed == null || absorbed.getUncompressedBlocks().isEmpty()) && !hasTrackedDarkness(entity)) {
                 this.state = BlackHoleRework.State.ABSORBING;
                 this.continuousComponent.stopContinuity(entity);
                 this.cooldownComponent.startCooldown(entity, 400.0F);
@@ -195,6 +226,72 @@ public class BlackHoleRework extends Ability {
 
     static {
         INSTANCE = (new AbilityCore.Builder("Black Hole", AbilityCategory.DEVIL_FRUITS, BlackHoleRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(200.0F, 400.0F), ChargeComponent.getTooltip(100.0F), ContinuousComponent.getTooltip(), RangeComponent.getTooltip(32.0F, RangeType.AOE)}).build();
+    }
+
+    private static void trackDarkness(LivingEntity entity, BlockPos pos) {
+        Deque<BlockPos> tracked = TRACKED_DARKNESS.computeIfAbsent(entity.getUUID(), id -> new ArrayDeque<>());
+        BlockPos immutablePos = pos.immutable();
+        if (!tracked.contains(immutablePos)) {
+            tracked.addLast(immutablePos);
+        }
+    }
+
+    private static void untrackDarkness(LivingEntity entity, BlockPos pos) {
+        Deque<BlockPos> tracked = TRACKED_DARKNESS.get(entity.getUUID());
+        if (tracked == null) return;
+        tracked.remove(pos);
+        if (tracked.isEmpty()) {
+            TRACKED_DARKNESS.remove(entity.getUUID());
+        }
+    }
+
+    private static BlockPos pollTrackedDarkness(LivingEntity entity) {
+        Deque<BlockPos> tracked = TRACKED_DARKNESS.get(entity.getUUID());
+        if (tracked == null || tracked.isEmpty()) return null;
+        BlockPos pos = tracked.pollLast();
+        if (tracked.isEmpty()) {
+            TRACKED_DARKNESS.remove(entity.getUUID());
+        }
+        return pos;
+    }
+
+    private static boolean hasTrackedDarkness(LivingEntity entity) {
+        Deque<BlockPos> tracked = TRACKED_DARKNESS.get(entity.getUUID());
+        return tracked != null && !tracked.isEmpty();
+    }
+
+    private static void retractDarkness(LivingEntity entity, BlockPos darknessPos) {
+        if (entity.level.getBlockState(darknessPos).getBlock() == CartBlocks.REWORKED_DARKNESS_BLOCK.get()) {
+            entity.level.setBlock(darknessPos, Blocks.AIR.defaultBlockState(), 3);
+            WyHelper.spawnParticleEffect((ParticleEffect)ModParticleEffects.BLACK_HOLE.get(), entity, (double)darknessPos.getX(), (double)((float)darknessPos.getY() + 0.5F), (double)darknessPos.getZ());
+        }
+    }
+
+    private static void cleanupTrackedDarkness(LivingEntity entity) {
+        cleanupTrackedDarkness(entity.getUUID(), entity.level);
+    }
+
+    private static void cleanupTrackedDarkness(UUID casterId, World world) {
+        Deque<BlockPos> tracked = TRACKED_DARKNESS.remove(casterId);
+        if (tracked == null) return;
+        for (BlockPos pos : tracked) {
+            if (world.getBlockState(pos).getBlock() == CartBlocks.REWORKED_DARKNESS_BLOCK.get()) {
+                world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            }
+        }
+    }
+
+    @Mod.EventBusSubscriber(modid = "kazimod")
+    public static class CleanupHandler {
+        @SubscribeEvent
+        public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+            cleanupTrackedDarkness(event.getPlayer().getUUID(), event.getPlayer().level);
+        }
+
+        @SubscribeEvent
+        public static void onLivingDeath(LivingDeathEvent event) {
+            cleanupTrackedDarkness(event.getEntityLiving().getUUID(), event.getEntityLiving().level);
+        }
     }
 
     private static enum State {

@@ -8,6 +8,7 @@ import net.MrMagicalCart.cartaddon.abilities.oni.*;
 import net.MrMagicalCart.cartaddon.abilities.rokushikiextra.*;
 import net.MrMagicalCart.cartaddon.init.CartResources;
 import net.kazi.kazimod.abilities.HumanRework.KamieRework;
+import net.kazi.kazimod.abilities.HumanRework.SoruRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalMissileRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalShowerRework;
@@ -29,7 +30,7 @@ import xyz.pixelatedw.mineminenomi.init.ModResources;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import xyz.pixelatedw.mineminenomi.wypi.WyRegistry;
 
-@Mixin({WyRegistry.class})
+@Mixin(value = WyRegistry.class, remap = false)
 public abstract class CartRaceReplace {
     @Shadow
     @Final
@@ -47,81 +48,66 @@ public abstract class CartRaceReplace {
     private static <I extends RaceId> void registerEditedRace(String localizedName, Supplier<I> race, CallbackInfoReturnable<RegistryObject<I>> cir) {
         String resourceName = WyHelper.getResourceName(localizedName);
         WyRegistry.getLangMap().put("race.mineminenomi." + resourceName, localizedName);
-        final Supplier<I>[] modifiedRace = new Supplier[]{race};
+        Supplier<I> modifiedRace = race;
         if (resourceName.equalsIgnoreCase("oni")) {
-            modifiedRace[0] = () -> {
-                if (resourceName.equalsIgnoreCase("oni")) {
+            modifiedRace = () -> {
+                CharacterCreatorSelectionMap.SelectionInfo info =
+                        new CharacterCreatorSelectionMap.SelectionInfo(CartResources.ONI);
 
-                    modifiedRace[0] = () -> {
-                        CharacterCreatorSelectionMap.SelectionInfo info =
-                                new CharacterCreatorSelectionMap.SelectionInfo(CartResources.ONI);
+                info.addTopAbilities(new AbilityCore[]{
+                        DrunkOniPassive.INSTANCE,
+                        HardenedGutsAbility.INSTANCE,
+                        OniAwakeningAbility.INSTANCE,
+                        OniDebuffPassiveAbility.INSTANCE,
+                        OniPassiveBonusesAbility.INSTANCE,
+                        PerceptionBlitzAbility.INSTANCE,
+                        SkullBasherRework.INSTANCE,
+                        SmashingFistAbility.INSTANCE,
+                        ThunderousLeapAbility.INSTANCE,
+                        ViciousRoarRework.INSTANCE
+                });
 
-                        info.addTopAbilities(new AbilityCore[]{
-                                DrunkOniPassive.INSTANCE,
-                                HardenedGutsAbility.INSTANCE,
-                                OniAwakeningAbility.INSTANCE,
-                                OniDebuffPassiveAbility.INSTANCE,
-                                OniPassiveBonusesAbility.INSTANCE,
-                                PerceptionBlitzAbility.INSTANCE,
-                                SkullBasherRework.INSTANCE,
-                                SmashingFistAbility.INSTANCE,
-                                ThunderousLeapAbility.INSTANCE,
-                                ViciousRoarRework.INSTANCE
-                        });
-
-                        return (I) new RaceId(info, true, 6);
-                    };
-                }
-                return null;
+                return (I) new RaceId(info, true, 6);
             };
         }
         if (resourceName.equalsIgnoreCase("mink")) {
-            modifiedRace[0] = () -> {
-                if (resourceName.equalsIgnoreCase("mink")) {
+            modifiedRace = () -> {
+                CharacterCreatorSelectionMap.SelectionInfo info =
+                        new CharacterCreatorSelectionMap.SelectionInfo(ModResources.MINK1);
 
-                    modifiedRace[0] = () -> {
-                        CharacterCreatorSelectionMap.SelectionInfo info =
-                                new CharacterCreatorSelectionMap.SelectionInfo(ModResources.MINK1);
+                info.addTopAbilities(new AbilityCore[]{
+                        CartEleclawAbility.INSTANCE,
+                        CartElectricalLunaAbility.INSTANCE,
+                        MinkSizePasssiveAbility.INSTANCE,
+                        CartSulongAbility.INSTANCE,
+                        ElectricalMissileRework.INSTANCE,
+                        ElectricalShowerRework.INSTANCE,
+                        ElectricalBurstRework.INSTANCE,
+                        ElectricalTempestaRework.INSTANCE
+                });
 
-                        info.addTopAbilities(new AbilityCore[]{
-                                CartEleclawAbility.INSTANCE,
-                                CartElectricalLunaAbility.INSTANCE,
-                                MinkSizePasssiveAbility.INSTANCE,
-                                CartSulongAbility.INSTANCE,
-                                ElectricalMissileRework.INSTANCE,
-                                ElectricalShowerRework.INSTANCE,
-                                ElectricalBurstRework.INSTANCE,
-                                ElectricalTempestaRework.INSTANCE
-                        });
-
-                        return (I) new RaceId(info, true, 4);
-                    };
-                }
-                return null;
+                return (I) new RaceId(info, true, 4);
             };
         }
         if (resourceName.equalsIgnoreCase("human")) {
-            modifiedRace[0] = () -> {
-                if (resourceName.equalsIgnoreCase("human")) {
+            modifiedRace = () -> {
+                CharacterCreatorSelectionMap.SelectionInfo info =
+                        new CharacterCreatorSelectionMap.SelectionInfo(ModResources.HUMAN);
 
-                    modifiedRace[0] = () -> {
-                        CharacterCreatorSelectionMap.SelectionInfo info =
-                                new CharacterCreatorSelectionMap.SelectionInfo(ModResources.HUMAN);
+                info.addTopAbilities(new AbilityCore[]{
+                        KamieRework.INSTANCE,
+                        ReworkedGeppoAbility.INSTANCE,
+                        ReworkedRankyakuAbility.INSTANCE,
+                        ReworkedRokuoganAbility.INSTANCE,
+                        ReworkedShiganAbility.INSTANCE,
+                        SoruRework.INSTANCE,
+                        ReworkedTekkaiAbility.INSTANCE
+                });
 
-                        info.addTopAbilities(new AbilityCore[]{
-                                KamieRework.INSTANCE,
-                                ReworkedGeppoAbility.INSTANCE,
-                                ReworkedRankyakuAbility.INSTANCE,
-                                ReworkedRokuoganAbility.INSTANCE,
-                                ReworkedShiganAbility.INSTANCE,
-                                ReworkedSoruAbility.INSTANCE,
-                                ReworkedTekkaiAbility.INSTANCE
-                        });
-
-                        return (I) new RaceId(info, true, 4);
-                    };
-                }
-                return null;
+                return (I) new RaceId(info, true, 1);
             };
         }
-    }}
+        RegistryObject<I> reg = RACES.register(resourceName, modifiedRace);
+        cir.setReturnValue(reg);
+    }
+}

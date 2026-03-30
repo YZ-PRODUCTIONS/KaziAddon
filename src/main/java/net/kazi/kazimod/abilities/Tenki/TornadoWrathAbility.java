@@ -96,10 +96,10 @@ public class TornadoWrathAbility extends Ability {
     private static final int    GALE_COOLDOWN      = 700;
 
     // ── Thunderous Wrath stats ────────────────────────────────────────────────
-    private static final float  THUNDER_DASH_TIME  = 70.0F;
+    private static final float  THUNDER_DASH_TIME  = 40.0F;
     private static final float  THUNDER_DASH_SPEED = 1.35F;
     private static final int    THUNDER_COOLDOWN   = 700;
-    private static final float  BOLT_DAMAGE        = 10.0F;
+    private static final float  BOLT_DAMAGE        = 5.0F;
     private static final int    BOLT_INNER_LIFE    = 12;
     private static final int    BOLT_OUTER_LIFE    = 18;
 

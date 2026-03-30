@@ -4,13 +4,12 @@ package net.kazi.kazimod.init;
 import net.kazi.kazimod.abilities.AwaRework.GoldenHourRework;
 import net.kazi.kazimod.abilities.AxeStyleRework.*;
 import net.kazi.kazimod.abilities.BaneRework.SpringSnipeRework;
+import net.kazi.kazimod.abilities.BaraRework.KuchuKirimomiDaiCircusRework;
 import net.kazi.kazimod.abilities.BariRework.BarrierGuardAbility;
+import net.kazi.kazimod.abilities.BlacklegRework.AntiMatterKickCourseRework;
 import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
 import net.kazi.kazimod.abilities.BomuRework.*;
-import net.kazi.kazimod.abilities.BrawlerRework.FistsOfLoveBarrageRework;
-import net.kazi.kazimod.abilities.BrawlerRework.GalaxyImpactRework;
-import net.kazi.kazimod.abilities.BrawlerRework.SpinningBrawlRework;
-import net.kazi.kazimod.abilities.BrawlerRework.SuplexRework;
+import net.kazi.kazimod.abilities.BrawlerRework.*;
 import net.kazi.kazimod.abilities.BuddhaRework.HitoDaibutsuPointRework;
 import net.kazi.kazimod.abilities.ChiyuRework.ChiyupopoRework;
 import net.kazi.kazimod.abilities.DekaRework.DekaDekaRework;
@@ -21,10 +20,15 @@ import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
 import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.GoroRework.ElThorRework;
 import net.kazi.kazimod.abilities.GoroRework.SangoRework;
+import net.kazi.kazimod.abilities.HakiRework.BusoshokuHakiFullBodyHardeningRework;
+import net.kazi.kazimod.abilities.HakiRework.HakiSenseAbility;
+import net.kazi.kazimod.abilities.HakiRework.KenbunshokuHakiFutureSightRework;
+import net.kazi.kazimod.abilities.HieRework.IceAgeRework;
 import net.kazi.kazimod.abilities.HoroRework.MiniHollowRework;
 import net.kazi.kazimod.abilities.HoroRework.NegativeHollowRework;
 import net.kazi.kazimod.abilities.HoroRework.TokuHollowRework;
 import net.kazi.kazimod.abilities.HumanRework.KamieRework;
+import net.kazi.kazimod.abilities.HumanRework.SoruRework;
 import net.kazi.kazimod.abilities.ItoRework.GodThreadRework;
 import net.kazi.kazimod.abilities.JikiRework.DamnedPunkRework;
 import net.kazi.kazimod.abilities.JikiRework.GenocideRaidRework;
@@ -137,7 +141,6 @@ public class KaziAbilities {
             FutenrakuRework.INSTANCE,
             PredatorsThrowRework.INSTANCE,
             YasotakeruRework.INSTANCE,
-            GalaxyImpactRework.INSTANCE,
             BlackHoleRework.INSTANCE,
             GodThreadRework.INSTANCE,
             GomuGomuNoRedRocAbility.INSTANCE,
@@ -171,6 +174,7 @@ public class KaziAbilities {
             CleaveAbility.INSTANCE,
             SpiderwebCleaveAbility.INSTANCE,
             FistsOfLoveBarrageRework.INSTANCE,
+            GalaxyImpactRework.INSTANCE,
             DomainExpansionMalevolentShrine.INSTANCE,
             FugaAbility.INSTANCE,
             FoxfireStyleAbility.INSTANCE,
@@ -253,7 +257,15 @@ public class KaziAbilities {
             ShamblesRework.INSTANCE,
             MaxAccelerationRework.INSTANCE,
             RadioKnifeRework.INSTANCE,
-            KamieRework.INSTANCE
+            KamieRework.INSTANCE,
+            SoruRework.INSTANCE,
+            IceAgeRework.INSTANCE,
+            JinshinHoRework.INSTANCE,
+            AntiMatterKickCourseRework.INSTANCE,
+            KuchuKirimomiDaiCircusRework.INSTANCE,
+            BusoshokuHakiFullBodyHardeningRework.INSTANCE,
+            KenbunshokuHakiFutureSightRework.INSTANCE,
+            HakiSenseAbility.INSTANCE
 
 
 

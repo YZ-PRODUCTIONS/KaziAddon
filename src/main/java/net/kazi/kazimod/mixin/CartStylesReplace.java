@@ -13,11 +13,9 @@ import net.MrMagicalCart.cartaddon.abilities.trident.SpinStanceAbility;
 import net.MrMagicalCart.cartaddon.abilities.trident.WideSlashAbility;
 import net.MrMagicalCart.cartaddon.init.CartResources;
 import net.kazi.kazimod.abilities.AxeStyleRework.*;
+import net.kazi.kazimod.abilities.BlacklegRework.AntiMatterKickCourseRework;
 import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
-import net.kazi.kazimod.abilities.BrawlerRework.FistsOfLoveBarrageRework;
-import net.kazi.kazimod.abilities.BrawlerRework.GalaxyImpactRework;
-import net.kazi.kazimod.abilities.BrawlerRework.SpinningBrawlRework;
-import net.kazi.kazimod.abilities.BrawlerRework.SuplexRework;
+import net.kazi.kazimod.abilities.BrawlerRework.*;
 import net.kazi.kazimod.abilities.DoctorRework.*;
 import net.kazi.kazimod.abilities.NitoryuRework.NitoryuIaiRashomonRework;
 import net.kazi.kazimod.abilities.NitoryuRework.SaiKuruRework;
@@ -50,7 +48,7 @@ import xyz.pixelatedw.mineminenomi.init.ModResources;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import xyz.pixelatedw.mineminenomi.wypi.WyRegistry;
 
-@Mixin({WyRegistry.class})
+@Mixin(value = WyRegistry.class, remap = false)
 public abstract class CartStylesReplace {
 
     @Shadow
@@ -153,7 +151,7 @@ public abstract class CartStylesReplace {
                         QueenPunchAbility.INSTANCE,
                         ReworkedGenkotsuMeteorAbility.INSTANCE,
                         ReworkedHakaiHoAbility.INSTANCE,
-                        ReworkedJishinHoAbility.INSTANCE,
+                        JinshinHoRework.INSTANCE,
                         SpinningBrawlRework.INSTANCE,
                         SuplexRework.INSTANCE
                 });
@@ -172,7 +170,7 @@ public abstract class CartStylesReplace {
 
                 info.addTopAbilities(new AbilityCore[]{
                         BeoufBurstAbility.INSTANCE,
-                        CartAntiMannerKickCourseAbility.INSTANCE,
+                        AntiMatterKickCourseRework.INSTANCE,
                         CartBienCuitGrillShotAbility.INSTANCE,
                         CartConcasseAbility.INSTANCE,
                         CartDiableJambeAbility.INSTANCE,

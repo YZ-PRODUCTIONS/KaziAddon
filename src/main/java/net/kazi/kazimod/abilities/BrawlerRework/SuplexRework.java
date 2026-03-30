@@ -50,16 +50,16 @@ public class SuplexRework extends Ability {
     private static final int   PULL_TIME   = 200;
     private static final int   CHARGE_TIME = 20;
     private static final float COOLDOWN    = 180.0F;
-    private static final float DAMAGE      = 50.0F;
+    private static final float DAMAGE      = 40.0F;
 
     // ── Dash tuning ───────────────────────────────────────────────────────────
-    private static final float DASH_DURATION      = 40.0F; // ticks — was 30, longer dash window
+    private static final float DASH_DURATION      = 20.0F; // ticks — was 30, longer dash window
     private static final double DASH_SPEED_GROUND = 5.0;   // was 4.0
     private static final double DASH_SPEED_AIR    = 4.0;   // was 3.0
 
     // ── Grab tuning ───────────────────────────────────────────────────────────
-    private static final float GRAB_REACH  = 8.0F;  // was 5.5 — forward reach
-    private static final float GRAB_WIDTH  = 4.5F;  // was 2.5 — lateral width
+    private static final float GRAB_REACH  = 4.0F;  // was 5.5 — forward reach
+    private static final float GRAB_WIDTH  = 2.2F;  // was 2.5 — lateral width
 
     public static final AbilityCore<SuplexRework> INSTANCE;
 
@@ -133,7 +133,7 @@ public class SuplexRework extends Ability {
                 this.grabComponent.release(entity);
             }
             if (!this.grabComponent.canContinueGrab(entity)) {
-                super.cooldownComponent.startCooldown(entity, 120.0F);
+                super.cooldownComponent.startCooldown(entity, 180.0F);
             } else {
                 this.chargeComponent.startCharging(entity, (float) CHARGE_TIME);
             }

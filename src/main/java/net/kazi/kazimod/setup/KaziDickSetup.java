@@ -7,6 +7,7 @@ import net.MrMagicalCart.cartaddon.abilities.gasuextra.ReworkedGastilleAbility;
 import net.MrMagicalCart.cartaddon.abilities.gasuextra.ReworkedKarakuniAbility;
 import net.MrMagicalCart.cartaddon.abilities.goroextra.ReworkedElThorAbility;
 import net.MrMagicalCart.cartaddon.abilities.goroextra.ReworkedSangoAbility;
+import net.MrMagicalCart.cartaddon.abilities.hieextra.IceAge2Ability;
 import net.MrMagicalCart.cartaddon.abilities.hitodaibutsuextra.ReworkedHitoDaibutsuPointAbility;
 import net.MrMagicalCart.cartaddon.abilities.inukitsune.FoxAssaultAbility;
 import net.MrMagicalCart.cartaddon.abilities.inukitsune.FoxfireBallAbility;
@@ -32,6 +33,7 @@ import net.MrMagicalCart.cartaddon.init.CartAbilities;
 import net.kazi.kazimod.KaziMod;
 import net.kazi.kazimod.abilities.AwaRework.GoldenHourRework;
 import net.kazi.kazimod.abilities.BaneRework.SpringSnipeRework;
+import net.kazi.kazimod.abilities.BaraRework.KuchuKirimomiDaiCircusRework;
 import net.kazi.kazimod.abilities.BariRework.BarrierGuardAbility;
 import net.kazi.kazimod.abilities.BomuRework.*;
 import net.kazi.kazimod.abilities.BuddhaRework.HitoDaibutsuPointRework;
@@ -43,6 +45,7 @@ import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
 import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.GoroRework.ElThorRework;
 import net.kazi.kazimod.abilities.GoroRework.SangoRework;
+import net.kazi.kazimod.abilities.HieRework.IceAgeRework;
 import net.kazi.kazimod.abilities.HoroRework.MiniHollowRework;
 import net.kazi.kazimod.abilities.HoroRework.NegativeHollowRework;
 import net.kazi.kazimod.abilities.HoroRework.TokuHollowRework;
@@ -92,6 +95,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.pixelatedw.mineminenomi.abilities.awa.GoldenHourAbility;
 import xyz.pixelatedw.mineminenomi.abilities.bane.SpringSnipeAbility;
+import xyz.pixelatedw.mineminenomi.abilities.bara.KuchuKirimomiDaiCircusAbility;
 import xyz.pixelatedw.mineminenomi.abilities.beta.BetaLauncherAbility;
 import xyz.pixelatedw.mineminenomi.abilities.bomu.ExplosivePunchAbility;
 import xyz.pixelatedw.mineminenomi.abilities.bomu.KickBombAbility;
@@ -336,6 +340,23 @@ public class KaziDickSetup {
         FruitAbilityInjector.addAbilities(ModAbilities.PIKA_PIKA_NO_MI,
                 MaxAccelerationRework.INSTANCE
         );
+
+        // ── HIE HIE NO MI ───────────────────────────────────
+        FruitAbilityInjector.removeAbilities(ModAbilities.HIE_HIE_NO_MI,
+                IceAge2Ability.INSTANCE
+        );
+        FruitAbilityInjector.addAbilities(ModAbilities.HIE_HIE_NO_MI,
+                IceAgeRework.INSTANCE
+        );
+
+        // ── BARA BARA NO MI ───────────────────────────────────
+        FruitAbilityInjector.removeAbilities(ModAbilities.BARA_BARA_NO_MI,
+                KuchuKirimomiDaiCircusAbility.INSTANCE
+        );
+        FruitAbilityInjector.addAbilities(ModAbilities.BARA_BARA_NO_MI,
+                KuchuKirimomiDaiCircusRework.INSTANCE
+        );
+
 
         // Rebuild ability-to-fruit map after all injections are done
         AwakeningAbilityLoginFix.invalidateCache();

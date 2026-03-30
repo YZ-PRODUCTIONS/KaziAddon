@@ -9,6 +9,7 @@
     "CartStylesReplace",
     "CartRaceReplace",
     "AbilityUnlockBlocker",
+    "MorphAbility2Accessor",
     "AkumaNoMiBoxMixin"
   ],
   "client": [

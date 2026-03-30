@@ -256,5 +256,17 @@
   "ability.kazimod.shambles": "Shambles",
   "ability.kazimod.max_acceleration": "Max Acceleration",
   "ability.kazimod.kamie": "Kami-E",
-  "ability.kazimod.radio_knife": "Radio Knife"
+  "ability.kazimod.radio_knife": "Radio Knife",
+  "ability.kazimod.soru": "Soru",
+  "ability.kazimod.ice_age": "Ice Age",
+  "ability.kazimod.jishin_ho": "Jishin Ho",
+  "ability.kazimod.antimanner_kick_course": "Antimanner Kick Course",
+  "ability.kazimod.kuchu_kirimomi_dai_circus": "Kuchu Kirimomi Dai Circus",
+  "ability.kazimod.busoshoku_haki_full_body_hardening": "Busoshoku Haki: Full Body Hardening",
+  "ability.kazimod.kenbunshoku_haki_future_sight": "Kenbunshoku Haki: Future Sight",
+  "ability.kazimod.haki_sense": "Haki Sense",
+  "ability.kazimod.haki_sense.description.0": "Sense nearby presences with Haki. Stronger foes feel terrifying, weaker ones feel faint.",
+  "ability.kazimod.haoshoku_haki_infusion": "Haoshoku Haki: Infusion",
+  "ability.kazimod.busoshoku_haki_hardening": "Busoshoku Haki: Hardening",
+  "ability.kazimod.busoshoku_haki_imbuing": "Busoshoku Haki: Imbuing"
 }

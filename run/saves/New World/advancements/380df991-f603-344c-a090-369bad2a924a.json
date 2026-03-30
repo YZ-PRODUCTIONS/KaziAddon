@@ -1,7 +1,41 @@
 {
+  "minecraft:husbandry/root": {
+    "criteria": {
+      "consumed_item": "2026-03-29 12:21:09 -0700"
+    },
+    "done": true
+  },
+  "mineminenomi:adventure/haki_master": {
+    "criteria": {
+      "unlock_busoshoku_imbuing": "2026-03-28 20:24:50 -0700",
+      "unlock_kenbunshoku_aura": "2026-03-28 20:24:50 -0700",
+      "unlock_busoshoku_internal_destruction": "2026-03-28 20:24:50 -0700",
+      "unlock_kenbunshoku_future_sight": "2026-03-28 20:24:50 -0700",
+      "unlock_busoshoku_emission": "2026-03-28 20:24:50 -0700",
+      "unlock_busoshoku_fullbody": "2026-03-28 20:24:50 -0700",
+      "unlock_busoshoku_hardening": "2026-03-28 20:24:50 -0700"
+    },
+    "done": true
+  },
+  "mineminenomi:adventure/whats_kairoseki": {
+    "criteria": {
+      "unlock_busoshoku_hardening": "2026-03-28 20:24:50 -0700"
+    },
+    "done": true
+  },
+  "mineminenomi:devil_fruits/root": {
+    "criteria": {
+      "eat_fruit": "2026-03-29 12:21:09 -0700"
+    },
+    "done": true
+  },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "minecraft:forest": "2026-03-02 15:40:50 -0800"
+      "minecraft:forest": "2026-03-29 12:15:34 -0700",
+      "minecraft:taiga": "2026-03-29 12:15:37 -0700",
+      "minecraft:river": "2026-03-29 17:39:01 -0700",
+      "minecraft:wooded_hills": "2026-03-29 17:38:12 -0700",
+      "minecraft:plains": "2026-03-28 20:24:44 -0700"
     },
     "done": false
   },
