@@ -153,7 +153,7 @@ public abstract class CartStylesReplace {
                         ReworkedHakaiHoAbility.INSTANCE,
                         JinshinHoRework.INSTANCE,
                         SpinningBrawlRework.INSTANCE,
-                        SuplexRework.INSTANCE
+                        ReworkedSuplexAbility.INSTANCE
                 });
 
                 info.addBottomAbilities(new AbilityCore[0]);

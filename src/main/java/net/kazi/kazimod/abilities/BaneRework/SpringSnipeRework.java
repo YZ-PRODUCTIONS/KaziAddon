@@ -33,8 +33,8 @@ import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 public class SpringSnipeRework extends Ability {
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "spring_snipe", new Pair[]{ImmutablePair.of("Turning the user's forelegs into springs, they can launch themselves directly at the opponent", (Object)null)});
     private static final int CHARGE_TIME = 10;
-    private static final float MIN_COOLDOWN = 60.0F;  // 4 seconds (20 ticks/sec)
-    private static final float MAX_COOLDOWN = 140.0F; // 12 seconds
+    private static final float MIN_COOLDOWN = 100.0F;  // 4 seconds (20 ticks/sec)
+    private static final float MAX_COOLDOWN = 160.0F; // 12 seconds
     private static final float RANGE = 1.6F;
     private static final float DAMAGE = 5.0F;
     public static final AbilityCore<SpringSnipeRework> INSTANCE;

@@ -22,6 +22,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.StackComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
@@ -153,6 +154,10 @@ public class PropellingBlastsAbility extends Ability {
         this.hadGravity = nbt.getBoolean("hadGravity");
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = (new AbilityCore.Builder("Propelling Blasts", AbilityCategory.DEVIL_FRUITS, PropellingBlastsAbility::new))
                 .addDescriptionLine(DESCRIPTION)
@@ -161,6 +166,7 @@ public class PropellingBlastsAbility extends Ability {
                         AbilityHelper.createShortLongCooldownStat(SHORT_COOLDOWN_PER_STACK, LONG_COOLDOWN_PER_STACK),
                         StackComponent.getTooltip(MAX_STACKS)
                 })
+                .setUnlockCheck(PropellingBlastsAbility::canUnlock)
                 .setSourceHakiNature(SourceHakiNature.HARDENING)
                 .setSourceElement(SourceElement.EXPLOSION)
                 .build();

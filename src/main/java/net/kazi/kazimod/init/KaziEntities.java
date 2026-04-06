@@ -1,7 +1,10 @@
 package net.kazi.kazimod.init;
 
 import net.kazi.kazimod.entities.*;
+import net.kazi.kazimod.entities.boss.bakugo.BakugoBossEntity;
+import net.kazi.kazimod.entities.boss.aizen.AizenBossEntity;
 import net.kazi.kazimod.entities.boss.gojo.GojoBossEntity;
+import net.kazi.kazimod.entities.boss.law.LawBossEntity;
 import net.kazi.kazimod.entities.boss.luffy.LuffyBossEntity;
 import net.kazi.kazimod.entities.boss.sukuna.SukunaBossEntity;
 import net.kazi.kazimod.entities.projectiles.*;
@@ -54,6 +57,34 @@ public class KaziEntities {
                             .setUpdateInterval(1)
                             .noSummon()
                             .build("time_bubble"));
+
+    public static final RegistryObject<EntityType<KurohitsugiEntity>> KUROHITSUGI =
+            ENTITY_TYPES.register("kurohitsugi", () ->
+                    EntityType.Builder.<KurohitsugiEntity>of(KurohitsugiEntity::new, EntityClassification.MISC)
+                            .sized(2.5f, 5.0f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .build("kurohitsugi"));
+
+    public static final RegistryObject<EntityType<KurohitsugiSpikeEntity>> KUROHITSUGI_SPIKE =
+            ENTITY_TYPES.register("kurohitsugi_spike", () ->
+                    EntityType.Builder.<KurohitsugiSpikeEntity>of(KurohitsugiSpikeEntity::new, EntityClassification.MISC)
+                            .sized(1.0f, 4.0f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .build("kurohitsugi_spike"));
+
+    public static final RegistryObject<EntityType<GoryutenmetsuDragonEntity>> GORYUTENMETSU_DRAGON =
+            ENTITY_TYPES.register("goryutenmetsu_dragon", () ->
+                    EntityType.Builder.<GoryutenmetsuDragonEntity>of(GoryutenmetsuDragonEntity::new, EntityClassification.MISC)
+                            .sized(3.5f, 3.5f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .noSave()
+                            .build("goryutenmetsu_dragon"));
 
     public static final RegistryObject<EntityType<WhiteTornadoEntity>> WHITE_TORNADO =
             ENTITY_TYPES.register("white_tornado", () ->
@@ -114,6 +145,7 @@ public class KaziEntities {
                     EntityType.Builder.<GojoBossEntity>of(GojoBossEntity::new, EntityClassification.MONSTER)
                             .sized(1.0f, 2.5f)
                             .clientTrackingRange(80)
+                            .noSave()
                             .build("gojo_boss"));
 
     public static final RegistryObject<EntityType<SukunaBossEntity>> SUKUNA_BOSS =
@@ -121,6 +153,7 @@ public class KaziEntities {
                     EntityType.Builder.<SukunaBossEntity>of(SukunaBossEntity::new, EntityClassification.MONSTER)
                             .sized(1.0f, 2.5f)
                             .clientTrackingRange(80)
+                            .noSave()
                             .build("sukuna_boss"));
 
     public static final RegistryObject<EntityType<LuffyBossEntity>> LUFFY_BOSS =
@@ -128,7 +161,32 @@ public class KaziEntities {
                     EntityType.Builder.<LuffyBossEntity>of(LuffyBossEntity::new, EntityClassification.MONSTER)
                             .sized(1.0f, 2.5f)
                             .clientTrackingRange(80)
+                            .noSave()
                             .build("luffy_boss"));
+
+    public static final RegistryObject<EntityType<BakugoBossEntity>> BAKUGO_BOSS =
+            ENTITY_TYPES.register("bakugo_boss", () ->
+                    EntityType.Builder.<BakugoBossEntity>of(BakugoBossEntity::new, EntityClassification.MONSTER)
+                            .sized(0.6f, 1.95f)
+                            .clientTrackingRange(80)
+                            .noSave()
+                            .build("bakugo_boss"));
+
+    public static final RegistryObject<EntityType<LawBossEntity>> LAW_BOSS =
+            ENTITY_TYPES.register("law_boss", () ->
+                    EntityType.Builder.<LawBossEntity>of(LawBossEntity::new, EntityClassification.MONSTER)
+                            .sized(1.0f, 2.2f)
+                            .clientTrackingRange(80)
+                            .noSave()
+                            .build("law_boss"));
+
+    public static final RegistryObject<EntityType<AizenBossEntity>> AIZEN_BOSS =
+            ENTITY_TYPES.register("aizen_boss", () ->
+                    EntityType.Builder.<AizenBossEntity>of(AizenBossEntity::new, EntityClassification.MONSTER)
+                            .sized(0.6f, 1.95f)
+                            .clientTrackingRange(80)
+                            .noSave()
+                            .build("aizen_boss"));
 
     public static final RegistryObject<EntityType<VegapunkTraderEntity>> VEGAPUNK_TRADER =
             ENTITY_TYPES.register("vegapunk_trader", () ->

@@ -79,11 +79,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import xyz.pixelatedw.mineminenomi.abilities.CommandAbility;
+import xyz.pixelatedw.mineminenomi.abilities.haki.BusoshokuHakiHardeningAbility;
 import xyz.pixelatedw.mineminenomi.abilities.rokushiki.GeppoAbility;
 import xyz.pixelatedw.mineminenomi.abilities.rokushiki.KamieAbility;
 import xyz.pixelatedw.mineminenomi.abilities.rokushiki.SoruAbility;
@@ -147,6 +149,8 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
     private static final UUID BLACK_BOX_COOLDOWN_BONUS_UUID = UUID.fromString("8459d1b9-2362-4c63-b89c-af761a6c9f18");
     private static final DataParameter<Integer> SHADOWS =
             EntityDataManager.defineId(ShadowDoppelmanEntity.class, DataSerializers.INT);
+    private static final DataParameter<Boolean> PLAYER_ILLUSION =
+            EntityDataManager.defineId(ShadowDoppelmanEntity.class, DataSerializers.BOOLEAN);
     private static final Set<String> KAGE_COPY_PATHS = new HashSet<>(Arrays.asList(
             "black_box",
             "brick_bat",
@@ -164,6 +168,21 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
             "sky_splitter_descent",
             "foxfire_style",
             "radiant_slice"
+    ));
+    private static final Set<String> CLONE_SUMMON_ABILITY_PATHS = new HashSet<>(Arrays.asList(
+            "illusion_clone_barrage",
+            "invisible_execution",
+            "illusion_counter"
+    ));
+    private static final Set<String> KYOKA_ABILITY_PATHS = new HashSet<>(Arrays.asList(
+            "kanzen_saimin",
+            "hado_90_kurohitsugi",
+            "kurohitsugi",
+            "hado_99_goryutenmetsu",
+            "goryutenmetsu",
+            "illusion_clone_barrage",
+            "invisible_execution",
+            "illusion_counter"
     ));
 
     @Nullable
@@ -267,6 +286,7 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SHADOWS, 0);
+        this.entityData.define(PLAYER_ILLUSION, false);
     }
 
     @Override
@@ -533,7 +553,47 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
             return currentOwner.getLastHurtByMob();
         }
 
+        LivingEntity aimedTarget = findCommandedTargetInFront(currentOwner, 20.0D);
+        if (aimedTarget != null) {
+            return aimedTarget;
+        }
+
         return this.getTarget();
+    }
+
+    @Nullable
+    private LivingEntity findCommandedTargetInFront(LivingEntity owner, double range) {
+        Vector3d eyePos = owner.getEyePosition(1.0F);
+        Vector3d look = owner.getLookAngle();
+        AxisAlignedBB searchBox = owner.getBoundingBox().inflate(range, 8.0D, range);
+        LivingEntity bestTarget = null;
+        double bestScore = Double.NEGATIVE_INFINITY;
+
+        for (LivingEntity candidate : this.level.getEntitiesOfClass(LivingEntity.class, searchBox)) {
+            if (!isValidHostileTarget(candidate) || !owner.canSee(candidate)) {
+                continue;
+            }
+
+            Vector3d toTarget = candidate.getEyePosition(1.0F).subtract(eyePos);
+            double distance = toTarget.length();
+            if (distance <= 0.001D || distance > range) {
+                continue;
+            }
+
+            Vector3d direction = toTarget.normalize();
+            double alignment = look.dot(direction);
+            if (alignment < 0.55D) {
+                continue;
+            }
+
+            double score = alignment * 1000.0D - distance;
+            if (score > bestScore) {
+                bestScore = score;
+                bestTarget = candidate;
+            }
+        }
+
+        return bestTarget;
     }
 
     @Override
@@ -571,6 +631,7 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
             nbt.putUUID("ownerId", this.ownerId);
         }
         nbt.putInt("shadows", this.entityData.get(SHADOWS));
+        nbt.putBoolean("playerIllusion", this.isPlayerIllusion());
     }
 
     @Override
@@ -580,6 +641,7 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
             this.ownerId = nbt.getUUID("ownerId");
         }
         this.entityData.set(SHADOWS, nbt.getInt("shadows"));
+        this.setPlayerIllusion(nbt.getBoolean("playerIllusion"));
     }
 
     @Override
@@ -588,6 +650,7 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
         if (this.ownerId != null) {
             buffer.writeUUID(this.ownerId);
         }
+        buffer.writeBoolean(this.isPlayerIllusion());
     }
 
     @Override
@@ -595,6 +658,7 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
         if (data.readBoolean()) {
             this.ownerId = data.readUUID();
         }
+        this.setPlayerIllusion(data.readBoolean());
     }
 
     @Override
@@ -639,6 +703,14 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
 
     public int getShadows() {
         return this.entityData.get(SHADOWS);
+    }
+
+    public void setPlayerIllusion(boolean value) {
+        this.entityData.set(PLAYER_ILLUSION, value);
+    }
+
+    public boolean isPlayerIllusion() {
+        return this.entityData.get(PLAYER_ILLUSION);
     }
 
     private boolean isValidHostileTarget(@Nullable LivingEntity target) {
@@ -709,6 +781,9 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
                 continue;
             }
             AbilityCore<?> core = passive.getCore();
+            if (core.getCategory() != AbilityCategory.STYLE) {
+                continue;
+            }
             if (!copied.add(core.getKey())) {
                 continue;
             }
@@ -723,6 +798,9 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
                 continue;
             }
             AbilityCore<?> core = ability.getCore();
+            if (core.getCategory() != AbilityCategory.STYLE) {
+                continue;
+            }
             if (!copied.add(core.getKey())) {
                 continue;
             }
@@ -759,20 +837,15 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
             if (!hasValidAbilityKey(core) || shouldSkipCopiedAbility(core)) {
                 continue;
             }
-            if (core.getCategory() != AbilityCategory.HAKI
-                    && core.getCategory() != AbilityCategory.RACIAL
-                    && !KAGE_COPY_PATHS.contains(core.getKey().getPath())) {
+            if (core.getCategory() != AbilityCategory.STYLE) {
                 continue;
             }
             if (!copied.add(core.getKey())) {
                 continue;
             }
             ensureEquippedInOpenSlot(core);
-            int priority = core.getCategory() == AbilityCategory.HAKI ? 0 : 1;
-            double maxDistance = core.getCategory() == AbilityCategory.HAKI ? 32.0 : 24.0;
-            int randomInterval = core.getCategory() == AbilityCategory.HAKI ? 2 : 3;
-            this.goalSelector.addGoal(priority,
-                    new ShadowCopiedAbilityGoal(this, (AbilityCore) core, 0.0, maxDistance, randomInterval));
+            this.goalSelector.addGoal(1,
+                    new ShadowCopiedAbilityGoal(this, (AbilityCore) core, 0.0, 24.0, 3));
         }
     }
 
@@ -785,10 +858,12 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
         ResourceLocation style = ownerStats.getFightingStyle();
         ResourceLocation race = ownerStats.getRace();
 
-        if (ownerData.hasUnlockedAbility(KamieAbility.INSTANCE)) {
-            ensureEquippedInOpenSlot(KamieAbility.INSTANCE);
-            this.goalSelector.addGoal(0, new KamieWrapperGoal(this));
+        if (ownerData.hasUnlockedAbility(BusoshokuHakiHardeningAbility.INSTANCE)
+                || ownerData.hasEquippedAbility(BusoshokuHakiHardeningAbility.INSTANCE)) {
+            ensureEquippedInOpenSlot(BusoshokuHakiHardeningAbility.INSTANCE);
+            this.goalSelector.addGoal(0, new AlwaysActiveAbilityWrapperGoal(this, BusoshokuHakiHardeningAbility.INSTANCE));
         }
+
         if (ownerData.hasUnlockedAbility(SoruAbility.INSTANCE)) {
             ensureEquippedInOpenSlot(SoruAbility.INSTANCE);
             this.goalSelector.addGoal(1, new SoruWrapperGoal(this));
@@ -796,23 +871,6 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
         if (ownerData.hasUnlockedAbility(GeppoAbility.INSTANCE)) {
             ensureEquippedInOpenSlot(GeppoAbility.INSTANCE);
             this.goalSelector.addGoal(1, new GeppoWrapperGoal(this));
-        }
-
-        if (ownerData.hasUnlockedAbility(xyz.pixelatedw.mineminenomi.abilities.haki.KenbunshokuHakiFutureSightAbility.INSTANCE)) {
-            ensureEquippedInOpenSlot(xyz.pixelatedw.mineminenomi.abilities.haki.KenbunshokuHakiFutureSightAbility.INSTANCE);
-            this.goalSelector.addGoal(0, new KenbunshokuHakiFutureSightWrapperGoal(this));
-        }
-        if (ownerData.hasUnlockedAbility(xyz.pixelatedw.mineminenomi.abilities.haki.HaoshokuHakiInfusionAbility.INSTANCE)) {
-            ensureEquippedInOpenSlot(xyz.pixelatedw.mineminenomi.abilities.haki.HaoshokuHakiInfusionAbility.INSTANCE);
-            this.goalSelector.addGoal(0, new HaoshokuHakiInfusionWrapperGoal(this));
-        }
-
-        if (ownerData.hasUnlockedAbility(xyz.pixelatedw.mineminenomi.abilities.haki.BusoshokuHakiInternalDestructionAbility.INSTANCE)) {
-            ensureEquippedInOpenSlot(xyz.pixelatedw.mineminenomi.abilities.haki.BusoshokuHakiInternalDestructionAbility.INSTANCE);
-            this.goalSelector.addGoal(0, new BusoshokuHakiInternalDestructionWrapperGoal(this));
-        } else if (ownerData.hasUnlockedAbility(xyz.pixelatedw.mineminenomi.abilities.haki.BusoshokuHakiHardeningAbility.INSTANCE)) {
-            ensureEquippedInOpenSlot(xyz.pixelatedw.mineminenomi.abilities.haki.BusoshokuHakiHardeningAbility.INSTANCE);
-            this.goalSelector.addGoal(0, new BusoshokuHakiHardeningWrapperGoal(this));
         }
 
         addStyleWrapperGoals(style, ownerData);
@@ -962,7 +1020,13 @@ public class ShadowDoppelmanEntity extends CreatureEntity implements ICommandRec
             return true;
         }
         String path = core.getKey().getPath();
-        return "doppelman".equals(path) || "kagemusha".equals(path) || FRUITLESS_ABILITY_PATHS.contains(path);
+        boolean isRegularHaoshoku = path != null && path.contains("haoshoku") && !path.contains("infusion");
+        return "doppelman".equals(path)
+                || "kagemusha".equals(path)
+                || isRegularHaoshoku
+                || KYOKA_ABILITY_PATHS.contains(path)
+                || CLONE_SUMMON_ABILITY_PATHS.contains(path)
+                || FRUITLESS_ABILITY_PATHS.contains(path);
     }
 
     private void applyStyleLoadout(ResourceLocation style) {

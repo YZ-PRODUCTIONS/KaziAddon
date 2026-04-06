@@ -3,6 +3,9 @@ package net.kazi.kazimod.init;
 import net.kazi.kazimod.entities.MalevolentShrineEntity;
 import net.kazi.kazimod.entities.ShadowDoppelmanEntity;
 import net.kazi.kazimod.entities.VegapunkTraderEntity;
+import net.kazi.kazimod.entities.boss.aizen.AizenBossEntity;
+import net.kazi.kazimod.entities.boss.bakugo.BakugoBossEntity;
+import net.kazi.kazimod.entities.boss.law.LawBossEntity;
 import net.kazi.kazimod.entities.boss.luffy.LuffyBossEntity;
 import net.kazi.kazimod.entities.boss.gojo.GojoBossEntity;
 import net.kazi.kazimod.entities.boss.sukuna.SukunaBossEntity;
@@ -22,6 +25,15 @@ public class KaziEntityAttributes {
 
         event.put(KaziEntities.LUFFY_BOSS.get(),
                 LuffyBossEntity.createAttributes().build());
+
+        event.put(KaziEntities.BAKUGO_BOSS.get(),
+                BakugoBossEntity.createAttributes().build());
+
+        event.put(KaziEntities.LAW_BOSS.get(),
+                LawBossEntity.createAttributes().build());
+
+        event.put(KaziEntities.AIZEN_BOSS.get(),
+                AizenBossEntity.createAttributes().build());
 
         event.put(KaziEntities.VEGAPUNK_TRADER.get(),
                 VegapunkTraderEntity.createAttributes().build());

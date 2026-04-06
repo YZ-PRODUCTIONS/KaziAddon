@@ -49,10 +49,11 @@ public class LapseBlueAbility extends Ability {
     private static final float COOLDOWN = 400.0F;
     private static final float PULL_CONTINUITY_TIME = 200.0F;
     private static final float CHARGE_TIME = 60.0F;
-    private static final float PULL_RANGE = 20.0F;
-    private static final float GRAB_INITIATE_DISTANCE = 8.0F;
+    private static final float PULL_RANGE = 25.0F;
+    private static final float GRAB_INITIATE_DISTANCE = 6.0F;
     private static final float PUNCH_DAMAGE = 10.0F;
     private static final float SLAM_DAMAGE = 25.0F;
+    private static final float SLAM_TELEPORT_DELAY = 20.0F;
 
     public static final AbilityCore<LapseBlueAbility> INSTANCE;
 
@@ -228,7 +229,7 @@ public class LapseBlueAbility extends Ability {
                             (Effect) ModEffects.DIZZY.get(), 10, 0, false, false));
                 }
 
-                if (!teleported && this.chargeComponent.getChargeTime() >= 40.0F) {
+                if (!teleported && this.chargeComponent.getChargeTime() >= SLAM_TELEPORT_DELAY) {
                     teleported = true;
                     entity.teleportTo(
                             slamTarget.getX(),

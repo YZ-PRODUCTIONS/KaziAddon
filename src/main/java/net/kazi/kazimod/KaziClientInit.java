@@ -1,7 +1,10 @@
 package net.kazi.kazimod;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.kazi.kazimod.client.renderers.BakugoBossRenderer;
+import net.kazi.kazimod.client.renderers.AizenBossRenderer;
 import net.kazi.kazimod.client.renderers.GojoBossRenderer;
+import net.kazi.kazimod.client.renderers.LawBossRenderer;
 import net.kazi.kazimod.client.renderers.LuffyBossRenderer;
 import net.kazi.kazimod.client.renderers.SukunaBossRenderer;
 import net.kazi.kazimod.effects.FlashbangEffect;
@@ -48,6 +51,18 @@ public final class KaziClientInit {
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.LUFFY_BOSS.get(),
                 LuffyBossRenderer::new
+        );
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.BAKUGO_BOSS.get(),
+                BakugoBossRenderer::new
+        );
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.LAW_BOSS.get(),
+                LawBossRenderer::new
+        );
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.AIZEN_BOSS.get(),
+                AizenBossRenderer::new
         );
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.SHADOW_DOPPELMAN.get(),

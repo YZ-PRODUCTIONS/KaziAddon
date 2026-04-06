@@ -34,6 +34,7 @@ import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModAbilityPools;
 import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
@@ -265,6 +266,10 @@ public class ExplosiveHoldAbility extends Ability {
         }
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     // ── Static registration ───────────────────────────────────────────────────
     static {
         INSTANCE = new AbilityCore.Builder<>("Explosive Hold", AbilityCategory.DEVIL_FRUITS, ExplosiveHoldAbility::new)
@@ -274,6 +279,7 @@ public class ExplosiveHoldAbility extends Ability {
                         CooldownComponent.getTooltip(COOLDOWN),
                         DealDamageComponent.getTooltip(HIT_DAMAGE)
                 })
+                .setUnlockCheck(ExplosiveHoldAbility::canUnlock)
                 .setSourceHakiNature(SourceHakiNature.SPECIAL)
                 .setSourceType(new SourceType[]{SourceType.INTERNAL})
                 .setSourceElement(SourceElement.SHOCKWAVE)

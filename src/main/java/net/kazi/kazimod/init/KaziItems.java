@@ -4,6 +4,12 @@ import net.kazi.kazimod.abilities.Koku.*;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
 import net.kazi.kazimod.abilities.Kake.LuckySlotAbility;
 import net.kazi.kazimod.abilities.Kake.SlotSpinAbility;
+import net.kazi.kazimod.abilities.Kyoka.IllusionCloneBarrageAbility;
+import net.kazi.kazimod.abilities.Kyoka.IllusionCounterAbility;
+import net.kazi.kazimod.abilities.Kyoka.InvisibleExecutionAbility;
+import net.kazi.kazimod.abilities.Kyoka.KanzenSaiminAbility;
+import net.kazi.kazimod.abilities.Kyoka.GoryutenmetsuAbility;
+import net.kazi.kazimod.abilities.Kyoka.KurohitsugiAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillBookCreationAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillHunterAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillRemoverAbility;
@@ -28,6 +34,7 @@ public class KaziItems {
     public static RegistryObject<AkumaNoMiItem> KOKU_KOKU_NO_MI;
     public static RegistryObject<AkumaNoMiItem> KAKE_KAKE_NO_MI;
     public static RegistryObject<AkumaNoMiItem> NUSU_NUSU_NO_MI;
+    public static RegistryObject<AkumaNoMiItem> KYOKA_KYOKA_NO_MI;
 
     /**
      * Reads the kazimod.toml config file directly from disk before Forge's
@@ -121,6 +128,19 @@ public class KaziItems {
                         SkillHunterAbility.INSTANCE,
                         SkillRemoverAbility.INSTANCE,
                         SkillBookCreationAbility.INSTANCE
+                )
+        );
+
+        KYOKA_KYOKA_NO_MI = KaziRegistry.registerItem(
+                "kyoka_kyoka_no_mi",
+                () -> new AkumaNoMiItem(
+                        "Kyoka Kyoka no Mi", 1, FruitType.PARAMECIA,
+                        KanzenSaiminAbility.INSTANCE,
+                        KurohitsugiAbility.INSTANCE,
+                        GoryutenmetsuAbility.INSTANCE,
+                        IllusionCloneBarrageAbility.INSTANCE,
+                        InvisibleExecutionAbility.INSTANCE,
+                        IllusionCounterAbility.INSTANCE
                 )
         );
     }

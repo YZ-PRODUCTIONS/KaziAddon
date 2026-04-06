@@ -49,10 +49,7 @@ public abstract class AkumaNoMiBoxMixin {
     }
 
     @Inject(
-            method = {
-                    "use(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;",
-                    "func_77659_a(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;"
-            },
+            method = "use(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;",
             at = @At("HEAD"),
             cancellable = true,
             require = 0

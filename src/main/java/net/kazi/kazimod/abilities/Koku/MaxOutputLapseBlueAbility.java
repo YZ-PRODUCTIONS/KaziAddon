@@ -27,6 +27,7 @@ import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.api.util.Interval;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
+import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
@@ -122,6 +123,9 @@ public class MaxOutputLapseBlueAbility extends Ability {
         LapseBlueProjectile proj = LapseBlueProjectile.ACTIVE_PROJECTILES.get(entity.getUUID());
         if (proj != null && proj.isAlive()) {
             AbilityHelper.slowEntityFall(entity);
+            AbilityHelper.setDeltaMovement(entity, 0.0, entity.getDeltaMovement().y, 0.0);
+            entity.addEffect(new net.minecraft.potion.EffectInstance(
+                    (net.minecraft.potion.Effect) ModEffects.MOVEMENT_BLOCKED.get(), 5, 0, false, false));
         }
     }
 

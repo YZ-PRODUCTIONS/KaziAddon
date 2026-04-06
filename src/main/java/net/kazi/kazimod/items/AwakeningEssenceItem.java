@@ -2,8 +2,10 @@ package net.kazi.kazimod.items;
 
 import net.kazi.kazimod.config.KaziConfig;
 import net.kazi.kazimod.entities.InfiniteVoidBarrierEntity;
+import net.kazi.kazimod.events.AwakeningEssenceDeathHandler;
 import net.kazi.kazimod.init.KaziEntities;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -26,17 +28,23 @@ import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.UUID;
 
 public class AwakeningEssenceItem extends Item {
-
     public static final String REGISTRY_NAME = "awakening_essence";
     public static final String SUMMONER_TAG  = "AwakeningEssenceSummoner";
     public static final String BARRIER_TAG   = "AwakeningBarrierUUID";
     public static final String SPHERE_TAG    = "AwakenningSphereUUID";
+    public static final String COOLDOWN_END_TAG = "AwakeningEssenceCooldownEnd";
+    public static final String ACTIVE_TRIAL_BOSS_TAG = "AwakeningTrialBossUUID";
+    private static final long TRIAL_COOLDOWN_MS = 5L * 60L * 1000L;
 
     private static final ResourceLocation KOKU_KOKU_NO_MI = new ResourceLocation("kazimod",     "koku_koku_no_mi");
     private static final ResourceLocation KAMA_KAMA_NO_MI = new ResourceLocation("cartaddon",   "kama_kama_no_mi");
     private static final ResourceLocation GOMU_GOMU_NO_MI = new ResourceLocation("mineminenomi","gomu_gomu_no_mi");
+    private static final ResourceLocation BOMU_BOMU_NO_MI = new ResourceLocation("mineminenomi","bomu_bomu_no_mi");
+    private static final ResourceLocation OPE_OPE_NO_MI = new ResourceLocation("mineminenomi","ope_ope_no_mi");
+    private static final ResourceLocation KYOKA_KYOKA_NO_MI = new ResourceLocation("kazimod", "kyoka_kyoka_no_mi");
 
     public AwakeningEssenceItem() {
         super(new Item.Properties()
@@ -53,6 +61,7 @@ public class AwakeningEssenceItem extends Item {
 
         ServerPlayerEntity player      = (ServerPlayerEntity) playerIn;
         ServerWorld        serverWorld = (ServerWorld) world;
+        long now = System.currentTimeMillis();
 
         // ── Validation — item is NOT consumed on any failure path ─────────────
 
@@ -70,8 +79,11 @@ public class AwakeningEssenceItem extends Item {
         boolean isKoku = fruit.isPresent() && KOKU_KOKU_NO_MI.equals(fruit.get());
         boolean isKama = fruit.isPresent() && KAMA_KAMA_NO_MI.equals(fruit.get());
         boolean isGomu = fruit.isPresent() && GOMU_GOMU_NO_MI.equals(fruit.get());
+        boolean isBomu = fruit.isPresent() && BOMU_BOMU_NO_MI.equals(fruit.get());
+        boolean isOpe = fruit.isPresent() && OPE_OPE_NO_MI.equals(fruit.get());
+        boolean isKyoka = fruit.isPresent() && KYOKA_KYOKA_NO_MI.equals(fruit.get());
 
-        if (!isKoku && !isKama && !isGomu) {
+        if (!isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka) {
             player.sendMessage(new StringTextComponent(
                             "\u00a7cOnly a user eligible for awakening can use this item."),
                     player.getUUID());
@@ -80,6 +92,24 @@ public class AwakeningEssenceItem extends Item {
 
         if (devilFruit.hasAwakenedFruit()) {
             player.sendMessage(new StringTextComponent("\u00a7eYour fruit is already awakened."),
+                    player.getUUID());
+            return ActionResult.fail(stack);
+        }
+
+        if (hasActiveTrial(serverWorld, player.getUUID())) {
+            player.sendMessage(new StringTextComponent(
+                            "\u00a7cYou already have an awakening challenge in progress."),
+                    player.getUUID());
+            return ActionResult.fail(stack);
+        }
+
+        long cooldownEnd = player.getPersistentData().getLong(COOLDOWN_END_TAG);
+        if (cooldownEnd > now) {
+            long remainingSeconds = Math.max(1L, (cooldownEnd - now + 999L) / 1000L);
+            long minutes = remainingSeconds / 60L;
+            long seconds = remainingSeconds % 60L;
+            player.sendMessage(new StringTextComponent(
+                            "\u00a7cYou must wait " + minutes + "m " + seconds + "s before starting another awakening challenge."),
                     player.getUUID());
             return ActionResult.fail(stack);
         }
@@ -126,10 +156,23 @@ public class AwakeningEssenceItem extends Item {
                     serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
             entranceSound = net.kazi.kazimod.init.KaziSounds.SUKUNA_BOSS_ENTRANCE_SFX.get();
         } else {
-            // isGomu
-            bossEntity = KaziEntities.LUFFY_BOSS.get().spawn(
-                    serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
-            entranceSound = net.kazi.kazimod.init.KaziSounds.LUFFY_BOSS_ENTRANCE_SFX.get();
+            if (isGomu) {
+                bossEntity = KaziEntities.LUFFY_BOSS.get().spawn(
+                        serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
+                entranceSound = net.kazi.kazimod.init.KaziSounds.LUFFY_BOSS_ENTRANCE_SFX.get();
+            } else if (isKyoka) {
+                bossEntity = KaziEntities.AIZEN_BOSS.get().spawn(
+                        serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
+                entranceSound = net.minecraft.util.SoundEvents.WITHER_SPAWN;
+            } else if (isOpe) {
+                bossEntity = KaziEntities.LAW_BOSS.get().spawn(
+                        serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
+                entranceSound = xyz.pixelatedw.mineminenomi.init.ModSounds.ROOM_CREATE_SFX.get();
+            } else {
+                bossEntity = KaziEntities.BAKUGO_BOSS.get().spawn(
+                        serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
+                entranceSound = net.minecraft.util.SoundEvents.GENERIC_EXPLODE;
+            }
         }
 
         if (bossEntity == null) {
@@ -140,6 +183,9 @@ public class AwakeningEssenceItem extends Item {
 
         // Tag boss with summoner UUID
         bossEntity.getPersistentData().putString(SUMMONER_TAG, player.getUUID().toString());
+        AwakeningEssenceDeathHandler.registerTrialBoss(bossEntity.getUUID());
+        player.getPersistentData().putString(ACTIVE_TRIAL_BOSS_TAG, bossEntity.getUUID().toString());
+        player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
 
         // Spawn barrier
         InfiniteVoidBarrierEntity barrier = new InfiniteVoidBarrierEntity(
@@ -155,7 +201,7 @@ public class AwakeningEssenceItem extends Item {
         sphere.moveTo(playerIn.getX(), playerIn.getY(), playerIn.getZ(), 0.0F, 0.0F);
         sphere.setRadius(150.0F);
         sphere.setColor(new Color(0, 0, 0, 180));
-        sphere.setDetailLevel(32);
+        sphere.setDetailLevel(16);
         serverWorld.addFreshEntity(sphere);
         bossEntity.getPersistentData().putString(SPHERE_TAG, sphere.getUUID().toString());
 
@@ -193,6 +239,38 @@ public class AwakeningEssenceItem extends Item {
                 return;
             }
         }
+    }
+
+    private static boolean hasActiveTrial(ServerWorld serverWorld, UUID playerUUID) {
+        if (serverWorld == null || serverWorld.getServer() == null) return false;
+
+        ServerPlayerEntity player = serverWorld.getServer().getPlayerList().getPlayer(playerUUID);
+        if (player == null) {
+            return false;
+        }
+
+        String bossUuidStr = player.getPersistentData().getString(ACTIVE_TRIAL_BOSS_TAG);
+        if (bossUuidStr == null || bossUuidStr.isEmpty()) {
+            return false;
+        }
+
+        UUID bossUUID;
+        try {
+            bossUUID = UUID.fromString(bossUuidStr);
+        } catch (IllegalArgumentException ignored) {
+            player.getPersistentData().remove(ACTIVE_TRIAL_BOSS_TAG);
+            return false;
+        }
+
+        for (ServerWorld world : serverWorld.getServer().getAllLevels()) {
+            Entity entity = world.getEntity(bossUUID);
+            if (entity != null && entity.isAlive()) {
+                return true;
+            }
+        }
+
+        player.getPersistentData().remove(ACTIVE_TRIAL_BOSS_TAG);
+        return false;
     }
 
     private BlockPos findSpawnPos(ServerWorld serverWorld, PlayerEntity player, int radius) {

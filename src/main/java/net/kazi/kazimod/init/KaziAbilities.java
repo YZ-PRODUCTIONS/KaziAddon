@@ -51,6 +51,12 @@ import net.kazi.kazimod.abilities.KitsuneRework.FoxAssaultRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireBallRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireExplosionRework;
 import net.kazi.kazimod.abilities.KitsuneRework.InuKitsuneWalkPointRework;
+import net.kazi.kazimod.abilities.Kyoka.IllusionCloneBarrageAbility;
+import net.kazi.kazimod.abilities.Kyoka.IllusionCounterAbility;
+import net.kazi.kazimod.abilities.Kyoka.InvisibleExecutionAbility;
+import net.kazi.kazimod.abilities.Kyoka.KanzenSaiminAbility;
+import net.kazi.kazimod.abilities.Kyoka.GoryutenmetsuAbility;
+import net.kazi.kazimod.abilities.Kyoka.KurohitsugiAbility;
 import net.kazi.kazimod.abilities.KobuRework.ShoureiRework;
 import net.kazi.kazimod.abilities.Koku.*;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
@@ -265,7 +271,13 @@ public class KaziAbilities {
             KuchuKirimomiDaiCircusRework.INSTANCE,
             BusoshokuHakiFullBodyHardeningRework.INSTANCE,
             KenbunshokuHakiFutureSightRework.INSTANCE,
-            HakiSenseAbility.INSTANCE
+            HakiSenseAbility.INSTANCE,
+            KanzenSaiminAbility.INSTANCE,
+            KurohitsugiAbility.INSTANCE,
+            GoryutenmetsuAbility.INSTANCE,
+            IllusionCloneBarrageAbility.INSTANCE,
+            InvisibleExecutionAbility.INSTANCE,
+            IllusionCounterAbility.INSTANCE
 
 
 
