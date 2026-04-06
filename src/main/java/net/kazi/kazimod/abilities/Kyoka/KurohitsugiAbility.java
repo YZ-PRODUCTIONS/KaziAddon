@@ -58,7 +58,7 @@ public class KurohitsugiAbility extends Ability {
     private static final float COOLDOWN = 800.0F;
     private static final float COFFIN_TIME = 32.0F;
     private static final float PULSE_DAMAGE = 10.0F;
-    private static final float FINAL_DAMAGE = 60.0F;
+    private static final float FINAL_DAMAGE = 61.0F;
     private static final double BOX_HALF_WIDTH = 7.5D;
     private static final double BOX_HEIGHT = 33.75D;
     private static final double SPIKE_LENGTH = 22.0D;
