@@ -55,6 +55,8 @@ public class KaziParticleTypes {
             KaziRegistry.registerParticleType("casino_chip_particle", SimpleParticleData::new);
     public static final RegistryObject<ParticleType<SimpleParticleData>> PLAYING_CARD =
             KaziRegistry.registerParticleType("playing_card_particle", SimpleParticleData::new);
+    public static final RegistryObject<ParticleType<SimpleParticleData>> PETAL_BLADE =
+            KaziRegistry.registerParticleType("petal_blade_particle", SimpleParticleData::new);
 
     public static void register(IEventBus eventBus) {
         KaziRegistry.PARTICLE_TYPES.register(eventBus);

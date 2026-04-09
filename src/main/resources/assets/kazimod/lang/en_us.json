@@ -268,5 +268,15 @@
   "ability.kazimod.haki_sense.description.0": "Sense nearby presences with Haki. Stronger foes feel terrifying, weaker ones feel faint.",
   "ability.kazimod.haoshoku_haki_infusion": "Haoshoku Haki: Infusion",
   "ability.kazimod.busoshoku_haki_hardening": "Busoshoku Haki: Hardening",
-  "ability.kazimod.busoshoku_haki_imbuing": "Busoshoku Haki: Imbuing"
+  "ability.kazimod.busoshoku_haki_imbuing": "Busoshoku Haki: Imbuing",
+  "ability.kazimod.silent_stride": "Silent Stride",
+  "ability.kazimod.silent_stride.description.0": "The user silences their presence, becoming invisible and gaining incredible speed for 6 seconds.",
+  "ability.kazimod.silent_slice": "Silent Slice",
+  "ability.kazimod.silent_slice.description.0": "The user fires an invisible air slash that cuts through enemies unseen.",
+  "ability.kazimod.silent_step": "Silent Step",
+  "ability.kazimod.silent_step.description.0": "The user silently teleports behind a target within 20 blocks, slashing their back and inflicting bleeding and slowness.",
+  "ability.kazimod.silent_box": "Silent Box",
+  "ability.kazimod.silent_box.description.0": "The user traps the enemy in a soundproof box, stunning them with blindness and silencing all sound around them.",
+  "ability.kazimod.silent_death": "Silent Death",
+  "ability.kazimod.silent_death.description.0": "The user launches a deadly poison orb. Enemies hit are afflicted with slowness, doku poison, and blindness."
 }

@@ -3,6 +3,7 @@ package net.kazi.kazimod.init;
 import net.MrMagicalCart.cartaddon.abilities.aowrework.entities.projectiles.WeatherCloudReworkEntity;
 import net.kazi.kazimod.entities.projectiles.CasinoProjectiles;
 import net.kazi.kazimod.entities.projectiles.CoinProjectile;
+import net.kazi.kazimod.entities.projectiles.PetalBladeProjectile;
 import net.kazi.kazimod.entities.projectiles.PlayingCardProjectile;
 import net.kazi.kazimod.entities.ShadowDoppelmanEntity;
 import net.kazi.kazimod.models.projectiles.DiceProjectileRenderer;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import xyz.pixelatedw.mineminenomi.models.abilities.CubeModel;
+import xyz.pixelatedw.mineminenomi.models.abilities.SphereModel;
 import xyz.pixelatedw.mineminenomi.renderers.abilities.AbilityProjectileRenderer;
 import xyz.pixelatedw.mineminenomi.particles.SimpleParticle;
 
@@ -114,6 +116,35 @@ public class KaziRenderers {
                 CasinoProjectiles.PLAYING_CARD.get(),
                 new PlayingCardRenderer.Factory());
 
+        // ── Saku Saku / Akuma Akuma projectile renderers ───────────────────────
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.PETAL_BLADE.get(),
+                (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.HELLBLAZE_PROJECTILE.get(),
+                (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.SLASH_WAVE.get(),
+                (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.DARK_SPEAR.get(),
+                (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
+
+        // ── Nagi Nagi no Mi projectile renderers ─────────────────────────────
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.SILENT_SLICE.get(),
+                (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.SILENT_DEATH.get(),
+                (new AbilityProjectileRenderer.Factory(new SphereModel()))
+                        .setColor(0.0F, 0.8F, 0.2F, 1.0F)
+                        .setScale(8.0)
+                        .setGlowing());
+
         // ── Particle engine registrations ─────────────────────────────────────
         ParticleManager pm = Minecraft.getInstance().particleEngine;
 
@@ -130,5 +161,6 @@ public class KaziRenderers {
         pm.register(KaziParticleTypes.COIN.get(),          new SimpleParticle.Factory(KaziResources.Coin));
         pm.register(KaziParticleTypes.CASINO_CHIP.get(),   new SimpleParticle.Factory(KaziResources.CasinoChip));
         pm.register(KaziParticleTypes.PLAYING_CARD.get(),  new SimpleParticle.Factory(KaziResources.PlayingCard));
+        pm.register(KaziParticleTypes.PETAL_BLADE.get(),   new SimpleParticle.Factory(KaziResources.PetalBlade));
     }
 }

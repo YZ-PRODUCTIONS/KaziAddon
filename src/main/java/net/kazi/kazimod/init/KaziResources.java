@@ -34,6 +34,7 @@ public class KaziResources {
     public static final ResourceLocation Coin;
     public static final ResourceLocation CasinoChip;
     public static final ResourceLocation PlayingCard;
+    public static final ResourceLocation PetalBlade;
 
     static {
         Dismantle              = new ResourceLocation("kazimod", "textures/particle/dismantle.png");
@@ -63,5 +64,6 @@ public class KaziResources {
         Coin                   = new ResourceLocation("kazimod", "textures/particle/coin.png");
         CasinoChip             = new ResourceLocation("kazimod", "textures/particle/casino_chip.png");
         PlayingCard            = new ResourceLocation("kazimod", "textures/particle/playing_card.png");
+        PetalBlade             = new ResourceLocation("kazimod", "textures/particle/petal_blade.png");
     }
 }
