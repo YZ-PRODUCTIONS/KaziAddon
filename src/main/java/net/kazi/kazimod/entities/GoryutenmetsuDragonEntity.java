@@ -24,6 +24,12 @@ public class GoryutenmetsuDragonEntity extends Entity {
             EntityDataManager.defineId(GoryutenmetsuDragonEntity.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> RENDER_ROLL =
             EntityDataManager.defineId(GoryutenmetsuDragonEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> COLOR_RED =
+            EntityDataManager.defineId(GoryutenmetsuDragonEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> COLOR_GREEN =
+            EntityDataManager.defineId(GoryutenmetsuDragonEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> COLOR_BLUE =
+            EntityDataManager.defineId(GoryutenmetsuDragonEntity.class, DataSerializers.FLOAT);
 
     public GoryutenmetsuDragonEntity(EntityType<? extends GoryutenmetsuDragonEntity> type, World world) {
         super(type, world);
@@ -31,8 +37,8 @@ public class GoryutenmetsuDragonEntity extends Entity {
         this.noCulling = true;
     }
 
-    public static GoryutenmetsuDragonEntity create(World world, double x, double y, double z, float scale, float alpha, int lifeTicks) {
-        GoryutenmetsuDragonEntity dragon = new GoryutenmetsuDragonEntity(KaziEntities.GORYUTENMETSU_DRAGON.get(), world);
+    public static GoryutenmetsuDragonEntity create(EntityType<? extends GoryutenmetsuDragonEntity> type, World world, double x, double y, double z, float scale, float alpha, int lifeTicks) {
+        GoryutenmetsuDragonEntity dragon = new GoryutenmetsuDragonEntity(type, world);
         dragon.setPos(x, y, z);
         dragon.entityData.set(SCALE, scale);
         dragon.entityData.set(ALPHA, alpha);
@@ -40,7 +46,14 @@ public class GoryutenmetsuDragonEntity extends Entity {
         dragon.entityData.set(RENDER_YAW, 0.0F);
         dragon.entityData.set(RENDER_PITCH, 0.0F);
         dragon.entityData.set(RENDER_ROLL, 0.0F);
+        dragon.entityData.set(COLOR_RED, 0.86F);
+        dragon.entityData.set(COLOR_GREEN, 0.74F);
+        dragon.entityData.set(COLOR_BLUE, 1.0F);
         return dragon;
+    }
+
+    public static GoryutenmetsuDragonEntity create(World world, double x, double y, double z, float scale, float alpha, int lifeTicks) {
+        return create(KaziEntities.GORYUTENMETSU_DRAGON.get(), world, x, y, z, scale, alpha, lifeTicks);
     }
 
     @Override
@@ -51,6 +64,9 @@ public class GoryutenmetsuDragonEntity extends Entity {
         this.entityData.define(RENDER_YAW, 0.0F);
         this.entityData.define(RENDER_PITCH, 0.0F);
         this.entityData.define(RENDER_ROLL, 0.0F);
+        this.entityData.define(COLOR_RED, 0.86F);
+        this.entityData.define(COLOR_GREEN, 0.74F);
+        this.entityData.define(COLOR_BLUE, 1.0F);
     }
 
     @Override
@@ -115,6 +131,24 @@ public class GoryutenmetsuDragonEntity extends Entity {
         this.entityData.set(RENDER_ROLL, roll);
     }
 
+    public float getColorRed() {
+        return this.entityData.get(COLOR_RED);
+    }
+
+    public float getColorGreen() {
+        return this.entityData.get(COLOR_GREEN);
+    }
+
+    public float getColorBlue() {
+        return this.entityData.get(COLOR_BLUE);
+    }
+
+    public void setColor(float red, float green, float blue) {
+        this.entityData.set(COLOR_RED, red);
+        this.entityData.set(COLOR_GREEN, green);
+        this.entityData.set(COLOR_BLUE, blue);
+    }
+
     @Override
     protected void readAdditionalSaveData(CompoundNBT nbt) {
         this.entityData.set(LIFE_TICKS, nbt.getInt("LifeTicks"));
@@ -123,6 +157,7 @@ public class GoryutenmetsuDragonEntity extends Entity {
         this.setRenderYaw(nbt.getFloat("Yaw"));
         this.setRenderPitch(nbt.getFloat("Pitch"));
         this.setRenderRoll(nbt.getFloat("Roll"));
+        this.setColor(nbt.getFloat("ColorRed"), nbt.getFloat("ColorGreen"), nbt.getFloat("ColorBlue"));
     }
 
     @Override
@@ -133,6 +168,9 @@ public class GoryutenmetsuDragonEntity extends Entity {
         nbt.putFloat("Yaw", this.yRot);
         nbt.putFloat("Pitch", this.xRot);
         nbt.putFloat("Roll", this.getRenderRoll());
+        nbt.putFloat("ColorRed", this.getColorRed());
+        nbt.putFloat("ColorGreen", this.getColorGreen());
+        nbt.putFloat("ColorBlue", this.getColorBlue());
     }
 
     @Override

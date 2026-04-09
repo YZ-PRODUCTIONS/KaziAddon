@@ -1,5 +1,6 @@
 package net.kazi.kazimod.entities.projectiles;
 
+import net.kazi.kazimod.init.KaziEntities;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +21,7 @@ public class ClusterProjectile extends AbilityProjectileEntity {
     }
 
     public ClusterProjectile(World world, LivingEntity player, Ability ability) {
-        super((EntityType) BomuProjectiles.CLUSTER.get(), world, player, ability);
+        super((EntityType) KaziEntities.CLUSTER.get(), world, player, ability);
         this.setDamage(12.0F);
         this.setPassThroughEntities();
         this.setMaxLife(30);

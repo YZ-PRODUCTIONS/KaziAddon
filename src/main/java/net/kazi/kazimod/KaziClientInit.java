@@ -20,6 +20,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import xyz.pixelatedw.mineminenomi.models.entities.projectiles.FistModel;
+import xyz.pixelatedw.mineminenomi.renderers.abilities.AbilityProjectileRenderer;
 
 public final class KaziClientInit {
 
@@ -79,6 +81,14 @@ public final class KaziClientInit {
                         return new ResourceLocation("mineminenomi", "textures/models/doppelman.png");
                     }
                 }
+        );
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.REWORKED_HIKEN.get(),
+                (new AbilityProjectileRenderer.Factory(new FistModel()))
+                        .setTexture("hiken")
+                        .setScale(10.0D)
+                        .setGlowing()
         );
 
         MinecraftForge.EVENT_BUS.register(FlashbangEffect.class);

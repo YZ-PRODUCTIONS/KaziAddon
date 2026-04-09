@@ -88,6 +88,7 @@ public class AwakeningEssenceDeathHandler {
             } finally {
                 AwakeningAbilityLoginFix.endAwakening(player.getUUID());
             }
+            AwakeningAbilityLoginFix.syncPlayerAwakeningReplacements(player);
 
             WyNetwork.sendTo(new SSyncDevilFruitPacket(player.getId(), devilFruit), player);
             player.sendMessage(new StringTextComponent(

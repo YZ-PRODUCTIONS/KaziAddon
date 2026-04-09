@@ -19,9 +19,6 @@ import xyz.pixelatedw.mineminenomi.models.entities.projectiles.OnibiModel;
 public class GoryutenmetsuDragonRenderer extends EntityRenderer<GoryutenmetsuDragonEntity> {
     private static final ResourceLocation TEXTURE =
             new ResourceLocation("minecraft", "textures/block/white_concrete.png");
-    private static final float CORE_RED = 0.86F;
-    private static final float CORE_GREEN = 0.74F;
-    private static final float CORE_BLUE = 1.0F;
     private final OnibiModel<GoryutenmetsuDragonEntity> model = new OnibiModel<>();
 
     public GoryutenmetsuDragonRenderer(EntityRendererManager manager) {
@@ -54,7 +51,8 @@ public class GoryutenmetsuDragonRenderer extends EntityRenderer<GoryutenmetsuDra
         this.model.setupAnim(entity, 0.0F, 0.0F, entity.tickCount + partialTicks, 0.0F, 0.0F);
 
         IVertexBuilder core = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE));
-        this.model.renderToBuffer(matrixStack, core, packedLight, OverlayTexture.NO_OVERLAY, CORE_RED, CORE_GREEN, CORE_BLUE, alpha);
+        this.model.renderToBuffer(matrixStack, core, packedLight, OverlayTexture.NO_OVERLAY,
+                entity.getColorRed(), entity.getColorGreen(), entity.getColorBlue(), alpha);
 
         matrixStack.popPose();
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);

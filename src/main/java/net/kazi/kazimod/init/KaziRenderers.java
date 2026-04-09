@@ -10,6 +10,7 @@ import net.kazi.kazimod.renderers.abilities.WeatherCloudReworkRenderer;
 import net.kazi.kazimod.renderers.abilities.WhiteTornadoRenderer;
 import net.kazi.kazimod.renderers.entities.*;
 import net.kazi.kazimod.models.projectiles.FugaProjectileRenderer;
+import net.kazi.kazimod.models.projectiles.HellfireBirdRenderer;
 import net.kazi.kazimod.init.KaziAnimations;
 import net.kazi.kazimod.init.KaziItemModelProps;
 import net.minecraft.client.Minecraft;
@@ -41,6 +42,10 @@ public class KaziRenderers {
                 FugaProjectileRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.HELLFIRE_BIRD.get(),
+                HellfireBirdRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.PUNCTURE_WILLE.get(),
                 (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
 
@@ -63,6 +68,10 @@ public class KaziRenderers {
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.GORYUTENMETSU_DRAGON.get(),
                 new GoryutenmetsuDragonRenderer.Factory());
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.MERA_FLAME_DRAGON.get(),
+                new MeraFlameDragonRenderer.Factory());
 
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.WHITE_TORNADO.get(),

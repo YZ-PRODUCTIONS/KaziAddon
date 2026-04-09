@@ -86,6 +86,16 @@ public class KaziEntities {
                             .noSave()
                             .build("goryutenmetsu_dragon"));
 
+    public static final RegistryObject<EntityType<GoryutenmetsuDragonEntity>> MERA_FLAME_DRAGON =
+            ENTITY_TYPES.register("mera_flame_dragon", () ->
+                    EntityType.Builder.<GoryutenmetsuDragonEntity>of(GoryutenmetsuDragonEntity::new, EntityClassification.MISC)
+                            .sized(5.0f, 5.0f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .noSave()
+                            .build("mera_flame_dragon"));
+
     public static final RegistryObject<EntityType<WhiteTornadoEntity>> WHITE_TORNADO =
             ENTITY_TYPES.register("white_tornado", () ->
                     EntityType.Builder.<WhiteTornadoEntity>of(WhiteTornadoEntity::new, EntityClassification.MISC)
@@ -131,6 +141,33 @@ public class KaziEntities {
                     EntityType.Builder.<PlayingCardProjectile>of(PlayingCardProjectile::new, EntityClassification.MISC)
                             .sized(0.8f, 0.05f)
                             .build("casino_playing_card"));
+
+    public static final RegistryObject<EntityType<ClusterProjectile>> CLUSTER =
+            ENTITY_TYPES.register("cluster", () ->
+                    EntityType.Builder.<ClusterProjectile>of(ClusterProjectile::new, EntityClassification.MISC)
+                            .sized(0.5f, 0.5f)
+                            .fireImmune()
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("cluster"));
+
+    public static final RegistryObject<EntityType<ReworkedHikenProjectile>> REWORKED_HIKEN =
+            ENTITY_TYPES.register("reworked_hiken", () ->
+                    EntityType.Builder.<ReworkedHikenProjectile>of(ReworkedHikenProjectile::new, EntityClassification.MISC)
+                            .sized(8.0f, 8.0f)
+                            .fireImmune()
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("reworked_hiken"));
+
+    public static final RegistryObject<EntityType<HellfireBirdProjectile>> HELLFIRE_BIRD =
+            ENTITY_TYPES.register("hellfire_bird", () ->
+                    EntityType.Builder.<HellfireBirdProjectile>of(HellfireBirdProjectile::new, EntityClassification.MISC)
+                            .sized(1.6f, 1.6f)
+                            .fireImmune()
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("hellfire_bird"));
 
     public static final RegistryObject<EntityType<GiantDiceEntity>> GIANT_DICE =
             ENTITY_TYPES.register("giant_dice", () ->
