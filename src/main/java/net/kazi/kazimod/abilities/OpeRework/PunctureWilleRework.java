@@ -27,6 +27,7 @@ import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
@@ -199,6 +200,10 @@ public class PunctureWilleRework extends Ability {
         this.setSwordStretch(entity, false, 1.0F);
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = new AbilityCore.Builder("Puncture Wille", AbilityCategory.DEVIL_FRUITS, PunctureWilleRework::new)
                 .addDescriptionLine(DESCRIPTION)
@@ -210,6 +215,7 @@ public class PunctureWilleRework extends Ability {
                 })
                 .setSourceElement(SourceElement.LIGHTNING)
                 .setSourceHakiNature(SourceHakiNature.SPECIAL)
+                .setUnlockCheck(PunctureWilleRework::canUnlock)
                 .build();
     }
 }

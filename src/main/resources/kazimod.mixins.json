@@ -9,8 +9,13 @@
     "CartStylesReplace",
     "CartRaceReplace",
     "AbilityUnlockBlocker",
+    "DevilFruitBaseMixin",
     "MorphAbility2Accessor",
-    "AkumaNoMiBoxMixin"
+    "AkumaNoMiBoxMixin",
+    "ReworkedTekkaiAbilityMixin",
+    "TekkaiToggleUseMixin",
+    "DawnbreakerDashAbilityMixin",
+    "CircleParryAbilityMixin"
   ],
   "client": [
     "client.KRoomSwordItemRendererMixin",

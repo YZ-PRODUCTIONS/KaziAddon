@@ -21,6 +21,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent.RangeType;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.init.ModParticleEffects;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
@@ -117,6 +118,10 @@ public class StunGrenadeAbility extends Ability {
         this.cooldownComponent.startCooldown(player, (float) COOLDOWN);
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = (new AbilityCore.Builder<>("Stun Grenade", AbilityCategory.DEVIL_FRUITS, StunGrenadeAbility::new))
                 .addDescriptionLine(DESCRIPTION)
@@ -126,6 +131,7 @@ public class StunGrenadeAbility extends Ability {
                         ChargeComponent.getTooltip((float) CHARGE_TIME),
                         RangeComponent.getTooltip((float) MIN_RANGE, (float) MAX_RANGE, RangeType.AOE)
                 })
+                .setUnlockCheck(StunGrenadeAbility::canUnlock)
                 .setSourceElement(SourceElement.LIGHT)
                 .build();
     }

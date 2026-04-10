@@ -13,6 +13,7 @@ import net.kazi.kazimod.entities.boss.gojo.goals.BossSpinningBrawlWrapperGoal;
 import net.kazi.kazimod.entities.boss.gojo.goals.BossSuplexWrapperGoal;
 import net.kazi.kazimod.entities.boss.sukuna.goals.*;
 import net.kazi.kazimod.init.KaziEntities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -52,6 +53,24 @@ public class SukunaBossEntity extends OPBossEntity<SukunaBossEntity> {
 
     public SukunaBossEntity(InProgressChallenge challenge) {
         super((EntityType) KaziEntities.SUKUNA_BOSS.get(), challenge);
+    }
+
+    @Override
+    public void tick() {
+        if (this.isPassenger()) {
+            this.stopRiding();
+        }
+        super.tick();
+    }
+
+    @Override
+    protected boolean canRide(Entity entity) {
+        return false;
+    }
+
+    @Override
+    public boolean startRiding(Entity entity, boolean force) {
+        return false;
     }
 
     @Override

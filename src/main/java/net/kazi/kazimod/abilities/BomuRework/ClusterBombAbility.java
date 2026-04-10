@@ -21,6 +21,7 @@ import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import net.kazi.kazimod.entities.projectiles.ClusterProjectile;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 
 public class ClusterBombAbility extends Ability {
 
@@ -72,6 +73,10 @@ public class ClusterBombAbility extends Ability {
         return new ClusterProjectile(entity.level, entity, this);
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = (new AbilityCore.Builder("Cluster Bomb", AbilityCategory.DEVIL_FRUITS, ClusterBombAbility::new))
                 .addDescriptionLine(DESCRIPTION)
@@ -80,6 +85,7 @@ public class ClusterBombAbility extends Ability {
                         CooldownComponent.getTooltip(COOLDOWN)
                 })
                 .addAdvancedDescriptionLine(ProjectileComponent.getProjectileTooltips())
+                .setUnlockCheck(ClusterBombAbility::canUnlock)
                 .setSourceHakiNature(SourceHakiNature.HARDENING)
                 .setSourceElement(SourceElement.EXPLOSION)
                 .build();

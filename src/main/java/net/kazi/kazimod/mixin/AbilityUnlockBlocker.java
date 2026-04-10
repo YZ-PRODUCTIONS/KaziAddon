@@ -99,7 +99,6 @@ public abstract class AbilityUnlockBlocker {
                 || self == SkySplitterDescentAbility.INSTANCE
                 || self == VaultAbility.INSTANCE
                 || self == ReworkedSpinningBrawlAbility.INSTANCE
-                || self == ReworkedSuplexAbility.INSTANCE
                 || self == ReworkedKamieAbility.INSTANCE
                 || self == ReworkedSoruAbility.INSTANCE
                 || self == ReworkedJishinHoAbility.INSTANCE

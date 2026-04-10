@@ -56,12 +56,24 @@ import net.kazi.kazimod.abilities.KitsuneRework.FoxAssaultRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireBallRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireExplosionRework;
 import net.kazi.kazimod.abilities.KitsuneRework.InuKitsuneWalkPointRework;
+import net.kazi.kazimod.abilities.Kyoka.IllusionCloneBarrageAbility;
+import net.kazi.kazimod.abilities.Kyoka.IllusionCounterAbility;
+import net.kazi.kazimod.abilities.Kyoka.InvisibleExecutionAbility;
+import net.kazi.kazimod.abilities.Kyoka.KanzenSaiminAbility;
+import net.kazi.kazimod.abilities.Kyoka.GoryutenmetsuAbility;
+import net.kazi.kazimod.abilities.Kyoka.KurohitsugiAbility;
 import net.kazi.kazimod.abilities.KobuRework.ShoureiRework;
 import net.kazi.kazimod.abilities.Koku.*;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalMissileRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalShowerRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalTempestaRework;
+import net.kazi.kazimod.abilities.MeraRework.HeatDashRework;
+import net.kazi.kazimod.abilities.MeraRework.HidarumaRework;
+import net.kazi.kazimod.abilities.MeraRework.HikenRework;
+import net.kazi.kazimod.abilities.NetsuRework.HellfireBirdAbility;
+import net.kazi.kazimod.abilities.NetsuRework.InfernalColumnAbility;
+import net.kazi.kazimod.abilities.NetsuRework.PhoenixDiveAbility;
 import net.kazi.kazimod.abilities.NikyuRework.PadHoRework;
 import net.kazi.kazimod.abilities.NikyuRework.TsuppariPadHoRework;
 import net.kazi.kazimod.abilities.NikyuRework.UrsusShockRework;
@@ -79,6 +91,7 @@ import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
 import net.kazi.kazimod.abilities.RyusokenRework.TalonRushRework;
+import net.kazi.kazimod.abilities.SaberRework.HeavenSlashAbility;
 import net.kazi.kazimod.abilities.SoruRework.SoulRecoveryRework;
 import net.kazi.kazimod.abilities.SpearRework.AbsolutePierceRework;
 import net.kazi.kazimod.abilities.SpearRework.DrillJabRework;
@@ -206,6 +219,13 @@ public class KaziAbilities {
             ElectricalShowerRework.INSTANCE,
             ElectricalBurstRework.INSTANCE,
             ElectricalTempestaRework.INSTANCE,
+            HeatDashRework.INSTANCE,
+            HidarumaRework.INSTANCE,
+            HikenRework.INSTANCE,
+            HellfireBirdAbility.INSTANCE,
+            HeavenSlashAbility.INSTANCE,
+            InfernalColumnAbility.INSTANCE,
+            PhoenixDiveAbility.INSTANCE,
             AbsolutePierceRework.INSTANCE,
             DrillJabRework.INSTANCE,
             SkySplitterDescentRework.INSTANCE,
@@ -290,7 +310,13 @@ public class KaziAbilities {
             SilentSliceAbility.INSTANCE,
             SilentStepAbility.INSTANCE,
             SilentBoxAbility.INSTANCE,
-            SilentDeathAbility.INSTANCE
+            SilentDeathAbility.INSTANCE,
+            KanzenSaiminAbility.INSTANCE,
+            KurohitsugiAbility.INSTANCE,
+            GoryutenmetsuAbility.INSTANCE,
+            IllusionCloneBarrageAbility.INSTANCE,
+            InvisibleExecutionAbility.INSTANCE,
+            IllusionCounterAbility.INSTANCE
 
 
 

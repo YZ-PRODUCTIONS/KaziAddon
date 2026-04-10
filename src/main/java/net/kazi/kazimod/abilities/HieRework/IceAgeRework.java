@@ -196,6 +196,13 @@ public class IceAgeRework extends Ability {
         }
     }
 
+    private static void startRetracting(UUID casterId) {
+        TrackedIceField field = TRACKED_ICE.get(casterId);
+        if (field != null) {
+            field.retracting = true;
+        }
+    }
+
     private static void retractSome(UUID casterId, TrackedIceField field) {
         int remaining = ICE_RETRACT_PER_TICK;
         while (remaining-- > 0 && !field.positions.isEmpty()) {
@@ -274,12 +281,9 @@ public class IceAgeRework extends Ability {
                 }
             }
 
-            for (UUID casterId : orphanedFields) {
-                TrackedIceField field = TRACKED_ICE.get(casterId);
-                if (field != null) {
-                    clearTrackedIce(casterId, field);
-                }
-            }
+             for (UUID casterId : orphanedFields) {
+                startRetracting(casterId);
+              }
 
             for (UUID casterId : retractingFields) {
                 TrackedIceField field = TRACKED_ICE.get(casterId);
@@ -290,22 +294,14 @@ public class IceAgeRework extends Ability {
         }
 
         @SubscribeEvent
-        public static void onLivingDeath(LivingDeathEvent event) {
-            UUID casterId = event.getEntityLiving().getUUID();
-            TrackedIceField field = TRACKED_ICE.get(casterId);
-            if (field != null) {
-                clearTrackedIce(casterId, field);
-            }
-        }
+         public static void onLivingDeath(LivingDeathEvent event) {
+            startRetracting(event.getEntityLiving().getUUID());
+         }
 
-        @SubscribeEvent
-        public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-            UUID casterId = event.getPlayer().getUUID();
-            TrackedIceField field = TRACKED_ICE.get(casterId);
-            if (field != null) {
-                clearTrackedIce(casterId, field);
-            }
-        }
+         @SubscribeEvent
+         public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+            startRetracting(event.getPlayer().getUUID());
+         }
 
         @SubscribeEvent
         public static void onServerStopping(FMLServerStoppingEvent event) {

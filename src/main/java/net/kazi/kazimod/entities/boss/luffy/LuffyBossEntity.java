@@ -4,6 +4,7 @@ import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.boss.luffy.BossKaminariAbility;
 import net.kazi.kazimod.entities.boss.luffy.goals.*;
 import net.kazi.kazimod.init.KaziEntities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -47,6 +48,24 @@ public class LuffyBossEntity extends OPBossEntity<LuffyBossEntity> {
 
     public LuffyBossEntity(InProgressChallenge challenge) {
         super((EntityType) KaziEntities.LUFFY_BOSS.get(), challenge);
+    }
+
+    @Override
+    public void tick() {
+        if (this.isPassenger()) {
+            this.stopRiding();
+        }
+        super.tick();
+    }
+
+    @Override
+    protected boolean canRide(Entity entity) {
+        return false;
+    }
+
+    @Override
+    public boolean startRiding(Entity entity, boolean force) {
+        return false;
     }
 
     @Override

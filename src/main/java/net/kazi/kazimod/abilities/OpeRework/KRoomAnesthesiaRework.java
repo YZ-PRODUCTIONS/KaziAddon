@@ -36,6 +36,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.PoolComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.SkinOverlayComponent;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.api.util.Interval;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
 
 public class KRoomAnesthesiaRework extends Ability {
@@ -152,8 +153,12 @@ public class KRoomAnesthesiaRework extends Ability {
         this.abilityUsed = use;
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
-        INSTANCE = (new AbilityCore.Builder("K-Room", AbilityCategory.DEVIL_FRUITS, KRoomAnesthesiaRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(200.0F)}).build();
+        INSTANCE = (new AbilityCore.Builder("K-Room", AbilityCategory.DEVIL_FRUITS, KRoomAnesthesiaRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(200.0F)}).setUnlockCheck(KRoomAnesthesiaRework::canUnlock).build();
         OVERLAY = (new AbilityOverlay.Builder()).setOverlayPart(OverlayPart.ARM).setTexture(CartResources.KROOM).build();
     }
 }

@@ -123,7 +123,7 @@ public class FistsOfLoveBarrageRework extends Ability {
     private void duringContinuityEvent(LivingEntity entity, IAbility ability) {
         if (entity.isAlive()) {
             Vector3d look = entity.getLookAngle();
-            Vector3d speed = look.multiply(1.4, (double)0.0F, 1.4);
+            Vector3d speed = look.multiply(0.7, (double)0.0F, 0.7);
             entity.move(MoverType.SELF, speed);
         }
 

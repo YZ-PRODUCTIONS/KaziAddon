@@ -68,6 +68,12 @@ import net.kazi.kazimod.abilities.KitsuneRework.FoxAssaultRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireBallRework;
 import net.kazi.kazimod.abilities.KitsuneRework.FoxfireExplosionRework;
 import net.kazi.kazimod.abilities.KitsuneRework.InuKitsuneWalkPointRework;
+import net.kazi.kazimod.abilities.MeraRework.HeatDashRework;
+import net.kazi.kazimod.abilities.MeraRework.HidarumaRework;
+import net.kazi.kazimod.abilities.MeraRework.HikenRework;
+import net.kazi.kazimod.abilities.NetsuRework.HellfireBirdAbility;
+import net.kazi.kazimod.abilities.NetsuRework.InfernalColumnAbility;
+import net.kazi.kazimod.abilities.NetsuRework.PhoenixDiveAbility;
 import net.kazi.kazimod.abilities.KobuRework.ShoureiRework;
 import net.kazi.kazimod.abilities.NikyuRework.PadHoRework;
 import net.kazi.kazimod.abilities.NikyuRework.TsuppariPadHoRework;
@@ -109,6 +115,9 @@ import xyz.pixelatedw.mineminenomi.abilities.jiki.PunkCrossAbility;
 import xyz.pixelatedw.mineminenomi.abilities.kage.DoppelmanAbility;
 import xyz.pixelatedw.mineminenomi.abilities.karu.IngaZarashiAbility;
 import xyz.pixelatedw.mineminenomi.abilities.kobu.ShoureiAbility;
+import xyz.pixelatedw.mineminenomi.abilities.mera.HeatDashAbility;
+import xyz.pixelatedw.mineminenomi.abilities.mera.HidarumaAbility;
+import xyz.pixelatedw.mineminenomi.abilities.mera.HikenAbility;
 import xyz.pixelatedw.mineminenomi.abilities.nikyu.PadHoAbility;
 import xyz.pixelatedw.mineminenomi.abilities.nikyu.TsuppariPadHoAbility;
 import xyz.pixelatedw.mineminenomi.abilities.noro.NoroNoroBeamAbility;
@@ -224,6 +233,16 @@ public class KaziDickSetup {
                 GomuGomuNoRedRocAbility.INSTANCE, GearFifthRework.INSTANCE,
                 GomuGomuNoGigantRework.INSTANCE, GomuGomuNoDawnWhipRework.INSTANCE,
                 GomuGomuNoKaminariAbility.INSTANCE, GearSecondRework.INSTANCE);
+
+        // ── MERA MERA NO MI ──────────────────────────────────────────────────
+        FruitAbilityInjector.removeAbilities(ModAbilities.MERA_MERA_NO_MI,
+                HeatDashAbility.INSTANCE, HidarumaAbility.INSTANCE, HikenAbility.INSTANCE);
+        FruitAbilityInjector.addAbilities(ModAbilities.MERA_MERA_NO_MI,
+                HeatDashRework.INSTANCE, HidarumaRework.INSTANCE, HikenRework.INSTANCE);
+
+        // â”€â”€ NETSU NETSU NO MI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        FruitAbilityInjector.addAbilities(ModAbilities.NETSU_NETSU_NO_MI,
+                HellfireBirdAbility.INSTANCE, InfernalColumnAbility.INSTANCE, PhoenixDiveAbility.INSTANCE);
 
         // ── KAMA KAMA NO MI ──────────────────────────────────────────────────
         FruitAbilityInjector.removeAbilities(CartAbilities.KAMA_KAMA_NO_MI,

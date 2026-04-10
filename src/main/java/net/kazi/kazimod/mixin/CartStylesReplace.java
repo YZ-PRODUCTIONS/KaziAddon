@@ -6,11 +6,20 @@ import net.MrMagicalCart.cartaddon.abilities.blacklegextra.*;
 import net.MrMagicalCart.cartaddon.abilities.brawlerextra.*;
 import net.MrMagicalCart.cartaddon.abilities.nitoryu.*;
 import net.MrMagicalCart.cartaddon.abilities.ryusoken.*;
+import net.MrMagicalCart.cartaddon.abilities.saber.CircleParryAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.DawnbreakerDashAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.FinalResortAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.HiNoKagutsuchiNoEisuAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.NewDivineDepartureAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.SpiderLilySliceAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.WildFuryAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.WildGambitAbility;
 import net.MrMagicalCart.cartaddon.abilities.swordsmenextra.ReworkedOTatsumakiAbility;
 import net.MrMagicalCart.cartaddon.abilities.swordsmenextra.ReworkedShiShishiSonsonAbility;
 import net.MrMagicalCart.cartaddon.abilities.trident.RapidRushAbility;
 import net.MrMagicalCart.cartaddon.abilities.trident.SpinStanceAbility;
 import net.MrMagicalCart.cartaddon.abilities.trident.WideSlashAbility;
+import net.MrMagicalCart.cartaddon.init.CartFightingStyles;
 import net.MrMagicalCart.cartaddon.init.CartResources;
 import net.kazi.kazimod.abilities.AxeStyleRework.*;
 import net.kazi.kazimod.abilities.KendoStyle.SeveranceAbility;
@@ -26,6 +35,7 @@ import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
 import net.kazi.kazimod.abilities.RyusokenRework.TalonRushRework;
+import net.kazi.kazimod.abilities.SaberRework.HeavenSlashAbility;
 import net.kazi.kazimod.abilities.SpearRework.AbsolutePierceRework;
 import net.kazi.kazimod.abilities.SpearRework.DrillJabRework;
 import net.kazi.kazimod.abilities.SpearRework.SkySplitterDescentRework;
@@ -49,6 +59,8 @@ import xyz.pixelatedw.mineminenomi.api.charactercreator.StyleId;
 import xyz.pixelatedw.mineminenomi.init.ModResources;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import xyz.pixelatedw.mineminenomi.wypi.WyRegistry;
+
+import java.lang.reflect.Field;
 
 @Mixin(value = WyRegistry.class, remap = false)
 public abstract class CartStylesReplace {
@@ -155,7 +167,7 @@ public abstract class CartStylesReplace {
                         ReworkedHakaiHoAbility.INSTANCE,
                         JinshinHoRework.INSTANCE,
                         SpinningBrawlRework.INSTANCE,
-                        SuplexRework.INSTANCE
+                        ReworkedSuplexAbility.INSTANCE
                 });
 
                 info.addBottomAbilities(new AbilityCore[0]);
@@ -249,6 +261,30 @@ public abstract class CartStylesReplace {
             };
         }
 
+        if (resourceName.equalsIgnoreCase("saber")) {
+            modifiedStyle = () -> {
+                CharacterCreatorSelectionMap.SelectionInfo info =
+                        new CharacterCreatorSelectionMap.SelectionInfo(CartResources.SABER);
+
+                info.addTopAbilities(new AbilityCore[]{
+                        CircleParryAbility.INSTANCE,
+                        DawnbreakerDashAbility.INSTANCE,
+                        FinalResortAbility.INSTANCE,
+                        HeavenSlashAbility.INSTANCE,
+                        HiNoKagutsuchiNoEisuAbility.INSTANCE,
+                        NewDivineDepartureAbility.INSTANCE,
+                        SpiderLilySliceAbility.INSTANCE,
+                        WildFuryAbility.INSTANCE,
+                        WildGambitAbility.INSTANCE
+                });
+
+                AbilityCore<?> perk = getPrivateAbilityCore(CartFightingStyles.class, "SABER_ATTACK_PERK");
+                info.addBottomAbilities(perk == null ? new AbilityCore[0] : new AbilityCore[]{perk});
+
+                return (I) new StyleId(info, true, 15);
+            };
+        }
+
         if (resourceName.equalsIgnoreCase("trident")) {
             modifiedStyle = () -> {
                 CharacterCreatorSelectionMap.SelectionInfo info =
@@ -274,5 +310,16 @@ public abstract class CartStylesReplace {
 
         RegistryObject<I> reg = STYLES.register(resourceName, modifiedStyle);
         cir.setReturnValue(reg);
+    }
+
+    private static AbilityCore<?> getPrivateAbilityCore(Class<?> owner, String fieldName) {
+        try {
+            Field field = owner.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            Object value = field.get(null);
+            return value instanceof AbilityCore ? (AbilityCore<?>) value : null;
+        } catch (ReflectiveOperationException ignored) {
+            return null;
+        }
     }
 }

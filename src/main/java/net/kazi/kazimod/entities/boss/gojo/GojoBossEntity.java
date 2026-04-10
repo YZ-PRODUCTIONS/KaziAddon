@@ -10,6 +10,7 @@ import net.kazi.kazimod.abilities.boss.gojo.BossMaxOutputLapseBlueAbility;
 import net.kazi.kazimod.abilities.boss.gojo.BossRedAbility;
 import net.kazi.kazimod.entities.boss.gojo.goals.*;
 import net.kazi.kazimod.init.KaziEntities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -53,6 +54,24 @@ public class GojoBossEntity extends OPBossEntity<GojoBossEntity> {
         this.hollowPurpleFired = false;
         this.hollowNukeQueued = false;
         this.domainFinished = false;
+    }
+
+    @Override
+    public void tick() {
+        if (this.isPassenger()) {
+            this.stopRiding();
+        }
+        super.tick();
+    }
+
+    @Override
+    protected boolean canRide(Entity entity) {
+        return false;
+    }
+
+    @Override
+    public boolean startRiding(Entity entity, boolean force) {
+        return false;
     }
 
     @Override

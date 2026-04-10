@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -60,9 +61,11 @@ public class BlackHoleRework extends Ability {
     private static final int RELEASE_TIME = 400;
     private static final int MAX_COOLDOWN = 400;
     private static final int RELEASE_PER_TICK = 40;
+    private static final int LOGOUT_CLEANUP_PER_TICK = 64;
     public static final AbilityCore<BlackHoleRework> INSTANCE;
     private static final BlockProtectionRule.IReplaceBlockRule PLACE_RULE = (world, pos, state) -> !state.getMaterial().isSolid() && world.getBlockState(pos.below()).getMaterial().isSolid();
     private static final Map<UUID, Deque<BlockPos>> TRACKED_DARKNESS = new HashMap<>();
+    private static final Map<UUID, TrackedDarknessCleanup> PENDING_DARKNESS_CLEANUP = new HashMap<>();
     private final AnimationComponent animationComponent = new AnimationComponent(this);
     private BlockPos origin;
     private State state;
@@ -281,16 +284,68 @@ public class BlackHoleRework extends Ability {
         }
     }
 
+    private static void queueTrackedDarknessCleanup(UUID casterId, World world) {
+        Deque<BlockPos> tracked = TRACKED_DARKNESS.remove(casterId);
+        if (tracked == null || tracked.isEmpty()) {
+            return;
+        }
+        PENDING_DARKNESS_CLEANUP.put(casterId, new TrackedDarknessCleanup(world, tracked));
+    }
+
+    private static void processTrackedDarknessCleanup(UUID casterId, TrackedDarknessCleanup cleanup) {
+        int remaining = LOGOUT_CLEANUP_PER_TICK;
+        while (remaining-- > 0 && !cleanup.positions.isEmpty()) {
+            BlockPos pos = cleanup.positions.pollLast();
+            if (cleanup.world.getBlockState(pos).getBlock() == CartBlocks.REWORKED_DARKNESS_BLOCK.get()) {
+                cleanup.world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            }
+        }
+        if (cleanup.positions.isEmpty()) {
+            PENDING_DARKNESS_CLEANUP.remove(casterId);
+        }
+    }
+
     @Mod.EventBusSubscriber(modid = "kazimod")
     public static class CleanupHandler {
         @SubscribeEvent
+        public static void onWorldTick(TickEvent.WorldTickEvent event) {
+            if (event.phase != TickEvent.Phase.END || event.world.isClientSide) {
+                return;
+            }
+
+            java.util.List<UUID> queued = new java.util.ArrayList<>();
+            for (Map.Entry<UUID, TrackedDarknessCleanup> entry : PENDING_DARKNESS_CLEANUP.entrySet()) {
+                if (entry.getValue().world == event.world) {
+                    queued.add(entry.getKey());
+                }
+            }
+
+            for (UUID casterId : queued) {
+                TrackedDarknessCleanup cleanup = PENDING_DARKNESS_CLEANUP.get(casterId);
+                if (cleanup != null) {
+                    processTrackedDarknessCleanup(casterId, cleanup);
+                }
+            }
+        }
+
+        @SubscribeEvent
         public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-            cleanupTrackedDarkness(event.getPlayer().getUUID(), event.getPlayer().level);
+            queueTrackedDarknessCleanup(event.getPlayer().getUUID(), event.getPlayer().level);
         }
 
         @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
-            cleanupTrackedDarkness(event.getEntityLiving().getUUID(), event.getEntityLiving().level);
+            queueTrackedDarknessCleanup(event.getEntityLiving().getUUID(), event.getEntityLiving().level);
+        }
+    }
+
+    private static class TrackedDarknessCleanup {
+        private final World world;
+        private final Deque<BlockPos> positions;
+
+        private TrackedDarknessCleanup(World world, Deque<BlockPos> positions) {
+            this.world = world;
+            this.positions = new ArrayDeque<>(positions);
         }
     }
 

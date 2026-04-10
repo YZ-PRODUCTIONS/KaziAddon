@@ -11,13 +11,11 @@ import net.kazi.kazimod.renderers.abilities.WeatherCloudReworkRenderer;
 import net.kazi.kazimod.renderers.abilities.WhiteTornadoRenderer;
 import net.kazi.kazimod.renderers.entities.*;
 import net.kazi.kazimod.models.projectiles.FugaProjectileRenderer;
+import net.kazi.kazimod.models.projectiles.HellfireBirdRenderer;
 import net.kazi.kazimod.init.KaziAnimations;
 import net.kazi.kazimod.init.KaziItemModelProps;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.renderer.entity.BipedRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -46,6 +44,10 @@ public class KaziRenderers {
                 FugaProjectileRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.HELLFIRE_BIRD.get(),
+                HellfireBirdRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.PUNCTURE_WILLE.get(),
                 (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
 
@@ -56,6 +58,22 @@ public class KaziRenderers {
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.TIME_BUBBLE.get(),
                 TimeBubbleRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.KUROHITSUGI.get(),
+                new KurohitsugiRenderer.Factory());
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.KUROHITSUGI_SPIKE.get(),
+                new KurohitsugiSpikeRenderer.Factory());
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.GORYUTENMETSU_DRAGON.get(),
+                new GoryutenmetsuDragonRenderer.Factory());
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.MERA_FLAME_DRAGON.get(),
+                new MeraFlameDragonRenderer.Factory());
 
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.WHITE_TORNADO.get(),
@@ -75,19 +93,7 @@ public class KaziRenderers {
 
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.SHADOW_DOPPELMAN.get(),
-                manager -> new BipedRenderer<ShadowDoppelmanEntity, BipedModel<ShadowDoppelmanEntity>>(manager, new BipedModel<>(0.0F), 0.5F) {
-                    @Override
-                    protected void scale(ShadowDoppelmanEntity entity, MatrixStack matrixStack, float partialTicks) {
-                        float shadowsUsed = entity.getShadows();
-                        float scale = shadowsUsed > 0.0F ? 1.0F + shadowsUsed / 6.0F : 1.0F;
-                        matrixStack.scale(scale, scale, scale);
-                    }
-
-                    @Override
-                    public ResourceLocation getTextureLocation(ShadowDoppelmanEntity entity) {
-                        return new ResourceLocation("mineminenomi", "textures/models/doppelman.png");
-                    }
-                });
+                ShadowDoppelmanRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(
                 (net.minecraft.entity.EntityType<WeatherCloudReworkEntity>)

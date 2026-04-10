@@ -1,7 +1,10 @@
 package net.kazi.kazimod;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.kazi.kazimod.client.renderers.BakugoBossRenderer;
+import net.kazi.kazimod.client.renderers.AizenBossRenderer;
 import net.kazi.kazimod.client.renderers.GojoBossRenderer;
+import net.kazi.kazimod.client.renderers.LawBossRenderer;
 import net.kazi.kazimod.client.renderers.LuffyBossRenderer;
 import net.kazi.kazimod.client.renderers.SukunaBossRenderer;
 import net.kazi.kazimod.effects.FlashbangEffect;
@@ -17,6 +20,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import xyz.pixelatedw.mineminenomi.models.entities.projectiles.FistModel;
+import xyz.pixelatedw.mineminenomi.renderers.abilities.AbilityProjectileRenderer;
 
 public final class KaziClientInit {
 
@@ -50,6 +55,18 @@ public final class KaziClientInit {
                 LuffyBossRenderer::new
         );
         RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.BAKUGO_BOSS.get(),
+                BakugoBossRenderer::new
+        );
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.LAW_BOSS.get(),
+                LawBossRenderer::new
+        );
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.AIZEN_BOSS.get(),
+                AizenBossRenderer::new
+        );
+        RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.SHADOW_DOPPELMAN.get(),
                 manager -> new BipedRenderer<ShadowDoppelmanEntity, BipedModel<ShadowDoppelmanEntity>>(manager, new BipedModel<>(0.0F), 0.5F) {
                     @Override
@@ -64,6 +81,14 @@ public final class KaziClientInit {
                         return new ResourceLocation("mineminenomi", "textures/models/doppelman.png");
                     }
                 }
+        );
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.REWORKED_HIKEN.get(),
+                (new AbilityProjectileRenderer.Factory(new FistModel()))
+                        .setTexture("hiken")
+                        .setScale(10.0D)
+                        .setGlowing()
         );
 
         MinecraftForge.EVENT_BUS.register(FlashbangEffect.class);

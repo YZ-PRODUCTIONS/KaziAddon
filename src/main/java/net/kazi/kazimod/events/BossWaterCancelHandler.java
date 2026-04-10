@@ -65,6 +65,10 @@ public class BossWaterCancelHandler {
 
         // Remove the boss
         entity.remove();
+        AwakeningEssenceDeathHandler.unregisterTrialBoss(entity.getUUID());
+        if (player != null) {
+            player.getPersistentData().remove(AwakeningEssenceItem.ACTIVE_TRIAL_BOSS_TAG);
+        }
 
         // Notify the summoner — item is kept
         if (player != null) {
