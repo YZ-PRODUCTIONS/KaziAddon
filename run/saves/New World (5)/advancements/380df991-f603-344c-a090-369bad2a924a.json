@@ -1,0 +1,90 @@
+{
+  "minecraft:recipes/decorations/slime_block": {
+    "criteria": {
+      "has_slime_ball": "2026-04-06 18:28:47 -0400"
+    },
+    "done": true
+  },
+  "minecraft:husbandry/root": {
+    "criteria": {
+      "consumed_item": "2026-04-06 07:26:25 -0400"
+    },
+    "done": true
+  },
+  "minecraft:adventure/kill_a_mob": {
+    "criteria": {
+      "minecraft:spider": "2026-04-06 07:44:21 -0400"
+    },
+    "done": true
+  },
+  "minecraft:adventure/kill_all_mobs": {
+    "criteria": {
+      "minecraft:pillager": "2026-04-06 18:46:00 -0400",
+      "minecraft:skeleton": "2026-04-06 07:56:58 -0400",
+      "minecraft:spider": "2026-04-06 07:44:21 -0400",
+      "minecraft:creeper": "2026-04-06 07:56:58 -0400",
+      "minecraft:slime": "2026-04-06 07:44:21 -0400",
+      "minecraft:zombie": "2026-04-06 07:56:58 -0400"
+    },
+    "done": false
+  },
+  "minecraft:recipes/redstone/sticky_piston": {
+    "criteria": {
+      "has_slime_ball": "2026-04-06 18:28:47 -0400"
+    },
+    "done": true
+  },
+  "minecraft:adventure/root": {
+    "criteria": {
+      "killed_something": "2026-04-06 07:44:21 -0400"
+    },
+    "done": true
+  },
+  "mineminenomi:adventure/haki_master": {
+    "criteria": {
+      "unlock_busoshoku_imbuing": "2026-04-06 18:08:03 -0400",
+      "unlock_kenbunshoku_aura": "2026-04-06 18:08:03 -0400",
+      "unlock_busoshoku_internal_destruction": "2026-04-06 18:08:03 -0400",
+      "unlock_busoshoku_emission": "2026-04-06 18:08:03 -0400",
+      "unlock_busoshoku_hardening": "2026-04-06 18:08:03 -0400"
+    },
+    "done": false
+  },
+  "mineminenomi:adventure/root": {
+    "criteria": {
+      "killed_something": "2026-04-06 07:44:21 -0400"
+    },
+    "done": true
+  },
+  "minecraft:recipes/tools/lead": {
+    "criteria": {
+      "has_slime_ball": "2026-04-06 18:28:47 -0400"
+    },
+    "done": true
+  },
+  "mineminenomi:adventure/whats_kairoseki": {
+    "criteria": {
+      "unlock_busoshoku_hardening": "2026-04-06 18:08:03 -0400"
+    },
+    "done": true
+  },
+  "mineminenomi:devil_fruits/root": {
+    "criteria": {
+      "eat_fruit": "2026-04-06 07:26:25 -0400"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:plains": "2026-04-06 07:25:40 -0400"
+    },
+    "done": false
+  },
+  "minecraft:nether/netherite_armor": {
+    "criteria": {
+      "netherite_armor": "2026-04-06 18:43:37 -0400"
+    },
+    "done": true
+  },
+  "DataVersion": 2586
+}
