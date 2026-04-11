@@ -239,4 +239,49 @@ public class KaziEntities {
                             .clientTrackingRange(64)
                             .setShouldReceiveVelocityUpdates(true)
                             .build("shadow_doppelman"));
+
+    // ── Saku Saku no Mi projectiles ───────────────────────────────────────
+    public static final RegistryObject<EntityType<PetalBladeProjectile>> PETAL_BLADE =
+            ENTITY_TYPES.register("petal_blade", () ->
+                    EntityType.Builder.<PetalBladeProjectile>of(PetalBladeProjectile::new, EntityClassification.MISC)
+                            .sized(0.3f, 0.3f)
+                            .clientTrackingRange(64)
+                            .build("petal_blade"));
+
+    // ── Akuma Akuma no Mi projectiles ─────────────────────────────────────
+    public static final RegistryObject<EntityType<HellblazeProjectile>> HELLBLAZE_PROJECTILE =
+            ENTITY_TYPES.register("hellblaze_projectile", () ->
+                    EntityType.Builder.<HellblazeProjectile>of(HellblazeProjectile::new, EntityClassification.MISC)
+                            .sized(4.0f, 4.0f)
+                            .clientTrackingRange(64)
+                            .build("hellblaze_projectile"));
+
+    public static final RegistryObject<EntityType<SlashWaveProjectile>> SLASH_WAVE =
+            ENTITY_TYPES.register("slash_wave", () ->
+                    EntityType.Builder.<SlashWaveProjectile>of(SlashWaveProjectile::new, EntityClassification.MISC)
+                            .sized(10.0f, 1.5f)
+                            .clientTrackingRange(64)
+                            .build("slash_wave"));
+
+    public static final RegistryObject<EntityType<DarkSpearProjectile>> DARK_SPEAR =
+            ENTITY_TYPES.register("dark_spear", () ->
+                    EntityType.Builder.<DarkSpearProjectile>of(DarkSpearProjectile::new, EntityClassification.MISC)
+                            .sized(0.8f, 0.8f)
+                            .clientTrackingRange(64)
+                            .build("dark_spear"));
+
+    // ── Nagi Nagi no Mi projectiles ──────────────────────────────────────
+    public static final RegistryObject<EntityType<SilentSliceProjectile>> SILENT_SLICE =
+            ENTITY_TYPES.register("silent_slice", () ->
+                    EntityType.Builder.<SilentSliceProjectile>of(SilentSliceProjectile::new, EntityClassification.MISC)
+                            .sized(6.0f, 1.0f)
+                            .clientTrackingRange(64)
+                            .build("silent_slice"));
+
+    public static final RegistryObject<EntityType<SilentDeathProjectile>> SILENT_DEATH =
+            ENTITY_TYPES.register("silent_death", () ->
+                    EntityType.Builder.<SilentDeathProjectile>of(SilentDeathProjectile::new, EntityClassification.MISC)
+                            .sized(2.0f, 2.0f)
+                            .clientTrackingRange(64)
+                            .build("silent_death"));
 }

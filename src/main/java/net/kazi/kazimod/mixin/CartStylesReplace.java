@@ -20,6 +20,8 @@ import net.MrMagicalCart.cartaddon.abilities.trident.WideSlashAbility;
 import net.MrMagicalCart.cartaddon.init.CartFightingStyles;
 import net.MrMagicalCart.cartaddon.init.CartResources;
 import net.kazi.kazimod.abilities.AxeStyleRework.*;
+import net.kazi.kazimod.abilities.KendoStyle.SeveranceAbility;
+import net.kazi.kazimod.abilities.KendoStyle.ZanshiAbility;
 import net.kazi.kazimod.abilities.BlacklegRework.AntiMatterKickCourseRework;
 import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
 import net.kazi.kazimod.abilities.BrawlerRework.*;
@@ -237,6 +239,23 @@ public abstract class CartStylesReplace {
 
 
                 I val = (I) new StyleId(info, true, 3);
+                return val;
+            };
+        }
+
+        if (resourceName.equalsIgnoreCase("kendo")) {
+            modifiedStyle = () -> {
+                CharacterCreatorSelectionMap.SelectionInfo info =
+                        new CharacterCreatorSelectionMap.SelectionInfo(CartResources.ITTORYU);
+
+                info.addTopAbilities(new AbilityCore[]{
+                        SeveranceAbility.INSTANCE,
+                        ZanshiAbility.INSTANCE
+                });
+
+                info.addBottomAbilities(new AbilityCore[0]);
+
+                I val = (I) new StyleId(info, true, 1);
                 return val;
             };
         }

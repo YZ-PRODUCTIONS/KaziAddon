@@ -4,6 +4,7 @@ import net.kazi.kazimod.abilities.Koku.*;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
 import net.kazi.kazimod.abilities.Kake.LuckySlotAbility;
 import net.kazi.kazimod.abilities.Kake.SlotSpinAbility;
+import net.kazi.kazimod.abilities.AkumaRework.*;
 import net.kazi.kazimod.abilities.Kyoka.IllusionCloneBarrageAbility;
 import net.kazi.kazimod.abilities.Kyoka.IllusionCounterAbility;
 import net.kazi.kazimod.abilities.Kyoka.InvisibleExecutionAbility;
@@ -13,6 +14,7 @@ import net.kazi.kazimod.abilities.Kyoka.KurohitsugiAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillBookCreationAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillHunterAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillRemoverAbility;
+import net.kazi.kazimod.abilities.SakuRework.*;
 import net.kazi.kazimod.abilities.Tenki.*;
 import net.kazi.kazimod.abilities.Toki.*;
 import net.kazi.kazimod.abilities.Toshi.*;
@@ -34,6 +36,8 @@ public class KaziItems {
     public static RegistryObject<AkumaNoMiItem> KOKU_KOKU_NO_MI;
     public static RegistryObject<AkumaNoMiItem> KAKE_KAKE_NO_MI;
     public static RegistryObject<AkumaNoMiItem> NUSU_NUSU_NO_MI;
+    public static RegistryObject<AkumaNoMiItem> SAKU_SAKU_NO_MI;
+    public static RegistryObject<AkumaNoMiItem> AKUMA_AKUMA_NO_MI;
     public static RegistryObject<AkumaNoMiItem> KYOKA_KYOKA_NO_MI;
 
     /**
@@ -128,6 +132,33 @@ public class KaziItems {
                         SkillHunterAbility.INSTANCE,
                         SkillRemoverAbility.INSTANCE,
                         SkillBookCreationAbility.INSTANCE
+                )
+        );
+
+        SAKU_SAKU_NO_MI = KaziRegistry.registerItem(
+                "saku_saku_no_mi",
+                () -> new AkumaNoMiItem(
+                        "Saku Saku no Mi", 1, FruitType.PARAMECIA,
+                        SenbonzakuraAbility.INSTANCE,
+                        SenbonzakuraKageyoshiAbility.INSTANCE,
+                        GokeiAbility.INSTANCE,
+                        SenkeiAbility.INSTANCE,
+                        ShukeiHakuteikenAbility.INSTANCE
+                )
+        );
+
+        AKUMA_AKUMA_NO_MI = KaziRegistry.registerItem(
+                "akuma_akuma_no_mi",
+                () -> new AkumaNoMiItem(
+                        "Akuma Akuma no Mi", 2, FruitType.ZOAN,
+                        FullCounterAbility.INSTANCE,
+                        RevengePassiveAbility.INSTANCE,
+                        RevengeCounterAbility.INSTANCE,
+                        HellblazeAbility.INSTANCE,
+                        KamiChigiriAbility.INSTANCE,
+                        DivineSlayerAbility.INSTANCE,
+                        TrillionDarkAbility.INSTANCE,
+                        DemonTransformationAbility.INSTANCE
                 )
         );
 

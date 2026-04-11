@@ -31,6 +31,7 @@ import net.MrMagicalCart.cartaddon.abilities.yamiextra.ReworkedBlackHoleAbility;
 import net.MrMagicalCart.cartaddon.abilities.yamiextra.YamiAbsorptionPassive;
 import net.MrMagicalCart.cartaddon.init.CartAbilities;
 import net.kazi.kazimod.KaziMod;
+import net.kazi.kazimod.abilities.NagiRework.*;
 import net.kazi.kazimod.abilities.AwaRework.GoldenHourRework;
 import net.kazi.kazimod.abilities.BaneRework.SpringSnipeRework;
 import net.kazi.kazimod.abilities.BaraRework.KuchuKirimomiDaiCircusRework;
@@ -373,6 +374,15 @@ public class KaziDickSetup {
                 KuchuKirimomiDaiCircusRework.INSTANCE
         );
 
+
+        // ── NAGI NAGI NO MI ──────────────────────────────────
+        FruitAbilityInjector.addAbilities(ModAbilities.NAGI_NAGI_NO_MI,
+                SilentStrideAbility.INSTANCE,
+                SilentSliceAbility.INSTANCE,
+                SilentStepAbility.INSTANCE,
+                SilentBoxAbility.INSTANCE,
+                SilentDeathAbility.INSTANCE
+        );
 
         // Rebuild ability-to-fruit map after all injections are done
         AwakeningAbilityLoginFix.invalidateCache();

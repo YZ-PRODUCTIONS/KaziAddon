@@ -1,5 +1,6 @@
 package net.kazi.kazimod.init;
 
+import net.kazi.kazimod.events.handlers.DemonWingsLayer;
 import net.kazi.kazimod.events.handlers.GearFifthSmokeLayer;
 import net.kazi.kazimod.events.handlers.GigantSmokeLayer;
 import net.minecraft.client.Minecraft;
@@ -24,6 +25,7 @@ public class KaziLayers {
                     .values()) {
                 renderer.addLayer(new GearFifthSmokeLayer<>(renderer));
                 renderer.addLayer(new GigantSmokeLayer<>(renderer));
+                renderer.addLayer(new DemonWingsLayer<>(renderer));
 
             }
         });

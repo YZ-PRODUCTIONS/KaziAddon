@@ -41,6 +41,11 @@ import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
 import net.kazi.kazimod.abilities.Kake.LuckySlotAbility;
 import net.kazi.kazimod.abilities.Kake.SlotSpinAbility;
 import net.kazi.kazimod.abilities.KamaRework.*;
+import net.kazi.kazimod.abilities.AkumaRework.*;
+import net.kazi.kazimod.abilities.NagiRework.*;
+import net.kazi.kazimod.abilities.KendoStyle.SeveranceAbility;
+import net.kazi.kazimod.abilities.KendoStyle.ZanshiAbility;
+import net.kazi.kazimod.abilities.SakuRework.*;
 import net.kazi.kazimod.abilities.KaruRework.ExplodingKarmaAbility;
 import net.kazi.kazimod.abilities.KaruRework.IngaZarashiRework;
 import net.kazi.kazimod.abilities.KaruRework.RageRushAbility;
@@ -285,13 +290,32 @@ public class KaziAbilities {
             BusoshokuHakiFullBodyHardeningRework.INSTANCE,
             KenbunshokuHakiFutureSightRework.INSTANCE,
             HakiSenseAbility.INSTANCE,
+            SeveranceAbility.INSTANCE,
+            ZanshiAbility.INSTANCE,
+            SenbonzakuraAbility.INSTANCE,
+            SenbonzakuraKageyoshiAbility.INSTANCE,
+            GokeiAbility.INSTANCE,
+            SenkeiAbility.INSTANCE,
+            ShukeiHakuteikenAbility.INSTANCE,
+            FullCounterAbility.INSTANCE,
+            RevengePassiveAbility.INSTANCE,
+            RevengeCounterAbility.INSTANCE,
+            HellblazeAbility.INSTANCE,
+            KamiChigiriAbility.INSTANCE,
+            DivineSlayerAbility.INSTANCE,
+            TrillionDarkAbility.INSTANCE,
+            DemonTransformationAbility.INSTANCE,
+            SilentStrideAbility.INSTANCE,
+            SilentSliceAbility.INSTANCE,
+            SilentStepAbility.INSTANCE,
+            SilentBoxAbility.INSTANCE,
+            SilentDeathAbility.INSTANCE,
             KanzenSaiminAbility.INSTANCE,
             KurohitsugiAbility.INSTANCE,
             GoryutenmetsuAbility.INSTANCE,
             IllusionCloneBarrageAbility.INSTANCE,
             InvisibleExecutionAbility.INSTANCE,
             IllusionCounterAbility.INSTANCE
-
 
 
 
