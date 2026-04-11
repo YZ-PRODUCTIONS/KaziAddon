@@ -14,8 +14,6 @@ import net.MrMagicalCart.cartaddon.abilities.saber.NewDivineDepartureAbility;
 import net.MrMagicalCart.cartaddon.abilities.saber.SpiderLilySliceAbility;
 import net.MrMagicalCart.cartaddon.abilities.saber.WildFuryAbility;
 import net.MrMagicalCart.cartaddon.abilities.saber.WildGambitAbility;
-import net.MrMagicalCart.cartaddon.abilities.swordsmenextra.ReworkedOTatsumakiAbility;
-import net.MrMagicalCart.cartaddon.abilities.swordsmenextra.ReworkedShiShishiSonsonAbility;
 import net.MrMagicalCart.cartaddon.abilities.trident.RapidRushAbility;
 import net.MrMagicalCart.cartaddon.abilities.trident.SpinStanceAbility;
 import net.MrMagicalCart.cartaddon.abilities.trident.WideSlashAbility;
@@ -33,7 +31,9 @@ import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
 import net.kazi.kazimod.abilities.RyusokenRework.TalonRushRework;
-import net.kazi.kazimod.abilities.SaberRework.HeavenSlashAbility;
+import net.kazi.kazimod.abilities.SaberRework.CircleParryRework;
+import net.kazi.kazimod.abilities.SaberRework.DawnbreakerDashRework;
+import net.kazi.kazimod.abilities.SaberRework.HeavenSlash;
 import net.kazi.kazimod.abilities.SpearRework.AbsolutePierceRework;
 import net.kazi.kazimod.abilities.SpearRework.DrillJabRework;
 import net.kazi.kazimod.abilities.SpearRework.SkySplitterDescentRework;
@@ -50,7 +50,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import xyz.pixelatedw.mineminenomi.abilities.doctor.*;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.charactercreator.CharacterCreatorSelectionMap;
 import xyz.pixelatedw.mineminenomi.api.charactercreator.StyleId;
@@ -248,10 +247,10 @@ public abstract class CartStylesReplace {
                         new CharacterCreatorSelectionMap.SelectionInfo(CartResources.SABER);
 
                 info.addTopAbilities(new AbilityCore[]{
-                        CircleParryAbility.INSTANCE,
-                        DawnbreakerDashAbility.INSTANCE,
+                        CircleParryRework.INSTANCE,
+                        DawnbreakerDashRework.INSTANCE,
                         FinalResortAbility.INSTANCE,
-                        HeavenSlashAbility.INSTANCE,
+                        HeavenSlash.INSTANCE,
                         HiNoKagutsuchiNoEisuAbility.INSTANCE,
                         NewDivineDepartureAbility.INSTANCE,
                         SpiderLilySliceAbility.INSTANCE,

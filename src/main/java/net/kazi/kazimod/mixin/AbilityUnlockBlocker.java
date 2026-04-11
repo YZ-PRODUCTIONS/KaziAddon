@@ -23,6 +23,8 @@ import net.MrMagicalCart.cartaddon.abilities.oni.ViciousRoarAbility;
 import net.MrMagicalCart.cartaddon.abilities.rokushikiextra.ReworkedKamieAbility;
 import net.MrMagicalCart.cartaddon.abilities.rokushikiextra.ReworkedSoruAbility;
 import net.MrMagicalCart.cartaddon.abilities.ryusoken.*;
+import net.MrMagicalCart.cartaddon.abilities.saber.CircleParryAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.DawnbreakerDashAbility;
 import net.MrMagicalCart.cartaddon.abilities.swordsmenextra.*;
 
 import net.MrMagicalCart.cartaddon.abilities.trident.AbsolutePierceAbility;
@@ -42,6 +44,7 @@ import xyz.pixelatedw.mineminenomi.abilities.haki.BusoshokuHakiImbuingAbility;
 import xyz.pixelatedw.mineminenomi.abilities.haki.BusoshokuHakiFullBodyHardeningAbility;
 import xyz.pixelatedw.mineminenomi.abilities.haki.HaoshokuHakiInfusionAbility;
 import xyz.pixelatedw.mineminenomi.abilities.haki.KenbunshokuHakiFutureSightAbility;
+import xyz.pixelatedw.mineminenomi.abilities.rokushiki.TekkaiAbility;
 import xyz.pixelatedw.mineminenomi.abilities.swordsman.YakkodoriAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 
@@ -105,7 +108,10 @@ public abstract class AbilityUnlockBlocker {
                 || self == CartAntiMannerKickCourseAbility.INSTANCE
                 || self == BusoshokuHakiFullBodyHardeningAbility.INSTANCE
                 || self == KenbunshokuHakiFutureSightAbility.INSTANCE
-                || self == ModifiedHumanPassiveBonusesAbility.INSTANCE)
+                || self == ModifiedHumanPassiveBonusesAbility.INSTANCE
+                || self == DawnbreakerDashAbility.INSTANCE
+                || self == CircleParryAbility.INSTANCE
+                || self == TekkaiAbility.INSTANCE)
 
                 {
             cir.setReturnValue(false);

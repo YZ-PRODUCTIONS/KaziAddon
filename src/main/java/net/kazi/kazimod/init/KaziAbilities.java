@@ -29,6 +29,7 @@ import net.kazi.kazimod.abilities.HoroRework.NegativeHollowRework;
 import net.kazi.kazimod.abilities.HoroRework.TokuHollowRework;
 import net.kazi.kazimod.abilities.HumanRework.KamieRework;
 import net.kazi.kazimod.abilities.HumanRework.SoruRework;
+import net.kazi.kazimod.abilities.HumanRework.TekkaiRework;
 import net.kazi.kazimod.abilities.ItoRework.GodThreadRework;
 import net.kazi.kazimod.abilities.JikiRework.DamnedPunkRework;
 import net.kazi.kazimod.abilities.JikiRework.GenocideRaidRework;
@@ -63,9 +64,6 @@ import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalMissileRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalShowerRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalTempestaRework;
-import net.kazi.kazimod.abilities.MeraRework.HeatDashRework;
-import net.kazi.kazimod.abilities.MeraRework.HidarumaRework;
-import net.kazi.kazimod.abilities.MeraRework.HikenRework;
 import net.kazi.kazimod.abilities.NetsuRework.HellfireBirdAbility;
 import net.kazi.kazimod.abilities.NetsuRework.InfernalColumnAbility;
 import net.kazi.kazimod.abilities.NetsuRework.PhoenixDiveAbility;
@@ -86,7 +84,7 @@ import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
 import net.kazi.kazimod.abilities.RyusokenRework.TalonRushRework;
-import net.kazi.kazimod.abilities.SaberRework.HeavenSlashAbility;
+import net.kazi.kazimod.abilities.SaberRework.HeavenSlash;
 import net.kazi.kazimod.abilities.SoruRework.SoulRecoveryRework;
 import net.kazi.kazimod.abilities.SpearRework.AbsolutePierceRework;
 import net.kazi.kazimod.abilities.SpearRework.DrillJabRework;
@@ -218,7 +216,7 @@ public class KaziAbilities {
             HidarumaRework.INSTANCE,
             HikenRework.INSTANCE,
             HellfireBirdAbility.INSTANCE,
-            HeavenSlashAbility.INSTANCE,
+            HeavenSlash.INSTANCE,
             InfernalColumnAbility.INSTANCE,
             PhoenixDiveAbility.INSTANCE,
             AbsolutePierceRework.INSTANCE,
@@ -279,6 +277,7 @@ public class KaziAbilities {
             RadioKnifeRework.INSTANCE,
             KamieRework.INSTANCE,
             SoruRework.INSTANCE,
+            TekkaiRework.INSTANCE,
             IceAgeRework.INSTANCE,
             JinshinHoRework.INSTANCE,
             AntiMatterKickCourseRework.INSTANCE,

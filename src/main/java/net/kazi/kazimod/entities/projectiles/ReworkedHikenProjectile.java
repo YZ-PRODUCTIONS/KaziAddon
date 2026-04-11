@@ -1,6 +1,5 @@
 package net.kazi.kazimod.entities.projectiles;
 
-import net.kazi.kazimod.abilities.MeraRework.HikenRework;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

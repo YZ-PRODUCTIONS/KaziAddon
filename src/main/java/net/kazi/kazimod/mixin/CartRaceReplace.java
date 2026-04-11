@@ -9,6 +9,7 @@ import net.MrMagicalCart.cartaddon.abilities.rokushikiextra.*;
 import net.MrMagicalCart.cartaddon.init.CartResources;
 import net.kazi.kazimod.abilities.HumanRework.KamieRework;
 import net.kazi.kazimod.abilities.HumanRework.SoruRework;
+import net.kazi.kazimod.abilities.HumanRework.TekkaiRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalBurstRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalMissileRework;
 import net.kazi.kazimod.abilities.MinkRework.ElectricalShowerRework;
@@ -101,7 +102,7 @@ public abstract class CartRaceReplace {
                         ReworkedRokuoganAbility.INSTANCE,
                         ReworkedShiganAbility.INSTANCE,
                         SoruRework.INSTANCE,
-                        ReworkedTekkaiAbility.INSTANCE
+                        TekkaiRework.INSTANCE
                 });
 
                 return (I) new RaceId(info, true, 1);
