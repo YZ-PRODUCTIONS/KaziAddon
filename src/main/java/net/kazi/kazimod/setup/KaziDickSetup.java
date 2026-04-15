@@ -231,11 +231,6 @@ public class KaziDickSetup {
                 GomuGomuNoGigantRework.INSTANCE, GomuGomuNoDawnWhipRework.INSTANCE,
                 GomuGomuNoKaminariAbility.INSTANCE, GearSecondRework.INSTANCE);
 
-        // ── MERA MERA NO MI ──────────────────────────────────────────────────
-        FruitAbilityInjector.removeAbilities(ModAbilities.MERA_MERA_NO_MI,
-                HeatDashAbility.INSTANCE, HidarumaAbility.INSTANCE, HikenAbility.INSTANCE);
-        FruitAbilityInjector.addAbilities(ModAbilities.MERA_MERA_NO_MI,
-                HeatDashRework.INSTANCE, HidarumaRework.INSTANCE, HikenRework.INSTANCE);
 
         //  NETSU NETSU NO MI
         FruitAbilityInjector.addAbilities(ModAbilities.NETSU_NETSU_NO_MI,
