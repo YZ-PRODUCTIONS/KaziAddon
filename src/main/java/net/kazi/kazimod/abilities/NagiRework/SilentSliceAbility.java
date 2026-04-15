@@ -22,6 +22,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent.RangeType;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
 
 public class SilentSliceAbility extends Ability {
@@ -71,6 +72,10 @@ public class SilentSliceAbility extends Ability {
         this.cooldownComponent.startCooldown(entity, COOLDOWN);
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = (new AbilityCore.Builder<>("Silent Slice", AbilityCategory.DEVIL_FRUITS, SilentSliceAbility::new))
                 .setIcon(ICON)
@@ -81,6 +86,7 @@ public class SilentSliceAbility extends Ability {
                         DealDamageComponent.getTooltip(DAMAGE_VALUE),
                         RangeComponent.getTooltip(RANGE, RangeType.LINE)
                 })
+                .setUnlockCheck(SilentSliceAbility::canUnlock)
                 .setSourceHakiNature(SourceHakiNature.IMBUING)
                 .build();
     }

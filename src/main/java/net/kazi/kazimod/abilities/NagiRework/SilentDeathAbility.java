@@ -20,6 +20,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.DealDamageComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
 
 public class SilentDeathAbility extends Ability {
@@ -68,6 +69,10 @@ public class SilentDeathAbility extends Ability {
         this.cooldownComponent.startCooldown(entity, COOLDOWN);
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = (new AbilityCore.Builder<>("Silent Death", AbilityCategory.DEVIL_FRUITS, SilentDeathAbility::new))
                 .setIcon(ICON)
@@ -77,6 +82,7 @@ public class SilentDeathAbility extends Ability {
                         CooldownComponent.getTooltip(COOLDOWN),
                         DealDamageComponent.getTooltip(DAMAGE_VALUE)
                 })
+                .setUnlockCheck(SilentDeathAbility::canUnlock)
                 .setSourceHakiNature(SourceHakiNature.IMBUING)
                 .build();
     }

@@ -109,6 +109,8 @@ public class AwakeningEssenceDeathHandler {
                 announcement = "\u00a7b\u00a7l\u2605 \u00a7fThe Surgeon of Death has awakened. \u00a7b\u00a7l\u2605";
             } else if (fruitId.contains("bomu_bomu_no_mi")) {
                 announcement = "\u00a7c\u00a7l\u2605 \u00a76A devastating awakening ignites the battlefield. \u00a7c\u00a7l\u2605";
+            } else if (fruitId.contains("nagi_nagi_no_mi")) {
+                announcement = "\u00a78\u00a7l\u2605 \u00a7fSilence itself has awakened. \u00a78\u00a7l\u2605";
             } else {
                 announcement = "\u00a76\u00a7l\u2605 \u00a7e" + player.getName().getString()
                         + " has awakened their Devil Fruit! \u00a76\u00a7l\u2605";

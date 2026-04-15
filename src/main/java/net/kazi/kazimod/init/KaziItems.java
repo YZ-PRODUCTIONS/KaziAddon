@@ -135,32 +135,9 @@ public class KaziItems {
                 )
         );
 
-        SAKU_SAKU_NO_MI = KaziRegistry.registerItem(
-                "saku_saku_no_mi",
-                () -> new AkumaNoMiItem(
-                        "Saku Saku no Mi", 1, FruitType.PARAMECIA,
-                        SenbonzakuraAbility.INSTANCE,
-                        SenbonzakuraKageyoshiAbility.INSTANCE,
-                        GokeiAbility.INSTANCE,
-                        SenkeiAbility.INSTANCE,
-                        ShukeiHakuteikenAbility.INSTANCE
-                )
-        );
 
-        AKUMA_AKUMA_NO_MI = KaziRegistry.registerItem(
-                "akuma_akuma_no_mi",
-                () -> new AkumaNoMiItem(
-                        "Akuma Akuma no Mi", 2, FruitType.ZOAN,
-                        FullCounterAbility.INSTANCE,
-                        RevengePassiveAbility.INSTANCE,
-                        RevengeCounterAbility.INSTANCE,
-                        HellblazeAbility.INSTANCE,
-                        KamiChigiriAbility.INSTANCE,
-                        DivineSlayerAbility.INSTANCE,
-                        TrillionDarkAbility.INSTANCE,
-                        DemonTransformationAbility.INSTANCE
-                )
-        );
+
+
 
         KYOKA_KYOKA_NO_MI = KaziRegistry.registerItem(
                 "kyoka_kyoka_no_mi",

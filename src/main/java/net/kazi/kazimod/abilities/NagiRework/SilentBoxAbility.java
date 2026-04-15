@@ -24,6 +24,7 @@ import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import net.kazi.kazimod.init.KaziEffects;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModDamageSource;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 
@@ -109,6 +110,10 @@ public class SilentBoxAbility extends Ability {
         return true;
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = (new AbilityCore.Builder<>("Silent Box", AbilityCategory.DEVIL_FRUITS, SilentBoxAbility::new))
                 .setIcon(ICON)
@@ -118,6 +123,7 @@ public class SilentBoxAbility extends Ability {
                         CooldownComponent.getTooltip(COOLDOWN),
                         DealDamageComponent.getTooltip(DAMAGE)
                 })
+                .setUnlockCheck(SilentBoxAbility::canUnlock)
                 .setSourceType(new SourceType[]{SourceType.FIST})
                 .setSourceHakiNature(SourceHakiNature.HARDENING)
                 .build();

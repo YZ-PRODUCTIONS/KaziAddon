@@ -6,6 +6,7 @@ import net.kazi.kazimod.entities.boss.aizen.AizenBossEntity;
 import net.kazi.kazimod.entities.boss.gojo.GojoBossEntity;
 import net.kazi.kazimod.entities.boss.law.LawBossEntity;
 import net.kazi.kazimod.entities.boss.luffy.LuffyBossEntity;
+import net.kazi.kazimod.entities.boss.sunjinwoo.SunJinWooBossEntity;
 import net.kazi.kazimod.entities.boss.sukuna.SukunaBossEntity;
 import net.kazi.kazimod.entities.projectiles.*;
 import net.minecraft.entity.EntityClassification;
@@ -224,6 +225,14 @@ public class KaziEntities {
                             .clientTrackingRange(80)
                             .noSave()
                             .build("aizen_boss"));
+
+    public static final RegistryObject<EntityType<SunJinWooBossEntity>> SUN_JIN_WOO_BOSS =
+            ENTITY_TYPES.register("sun_jin_woo_boss", () ->
+                    EntityType.Builder.<SunJinWooBossEntity>of(SunJinWooBossEntity::new, EntityClassification.MONSTER)
+                            .sized(0.6f, 1.95f)
+                            .clientTrackingRange(80)
+                            .noSave()
+                            .build("sun_jin_woo_boss"));
 
     public static final RegistryObject<EntityType<VegapunkTraderEntity>> VEGAPUNK_TRADER =
             ENTITY_TYPES.register("vegapunk_trader", () ->

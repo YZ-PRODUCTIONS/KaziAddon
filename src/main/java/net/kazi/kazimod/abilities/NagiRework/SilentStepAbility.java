@@ -30,6 +30,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.DealDamageComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModDamageSource;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
@@ -114,6 +115,10 @@ public class SilentStepAbility extends Ability {
         this.cooldownComponent.startCooldown(entity, COOLDOWN);
     }
 
+    private static boolean canUnlock(LivingEntity user) {
+        return DevilFruitCapability.get(user).hasAwakenedFruit();
+    }
+
     static {
         INSTANCE = (new AbilityCore.Builder<>("Silent Step", AbilityCategory.DEVIL_FRUITS, SilentStepAbility::new))
                 .setIcon(ICON)
@@ -123,6 +128,7 @@ public class SilentStepAbility extends Ability {
                         CooldownComponent.getTooltip(COOLDOWN),
                         DealDamageComponent.getTooltip(DAMAGE)
                 })
+                .setUnlockCheck(SilentStepAbility::canUnlock)
                 .setSourceHakiNature(SourceHakiNature.HARDENING)
                 .build();
     }

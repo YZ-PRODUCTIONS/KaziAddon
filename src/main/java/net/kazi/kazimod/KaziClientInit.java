@@ -6,6 +6,7 @@ import net.kazi.kazimod.client.renderers.AizenBossRenderer;
 import net.kazi.kazimod.client.renderers.GojoBossRenderer;
 import net.kazi.kazimod.client.renderers.LawBossRenderer;
 import net.kazi.kazimod.client.renderers.LuffyBossRenderer;
+import net.kazi.kazimod.client.renderers.SunJinWooBossRenderer;
 import net.kazi.kazimod.client.renderers.SukunaBossRenderer;
 import net.kazi.kazimod.effects.FlashbangEffect;
 import net.kazi.kazimod.entities.ShadowDoppelmanEntity;
@@ -65,6 +66,10 @@ public final class KaziClientInit {
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.AIZEN_BOSS.get(),
                 AizenBossRenderer::new
+        );
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.SUN_JIN_WOO_BOSS.get(),
+                SunJinWooBossRenderer::new
         );
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.SHADOW_DOPPELMAN.get(),

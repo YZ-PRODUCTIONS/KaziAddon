@@ -8,7 +8,7 @@ license="All Rights Reserved"
 
 [[mods]] #mandatory
 modId="kazimod" #mandatory
-version="3.21" #mandatory
+version="3.3" #mandatory
 displayName="KazisAdditions" #mandatory
 authors="kazi" #optional
 

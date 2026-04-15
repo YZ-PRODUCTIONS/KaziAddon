@@ -243,23 +243,6 @@ public abstract class CartStylesReplace {
             };
         }
 
-        if (resourceName.equalsIgnoreCase("kendo")) {
-            modifiedStyle = () -> {
-                CharacterCreatorSelectionMap.SelectionInfo info =
-                        new CharacterCreatorSelectionMap.SelectionInfo(CartResources.ITTORYU);
-
-                info.addTopAbilities(new AbilityCore[]{
-                        SeveranceAbility.INSTANCE,
-                        ZanshiAbility.INSTANCE
-                });
-
-                info.addBottomAbilities(new AbilityCore[0]);
-
-                I val = (I) new StyleId(info, true, 1);
-                return val;
-            };
-        }
-
         if (resourceName.equalsIgnoreCase("saber")) {
             modifiedStyle = () -> {
                 CharacterCreatorSelectionMap.SelectionInfo info =

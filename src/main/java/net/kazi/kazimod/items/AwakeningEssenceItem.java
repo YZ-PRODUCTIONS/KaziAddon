@@ -45,6 +45,7 @@ public class AwakeningEssenceItem extends Item {
     private static final ResourceLocation BOMU_BOMU_NO_MI = new ResourceLocation("mineminenomi","bomu_bomu_no_mi");
     private static final ResourceLocation OPE_OPE_NO_MI = new ResourceLocation("mineminenomi","ope_ope_no_mi");
     private static final ResourceLocation KYOKA_KYOKA_NO_MI = new ResourceLocation("kazimod", "kyoka_kyoka_no_mi");
+    private static final ResourceLocation NAGI_NAGI_NO_MI = new ResourceLocation("mineminenomi", "nagi_nagi_no_mi");
 
     public AwakeningEssenceItem() {
         super(new Item.Properties()
@@ -82,8 +83,9 @@ public class AwakeningEssenceItem extends Item {
         boolean isBomu = fruit.isPresent() && BOMU_BOMU_NO_MI.equals(fruit.get());
         boolean isOpe = fruit.isPresent() && OPE_OPE_NO_MI.equals(fruit.get());
         boolean isKyoka = fruit.isPresent() && KYOKA_KYOKA_NO_MI.equals(fruit.get());
+        boolean isNagi = fruit.isPresent() && NAGI_NAGI_NO_MI.equals(fruit.get());
 
-        if (!isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka) {
+        if (!isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi) {
             player.sendMessage(new StringTextComponent(
                             "\u00a7cOnly a user eligible for awakening can use this item."),
                     player.getUUID());
@@ -168,6 +170,10 @@ public class AwakeningEssenceItem extends Item {
                 bossEntity = KaziEntities.LAW_BOSS.get().spawn(
                         serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
                 entranceSound = xyz.pixelatedw.mineminenomi.init.ModSounds.ROOM_CREATE_SFX.get();
+            } else if (isNagi) {
+                bossEntity = KaziEntities.SUN_JIN_WOO_BOSS.get().spawn(
+                        serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
+                entranceSound = net.minecraft.util.SoundEvents.ENDERMAN_TELEPORT;
             } else {
                 bossEntity = KaziEntities.BAKUGO_BOSS.get().spawn(
                         serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);

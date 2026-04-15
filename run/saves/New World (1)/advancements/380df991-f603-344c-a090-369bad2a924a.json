@@ -323,6 +323,12 @@
     },
     "done": true
   },
+  "mineminenomi:devil_fruits/root": {
+    "criteria": {
+      "eat_fruit": "2026-04-10 15:01:02 -0700"
+    },
+    "done": true
+  },
   "minecraft:recipes/brewing/cauldron": {
     "criteria": {
       "has_water_bucket": "2026-03-22 19:22:27 -0700"

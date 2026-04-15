@@ -377,7 +377,6 @@ public class KaziDickSetup {
 
         // ── NAGI NAGI NO MI ──────────────────────────────────
         FruitAbilityInjector.addAbilities(ModAbilities.NAGI_NAGI_NO_MI,
-                SilentStrideAbility.INSTANCE,
                 SilentSliceAbility.INSTANCE,
                 SilentStepAbility.INSTANCE,
                 SilentBoxAbility.INSTANCE,
