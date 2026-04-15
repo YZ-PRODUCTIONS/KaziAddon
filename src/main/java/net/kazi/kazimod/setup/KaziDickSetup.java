@@ -237,7 +237,7 @@ public class KaziDickSetup {
         FruitAbilityInjector.addAbilities(ModAbilities.MERA_MERA_NO_MI,
                 HeatDashRework.INSTANCE, HidarumaRework.INSTANCE, HikenRework.INSTANCE);
 
-        // â”€â”€ NETSU NETSU NO MI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        //  NETSU NETSU NO MI
         FruitAbilityInjector.addAbilities(ModAbilities.NETSU_NETSU_NO_MI,
                 HellfireBirdAbility.INSTANCE, InfernalColumnAbility.INSTANCE, PhoenixDiveAbility.INSTANCE);
 
