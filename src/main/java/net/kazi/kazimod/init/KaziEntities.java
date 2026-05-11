@@ -152,14 +152,6 @@ public class KaziEntities {
                             .setUpdateInterval(1)
                             .build("cluster"));
 
-    public static final RegistryObject<EntityType<ReworkedHikenProjectile>> REWORKED_HIKEN =
-            ENTITY_TYPES.register("reworked_hiken", () ->
-                    EntityType.Builder.<ReworkedHikenProjectile>of(ReworkedHikenProjectile::new, EntityClassification.MISC)
-                            .sized(8.0f, 8.0f)
-                            .fireImmune()
-                            .clientTrackingRange(64)
-                            .setUpdateInterval(1)
-                            .build("reworked_hiken"));
 
     public static final RegistryObject<EntityType<HellfireBirdProjectile>> HELLFIRE_BIRD =
             ENTITY_TYPES.register("hellfire_bird", () ->
@@ -280,6 +272,14 @@ public class KaziEntities {
                             .build("dark_spear"));
 
     // ── Nagi Nagi no Mi projectiles ──────────────────────────────────────
+    public static final RegistryObject<EntityType<BloodRiverProjectile>> BLOOD_RIVER_PROJECTILE =
+            ENTITY_TYPES.register("blood_river_projectile", () ->
+                    EntityType.Builder.<BloodRiverProjectile>of(BloodRiverProjectile::new, EntityClassification.MISC)
+                            .sized(1.0f, 1.0f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("blood_river_projectile"));
+
     public static final RegistryObject<EntityType<SilentSliceProjectile>> SILENT_SLICE =
             ENTITY_TYPES.register("silent_slice", () ->
                     EntityType.Builder.<SilentSliceProjectile>of(SilentSliceProjectile::new, EntityClassification.MISC)

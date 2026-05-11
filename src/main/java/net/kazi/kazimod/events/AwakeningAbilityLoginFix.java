@@ -61,9 +61,7 @@ public class AwakeningAbilityLoginFix {
     private static final Set<UUID> awakeningInProgress = new HashSet<>();
 
     static {
-        MERA_REPLACEMENTS.put(HeatDashAbility.INSTANCE, HeatDashRework.INSTANCE);
-        MERA_REPLACEMENTS.put(HidarumaAbility.INSTANCE, HidarumaRework.INSTANCE);
-        MERA_REPLACEMENTS.put(HikenAbility.INSTANCE, HikenRework.INSTANCE);
+
     }
 
     public static void beginAwakening(UUID playerUUID) {

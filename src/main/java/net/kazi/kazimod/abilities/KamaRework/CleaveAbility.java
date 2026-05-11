@@ -52,11 +52,11 @@ public class CleaveAbility extends Ability {
 
     // ── Tuning ────────────────────────────────────────────────────────────────
     private static final float  COOLDOWN          = 240.0F;
-    private static final float  HOLD_DURATION     = 60.0F;   // 3 slashes × 20 ticks
+    private static final float  HOLD_DURATION     = 30.0F;   // 3 slashes × 20 ticks
     private static final float  HIT_DAMAGE        = 15.0F;
     private static final double THROW_POWER_XZ    = 2.0;
     private static final double THROW_POWER_Y     = 0.6;
-    private static final int    SLASH_EVERY_TICKS = 20;
+    private static final int    SLASH_EVERY_TICKS = 10;
     private static final int    MAX_SLASHES       = 3;
     private static final double HOLD_DISTANCE     = 1.8;
 

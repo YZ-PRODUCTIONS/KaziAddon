@@ -88,13 +88,6 @@ public final class KaziClientInit {
                 }
         );
 
-        RenderingRegistry.registerEntityRenderingHandler(
-                KaziEntities.REWORKED_HIKEN.get(),
-                (new AbilityProjectileRenderer.Factory(new FistModel()))
-                        .setTexture("hiken")
-                        .setScale(10.0D)
-                        .setGlowing()
-        );
 
         MinecraftForge.EVENT_BUS.register(FlashbangEffect.class);
         MinecraftForge.EVENT_BUS.register(new SizeRenderHandler());

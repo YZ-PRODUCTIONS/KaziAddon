@@ -62,6 +62,7 @@ public class KaziMod {
         MinecraftForge.EVENT_BUS.register(new AwakeningAbilityLoginFix());
         MinecraftForge.EVENT_BUS.register(new RecipeRemovalHandler());
         MinecraftForge.EVENT_BUS.register(new BossWaterCancelHandler());
+        MinecraftForge.EVENT_BUS.register(new BootBoostFallHandler());
 
         LOGGER.info("kazimod constructed");
     }

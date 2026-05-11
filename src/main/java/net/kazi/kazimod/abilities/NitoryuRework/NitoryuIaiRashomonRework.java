@@ -42,10 +42,10 @@ import java.util.List;
 
 
 public class NitoryuIaiRashomonRework extends Ability {
-    private static final float COOLDOWN = 280.0F;
+    private static final float COOLDOWN = 180.0F;
     private static final int CHARGE_TIME = 20;
-    private static final float DAMAGE = 50.0F;
-    private static final float RANGE = 2.5F;
+    private static final float DAMAGE = 35.0F;
+    private static final float RANGE = 5.0F;
     private static final float MAX_TELEPORT_DISTANCE = 25.0F;
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "nitoryu_iai_rashomon", new Pair[]{ImmutablePair.of("The user dashes forward slightly, and slashes all those in front of them", (Object)null)});
 

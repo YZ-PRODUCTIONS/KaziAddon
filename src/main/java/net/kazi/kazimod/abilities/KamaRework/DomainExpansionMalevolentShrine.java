@@ -59,8 +59,8 @@ public class DomainExpansionMalevolentShrine extends Ability {
                     new Pair[]{ImmutablePair.of("The pinnacle of power", (Object) null)});
 
     private static final float  COOLDOWN                = 2400.0F;
-    private static final float  CHARGE_TIME             = 60.0F;
-    private static final float  HOLD_TIME               = 600.0F;
+    private static final float  CHARGE_TIME             = 100.0F;
+    private static final float  HOLD_TIME               = 400.0F;
     private static final float  RANGE                   = 150.0F;
     private static final float  DAMAGE                  = 6.0F;
     private static final int    DAMAGE_INTERVAL_TICKS   = 20;
@@ -68,7 +68,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
     private static final double SPAWN_BEHIND_DISTANCE   = 3.0;
     private static final int    PARTICLE_COUNT          = 4020;
     private static final float  MIN_COOLDOWN            = 1200.0F;
-    private static final float  MAX_COOLDOWN            = 3600.0F;
+    private static final float  MAX_COOLDOWN            = 3000.0F;
 
     public static final AbilityCore<DomainExpansionMalevolentShrine> INSTANCE;
 

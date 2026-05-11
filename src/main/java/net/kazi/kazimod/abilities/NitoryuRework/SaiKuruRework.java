@@ -62,7 +62,7 @@ public class SaiKuruRework extends Ability {
     private static final float COOLDOWN = 300.0F;
     private static final float DAMAGE = 10.0F;
     private static final float RANGE = 9.5F;
-    private final Interval damageInterval = new Interval(15);
+    private final Interval damageInterval = new Interval(20);
     public static final AbilityCore<SaiKuruRework> INSTANCE;
     private final ContinuousComponent continuousComponent = (new ContinuousComponent(this)).addStartEvent(this::startContinuousEvent).addTickEvent(this::tickContinuousEvent).addEndEvent(this::endContinuousEvent);
     private final DealDamageComponent dealDamageComponent = new DealDamageComponent(this);

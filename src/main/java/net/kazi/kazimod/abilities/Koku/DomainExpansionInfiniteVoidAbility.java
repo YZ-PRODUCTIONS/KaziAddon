@@ -38,8 +38,8 @@ import java.util.*;
 public class DomainExpansionInfiniteVoidAbility extends Ability {
 
     private static final ITextComponent[] DESCRIPTION;
-    private static final float CHARGE_TIME      = 60.0f;
-    private static final float DOMAIN_DURATION  = 160.0f;
+    private static final float CHARGE_TIME      = 100.0f;
+    private static final float DOMAIN_DURATION  = 100.0f;
     private static final float MIN_COOLDOWN     = 1200.0f;
     private static final float MAX_COOLDOWN     = 2400.0f;
     private static final float RADIUS           = 30.0f;

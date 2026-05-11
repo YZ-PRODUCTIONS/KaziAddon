@@ -32,8 +32,8 @@ public class InfinityAbility extends Ability {
             new Pair[]{ImmutablePair.of("Activates Infinity, an infinite convergence that slows all matter to a halt before it can reach Gojo. Negates all incoming damage while active.", (Object) null)}
     );
 
-    private static final float COOLDOWN_PER_STACK = 180.0F;
-    private static final int   MAX_STACKS         = 6;
+    private static final float COOLDOWN_PER_STACK = 300.0F;
+    private static final int   MAX_STACKS         = 3;
 
     public static final AbilityCore<InfinityAbility> INSTANCE;
 

@@ -51,7 +51,7 @@
 		#Which selection mode to use.
 		#Default: DRAG_AND_DROP
 		#Allowed Values: DRAG_AND_DROP, KEYBIND
-		"Ability List Selection Mode" = "DRAG_AND_DROP"
+		"Ability List Selection Mode" = "KEYBIND"
 		#Shows the ability tooltips when hovering them
 		#Default: true
 		"Ability List Show Tooltips" = true

@@ -47,7 +47,7 @@ public class LapseBlueAbility extends Ability {
     );
 
     private static final float COOLDOWN = 400.0F;
-    private static final float PULL_CONTINUITY_TIME = 200.0F;
+    private static final float PULL_CONTINUITY_TIME = 100.0F;
     private static final float CHARGE_TIME = 60.0F;
     private static final float PULL_RANGE = 25.0F;
     private static final float GRAB_INITIATE_DISTANCE = 6.0F;

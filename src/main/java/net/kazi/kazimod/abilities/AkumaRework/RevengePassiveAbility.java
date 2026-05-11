@@ -48,6 +48,10 @@ public class RevengePassiveAbility extends PassiveAbility2 {
 
     private final DamageTakenComponent damageTakenComponent;
 
+    private static final int DECAY_INTERVAL = 40;
+    private static final float DECAY_AMOUNT = 5.0F;
+    private int decayTicker = 0;
+
     public RevengePassiveAbility(AbilityCore<RevengePassiveAbility> core) {
         super(core);
         this.damageTakenComponent = new DamageTakenComponent(this, this::onDamageTaken, DamageState.ATTACK);
@@ -60,15 +64,13 @@ public class RevengePassiveAbility extends PassiveAbility2 {
         }
     }
 
-    private static final int DECAY_INTERVAL = 40; // 2 seconds
-    private static final float DECAY_AMOUNT = 5.0F;
-    private int decayTicker = 0;
-
     @Override
     public void tick(LivingEntity entity) {
         super.tick(entity);
-        if (entity.level.isClientSide) return;
-        if (this.storedDamage <= 0) {
+        if (entity.level.isClientSide) {
+            return;
+        }
+        if (this.storedDamage <= 0.0F) {
             this.decayTicker = 0;
             return;
         }
@@ -101,7 +103,6 @@ public class RevengePassiveAbility extends PassiveAbility2 {
         }
     }
 
-    // ── NBT persistence ───────────────────────────────────────────────────────
     @Override
     public CompoundNBT save(CompoundNBT nbt) {
         nbt.putFloat("storedDamage", this.storedDamage);
@@ -113,7 +114,6 @@ public class RevengePassiveAbility extends PassiveAbility2 {
         this.storedDamage = MathHelper.clamp(nbt.getFloat("storedDamage"), 0.0F, MAX_STORED_DAMAGE);
     }
 
-    // ── Gauge renderer (client only) ──────────────────────────────────────────
     @OnlyIn(Dist.CLIENT)
     public void renderGauge(PlayerEntity player, MatrixStack matrixStack, int posX, int posY, RevengePassiveAbility ability) {
         RenderSystem.enableBlend();
@@ -121,7 +121,6 @@ public class RevengePassiveAbility extends PassiveAbility2 {
         mc.getTextureManager().bind(ModResources.WIDGETS);
         RendererHelper.drawAbilityIcon(INSTANCE, matrixStack, (float) posX, (float) (posY - 38), 0, 32.0F, 32.0F);
         String label = FORMAT.format((double) ability.getStoredDamage());
-        // Color shifts from gray to red as damage fills up
         float ratio = ability.getStoredDamage() / MAX_STORED_DAMAGE;
         int r = (int) (100 + 155 * ratio);
         int g = (int) (100 * (1 - ratio));

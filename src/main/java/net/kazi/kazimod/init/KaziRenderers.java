@@ -141,6 +141,10 @@ public class KaziRenderers {
 
         // ── Nagi Nagi no Mi projectile renderers ─────────────────────────────
         RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.BLOOD_RIVER_PROJECTILE.get(),
+                (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
+
+        RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.SILENT_SLICE.get(),
                 (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
 

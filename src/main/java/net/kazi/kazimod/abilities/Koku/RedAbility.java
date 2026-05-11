@@ -58,7 +58,7 @@ public class RedAbility extends Ability {
     private static final ResourceLocation RED_ICON =
             new ResourceLocation("kazimod", "textures/abilities/red.png");
 
-    public static final float COOLDOWN = 200.0F;
+    public static final float COOLDOWN = 300.0F;
     public static final float MAX_OUTPUT_COOLDOWN = 700.0F;
     private static final float CHARGE_TIME = 20.0F;
     public static final AbilityCore<RedAbility> INSTANCE;

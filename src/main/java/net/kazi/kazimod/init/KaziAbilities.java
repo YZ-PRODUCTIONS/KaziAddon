@@ -7,6 +7,7 @@ import net.kazi.kazimod.abilities.BaneRework.SpringSnipeRework;
 import net.kazi.kazimod.abilities.BaraRework.KuchuKirimomiDaiCircusRework;
 import net.kazi.kazimod.abilities.BariRework.BarrierGuardAbility;
 import net.kazi.kazimod.abilities.BlacklegRework.AntiMatterKickCourseRework;
+import net.kazi.kazimod.abilities.BlacklegRework.ConcasseRework;
 import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
 import net.kazi.kazimod.abilities.BomuRework.*;
 import net.kazi.kazimod.abilities.BrawlerRework.*;
@@ -90,6 +91,10 @@ import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
 import net.kazi.kazimod.abilities.RyusokenRework.TalonRushRework;
 import net.kazi.kazimod.abilities.SaberRework.HeavenSlash;
+import net.kazi.kazimod.abilities.ServerUtility.BootBoost;
+import net.kazi.kazimod.abilities.ServerUtility.DevilFruitDamageMultiplier125Ability;
+import net.kazi.kazimod.abilities.ServerUtility.DevilFruitDamageMultiplierAbility;
+import net.kazi.kazimod.abilities.ServerUtility.ZoanAwakening;
 import net.kazi.kazimod.abilities.SoruRework.SoulRecoveryRework;
 import net.kazi.kazimod.abilities.SpearRework.AbsolutePierceRework;
 import net.kazi.kazimod.abilities.SpearRework.DrillJabRework;
@@ -100,6 +105,9 @@ import net.kazi.kazimod.abilities.Toki.*;
 import net.kazi.kazimod.abilities.ToriNueRework.FlameBlessingRework;
 import net.kazi.kazimod.abilities.ToriNueRework.ImperialFlameRIngCommandmentRework;
 import net.kazi.kazimod.abilities.Toshi.*;
+import net.kazi.kazimod.abilities.VampAwaken.BloodRiver;
+import net.kazi.kazimod.abilities.VampAwaken.Feast;
+import net.kazi.kazimod.abilities.VampAwaken.SoulsPassive;
 import net.kazi.kazimod.abilities.UoSeiryuRework.SeiryuHeavyPointRework;
 import net.kazi.kazimod.abilities.YamiRework.BlackHoleRework;
 import net.kazi.kazimod.abilities.boss.gojo.BossHollowPurpleAbility;
@@ -152,6 +160,7 @@ public class KaziAbilities {
             RageRushAbility.INSTANCE,
             ExplodingKarmaAbility.INSTANCE,
             PartyTableKickCourseRework.INSTANCE,
+            ConcasseRework.INSTANCE,
             TyrantCleaveRework.INSTANCE,
             BerserkRework.INSTANCE,
             FutenrakuRework.INSTANCE,
@@ -217,9 +226,6 @@ public class KaziAbilities {
             ElectricalShowerRework.INSTANCE,
             ElectricalBurstRework.INSTANCE,
             ElectricalTempestaRework.INSTANCE,
-            HeatDashRework.INSTANCE,
-            HidarumaRework.INSTANCE,
-            HikenRework.INSTANCE,
             HellfireBirdAbility.INSTANCE,
             HeavenSlash.INSTANCE,
             InfernalColumnAbility.INSTANCE,
@@ -253,6 +259,7 @@ public class KaziAbilities {
             DomainExpansionInfiniteVoidAbility.INSTANCE,
             SpinningBrawlRework.INSTANCE,
             SuplexRework.INSTANCE,
+            Feast.INSTANCE,
             SunshineAbility.INSTANCE,
             CruelSunAbility.INSTANCE,
             HitoDaibutsuPointRework.INSTANCE,
@@ -290,6 +297,10 @@ public class KaziAbilities {
             BusoshokuHakiFullBodyHardeningRework.INSTANCE,
             KenbunshokuHakiFutureSightRework.INSTANCE,
             HakiSenseAbility.INSTANCE,
+            BootBoost.INSTANCE,
+            DevilFruitDamageMultiplier125Ability.INSTANCE,
+            DevilFruitDamageMultiplierAbility.INSTANCE,
+            ZoanAwakening.INSTANCE,
             SeveranceAbility.INSTANCE,
             ZanshiAbility.INSTANCE,
             SenbonzakuraAbility.INSTANCE,
@@ -300,6 +311,8 @@ public class KaziAbilities {
             FullCounterAbility.INSTANCE,
             RevengePassiveAbility.INSTANCE,
             RevengeCounterAbility.INSTANCE,
+            BloodRiver.INSTANCE,
+            SoulsPassive.INSTANCE,
             HellblazeAbility.INSTANCE,
             KamiChigiriAbility.INSTANCE,
             DivineSlayerAbility.INSTANCE,
