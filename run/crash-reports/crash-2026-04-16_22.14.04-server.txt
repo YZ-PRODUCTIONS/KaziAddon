@@ -1,0 +1,114 @@
+---- Minecraft Crash Report ----
+// Shall we play a game?
+
+Time: 4/16/26 10:14 PM
+Description: Ticking entity
+
+java.lang.IllegalArgumentException: The team name 'kazimod_blood_river_red' is too long!
+	at net.minecraft.scoreboard.Scoreboard.addPlayerTeam(Scoreboard.java:184) ~[forge:?] {re:classloading}
+	at net.kazi.kazimod.entities.projectiles.BloodRiverProjectile.applyRedGlow(BloodRiverProjectile.java:86) ~[?:?] {re:classloading}
+	at net.kazi.kazimod.entities.projectiles.BloodRiverProjectile.onEntityImpactEvent(BloodRiverProjectile.java:75) ~[?:?] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity.onModHit(AbilityProjectileEntity.java:632) ~[mineminenomi:0.10.10] {re:classloading,re:mixin}
+	at xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity.checkEntityCollision(AbilityProjectileEntity.java:353) ~[mineminenomi:0.10.10] {re:classloading,re:mixin}
+	at xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity.tick(AbilityProjectileEntity.java:290) ~[mineminenomi:0.10.10] {re:classloading,re:mixin}
+	at net.minecraft.world.server.ServerWorld.tickNonPassenger(ServerWorld.java:612) ~[forge:?] {re:mixin,re:classloading,pl:mixin:APP:mine-mine-no-mi.mixins.json:IServerWorldMixin,pl:mixin:APP:mine-mine-no-mi.mixins.json:ServerWorldMixin,pl:mixin:A}
+	at net.minecraft.world.World.guardEntityTick(World.java:554) ~[forge:?] {re:mixin,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B,pl:mixin:APP:mine-mine-no-mi.mixins.json:WorldMixin,pl:mixin:A}
+	at net.minecraft.world.server.ServerWorld.tick(ServerWorld.java:405) ~[forge:?] {re:mixin,re:classloading,pl:mixin:APP:mine-mine-no-mi.mixins.json:IServerWorldMixin,pl:mixin:APP:mine-mine-no-mi.mixins.json:ServerWorldMixin,pl:mixin:A}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:851) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:787) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.integrated.IntegratedServer.tickServer(IntegratedServer.java:78) ~[forge:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:642) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:232) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:750) [?:1.8.0_482] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at net.minecraft.scoreboard.Scoreboard.addPlayerTeam(Scoreboard.java:184) ~[forge:?] {re:classloading}
+	at net.kazi.kazimod.entities.projectiles.BloodRiverProjectile.applyRedGlow(BloodRiverProjectile.java:86) ~[?:?] {re:classloading}
+	at net.kazi.kazimod.entities.projectiles.BloodRiverProjectile.onEntityImpactEvent(BloodRiverProjectile.java:75) ~[?:?] {re:classloading}
+	at xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity.onModHit(AbilityProjectileEntity.java:632) ~[mineminenomi:0.10.10] {re:classloading,re:mixin}
+	at xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity.checkEntityCollision(AbilityProjectileEntity.java:353) ~[mineminenomi:0.10.10] {re:classloading,re:mixin}
+	at xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity.tick(AbilityProjectileEntity.java:290) ~[mineminenomi:0.10.10] {re:classloading,re:mixin}
+	at net.minecraft.world.server.ServerWorld.tickNonPassenger(ServerWorld.java:612) ~[forge:?] {re:mixin,re:classloading,pl:mixin:APP:mine-mine-no-mi.mixins.json:IServerWorldMixin,pl:mixin:APP:mine-mine-no-mi.mixins.json:ServerWorldMixin,pl:mixin:A}
+-- Entity being ticked --
+Details:
+	Entity Type: kazimod:blood_river_projectile (net.kazi.kazimod.entities.projectiles.BloodRiverProjectile)
+	Entity ID: 471
+	Entity Name: entity.kazimod.blood_river_projectile
+	Entity's Exact location: 170.38, 81.99, -225.96
+	Entity's Block location: World: (170,81,-226), Chunk: (at 10,5,14 in 10,-15; contains blocks 160,0,-240 to 175,255,-225), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,0,-512 to 511,255,-1)
+	Entity's Momentum: -1.82, -1.77, -1.42
+	Entity's Passengers: []
+	Entity's Vehicle: ~~ERROR~~ NullPointerException: null
+Stacktrace:
+	at net.minecraft.world.World.guardEntityTick(World.java:554) ~[forge:?] {re:mixin,pl:accesstransformer:B,re:classloading,pl:accesstransformer:B,pl:mixin:APP:mine-mine-no-mi.mixins.json:WorldMixin,pl:mixin:A}
+	at net.minecraft.world.server.ServerWorld.tick(ServerWorld.java:405) ~[forge:?] {re:mixin,re:classloading,pl:mixin:APP:mine-mine-no-mi.mixins.json:IServerWorldMixin,pl:mixin:APP:mine-mine-no-mi.mixins.json:ServerWorldMixin,pl:mixin:A}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; [ServerPlayerEntity['Dev'/281, l='ServerLevel[New World]', x=176.05, y=85.99, z=-221.59]]
+	Chunk stats: ServerChunkCache: 2087
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (112,76,-192), Chunk: (at 0,4,0 in 7,-12; contains blocks 112,0,-192 to 127,255,-177), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,0,-512 to 511,255,-1)
+	Level time: 96053 game time, 57513 day time
+	Level name: New World
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+	Level weather: Rain time: 15575 (now: true), thunder time: 60187 (now: false)
+	Known server brands: forge
+	Level was modded: true
+	Level storage version: 0x04ABD - Anvil
+Stacktrace:
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:851) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:787) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.integrated.IntegratedServer.tickServer(IntegratedServer.java:78) ~[forge:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:642) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:232) ~[forge:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:750) [?:1.8.0_482] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.5
+	Minecraft Version ID: 1.16.5
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_482, Amazon.com Inc.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Amazon.com Inc.
+	Memory: 1334370200 bytes (1272 MB) / 2148007936 bytes (2048 MB) up to 3769630720 bytes (3595 MB)
+	CPUs: 16
+	JVM Flags: 2 total; -XX:+IgnoreUnrecognizedVMOptions -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	ModLauncher: 8.1.3+8.1.3+main-8.1.x.c94d18ec
+	ModLauncher launch target: fmluserdevclient
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		/mixin-0.8.4.jar mixin PLUGINSERVICE 
+		/eventbus-4.0.0.jar eventbus PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar object_holder_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar runtime_enum_extender PLUGINSERVICE 
+		/accesstransformers-3.0.1.jar accesstransformer PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar capability_inject_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar runtimedistcleaner PLUGINSERVICE 
+		/mixin-0.8.4.jar mixin TRANSFORMATIONSERVICE 
+		/forge-1.16.5-36.2.39_mapped_official_1.16.5-launcher.jar fml TRANSFORMATIONSERVICE 
+	FML: 36.2
+	Forge: net.minecraftforge:36.2.39
+	FML Language Providers: 
+		javafml@36.2
+		minecraft@1
+	Mod List: 
+		client-extra.jar                                  |Minecraft                     |minecraft                     |1.16.5              |DONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp|Forge                         |forge                         |36.2.39             |DONE      |Manifest: NOSIGNATURE
+		mine-mine-no-mi-78726-7170763_mapped_official_1.16|Mine Mine no Mi               |mineminenomi                  |0.10.10             |DONE      |Manifest: NOSIGNATURE
+		main                                              |KazisAdditions                |kazimod                       |3.3                 |DONE      |Manifest: NOSIGNATURE
+		curios-309927-4419403_mapped_official_1.16.5.jar  |Curios API                    |curios                        |1.16.5-4.1.0.0      |DONE      |Manifest: NOSIGNATURE
+		carts-mmnm-addon-1143743-7661122_mapped_official_1|Cart's mmnm Addon             |cartaddon                     |0.7.51              |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: a340f825-8798-460e-8e95-54bf5780c34b
+	Player Count: 1 / 8; [ServerPlayerEntity['Dev'/281, l='ServerLevel[New World]', x=176.05, y=85.99, z=-221.59]]
+	Data Packs: vanilla, mod:forge, mod:mineminenomi, mod:kazimod, mod:curios, mod:cartaddon
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'forge'
