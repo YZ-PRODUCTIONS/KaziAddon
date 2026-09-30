@@ -1,0 +1,24 @@
+{
+  "blacklist": [
+    {
+      "uuid": "52fc07ad-d0a4-483a-bb30-faf426a21360",
+      "reason": "Cheating"
+    },
+    {
+      "uuid": "b64dd9fc-ee31-41b6-8336-23ea7f406292",
+      "reason": "Cheating"
+    },
+    {
+      "uuid": "3ac3f436-5935-47c2-bd13-5b6c79ccf9c6",
+      "reason": "Cheating"
+    },
+    {
+      "uuid": "ea509837-ba46-452a-a5ef-dbca76db6b41",
+      "reason": "Paedophilia"
+    },
+    {
+      "uuid": "1fde36e8-5910-450d-9207-81b5bd721140",
+      "reason": "Impersonation"
+    }
+  ]
+}

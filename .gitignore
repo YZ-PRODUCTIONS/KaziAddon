@@ -1,4 +1,23 @@
 # Project exclude paths
 /.gradle/
 /build/
-/build/classes/java/main/
+
+# Generated Minecraft/Forge run data
+/run/
+/run-data/
+/src/generated/
+
+# Local build outputs and extracted reference projects
+/output/
+/catboys_fixed_build/
+/catboys_fixed_minimal/
+/port-1.20.1/
+/voxelmap-forge-1.20.1/
+
+# Local IDE/compiler output
+/out/
+*.class
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
