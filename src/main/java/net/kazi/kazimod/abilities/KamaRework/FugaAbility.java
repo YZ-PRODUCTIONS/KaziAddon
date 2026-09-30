@@ -42,6 +42,7 @@ public class FugaAbility extends Ability {
             .addTickEvent(this::duringChargeEvent)
             .addEndEvent(this::endChargeEvent);
     private final AnimationComponent animationComponent = new AnimationComponent(this);
+    private net.kazi.kazimod.entities.KamaVfxEntity chargeVisual;
     private final ProjectileComponent projectileComponent = new ProjectileComponent(this, this::createProjectile);
 
     public FugaAbility(AbilityCore<FugaAbility> core) {
@@ -49,6 +50,7 @@ public class FugaAbility extends Ability {
         this.isNew = true;
         this.addComponents(new AbilityComponent[]{this.chargeComponent, this.animationComponent, this.projectileComponent});
         this.addUseEvent(this::useEvent);
+        this.addRemoveEvent((entity, ability) -> stopChargeVisual());
     }
 
     private void useEvent(LivingEntity entity, IAbility ability) {
@@ -58,6 +60,8 @@ public class FugaAbility extends Ability {
     private void startChargeEvent(LivingEntity entity, IAbility ability) {
         // No launch — player floats via slowEntityFall in duringChargeEvent
         this.animationComponent.start(entity, KaziAnimations.FUGA_SUKUNA, (int) CHARGE_TIME);
+        stopChargeVisual();
+        this.chargeVisual = net.kazi.kazimod.entities.KamaVfxEntity.charge(entity, ability, (int) CHARGE_TIME);
 
         entity.level.playSound((PlayerEntity) null, entity.blockPosition(),
                 (SoundEvent) KaziSounds.FUGA_SFX.get(), SoundCategory.PLAYERS, 5.0F, 1.0F);
@@ -65,14 +69,16 @@ public class FugaAbility extends Ability {
 
     private void duringChargeEvent(LivingEntity entity, IAbility ability) {
         AbilityHelper.slowEntityFall(entity);
+        if (this.chargeVisual != null) this.chargeVisual.refresh(this.chargeComponent.getChargePercentage());
+    }
 
-        if (this.chargeComponent.getChargeTime() > 10.0F) {
-            WyHelper.spawnParticleEffect((ParticleEffect) KaziParticleEffects.FUGA.get(), entity,
-                    entity.getX(), entity.getY(), entity.getZ());
-        }
+    private void stopChargeVisual() {
+        if (this.chargeVisual != null) this.chargeVisual.remove();
+        this.chargeVisual = null;
     }
 
     private void endChargeEvent(LivingEntity entity, IAbility ability) {
+        stopChargeVisual();
         this.animationComponent.stop(entity);
         float multiplier = this.chargeComponent.getChargePercentage();
 

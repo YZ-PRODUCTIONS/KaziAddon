@@ -60,7 +60,7 @@ public class SpinningBrawlRework extends Ability {
     private static final double THROW_POWER_XZ = (double)2.0F;
     private static final double THROW_POWER_Y = (double)0.5F;
     private static final int SPIN_DAMAGE = 10;
-    private static final int MAIN_DAMAGE = 50;
+    private static final int MAIN_DAMAGE = 30;
     private static final int COOLDOWN = 180;
     private static final int CHARGE_TIME = 60;
     private static final int THROW_TIME = 40;

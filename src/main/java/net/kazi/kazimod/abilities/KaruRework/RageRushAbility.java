@@ -180,15 +180,6 @@ public class RageRushAbility extends Ability {
         this.lockedDamage = (float)(MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * karmaRatio);
         this.lockedKnockbackMultiplier = (float)(0.25 + (0.75 * karmaRatio));
 
-        // Debug logging
-        System.out.println("=== RAGE RUSH DEBUG ===");
-        System.out.println("Used Karma: " + this.usedKarma);
-        System.out.println("Karma Ratio: " + karmaRatio);
-        System.out.println("Locked Speed: " + this.lockedSpeed + " (min: " + MIN_MOVEMENT_SPEED + ", max: " + MAX_MOVEMENT_SPEED + ")");
-        System.out.println("Locked Range: " + this.lockedRange);
-        System.out.println("Locked Damage: " + this.lockedDamage);
-        System.out.println("Locked Knockback Multiplier: " + this.lockedKnockbackMultiplier);
-
         // Drain karma when ability starts
         if (this.karmaAbility.isPresent()) {
             this.karmaAbility.get().addKarma(entity, -KARMA_DRAIN);
@@ -247,13 +238,6 @@ public class RageRushAbility extends Ability {
         // Use the stored karma value for consistency
         double karmaRatio = this.usedKarma / 100.0;
         float cooldown = (float)(MIN_COOLDOWN + (MAX_COOLDOWN - MIN_COOLDOWN) * karmaRatio);
-
-        // Debug logging
-        System.out.println("=== RAGE RUSH COOLDOWN DEBUG ===");
-        System.out.println("Used Karma: " + this.usedKarma);
-        System.out.println("Karma Ratio: " + karmaRatio);
-        System.out.println("Cooldown: " + cooldown + " ticks (" + (cooldown/20.0F) + " seconds)");
-        System.out.println("Min Cooldown: " + MIN_COOLDOWN + ", Max Cooldown: " + MAX_COOLDOWN);
 
         // Apply the calculated cooldown
         this.cooldownComponent.startCooldown(entity, cooldown);

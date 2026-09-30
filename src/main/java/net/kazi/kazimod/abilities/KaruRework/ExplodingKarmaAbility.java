@@ -179,13 +179,6 @@ public class ExplodingKarmaAbility extends Ability {
         this.lockedAOE = (float)(MIN_AOE_RADIUS + (MAX_AOE_RADIUS - MIN_AOE_RADIUS) * karmaRatio);
         this.lockedDamage = (float)(MIN_DAMAGE + (MAX_DAMAGE - MIN_DAMAGE) * karmaRatio);
 
-        // Debug logging
-        System.out.println("=== EXPLODING KARMA DEBUG ===");
-        System.out.println("Used Karma: " + this.usedKarma);
-        System.out.println("Karma Ratio: " + karmaRatio);
-        System.out.println("Locked AOE: " + this.lockedAOE);
-        System.out.println("Locked Damage: " + this.lockedDamage);
-
         // Create and spawn the projectile
         this.karmaProjectile = (KarmaExplosionProjectile)this.projectileComponent.getNewProjectile(entity);
         this.karmaProjectile.setPos(entity.getX(), entity.getY() + (double)entity.getEyeHeight() + 7.5, entity.getZ());
@@ -294,8 +287,6 @@ public class ExplodingKarmaAbility extends Ability {
         if (this.karmaAbility.isPresent()) {
             float currentKarma = this.karmaAbility.get().getKarma();
             this.karmaAbility.get().addKarma(entity, -currentKarma); // Remove all karma
-            System.out.println("=== KARMA DEPLETED ===");
-            System.out.println("Removed " + currentKarma + " karma");
         }
 
         // Reset stored karma for next use

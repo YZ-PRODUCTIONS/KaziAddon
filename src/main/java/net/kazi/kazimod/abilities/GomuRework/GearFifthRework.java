@@ -36,6 +36,7 @@ import xyz.pixelatedw.mineminenomi.api.helpers.HakiHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
+import xyz.pixelatedw.mineminenomi.init.ModAbilities;
 import xyz.pixelatedw.mineminenomi.data.entity.haki.HakiDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.haki.IHakiData;
 import xyz.pixelatedw.mineminenomi.entities.LightningDischargeEntity;
@@ -453,7 +454,8 @@ public class GearFifthRework extends Ability {
     }
 
     private static boolean canUnlock(LivingEntity user) {
-        return DevilFruitCapability.get(user).hasAwakenedFruit();
+        return DevilFruitCapability.get(user).hasDevilFruit(ModAbilities.GOMU_GOMU_NO_MI)
+                && DevilFruitCapability.get(user).hasAwakenedFruit();
     }
 
     // =========================================================

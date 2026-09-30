@@ -6,6 +6,7 @@ import net.kazi.kazimod.items.ShadowSpearItem;
 import net.kazi.kazimod.items.ShadowSwordItem;
 import net.kazi.kazimod.items.ShadowWeaponItem;
 import net.kazi.kazimod.items.SkillBookItem;
+import net.kazi.kazimod.items.PairedSwordsItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -27,6 +28,9 @@ public class KaziItems2 {
 
     public static final RegistryObject<ShadowSwordItem> SHADOW_SWORD =
             ITEMS.register("shadow_sword", ShadowSwordItem::new);
+
+    public static final RegistryObject<PairedSwordsItem> KANSHOU_BAKUYA =
+            ITEMS.register("kanshou_bakuya", PairedSwordsItem::new);
 
     public static final RegistryObject<ShadowMaceItem> SHADOW_MACE =
             ITEMS.register("shadow_mace", ShadowMaceItem::new);

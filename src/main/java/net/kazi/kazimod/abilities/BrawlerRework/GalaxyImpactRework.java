@@ -94,7 +94,7 @@ public class GalaxyImpactRework extends Ability {
     private static final float G_DIVIDE_COOLDOWN = 1400.0F;
     private static final float G_DIVIDE_CHARGE = 60.0F;
     private static final float G_DIVIDE_DURATION = 80.0F;
-    private static final float IMPACT_PROJECTILE_SPEED = 6.0F; // Increased from 4.0F
+    private static final float IMPACT_PROJECTILE_SPEED = 3.0F;
     public static final AbilityCore<GalaxyImpactRework> INSTANCE;
     private final ProjectileComponent projectileComponent = new ProjectileComponent(this, this::createProjectile);
     private final AnimationComponent animationComponent = new AnimationComponent(this);
@@ -418,7 +418,7 @@ public class GalaxyImpactRework extends Ability {
     }
 
     static {
-        INSTANCE = (new AbilityCore.Builder("Galaxy Impact", AbilityCategory.STYLE, GalaxyImpactRework::new)).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{(e, a) -> IMPACT_NAME.copy().setStyle(Style.EMPTY.withColor(TextFormatting.GREEN)), (e, a) -> DESCRIPTION[0], DealDamageComponent.getTooltip(80.0F), ChargeComponent.getTooltip(50.0F), CooldownComponent.getTooltip(1800.0F)}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, (e, a) -> DIVIDE_NAME.copy().setStyle(Style.EMPTY.withColor(TextFormatting.GREEN)), (e, a) -> DESCRIPTION[1], DealDamageComponent.getTooltip(110.0F), ChargeComponent.getTooltip(60.0F), ContinuousComponent.getTooltip(80.0F), CooldownComponent.getTooltip(1400.0F), ChangeStatsComponent.getTooltip()}).setSourceHakiNature(SourceHakiNature.HARDENING).setUnlockCheck(GalaxyImpactRework::canUnlock).build();
+        INSTANCE = (new AbilityCore.Builder("Galaxy Impact", AbilityCategory.STYLE, GalaxyImpactRework::new)).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{(e, a) -> IMPACT_NAME.copy().setStyle(Style.EMPTY.withColor(TextFormatting.GREEN)), (e, a) -> DESCRIPTION[0], DealDamageComponent.getTooltip(104.0F), ChargeComponent.getTooltip(50.0F), CooldownComponent.getTooltip(1800.0F)}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, (e, a) -> DIVIDE_NAME.copy().setStyle(Style.EMPTY.withColor(TextFormatting.GREEN)), (e, a) -> DESCRIPTION[1], DealDamageComponent.getTooltip(110.0F), ChargeComponent.getTooltip(60.0F), ContinuousComponent.getTooltip(80.0F), CooldownComponent.getTooltip(1400.0F), ChangeStatsComponent.getTooltip()}).setSourceHakiNature(SourceHakiNature.HARDENING).setUnlockCheck(GalaxyImpactRework::canUnlock).build();
         SPEED_MODIFIER = new AbilityAttributeModifier(UUID.fromString("83979d24-62a4-4014-b1db-44e22a641511"), INSTANCE, "Galaxy Divide Modifier", 0.02, Operation.ADDITION);
         JUMP_MODIFIER = new AbilityAttributeModifier(UUID.fromString("b07997f2-d0a2-4a98-a083-f2f237cb7b4e"), INSTANCE, "Galaxy Divide Jump Modifier", (double)3.0F, Operation.ADDITION);
     }

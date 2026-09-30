@@ -6,51 +6,31 @@ import net.minecraft.util.math.MathHelper;
 import xyz.pixelatedw.mineminenomi.api.animations.Animation;
 import xyz.pixelatedw.mineminenomi.api.animations.AnimationId;
 
-public class FugaSukunaAnimation extends Animation<LivingEntity, BipedModel> {
-
-    public FugaSukunaAnimation(AnimationId<FugaSukunaAnimation> animId) {
-        super(animId);
+public class FugaSukunaAnimation
+extends Animation<LivingEntity, BipedModel> {
+    public FugaSukunaAnimation(AnimationId<FugaSukunaAnimation> id) {
+        super(id);
         this.setAnimationAngles(this::angles);
     }
 
-    public void angles(LivingEntity entity, BipedModel model, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        float time     = (float) this.getTime();
-        float raiseEnd = 10.0F;
+    private void angles(LivingEntity entity, BipedModel model, float limbSwing, float limbAmount, float age, float headYaw, float headPitch) {
+        float time = this.getTime();
+        float raise = FugaSukunaAnimation.smooth(time / 12.0f);
+        float draw = FugaSukunaAnimation.smooth((time - 44.0f) / 26.0f);
+        float yaw = (float)Math.toRadians(headYaw);
+        float pitch = (float)Math.toRadians(headPitch);
+        model.leftArm.xRot = (-1.35f + draw * (-0.22f + pitch)) * raise;
+        model.leftArm.yRot = (-0.65f * (1.0f - draw) + yaw * draw) * raise;
+        model.leftArm.zRot = -0.1f * (1.0f - draw) * raise;
+        model.rightArm.xRot = (-1.35f - draw * 0.45f + pitch * draw) * raise;
+        model.rightArm.yRot = (0.65f - draw * 0.3f + yaw * draw) * raise;
+        model.rightArm.zRot = 0.1f * raise;
+        model.rightArm.z = draw * 2.0f;
+        model.leftArm.z = -draw;
+    }
 
-        float targetLeftXRot  = (float) Math.toRadians(-90.0F);
-        float targetRightXRot = (float) Math.toRadians(-90.0F);
-        float targetRightYRot = (float) Math.toRadians(-17.5F);
-
-        float targetRightY = 2.0F - 1.0F;
-        float targetRightZ = 0.0F + 3.0F;
-
-        if (time < raiseEnd) {
-            float t = MathHelper.clamp(time / raiseEnd, 0.0F, 1.0F);
-
-            model.leftArm.xRot = MathHelper.lerp(t, 0.0F, targetLeftXRot);
-            model.leftArm.yRot = 0.0F;
-            model.leftArm.zRot = 0.0F;
-            model.leftArm.y =  2.0F;
-            model.leftArm.z = -3.0F;
-
-            model.rightArm.xRot = MathHelper.lerp(t, 0.0F, targetRightXRot);
-            model.rightArm.yRot = MathHelper.lerp(t, 0.0F, targetRightYRot);
-            model.rightArm.zRot = 0.0F;
-            model.rightArm.y = MathHelper.lerp(t, 2.0F, targetRightY);
-            model.rightArm.z = MathHelper.lerp(t, 0.0F, targetRightZ);
-
-        } else {
-            model.leftArm.xRot = targetLeftXRot;
-            model.leftArm.yRot = 0.0F;
-            model.leftArm.zRot = 0.0F;
-            model.leftArm.y =  2.0F;
-            model.leftArm.z = -3.0F;
-
-            model.rightArm.xRot = targetRightXRot;
-            model.rightArm.yRot = targetRightYRot;
-            model.rightArm.zRot = 0.0F;
-            model.rightArm.y = targetRightY;
-            model.rightArm.z = targetRightZ;
-        }
+    private static float smooth(float value) {
+        float t = MathHelper.clamp((float)value, (float)0.0f, (float)1.0f);
+        return t * t * (3.0f - 2.0f * t);
     }
 }

@@ -38,7 +38,8 @@ public class KaziMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.endsWith("AkumaNoMiBoxMixin")) {
+        if (mixinClassName.endsWith("AkumaNoMiBoxMixin")
+                || mixinClassName.endsWith("CartYamiAbilitiesMixin")) {
             return !isFruitChangesDisabled();
         }
         return true;

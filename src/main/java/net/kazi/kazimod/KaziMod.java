@@ -33,7 +33,6 @@ public class KaziMod {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, KaziConfig.SPEC, "kazimod.toml");
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
         KaziAbilities.register(modEventBus);
         KaziItems.register();
         KaziRegistry.ITEMS.register(modEventBus);
@@ -46,6 +45,7 @@ public class KaziMod {
         KaziModPools.init();
         KaziAttributes.ATTRIBUTES.register(modEventBus);
         KaziBlocks.BLOCKS.register(modEventBus);
+        KaziBlocks.ITEMS.register(modEventBus);
         NusuEvents.register();
 
         modEventBus.addListener((Consumer<FMLCommonSetupEvent>) this::commonSetup);
@@ -63,7 +63,6 @@ public class KaziMod {
         MinecraftForge.EVENT_BUS.register(new RecipeRemovalHandler());
         MinecraftForge.EVENT_BUS.register(new BossWaterCancelHandler());
         MinecraftForge.EVENT_BUS.register(new BootBoostFallHandler());
-
         LOGGER.info("kazimod constructed");
     }
 

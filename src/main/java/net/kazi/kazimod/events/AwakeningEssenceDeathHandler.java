@@ -2,6 +2,7 @@ package net.kazi.kazimod.events;
 
 import net.kazi.kazimod.abilities.Koku.DomainExpansionInfiniteVoidAbility;
 import net.kazi.kazimod.abilities.KamaRework.DomainExpansionMalevolentShrine;
+import net.kazi.kazimod.config.KaziConfig;
 import net.kazi.kazimod.entities.InfiniteVoidBarrierEntity;
 import net.kazi.kazimod.items.AwakeningEssenceItem;
 import net.minecraft.entity.Entity;
@@ -51,6 +52,37 @@ public class AwakeningEssenceDeathHandler {
         }
     }
 
+    /**
+     * Completes an awakening for a fruit that does not have a dedicated trial
+     * boss. The essence is consumed only after the awakening is granted.
+     */
+    public static boolean grantAwakeningWithoutTrial(ServerPlayerEntity player) {
+        if (player == null) return false;
+
+        IDevilFruit devilFruit = DevilFruitCapability.get(player);
+        if (devilFruit == null || devilFruit.hasAwakenedFruit()) return false;
+
+        devilFruit.setAwakenedFruit(true);
+
+        AwakeningAbilityLoginFix.beginAwakening(player.getUUID());
+        try {
+            AbilityValidationEvents.checkForPossibleFruitAbilities(player);
+        } finally {
+            AwakeningAbilityLoginFix.endAwakening(player.getUUID());
+        }
+        AwakeningAbilityLoginFix.syncPlayerAwakeningReplacements(player);
+
+        WyNetwork.sendTo(new SSyncDevilFruitPacket(player.getId(), devilFruit), player);
+        player.sendMessage(new StringTextComponent(
+                        "\u00a76\u00a7l\u2605 \u00a7eYour fruit has been awakened! \u00a76\u00a7l\u2605"),
+                player.getUUID());
+
+        broadcastAwakening(player, devilFruit);
+
+        AwakeningEssenceItem.consumeFromInventory(player);
+        return true;
+    }
+
     // ── Boss dies — player wins ────────────────────────────────────────────────
 
     @SubscribeEvent
@@ -96,28 +128,7 @@ public class AwakeningEssenceDeathHandler {
                     player.getUUID());
 
             // ── Server-wide awakening announcement ────────────────────────────
-            java.util.Optional<?> fruit = devilFruit.getDevilFruit();
-            String fruitId = fruit.isPresent() ? fruit.get().toString() : "";
-            String announcement;
-            if (fruitId.contains("koku_koku_no_mi")) {
-                announcement = "\u00a7d\u00a7l\u2605 \u00a7fThe Honored One has awakened. \u00a7d\u00a7l\u2605";
-            } else if (fruitId.contains("kama_kama_no_mi")) {
-                announcement = "\u00a74\u00a7l\u2605 \u00a7cThe King of Curses has Awakened. \u00a74\u00a7l\u2605";
-            } else if (fruitId.contains("gomu_gomu_no_mi")) {
-                announcement = "\u00a7e\u00a7l\u2605 \u00a7fJoyboy returns after 800 years. \u00a7e\u00a7l\u2605";
-            } else if (fruitId.contains("ope_ope_no_mi")) {
-                announcement = "\u00a7b\u00a7l\u2605 \u00a7fThe Surgeon of Death has awakened. \u00a7b\u00a7l\u2605";
-            } else if (fruitId.contains("bomu_bomu_no_mi")) {
-                announcement = "\u00a7c\u00a7l\u2605 \u00a76A devastating awakening ignites the battlefield. \u00a7c\u00a7l\u2605";
-            } else if (fruitId.contains("nagi_nagi_no_mi")) {
-                announcement = "\u00a78\u00a7l\u2605 \u00a7fSilence itself has awakened. \u00a78\u00a7l\u2605";
-            } else {
-                announcement = "\u00a76\u00a7l\u2605 \u00a7e" + player.getName().getString()
-                        + " has awakened their Devil Fruit! \u00a76\u00a7l\u2605";
-            }
-            final String msg = announcement;
-            server.getPlayerList().getPlayers().forEach(p ->
-                    p.sendMessage(new StringTextComponent(msg), p.getUUID()));
+            broadcastAwakening(player, devilFruit);
 
             // ── Consume item only on success ──────────────────────────────────
             AwakeningEssenceItem.consumeFromInventory(player);
@@ -252,6 +263,51 @@ public class AwakeningEssenceDeathHandler {
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private static void broadcastAwakening(ServerPlayerEntity player, IDevilFruit devilFruit) {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server == null) return;
+
+        java.util.Optional<?> fruit = devilFruit.getDevilFruit();
+        String fruitId = fruit.isPresent() ? fruit.get().toString() : "";
+        String announcement = getAwakeningAnnouncement(fruitId, player.getName().getString());
+        server.getPlayerList().getPlayers().forEach(p ->
+                p.sendMessage(new StringTextComponent(announcement), p.getUUID()));
+    }
+
+    private static String getAwakeningAnnouncement(String fruitId, String playerName) {
+        if (KaziConfig.INSTANCE.disableCustomAwakeningMessages.get()) {
+            return getGenericAwakeningAnnouncement(playerName);
+        }
+
+        if (fruitId.contains("koku_koku_no_mi")) {
+            return "\u00a7d\u00a7l\u2605 \u00a7f" + playerName + " Has been unsealed... \u00a7d\u00a7l\u2605";
+        } else if (fruitId.contains("kama_kama_no_mi")) {
+            return "\u00a74\u00a7l\u2605 \u00a7c" + playerName + " Has gained a new vessel... \u00a74\u00a7l\u2605";
+        } else if (fruitId.contains("gomu_gomu_no_mi")) {
+            return "\u00a7e\u00a7l\u2605 \u00a7f" + playerName + " Has reawakened the drums of liberation! \u00a7e\u00a7l\u2605";
+        } else if (fruitId.contains("ope_ope_no_mi")) {
+            return "\u00a7b\u00a7l\u2605 \u00a7f" + playerName + " Has opened K-Room and R-Room. \u00a7b\u00a7l\u2605";
+        } else if (fruitId.contains("bomu_bomu_no_mi")) {
+            return "\u00a7c\u00a7l\u2605 \u00a76" + playerName + " Now understands the true meaning of explosions! \u00a7c\u00a7l\u2605";
+        } else if (fruitId.contains("kyoka_kyoka_no_mi")) {
+            return "\u00a75\u00a7l\u2605 \u00a7d" + playerName + ": Shatter, Kyoka Suigetsu. \u00a75\u00a7l\u2605";
+        } else if (fruitId.contains("nagi_nagi_no_mi")) {
+            return "\u00a78\u00a7l\u2605 \u00a7f" + playerName + ": I must level up! \u00a78\u00a7l\u2605";
+        } else if (fruitId.contains("netsu_netsu_no_mi")) {
+            return "\u00a76\u00a7l\u2605 \u00a7c" + playerName + ": I stand at the pinnacle of all races. \u00a76\u00a7l\u2605";
+        } else if (fruitId.contains("kira_kira_no_mi")) {
+            return "\u00a7b\u00a7l\u2605 \u00a7f" + playerName + ": Shrine bright like a diamond \u00a7b\u00a7l\u2605";
+        } else if (fruitId.contains("batto_batto_no_mi_model_vampire")) {
+            return "\u00a74\u00a7l\u2605 \u00a7c" + playerName + " Has released control art system level 1.. \u00a74\u00a7l\u2605";
+        }
+        return getGenericAwakeningAnnouncement(playerName);
+    }
+
+    private static String getGenericAwakeningAnnouncement(String playerName) {
+        return "\u00a76\u00a7l\u2605 \u00a7e" + playerName
+                + " Has awakened their devil fruit! \u00a76\u00a7l\u2605";
+    }
 
     private boolean isBossWith(Entity entity, UUID playerUUID) {
         if (!(entity instanceof LivingEntity)) return false;

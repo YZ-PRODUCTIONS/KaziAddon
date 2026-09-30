@@ -91,3 +91,4 @@ public class TsuppariPadHoRework extends Ability {
         INSTANCE = (new AbilityCore.Builder("Tsuppari Pad Ho", AbilityCategory.DEVIL_FRUITS, TsuppariPadHoRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(300.0F)}).setSourceHakiNature(SourceHakiNature.SPECIAL).setSourceElement(SourceElement.SHOCKWAVE).build();
     }
 }
+

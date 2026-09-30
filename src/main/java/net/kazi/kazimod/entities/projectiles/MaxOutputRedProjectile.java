@@ -76,33 +76,8 @@ public class MaxOutputRedProjectile extends AbilityProjectileEntity {
     }
 
     private void spawnRedLightning(LivingEntity target) {
-        LightningDischargeEntity inner = new LightningDischargeEntity(
-                target, target.getX(), target.getY() + 1.0, target.getZ(),
-                target.yRot, target.xRot);
-        inner.setAliveTicks(15);
-        inner.setLightningLength(4.0F);
-        inner.setColor(RED_LIGHTNING_INNER);
-        inner.setOutlineColor(RED_LIGHTNING_OUTER);
-        inner.setRenderTransparent();
-        inner.setDetails(20);
-        inner.setDensity(40);
-        inner.setSize(0.3F);
-        inner.setSkipSegments(1);
-        target.level.addFreshEntity(inner);
-
-        LightningDischargeEntity outer = new LightningDischargeEntity(
-                target, target.getX(), target.getY() + 1.0, target.getZ(),
-                target.yRot, target.xRot);
-        outer.setAliveTicks(15);
-        outer.setLightningLength(4.0F);
-        outer.setColor(RED_LIGHTNING_OUTER);
-        outer.setOutlineColor(new Color(100, 0, 0, 150));
-        outer.setRenderTransparent();
-        outer.setDetails(20);
-        outer.setDensity(40);
-        outer.setSize(0.5F);
-        outer.setSkipSegments(1);
-        target.level.addFreshEntity(outer);
+        net.kazi.kazimod.entities.KokuVfxEntity.impact(target.level, target.position().add(0.0D, 1.0D, 0.0D),
+                net.kazi.kazimod.entities.KokuVfxEntity.RED_IMPACT, 4.0F);
     }
 
     private void onEntityImpactEvent(LivingEntity hitEntity) {
@@ -118,8 +93,10 @@ public class MaxOutputRedProjectile extends AbilityProjectileEntity {
             ExplosionAbility explosion = super.createExplosion(this.getThrower(), this.level,
                     (double) hit.getX(), (double) hit.getY(), (double) hit.getZ(), 4.0F);
             explosion.setStaticDamage(0.0F);
-            explosion.setSmokeParticles(new CommonExplosionParticleEffect(2));
+            explosion.setSmokeParticles(null);
             explosion.doExplosion();
+            net.kazi.kazimod.entities.KokuVfxEntity.impact(this.level, Vector3d.atCenterOf(hit),
+                    net.kazi.kazimod.entities.KokuVfxEntity.RED_IMPACT, 4.0F);
         }
     }
 
@@ -151,10 +128,7 @@ public class MaxOutputRedProjectile extends AbilityProjectileEntity {
                     this.setPos(target.x, target.y, target.z);
                 }
 
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_RED.get(), this,
-                        this.getX(), this.getY(), this.getZ()
-                );
+                // Flight visuals are handled by KokuProjectileRenderer.
 
                 // Drag hooked entity toward caster
                 Vector3d toCaster = caster.position()
@@ -204,8 +178,7 @@ public class MaxOutputRedProjectile extends AbilityProjectileEntity {
             }
 
             // ── Normal flight phase ──────────────────────────────────────────
-            WyHelper.spawnParticleEffect((ParticleEffect) KaziParticleEffects.GOJO_RED.get(), this,
-                    this.getX(), this.getY(), this.getZ());
+            // Flight visuals are handled by KokuProjectileRenderer.
 
             if (hookedEntity == null && this.tickCount >= 80) {
                 this.remove();

@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.play.server.SAnimateHandPacket;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
@@ -47,7 +48,8 @@ import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class ConcasseRework extends DropHitAbility {
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "concasserework", new Pair[]{ImmutablePair.of("Leaps forward kicking all nearby enemies for moderate damage and knocking them down", (Object)null)});
+    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("mineminenomi", "concasse", new Pair[]{ImmutablePair.of("Leaps forward kicking all nearby enemies for moderate damage and knocking them down", (Object)null)});
+    private static final ResourceLocation ICON = new ResourceLocation("cartaddon", "textures/abilities/concasse.png");
     private static final int COOLDOWN = 300;
     private static final float RANGE = 2.0F;
     private static final float DAMAGE = 15.0F;
@@ -139,6 +141,6 @@ public class ConcasseRework extends DropHitAbility {
     }
 
     static {
-        INSTANCE = (new AbilityCore.Builder("Concasse", AbilityCategory.STYLE, ConcasseRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(300.0F), DealDamageComponent.getTooltip(15.0F), RangeComponent.getTooltip(1.7F, RangeType.AOE)}).setSourceHakiNature(SourceHakiNature.HARDENING).setSourceType(new SourceType[]{SourceType.FIST}).setUnlockCheck(ConcasseRework::canUnlock).build();
+        INSTANCE = (new AbilityCore.Builder("Concasse", AbilityCategory.STYLE, ConcasseRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(300.0F), DealDamageComponent.getTooltip(15.0F), RangeComponent.getTooltip(1.7F, RangeType.AOE)}).setSourceHakiNature(SourceHakiNature.HARDENING).setSourceType(new SourceType[]{SourceType.FIST}).setUnlockCheck(ConcasseRework::canUnlock).setIcon(ICON).build();
     }
 }

@@ -31,7 +31,7 @@ public class SlotSpinAbility extends Ability {
             }
     );
 
-    private static final float COOLDOWN  = 300.0f;
+    private static final float COOLDOWN  = 600.0f;
     private static final float SPIN_TIME = 20.0f;
 
     public static final DamageSource ZERO_ROLL = new DamageSource("kazi_zero_roll") {

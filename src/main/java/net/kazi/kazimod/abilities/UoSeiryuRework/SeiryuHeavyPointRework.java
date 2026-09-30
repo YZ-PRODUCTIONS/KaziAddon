@@ -98,7 +98,7 @@ public class SeiryuHeavyPointRework extends MorphAbility2 {
 
     static {
         INSTANCE = (new AbilityCore.Builder("Seiryu Heavy Point", AbilityCategory.DEVIL_FRUITS, SeiryuHeavyPointRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(10.0F), ContinuousComponent.getTooltip(), ChangeStatsComponent.getTooltip()}).build();
-        SPEED_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_MOVEMENT_SPEED_UUID, INSTANCE, "Seiryu Heavy Point Speed Modifier", 0.05, Operation.ADDITION);
+        SPEED_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_MOVEMENT_SPEED_UUID, INSTANCE, "Seiryu Heavy Point Speed Modifier", 0.00, Operation.ADDITION);
         JUMP_BOOST_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_JUMP_BOOST_UUID, INSTANCE, "Seiryu Heavy Point Jump Modifier", (double)6.0F, Operation.ADDITION);
         STRENGTH_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_STRENGTH_UUID, INSTANCE, "Seiryu Heavy Point Strength Modifier", (double)14.0F, Operation.ADDITION);
         ARMOR_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_ARMOR_UUID, INSTANCE, "Seiryu Heavy Point Armor Modifier", (double)14.0F, Operation.ADDITION);
@@ -117,3 +117,4 @@ public class SeiryuHeavyPointRework extends MorphAbility2 {
         }
     }
 }
+

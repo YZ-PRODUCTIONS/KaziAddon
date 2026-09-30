@@ -1,5 +1,6 @@
 package net.kazi.kazimod.abilities.HakiRework;
 
+import net.kazi.kazimod.config.KaziConfig;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +41,7 @@ public class HakiSenseAbility extends Ability {
     );
 
     private static final float COOLDOWN_TICKS = 200.0F;
-    private static final int RANGE = 2000;
+    private static final int DEFAULT_RANGE = 1000;
 
     public static final AbilityCore<HakiSenseAbility> INSTANCE;
 
@@ -76,7 +77,8 @@ public class HakiSenseAbility extends Ability {
         }
 
         double myDoriki = selfStats.getDoriki();
-        List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(player, RANGE)
+        int configuredRange = KaziConfig.INSTANCE.hakiSenseRange.get();
+        List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(player, configuredRange)
                 .stream()
                 .filter(e -> e instanceof ServerPlayerEntity)
                 .collect(Collectors.toList());
@@ -132,7 +134,7 @@ public class HakiSenseAbility extends Ability {
     private String getDirection(ServerPlayerEntity player, LivingEntity target) {
         double dx = target.getX() - player.getX();
         double dz = target.getZ() - player.getZ();
-        double angle = Math.toDegrees(Math.atan2(-dx, dz));
+        double angle = Math.toDegrees(Math.atan2(dx, -dz));
         if (angle < 0) {
             angle += 360.0D;
         }
@@ -167,7 +169,7 @@ public class HakiSenseAbility extends Ability {
                 .addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{
                         AbilityDescriptionLine.NEW_LINE,
                         CooldownComponent.getTooltip(COOLDOWN_TICKS),
-                        RangeComponent.getTooltip(RANGE, RangeType.AOE)
+                        RangeComponent.getTooltip(DEFAULT_RANGE, RangeType.AOE)
                 })
                 .setSourceHakiNature(SourceHakiNature.SPECIAL)
                 .setSourceType(new SourceType[]{SourceType.INDIRECT})

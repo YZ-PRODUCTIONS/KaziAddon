@@ -31,6 +31,30 @@ public class InfiniteVoidBarrierEntity extends Entity implements IEntityAddition
     private static final DataParameter<Float> RADIUS =
             EntityDataManager.defineId(InfiniteVoidBarrierEntity.class, DataSerializers.FLOAT);
 
+    private static final DataParameter<Boolean> VOID_VISUAL =
+            EntityDataManager.defineId(InfiniteVoidBarrierEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> VISUAL_START =
+            EntityDataManager.defineId(InfiniteVoidBarrierEntity.class, DataSerializers.INT);
+
+    public void beginVoidExpansion() {
+        this.entityData.set(VOID_VISUAL, true);
+        this.entityData.set(VISUAL_START, (int) this.level.getGameTime());
+    }
+
+    public boolean hasVoidVisual() { return this.entityData.get(VOID_VISUAL); }
+
+    public float getVisualAge(float partial) {
+        int elapsed = (int) this.level.getGameTime() - this.entityData.get(VISUAL_START);
+        return Math.max(0.0F, elapsed + partial);
+    }
+
+    /** Animation radius only: the local collision radius remains unchanged. */
+    public float getVisualRadius(float partial) {
+        if (!hasVoidVisual()) return getRadius();
+        float p = Math.max(0.0F, Math.min(1.0F, getVisualAge(partial) / 40.0F));
+        return getRadius() * p * p * (3.0F - 2.0F * p);
+    }
+
     private static final double WALL_THICKNESS    = 0.6;
     private static final double PUSH_EPS          = 0.12;
     private static final double SOFT_PUSH_BASE    = 0.025;
@@ -69,6 +93,8 @@ public class InfiniteVoidBarrierEntity extends Entity implements IEntityAddition
     @Override
     protected void defineSynchedData() {
         this.getEntityData().define(RADIUS, 0.0F);
+        this.entityData.define(VOID_VISUAL, false);
+        this.entityData.define(VISUAL_START, 0);
     }
 
     @Override

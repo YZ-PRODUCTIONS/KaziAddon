@@ -18,6 +18,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCategory;
@@ -30,12 +33,16 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.DamageTakenComponent
 import xyz.pixelatedw.mineminenomi.api.abilities.components.DamageTakenComponent.DamageState;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.GaugeComponent;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.api.helpers.RendererHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
+import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.init.ModResources;
 import xyz.pixelatedw.mineminenomi.packets.server.ability.SSyncAbilityPacket;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 
+@Mod.EventBusSubscriber(modid = "kazimod", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SoulsPassive extends PassiveAbility2 {
 
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
@@ -126,6 +133,49 @@ public class SoulsPassive extends PassiveAbility2 {
 
     public int getSoulStacks() {
         return this.soulStacks;
+    }
+
+    public boolean addSoulStack(LivingEntity entity) {
+        if (this.soulStacks >= MAX_SOUL_STACKS) {
+            return false;
+        }
+
+        this.soulStacks = MathHelper.clamp(this.soulStacks + 1, 0, MAX_SOUL_STACKS);
+        sync(entity);
+
+        if (entity instanceof PlayerEntity) {
+            ((PlayerEntity) entity).displayClientMessage(
+                    new StringTextComponent(TextFormatting.DARK_RED + "A fallen soul has been reclaimed. "
+                            + this.soulStacks + "/" + MAX_SOUL_STACKS + " remaining. "),
+                    true
+            );
+        }
+
+        return true;
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        if (!(event.getEntityLiving() instanceof PlayerEntity)) {
+            return;
+        }
+
+        LivingEntity killer = event.getSource().getEntity() instanceof LivingEntity
+                ? (LivingEntity) event.getSource().getEntity()
+                : null;
+        if (!(killer instanceof PlayerEntity) || killer == event.getEntityLiving()) {
+            return;
+        }
+
+        IAbilityData data = AbilityDataCapability.get(killer);
+        if (data == null) {
+            return;
+        }
+
+        SoulsPassive soulsPassive = (SoulsPassive) data.getPassiveAbility(INSTANCE);
+        if (soulsPassive != null) {
+            soulsPassive.addSoulStack(killer);
+        }
     }
 
     private String getSoulStackDisplay() {
@@ -244,6 +294,7 @@ public class SoulsPassive extends PassiveAbility2 {
                 SoulsPassive::new
         ))
                 .addDescriptionLine(DESCRIPTION)
+                .setUnlockCheck(entity -> DevilFruitCapability.get(entity).hasAwakenedFruit())
                 .build();
     }
 }

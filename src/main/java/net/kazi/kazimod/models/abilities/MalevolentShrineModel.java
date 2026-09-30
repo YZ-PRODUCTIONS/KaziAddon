@@ -12,6 +12,10 @@ import net.kazi.kazimod.entities.MalevolentShrineEntity;
 
 
 public class MalevolentShrineModel extends EntityModel<MalevolentShrineEntity> {
+    private float construction = 1.0F;
+
+    public void setConstruction(float progress) { this.construction = progress; }
+
 	private final ModelRenderer bone;
 	private final ModelRenderer cube_r1;
 	private final ModelRenderer cube_r2;
@@ -879,20 +883,33 @@ public class MalevolentShrineModel extends EntityModel<MalevolentShrineEntity> {
 	}
 
 	@Override
-	public void setupAnim(MalevolentShrineEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		//previously the render function, render code was moved to a method below
-	}
+	public void setupAnim(MalevolentShrineEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        this.construction = entity.getConstruction();
+    }
 
 	@Override
-	public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
-		bone.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone3.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone5.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone7.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone9.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		top.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		bb_main.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-	}
+	public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        this.renderPart(this.bb_main, 0.0f, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.renderPart(this.bone, 0.08f, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.renderPart(this.bone3, 0.2f, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.renderPart(this.bone5, 0.32f, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.renderPart(this.bone7, 0.44f, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.renderPart(this.bone9, 0.56f, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.renderPart(this.top, 0.7f, matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    }
+
+	private void renderPart(ModelRenderer part, float start, MatrixStack stack, IVertexBuilder buffer, int light, int overlay, float red, float green, float blue, float alpha) {
+        float progress = Math.max(0.0f, Math.min(1.0f, (this.construction - start) / 0.3f));
+        if (progress <= 0.0f) {
+            return;
+        }
+        progress = progress * progress * (3.0f - 2.0f * progress);
+        stack.pushPose();
+        stack.translate(0.0, (double)((1.0f - progress) * 2.0f), 0.0);
+        stack.scale(1.0f, Math.max(0.02f, progress), 1.0f);
+        part.render(stack, buffer, light, overlay, red, green, blue, alpha);
+        stack.popPose();
+    }
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
 		modelRenderer.xRot = x;

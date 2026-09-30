@@ -6,15 +6,36 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "kazimod.refmap.json",
   "mixins": [
+    "Supamixins.PairedSwordsContainerMixin",
     "CartStylesReplace",
     "CartRaceReplace",
+    "CartYamiAbilitiesMixin",
+    "LaserBeamDataMixin",
     "AbilityUnlockBlocker",
+    "NusuAbilityCheckBypassMixin",
+    "CheckFruitsCommandMixin",
+    "PlayerListBanlistMixin",
     "MorphAbility2Accessor",
+    "NusuAbilityCheckBypassMixin$RequireAbilityComponentAccessor",
+    "NusuAbilityCheckBypassMixin$RequireMorphComponentAccessor",
+    "NusuAbilityCheckBypassMixin$FreeSwimmingAbilityAccessor",
+    "NusuAbilityCheckBypassMixin$RequireAbilityComponentMixin",
+    "NusuAbilityCheckBypassMixin$RequireMorphComponentMixin",
+    "NusuAbilityCheckBypassMixin$AbilityMixin",
+    "NusuAbilityCheckBypassMixin$AbilityLimitsMixin",
+    "NusuAbilityCheckBypassMixin$LunarianHelperMixin",
+    "NusuAbilityCheckBypassMixin$ArtOfWeatherHelperMixin",
+    "NusuAbilityCheckBypassMixin$GenkotsuMeteorMixin",
+    "NusuAbilityCheckBypassMixin$KageHelperMixin",
+    "NusuAbilityCheckBypassMixin$NightmareSoldiersMixin",
+    "NusuAbilityCheckBypassMixin$TriceratopsHelperMixin",
     "AkumaNoMiBoxMixin"
   ],
   "client": [
+    "client.LaserBeamRendererMixin",
     "client.KRoomSwordItemRendererMixin",
-    "client.PunctureWilleSwordRenderMixin"
+    "client.PunctureWilleSwordRenderMixin",
+    "client.ZanGiriMochiLayerSafetyMixin"
   ],
   "injectors": {
     "defaultRequire": 1

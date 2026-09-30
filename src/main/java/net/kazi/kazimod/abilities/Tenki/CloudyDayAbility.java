@@ -1,14 +1,13 @@
 package net.kazi.kazimod.abilities.Tenki;
 
+import net.MrMagicalCart.cartaddon.abilities.aowrework.entities.AOWReworkEntities;
 import net.MrMagicalCart.cartaddon.abilities.aowrework.entities.projectiles.WeatherCloudReworkEntity;
 import net.MrMagicalCart.cartaddon.abilities.aowrework.entities.projectiles.WeatherCloudReworkEntity.CloudForm;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import xyz.pixelatedw.mineminenomi.api.abilities.Ability;
@@ -90,13 +89,9 @@ public class CloudyDayAbility extends Ability {
     // ── Cloud spawn helper ────────────────────────────────────────────────────
 
     private WeatherCloudReworkEntity spawnCloud(LivingEntity entity, double x, double y, double z) {
-        EntityType<?> type = ForgeRegistries.ENTITIES.getValue(
-                new ResourceLocation("cartaddon", "weather_cloud_rework"));
-        if (type == null) return null;
-
-        @SuppressWarnings("unchecked")
+        EntityType<WeatherCloudReworkEntity> type = AOWReworkEntities.WEATHER_CLOUD_REWORK.get();
         WeatherCloudReworkEntity cloud = new WeatherCloudReworkEntity(
-                (EntityType<WeatherCloudReworkEntity>) type, entity.level);
+                type, entity.level);
 
         if (entity instanceof PlayerEntity) cloud.setOwner((PlayerEntity) entity);
 

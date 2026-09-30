@@ -139,8 +139,7 @@ public class ElectricalShowerRework extends Ability {
     }
 
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
-        boolean hasSulongActive = CartElectroHelper.hasSulongActive(entity);
-        this.cooldownComponent.startCooldown(entity, hasSulongActive ? 224.0F : 280.0F);
+        this.cooldownComponent.startCooldown(entity, 280.0F);
     }
 
     private void triggerRepeaterEvent(LivingEntity entity, IAbility ability) {
@@ -179,7 +178,7 @@ public class ElectricalShowerRework extends Ability {
     }
 
     static {
-        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "electrical_shower", new Pair[]{ImmutablePair.of("Launches the user into the air and showers down lightning bolts underneath.", (Object)null), ImmutablePair.of("While %s is active the cooldown of this ability is reduced by %s and the damage is increased by %s.", new Object[]{AbilityHelper.mentionAbility(CartSulongAbility.INSTANCE), AbilityHelper.mentionText(Math.round(20.0F) + "%"), AbilityHelper.mentionText(Math.round(Math.abs(-0.15F) * 100.0F) + "%")})});
+        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "electrical_shower", new Pair[]{ImmutablePair.of("Launches the user into the air and showers down lightning bolts underneath.", (Object)null), ImmutablePair.of("While %s is active the damage is increased by %s.", new Object[]{AbilityHelper.mentionAbility(CartSulongAbility.INSTANCE), AbilityHelper.mentionText(Math.round(Math.abs(-0.15F) * 100.0F) + "%")})});
         INSTANCE = (new AbilityCore.Builder("Electrical Shower", AbilityCategory.RACIAL, ElectricalShowerRework::new)).addDescriptionLine(new ITextComponent[]{DESCRIPTION[0]}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{IDescriptionLine.of(DESCRIPTION[1])}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(280.0F), ChargeComponent.getTooltip(60.0F)}).addAdvancedDescriptionLine(ProjectileComponent.getProjectileTooltips()).setSourceHakiNature(SourceHakiNature.SPECIAL).setSourceElement(SourceElement.LIGHTNING).setUnlockCheck(ElectricalShowerRework::canUnlock).build();
     }
 }

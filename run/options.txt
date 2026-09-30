@@ -23,10 +23,10 @@ fov:1.0
 screenEffectScale:0.0
 fovEffectScale:0.0
 gamma:1.0
-renderDistance:8
+renderDistance:16
 entityDistanceScaling:1.0
 guiScale:2
-particles:0
+particles:2
 maxFps:260
 difficulty:2
 graphicsMode:0
@@ -43,7 +43,7 @@ chatLineSpacing:0.0
 textBackgroundOpacity:0.5
 backgroundForChatOnly:true
 hideServerAddress:false
-advancedItemTooltips:false
+advancedItemTooltips:true
 pauseOnLostFocus:true
 overrideWidth:0
 overrideHeight:0

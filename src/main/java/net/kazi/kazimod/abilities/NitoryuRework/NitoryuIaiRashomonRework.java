@@ -1,6 +1,5 @@
 package net.kazi.kazimod.abilities.NitoryuRework;
 
-import com.sun.javafx.geom.Quat4f;
 import net.MrMagicalCart.cartaddon.api.helpers.AbilityLimits;
 import net.MrMagicalCart.cartaddon.init.CartAnimations;
 import net.MrMagicalCart.cartaddon.init.CartQuests;
@@ -91,7 +90,6 @@ public class NitoryuIaiRashomonRework extends Ability {
     private final AnimationComponent animationComponent = new AnimationComponent(this);
     private final HitTrackerComponent hitTrackerComponent = new HitTrackerComponent(this);
     private ChangeStatsComponent changeStatsComponent;
-    private Quat4f dir;
 
     public NitoryuIaiRashomonRework(AbilityCore<NitoryuIaiRashomonRework> core) {
         super(core);

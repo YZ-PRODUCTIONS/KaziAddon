@@ -1,5 +1,35 @@
 package net.kazi.kazimod.events;
 
+import net.MrMagicalCart.cartaddon.abilities.battovampire.*;
+import net.MrMagicalCart.cartaddon.abilities.goroextra.*;
+import net.MrMagicalCart.cartaddon.abilities.gasuextra.ReworkedGastilleAbility;
+import net.MrMagicalCart.cartaddon.abilities.gasuextra.ReworkedKarakuniAbility;
+import net.MrMagicalCart.cartaddon.abilities.mochi2.KuriMochiNewAbility;
+import net.MrMagicalCart.cartaddon.abilities.mochi2.MochiGinchakuNewAbility;
+import net.MrMagicalCart.cartaddon.abilities.mochi2.ZanGiriMochiAbility;
+import net.MrMagicalCart.cartaddon.init.CartAbilities;
+import net.MrMagicalCart.cartaddon.abilities.meraextra.ReworkedFlameRushAbility;
+import net.kazi.kazimod.abilities.MochiRework.KuriMochiClone;
+import net.kazi.kazimod.abilities.MochiRework.MochiGinchakuClone;
+import net.kazi.kazimod.abilities.MochiRework.ZanGiriMochiClone;
+import net.kazi.kazimod.abilities.GoroRework.*;
+import net.kazi.kazimod.abilities.GasuRework.GastilleRework;
+import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
+import net.kazi.kazimod.abilities.KameRework.KameGuardPointRework;
+import net.kazi.kazimod.abilities.MeraRework.DaiEnkaiRework;
+import net.kazi.kazimod.abilities.ToriPhoenixRework.FlamesOfRegenerationRework;
+import net.kazi.kazimod.abilities.ToriPhoenixRework.PhoenixAssaultPointRework;
+import net.kazi.kazimod.abilities.ToriPhoenixRework.PhoenixFlyPointRework;
+import net.kazi.kazimod.abilities.VampAwaken.AwakenedBloodStepAbility;
+import net.kazi.kazimod.abilities.VampAwaken.AwakenedPhantomCloakAbility;
+import net.kazi.kazimod.abilities.VampAwaken.AwakenedPhantomVeilAbility;
+import net.kazi.kazimod.abilities.VampAwaken.AwakenedVampirePassiveAbility;
+import net.kazi.kazimod.config.KaziConfig;
+import net.kazi.kazimod.abilities.SupaRework.RealityMarbleAbility;
+import net.kazi.kazimod.abilities.SupaRework.ProjectionAbility;
+import net.kazi.kazimod.abilities.SupaRework.EnhancementAbility;
+import net.kazi.kazimod.abilities.SupaRework.KanshouBakuyaAbility;
+import net.minecraftforge.event.TickEvent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -12,19 +42,37 @@ import net.minecraftforge.registries.ForgeRegistries;
 import xyz.pixelatedw.mineminenomi.abilities.gomu.GearFifthAbility;
 import xyz.pixelatedw.mineminenomi.abilities.gomu.GomuGomuNoDawnWhipAbility;
 import xyz.pixelatedw.mineminenomi.abilities.gomu.GomuGomuNoGigantAbility;
+import xyz.pixelatedw.mineminenomi.abilities.goro.*;
+import xyz.pixelatedw.mineminenomi.abilities.gasu.GastilleAbility;
+import xyz.pixelatedw.mineminenomi.abilities.gasu.KarakuniAbility;
+import xyz.pixelatedw.mineminenomi.abilities.kame.KameGuardPointAbility;
 import xyz.pixelatedw.mineminenomi.abilities.mera.HeatDashAbility;
+import xyz.pixelatedw.mineminenomi.abilities.mera.DaiEnkaiAbility;
 import xyz.pixelatedw.mineminenomi.abilities.mera.HidarumaAbility;
 import xyz.pixelatedw.mineminenomi.abilities.mera.HikenAbility;
+import xyz.pixelatedw.mineminenomi.abilities.supa.AtomicRushAbility;
+import xyz.pixelatedw.mineminenomi.abilities.supa.AtomicSpurtAbility;
+import xyz.pixelatedw.mineminenomi.abilities.supa.SparClawAbility;
+import xyz.pixelatedw.mineminenomi.abilities.supa.SparklingDaisyAbility;
+import xyz.pixelatedw.mineminenomi.abilities.supa.SpiderAbility;
+import xyz.pixelatedw.mineminenomi.abilities.supa.SpiralHollowAbility;
+import xyz.pixelatedw.mineminenomi.abilities.toriphoenix.FlamesOfRegenerationAbility;
+import xyz.pixelatedw.mineminenomi.abilities.toriphoenix.PhoenixAssaultPointAbility;
+import xyz.pixelatedw.mineminenomi.abilities.toriphoenix.PhoenixFlyPointAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityUnlock;
 import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.events.ability.UnlockAbilityEvent;
+import xyz.pixelatedw.mineminenomi.api.events.onefruit.EatDevilFruitEvent;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.IDevilFruit;
+import xyz.pixelatedw.mineminenomi.events.abilities.AbilityValidationEvents;
 import xyz.pixelatedw.mineminenomi.init.ModAbilities;
 import xyz.pixelatedw.mineminenomi.items.AkumaNoMiItem;
+import xyz.pixelatedw.mineminenomi.packets.server.SSyncAbilityDataPacket;
+import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 
 import java.util.*;
 
@@ -44,6 +92,65 @@ public class AwakeningAbilityLoginFix {
     ));
 
     private static final Map<AbilityCore<?>, AbilityCore<?>> MERA_REPLACEMENTS = new LinkedHashMap<>();
+    private static final Map<AbilityCore<?>, AbilityCore<?>> MOCHI_REPLACEMENTS = new LinkedHashMap<>();
+    private static final Map<AbilityCore<?>, AbilityCore<?>> GORO_REPLACEMENTS = new LinkedHashMap<>();
+    private static final Map<AbilityCore<?>, AbilityCore<?>> GASU_REPLACEMENTS = new LinkedHashMap<>();
+    private static final Map<AbilityCore<?>, AbilityCore<?>> KAME_REPLACEMENTS = new LinkedHashMap<>();
+    private static final Map<AbilityCore<?>, AbilityCore<?>> TORI_PHOENIX_REPLACEMENTS = new LinkedHashMap<>();
+
+    private static final Set<AbilityCore<?>> RETIRED_GORO_ABILITIES = new HashSet<>(Arrays.asList(
+            VoltageUpAbility.INSTANCE,
+            ShinzoMassagePassiveAbility.INSTANCE
+    ));
+
+    // The Goro fruit owns these cores outright. Do not make their grant depend on
+    // a player having an older Cart/base counterpart: players can receive a fruit
+    // through commands and other paths that never create those legacy unlocks.
+    private static final List<AbilityCore<?>> KAZI_GORO_ABILITIES = Arrays.asList(
+            ElThorRework.INSTANCE,
+            VariRework.INSTANCE,
+            KariRework.INSTANCE,
+            SangoRework.INSTANCE,
+            RaigoRework.INSTANCE,
+            VoltAmaruRework.INSTANCE,
+            VoltAmaruFlightRework.INSTANCE
+    );
+
+    private static final List<AbilityCore<?>> AWAKENED_SUPA_ABILITIES = Arrays.asList(
+            RealityMarbleAbility.INSTANCE,
+            ProjectionAbility.INSTANCE,
+            EnhancementAbility.INSTANCE,
+            KanshouBakuyaAbility.INSTANCE
+    );
+
+    // These base Supa moves are retired when the fruit awakens. Keep this list
+    // explicit like Vampire's cleanup so it cannot accidentally include Kazi's
+    // awakened Supa moves after fruit injection mutates the fruit ability list.
+    private static final Set<AbilityCore<?>> AWAKENED_SUPA_REMOVALS = new HashSet<>(Arrays.asList(
+            SparklingDaisyAbility.INSTANCE,
+            SpiderAbility.INSTANCE,
+            net.kazi.kazimod.abilities.SupaRework.SpiderRework.INSTANCE,
+            net.kazi.kazimod.abilities.SupaRework.SparklingDaisyRework.INSTANCE,
+            SparClawAbility.INSTANCE,
+            AtomicSpurtAbility.INSTANCE,
+            AtomicRushAbility.INSTANCE,
+            SpiralHollowAbility.INSTANCE
+    ));
+
+    // These base Vampire moves are retired when the fruit awakens. Assault
+    // Point's stats are replaced by Kazi's awakening-only passive.
+    private static final Set<AbilityCore<?>> AWAKENED_VAMPIRE_REMOVALS = new HashSet<>(Arrays.asList(
+            VampireAssaultPointAbility.INSTANCE,
+            VampireFlyPointAbility.INSTANCE,
+            VampireFlightAbility.INSTANCE,
+            BloodBurstAbility.INSTANCE,
+            LifeStealBiteAbility.INSTANCE,
+            PhantomVeilAbility.INSTANCE,
+            AwakenedPhantomVeilAbility.INSTANCE
+    ));
+
+    private static final Map<AbilityCore<?>, AbilityCore<?>> VAMPIRE_AWAKENING_REPLACEMENTS =
+            new LinkedHashMap<>();
 
     // Maps each AbilityCore to which fruit(s) it belongs to
     private static Map<AbilityCore<?>, Set<AkumaNoMiItem>> abilityToFruits = null;
@@ -61,7 +168,43 @@ public class AwakeningAbilityLoginFix {
     private static final Set<UUID> awakeningInProgress = new HashSet<>();
 
     static {
+        MERA_REPLACEMENTS.put(HeatDashAbility.INSTANCE, ReworkedFlameRushAbility.INSTANCE);
+        MERA_REPLACEMENTS.put(DaiEnkaiAbility.INSTANCE, DaiEnkaiRework.INSTANCE);
+        KAME_REPLACEMENTS.put(KameGuardPointAbility.INSTANCE, KameGuardPointRework.INSTANCE);
+        TORI_PHOENIX_REPLACEMENTS.put(PhoenixFlyPointAbility.INSTANCE, PhoenixFlyPointRework.INSTANCE);
+        TORI_PHOENIX_REPLACEMENTS.put(PhoenixAssaultPointAbility.INSTANCE, PhoenixAssaultPointRework.INSTANCE);
+        TORI_PHOENIX_REPLACEMENTS.put(FlamesOfRegenerationAbility.INSTANCE, FlamesOfRegenerationRework.INSTANCE);
+        GORO_REPLACEMENTS.put(ReworkedElThorAbility.INSTANCE, ElThorRework.INSTANCE);
+        GORO_REPLACEMENTS.put(ReworkedVariAbility.INSTANCE, VariRework.INSTANCE);
+        GORO_REPLACEMENTS.put(ReworkedSangoAbility.INSTANCE, SangoRework.INSTANCE);
+        GORO_REPLACEMENTS.put(ReworkedRaigoAbility.INSTANCE, RaigoRework.INSTANCE);
+        GORO_REPLACEMENTS.put(ReworkedVoltAmaruAbility.INSTANCE, VoltAmaruRework.INSTANCE);
+        GORO_REPLACEMENTS.put(
+                ReworkedVoltAmaruFlightAbility.INSTANCE, VoltAmaruFlightRework.INSTANCE);
+        GORO_REPLACEMENTS.put(ElThorAbility.INSTANCE, ElThorRework.INSTANCE);
+        GORO_REPLACEMENTS.put(VariAbility.INSTANCE, VariRework.INSTANCE);
+        GORO_REPLACEMENTS.put(KariAbility.INSTANCE, KariRework.INSTANCE);
+        GORO_REPLACEMENTS.put(SangoAbility.INSTANCE, SangoRework.INSTANCE);
+        GORO_REPLACEMENTS.put(RaigoAbility.INSTANCE, RaigoRework.INSTANCE);
+        GORO_REPLACEMENTS.put(VoltAmaruAbility.INSTANCE, VoltAmaruRework.INSTANCE);
+        GORO_REPLACEMENTS.put(
+                VoltAmaruFlightAbility.INSTANCE, VoltAmaruFlightRework.INSTANCE);
 
+        GASU_REPLACEMENTS.put(GastilleAbility.INSTANCE, GastilleRework.INSTANCE);
+        GASU_REPLACEMENTS.put(ReworkedGastilleAbility.INSTANCE, GastilleRework.INSTANCE);
+        GASU_REPLACEMENTS.put(KarakuniAbility.INSTANCE, KarakuniRework.INSTANCE);
+        GASU_REPLACEMENTS.put(ReworkedKarakuniAbility.INSTANCE, KarakuniRework.INSTANCE);
+
+        MOCHI_REPLACEMENTS.put(ZanGiriMochiAbility.INSTANCE, ZanGiriMochiClone.INSTANCE);
+        MOCHI_REPLACEMENTS.put(KuriMochiNewAbility.INSTANCE, KuriMochiClone.INSTANCE);
+        MOCHI_REPLACEMENTS.put(MochiGinchakuNewAbility.INSTANCE, MochiGinchakuClone.INSTANCE);
+
+        VAMPIRE_AWAKENING_REPLACEMENTS.put(
+                BloodStepAbility.INSTANCE, AwakenedBloodStepAbility.INSTANCE);
+        VAMPIRE_AWAKENING_REPLACEMENTS.put(
+                PhantomCloakAbility.INSTANCE, AwakenedPhantomCloakAbility.INSTANCE);
+        VAMPIRE_AWAKENING_REPLACEMENTS.put(
+                VampirePassiveAbility.INSTANCE, AwakenedVampirePassiveAbility.INSTANCE);
     }
 
     public static void beginAwakening(UUID playerUUID) {
@@ -74,16 +217,239 @@ public class AwakeningAbilityLoginFix {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        syncMeraReworks(event.getPlayer());
+        restoreAwakenedFruitAbilities(event.getPlayer());
     }
 
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        syncMeraReworks(event.getPlayer());
+        restoreAwakenedFruitAbilities(event.getPlayer());
+    }
+
+    @SubscribeEvent
+    public void onDevilFruitEaten(EatDevilFruitEvent.Post event) {
+        syncGoroKaziAbilities(event.getPlayer());
+        syncGasuReworks(event.getPlayer());
+        syncKameRework(event.getPlayer());
+        syncToriPhoenixReworks(event.getPlayer());
     }
 
     public static void syncPlayerAwakeningReplacements(PlayerEntity player) {
+        syncAwakenedSupaAbilities(player);
+        syncGoroKaziAbilities(player);
+        syncGasuReworks(player);
+        syncKameRework(player);
+        syncToriPhoenixReworks(player);
         syncMeraReworks(player);
+        syncMochiReworks(player);
+        syncAwakenedVampireAbilities(player);
+    }
+
+    private static void restoreAwakenedFruitAbilities(PlayerEntity player) {
+        if (player == null || player.level.isClientSide) return;
+
+        IDevilFruit devilFruit = DevilFruitCapability.get(player);
+        boolean isAwakenedSupa = devilFruit != null
+                && devilFruit.hasAwakenedFruit()
+                && devilFruit.hasDevilFruit(ModAbilities.SUPA_SUPA_NO_MI);
+        syncAwakenedSupaAbilities(player);
+        syncGoroKaziAbilities(player);
+        syncGasuReworks(player);
+        syncKameRework(player);
+        syncToriPhoenixReworks(player);
+        syncMeraReworks(player);
+        syncAwakenedVampireAbilities(player);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void syncGoroKaziAbilities(PlayerEntity player) {
+        if (player == null || player.level.isClientSide
+                || KaziConfig.INSTANCE.disableFruitChanges.get()) {
+            return;
+        }
+
+        IDevilFruit devilFruit = DevilFruitCapability.get(player);
+        if (devilFruit == null || !devilFruit.hasDevilFruit(ModAbilities.GORO_GORO_NO_MI)) return;
+
+        IAbilityData abilityData = AbilityDataCapability.get(player);
+        if (abilityData == null) return;
+
+        for (AbilityCore<?> retiredCore : RETIRED_GORO_ABILITIES) {
+            abilityData.removeEquippedAbility(retiredCore);
+            abilityData.removeUnlockedAbility(retiredCore);
+        }
+
+        List<IAbility> equipped = abilityData.getRawEquippedAbilities();
+        for (Map.Entry<AbilityCore<?>, AbilityCore<?>> entry : GORO_REPLACEMENTS.entrySet()) {
+            AbilityCore oldCore = entry.getKey();
+            AbilityCore replacementCore = entry.getValue();
+            boolean hadOld = abilityData.hasUnlockedAbility(oldCore);
+            List<Integer> slotsToReplace = new ArrayList<>();
+
+            for (int slot = 0; slot < equipped.size(); slot++) {
+                IAbility equippedAbility = equipped.get(slot);
+                if (equippedAbility != null && oldCore.equals(equippedAbility.getCore())) {
+                    slotsToReplace.add(slot);
+                }
+            }
+
+            abilityData.removeEquippedAbility(oldCore);
+            abilityData.removeUnlockedAbility(oldCore);
+
+            if (hadOld || !slotsToReplace.isEmpty()) {
+                if (!abilityData.hasUnlockedAbility(replacementCore)) {
+                    abilityData.addUnlockedAbility(replacementCore, AbilityUnlock.PROGRESSION);
+                }
+                for (int slot : slotsToReplace) {
+                    abilityData.setEquippedAbility(slot, replacementCore.createAbility());
+                }
+            }
+        }
+
+        // Grant the full Kazi Goro set even if this player was given Goro by a
+        // command or another path that skipped Cart/base ability progression.
+        for (AbilityCore<?> core : KAZI_GORO_ABILITIES) {
+            if (!abilityData.hasUnlockedAbility(core)) {
+                abilityData.addUnlockedAbility(core, AbilityUnlock.PROGRESSION);
+            }
+        }
+
+        // Re-evaluate the corrected fruit list so existing Goro users also
+        // receive any base moves for which they already meet the requirements.
+        AbilityValidationEvents.checkForPossibleFruitAbilities(player);
+        WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), abilityData), player);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void syncGasuReworks(PlayerEntity player) {
+        if (player == null || player.level.isClientSide
+                || KaziConfig.INSTANCE.disableFruitChanges.get()) return;
+
+        IDevilFruit devilFruit = DevilFruitCapability.get(player);
+        if (devilFruit == null || !devilFruit.hasDevilFruit(ModAbilities.GASU_GASU_NO_MI)) return;
+
+        IAbilityData abilityData = AbilityDataCapability.get(player);
+        if (abilityData == null) return;
+
+        List<IAbility> equipped = abilityData.getRawEquippedAbilities();
+        for (Map.Entry<AbilityCore<?>, AbilityCore<?>> entry : GASU_REPLACEMENTS.entrySet()) {
+            AbilityCore oldCore = entry.getKey();
+            AbilityCore replacementCore = entry.getValue();
+            boolean hadOld = abilityData.hasUnlockedAbility(oldCore);
+            List<Integer> slotsToReplace = new ArrayList<>();
+
+            for (int slot = 0; slot < equipped.size(); slot++) {
+                IAbility equippedAbility = equipped.get(slot);
+                if (equippedAbility != null && oldCore.equals(equippedAbility.getCore())) {
+                    slotsToReplace.add(slot);
+                }
+            }
+
+            abilityData.removeEquippedAbility(oldCore);
+            abilityData.removeUnlockedAbility(oldCore);
+
+            if (hadOld || !slotsToReplace.isEmpty()) {
+                if (!abilityData.hasUnlockedAbility(replacementCore)) {
+                    abilityData.addUnlockedAbility(replacementCore, AbilityUnlock.PROGRESSION);
+                }
+                for (int slot : slotsToReplace) {
+                    abilityData.setEquippedAbility(slot, replacementCore.createAbility());
+                }
+            }
+        }
+
+        // Existing saves do not automatically re-evaluate abilities added to a
+        // fruit after it was eaten. This grants Gastille/Karakuni as soon as
+        // their normal Gasu progression requirements are satisfied.
+        AbilityValidationEvents.checkForPossibleFruitAbilities(player);
+        WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), abilityData), player);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void syncKameRework(PlayerEntity player) {
+        if (player == null || player.level.isClientSide
+                || KaziConfig.INSTANCE.disableFruitChanges.get()) return;
+
+        IDevilFruit devilFruit = DevilFruitCapability.get(player);
+        if (devilFruit == null || !devilFruit.hasDevilFruit(ModAbilities.KAME_KAME_NO_MI)) return;
+
+        IAbilityData abilityData = AbilityDataCapability.get(player);
+        if (abilityData == null) return;
+
+        List<IAbility> equipped = abilityData.getRawEquippedAbilities();
+        for (Map.Entry<AbilityCore<?>, AbilityCore<?>> entry : KAME_REPLACEMENTS.entrySet()) {
+            AbilityCore oldCore = entry.getKey();
+            AbilityCore replacementCore = entry.getValue();
+            boolean hadOld = abilityData.hasUnlockedAbility(oldCore);
+            List<Integer> slotsToReplace = new ArrayList<>();
+
+            for (int slot = 0; slot < equipped.size(); slot++) {
+                IAbility equippedAbility = equipped.get(slot);
+                if (equippedAbility != null && oldCore.equals(equippedAbility.getCore())) {
+                    slotsToReplace.add(slot);
+                }
+            }
+
+            abilityData.removeEquippedAbility(oldCore);
+            abilityData.removeUnlockedAbility(oldCore);
+            if (hadOld || !slotsToReplace.isEmpty()) {
+                if (!abilityData.hasUnlockedAbility(replacementCore)) {
+                    abilityData.addUnlockedAbility(replacementCore, AbilityUnlock.PROGRESSION);
+                }
+                for (int slot : slotsToReplace) {
+                    abilityData.setEquippedAbility(slot, replacementCore.createAbility());
+                }
+            }
+        }
+
+        AbilityValidationEvents.checkForPossibleFruitAbilities(player);
+        WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), abilityData), player);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void syncToriPhoenixReworks(PlayerEntity player) {
+        if (player == null || player.level.isClientSide
+                || KaziConfig.INSTANCE.disableFruitChanges.get()) return;
+
+        IDevilFruit devilFruit = DevilFruitCapability.get(player);
+        if (devilFruit == null || !devilFruit.hasDevilFruit(ModAbilities.TORI_TORI_NO_MI_PHOENIX)) return;
+
+        IAbilityData abilityData = AbilityDataCapability.get(player);
+        if (abilityData == null) return;
+
+        List<IAbility> equipped = abilityData.getRawEquippedAbilities();
+        for (Map.Entry<AbilityCore<?>, AbilityCore<?>> entry : TORI_PHOENIX_REPLACEMENTS.entrySet()) {
+            AbilityCore oldCore = entry.getKey();
+            AbilityCore replacementCore = entry.getValue();
+            boolean hadOldUnlocked = abilityData.hasUnlockedAbility(oldCore);
+            boolean hadOldPassive = abilityData.hasPassiveAbility(oldCore);
+            List<Integer> slotsToReplace = new ArrayList<>();
+
+            for (int slot = 0; slot < equipped.size(); slot++) {
+                IAbility equippedAbility = equipped.get(slot);
+                if (equippedAbility != null && oldCore.equals(equippedAbility.getCore())) {
+                    slotsToReplace.add(slot);
+                }
+            }
+
+            abilityData.removeEquippedAbility(oldCore);
+            abilityData.removeUnlockedAbility(oldCore);
+            abilityData.removePassiveAbility(oldCore);
+
+            if (hadOldUnlocked || !slotsToReplace.isEmpty()) {
+                if (!abilityData.hasUnlockedAbility(replacementCore)) {
+                    abilityData.addUnlockedAbility(replacementCore, AbilityUnlock.PROGRESSION);
+                }
+                for (int slot : slotsToReplace) {
+                    abilityData.setEquippedAbility(slot, replacementCore.createAbility());
+                }
+            }
+            if (hadOldPassive && !abilityData.hasPassiveAbility(replacementCore)) {
+                abilityData.addPassiveAbility(replacementCore.createAbility());
+            }
+        }
+
+        AbilityValidationEvents.checkForPossibleFruitAbilities(player);
+        WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), abilityData), player);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -94,13 +460,27 @@ public class AwakeningAbilityLoginFix {
         AbilityCore<?> core = event.getAbilityCore();
         if (entity == null || core == null) return;
 
-        // If this is an intentional awakening grant, allow everything through
-        if (awakeningInProgress.contains(entity.getUUID())) return;
-
         IDevilFruit devilFruit = DevilFruitCapability.get(entity);
         if (devilFruit == null || !devilFruit.hasAwakenedFruit()) return;
 
-        if (entity instanceof PlayerEntity && devilFruit.hasDevilFruit(ModAbilities.MERA_MERA_NO_MI)) {
+        if (devilFruit.hasDevilFruit(ModAbilities.SUPA_SUPA_NO_MI)
+                && AWAKENED_SUPA_REMOVALS.contains(core)) {
+            event.setResult(Event.Result.DENY);
+            return;
+        }
+
+        // Awakening validation normally rechecks every ability on the fruit.
+        // Keep removed Vampire moves and the originals of awakening-only
+        // replacements from returning during that validation.
+        if (isAwakenedVampire(devilFruit)
+                && (AWAKENED_VAMPIRE_REMOVALS.contains(core)
+                || VAMPIRE_AWAKENING_REPLACEMENTS.containsKey(core))) {
+            event.setResult(Event.Result.DENY);
+            return;
+        }
+
+        if (entity instanceof PlayerEntity && devilFruit.hasDevilFruit(ModAbilities.MERA_MERA_NO_MI)
+                && !MERA_REPLACEMENTS.containsValue(core)) {
             syncMeraReworks((PlayerEntity) entity);
         }
 
@@ -146,7 +526,8 @@ public class AwakeningAbilityLoginFix {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static void syncMeraReworks(PlayerEntity player) {
-        if (player == null || player.level.isClientSide) return;
+        if (player == null || player.level.isClientSide
+                || KaziConfig.INSTANCE.disableFruitChanges.get()) return;
 
         IDevilFruit devilFruit = DevilFruitCapability.get(player);
         if (devilFruit == null || !devilFruit.hasDevilFruit(ModAbilities.MERA_MERA_NO_MI)) return;
@@ -184,5 +565,109 @@ public class AwakeningAbilityLoginFix {
             }
         }
 
+        WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), abilityData), player);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void syncMochiReworks(PlayerEntity player) {
+        if (player == null || player.level.isClientSide) return;
+
+        IDevilFruit devilFruit = DevilFruitCapability.get(player);
+        if (devilFruit == null || !devilFruit.hasDevilFruit(CartAbilities.MOCHI_MOCHI_NO_MI)) return;
+
+        IAbilityData abilityData = AbilityDataCapability.get(player);
+        if (abilityData == null) return;
+
+        List<IAbility> equipped = abilityData.getRawEquippedAbilities();
+        for (Map.Entry<AbilityCore<?>, AbilityCore<?>> entry : MOCHI_REPLACEMENTS.entrySet()) {
+            AbilityCore oldCore = entry.getKey();
+            AbilityCore replacementCore = entry.getValue();
+            boolean hadOld = abilityData.hasUnlockedAbility(oldCore);
+            List<Integer> slotsToReplace = new ArrayList<>();
+
+            for (int slot = 0; slot < equipped.size(); slot++) {
+                IAbility equippedAbility = equipped.get(slot);
+                if (equippedAbility != null && oldCore.equals(equippedAbility.getCore())) {
+                    slotsToReplace.add(slot);
+                }
+            }
+
+            if (!hadOld && slotsToReplace.isEmpty()) continue;
+            abilityData.removeUnlockedAbility(oldCore);
+            if (!abilityData.hasUnlockedAbility(replacementCore)) {
+                abilityData.addUnlockedAbility(replacementCore, AbilityUnlock.PROGRESSION);
+            }
+            for (int slot : slotsToReplace) {
+                abilityData.setEquippedAbility(slot, replacementCore.createAbility());
+            }
+        }
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void syncAwakenedVampireAbilities(PlayerEntity player) {
+        if (player == null || player.level.isClientSide) return;
+
+        IDevilFruit devilFruit = DevilFruitCapability.get(player);
+        if (!isAwakenedVampire(devilFruit)) return;
+
+        IAbilityData abilityData = AbilityDataCapability.get(player);
+        if (abilityData == null) return;
+
+        for (AbilityCore<?> core : AWAKENED_VAMPIRE_REMOVALS) {
+            abilityData.removeEquippedAbility(core);
+            abilityData.removeUnlockedAbility(core);
+        }
+
+        List<IAbility> equipped = abilityData.getRawEquippedAbilities();
+        for (Map.Entry<AbilityCore<?>, AbilityCore<?>> entry
+                : VAMPIRE_AWAKENING_REPLACEMENTS.entrySet()) {
+            AbilityCore originalCore = entry.getKey();
+            AbilityCore replacementCore = entry.getValue();
+            List<Integer> slotsToReplace = new ArrayList<>();
+
+            for (int slot = 0; slot < equipped.size(); slot++) {
+                IAbility equippedAbility = equipped.get(slot);
+                if (equippedAbility != null && originalCore.equals(equippedAbility.getCore())) {
+                    slotsToReplace.add(slot);
+                }
+            }
+
+            abilityData.removeEquippedAbility(originalCore);
+            abilityData.removeUnlockedAbility(originalCore);
+            if (!abilityData.hasUnlockedAbility(replacementCore)) {
+                abilityData.addUnlockedAbility(replacementCore, AbilityUnlock.PROGRESSION);
+            }
+
+            for (int slot : slotsToReplace) {
+                abilityData.setEquippedAbility(slot, replacementCore.createAbility());
+            }
+        }
+    }
+
+    private static void syncAwakenedSupaAbilities(PlayerEntity player) {
+        if (player == null || player.level.isClientSide) return;
+        IDevilFruit fruit = DevilFruitCapability.get(player);
+        if (fruit == null || !fruit.hasAwakenedFruit()
+                || !fruit.hasDevilFruit(ModAbilities.SUPA_SUPA_NO_MI)) return;
+        IAbilityData data = AbilityDataCapability.get(player);
+        if (data == null) return;
+        for (AbilityCore<?> core : AWAKENED_SUPA_REMOVALS) {
+            data.removeEquippedAbility(core);
+            data.removeUnlockedAbility(core);
+        }
+        for (AbilityCore<?> core : AWAKENED_SUPA_ABILITIES) {
+            if (!data.hasUnlockedAbility(core)) {
+                data.addUnlockedAbility(core, AbilityUnlock.PROGRESSION);
+            }
+        }
+        if (data.getPassiveAbility(KanshouBakuyaAbility.INSTANCE) == null) {
+            data.addPassiveAbility(KanshouBakuyaAbility.INSTANCE.createAbility());
+        }
+    }
+
+    private static boolean isAwakenedVampire(IDevilFruit devilFruit) {
+        return devilFruit != null
+                && devilFruit.hasAwakenedFruit()
+                && devilFruit.hasDevilFruit(CartAbilities.BATTO_BATTO_NO_MI_MODEL_VAMPIRE);
     }
 }

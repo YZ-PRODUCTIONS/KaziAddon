@@ -59,3 +59,4 @@ public class PadHoRework extends Ability {
         INSTANCE = (new AbilityCore.Builder("Pad Ho", AbilityCategory.DEVIL_FRUITS, PadHoRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(30.0F)}).addAdvancedDescriptionLine(ProjectileComponent.getProjectileTooltips()).setSourceHakiNature(SourceHakiNature.SPECIAL).setSourceElement(SourceElement.SHOCKWAVE).build();
     }
 }
+

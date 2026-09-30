@@ -1,9 +1,8 @@
 package net.kazi.kazimod.network;
 
-import net.kazi.kazimod.client.AfterImageStore;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -59,17 +58,21 @@ public class AfterImagePacket {
 
     public static void handle(AfterImagePacket msg, Supplier<NetworkEvent.Context> ctxSupplier) {
         NetworkEvent.Context ctx = ctxSupplier.get();
-        ctx.enqueueWork(() ->
-                // DistExecutor ensures this only touches client classes on the client.
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                        AfterImageStore.INSTANCE.addSnapshot(new AfterImageStore.Snapshot(
-                                msg.x, msg.y, msg.z,
-                                msg.yaw, msg.pitch,
-                                msg.skinName,
-                                msg.ticks
-                        ))
-                )
-        );
+        ctx.enqueueWork(() -> ClientHandler.handle(msg));
         ctx.setPacketHandled(true);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static final class ClientHandler {
+        private static void handle(AfterImagePacket msg) {
+            net.kazi.kazimod.client.AfterImageStore.INSTANCE.addSnapshot(
+                    new net.kazi.kazimod.client.AfterImageStore.Snapshot(
+                            msg.x, msg.y, msg.z,
+                            msg.yaw, msg.pitch,
+                            msg.skinName,
+                            msg.ticks
+                    )
+            );
+        }
     }
 }

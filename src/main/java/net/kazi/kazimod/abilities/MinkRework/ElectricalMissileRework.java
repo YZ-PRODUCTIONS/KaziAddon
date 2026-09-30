@@ -69,10 +69,8 @@ public class ElectricalMissileRework extends DashAbility {
         boolean hasSulongActive = CartElectroHelper.hasSulongActive(entity);
         this.dashSpeed = hasSulongActive ? (double)4.0F : (double)3.25F;
         this.dealDamageComponent.getBonusManager().removeBonus(CartElectroHelper.SULONG_DAMAGE_BONUS);
-        this.cooldownComponent.getBonusManager().removeBonus(CartElectroHelper.SULONG_COOLDOWN_BONUS);
         if (hasSulongActive) {
             this.dealDamageComponent.getBonusManager().addBonus(CartElectroHelper.SULONG_DAMAGE_BONUS, "Sulong Damage Bonus", BonusOperation.MUL, 2.5F);
-            this.cooldownComponent.getBonusManager().addBonus(CartElectroHelper.SULONG_COOLDOWN_BONUS, "Sulong Cooldown Bonus", BonusOperation.MUL, 0.5F);
         }
 
         entity.swing(Hand.MAIN_HAND, true);
@@ -105,7 +103,7 @@ public class ElectricalMissileRework extends DashAbility {
     }
 
     static {
-        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "electrical_missile", new Pair[]{ImmutablePair.of("Powerful and fast forward dash that will stun enemies.", (Object)null), ImmutablePair.of("While %s is active the cooldown of this ability is reduced by %s and the damage is increased by %s.", new Object[]{AbilityHelper.mentionAbility(CartSulongAbility.INSTANCE), AbilityHelper.mentionText(Math.round(50.0F) + "%"), AbilityHelper.mentionText(Math.round(Math.abs(-1.5F) * 100.0F) + "%")})});
+        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "electrical_missile", new Pair[]{ImmutablePair.of("Powerful and fast forward dash that will stun enemies.", (Object)null), ImmutablePair.of("While %s is active the damage is increased by %s.", new Object[]{AbilityHelper.mentionAbility(CartSulongAbility.INSTANCE), AbilityHelper.mentionText(Math.round(Math.abs(-1.5F) * 100.0F) + "%")})});
         INSTANCE = (new AbilityCore.Builder("Electrical Missile", AbilityCategory.RACIAL, ElectricalMissileRework::new)).addDescriptionLine(new ITextComponent[]{DESCRIPTION[0]}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{IDescriptionLine.of(DESCRIPTION[1])}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(180.0F), RangeComponent.getTooltip(1.6F, RangeType.AOE), DealDamageComponent.getTooltip(35.0F)}).setSourceHakiNature(SourceHakiNature.HARDENING).setSourceType(new SourceType[]{SourceType.FIST}).setSourceElement(SourceElement.LIGHTNING).setUnlockCheck(ElectricalMissileRework::canUnlock).build();
     }
 }

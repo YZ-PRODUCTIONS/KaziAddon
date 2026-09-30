@@ -1,7 +1,6 @@
 package net.kazi.kazimod.abilities.Koku;
 
 import net.kazi.kazimod.abilities.GomuRework.GearFifthRework;
-import net.kazi.kazimod.animations.gojo.GojoHollowPurpleAnimation;
 import net.kazi.kazimod.entities.projectiles.HollowPurpleProjectile;
 import net.kazi.kazimod.init.KaziAnimations;
 import net.kazi.kazimod.init.KaziParticleEffects;
@@ -57,6 +56,7 @@ public class HollowPurpleAbility extends Ability {
     private ProjectileComponent projectileComponent;
 
     private final Interval particleInterval = new Interval(2);
+    private final KokuChargeVisual chargeVisual = new KokuChargeVisual();
     private boolean fireAnimTriggered = false;
     private boolean chantTriggered    = false;
 
@@ -71,6 +71,7 @@ public class HollowPurpleAbility extends Ability {
         });
         this.addCanUseCheck(this::domainCheck);
         this.addUseEvent(this::onUseEvent);
+        this.addRemoveEvent((entity, ability) -> this.chargeVisual.stop());
     }
 
     private AbilityUseResult domainCheck(LivingEntity entity, IAbility ability) {
@@ -102,58 +103,17 @@ public class HollowPurpleAbility extends Ability {
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         // No launch — just start the animation and reset flags
         this.animationComponent.start(entity, KaziAnimations.GOJO_HOLLOW_PURPLE);
+        this.chargeVisual.start(entity, ability, net.kazi.kazimod.entities.KokuVfxEntity.PURPLE_CHARGE, (int) CHARGE_TIME);
         fireAnimTriggered = false;
         chantTriggered    = false;
-        if (GojoHollowPurpleAnimation.INSTANCE != null) {
-            GojoHollowPurpleAnimation.INSTANCE.reset();
-        }
     }
 
     private void onChargeTick(LivingEntity entity, IAbility ability) {
-        // Float in place like El Thor — slow fall every tick instead of launching up
         AbilityHelper.slowEntityFall(entity);
-
+        this.chargeVisual.update(this.chargeComponent.getChargePercentage());
         if (!entity.level.isClientSide && particleInterval.canTick()) {
             float progress = this.chargeComponent.getChargePercentage();
-
-            Vector3d look  = entity.getLookAngle().normalize();
-            Vector3d right = new Vector3d(-look.z, 0, look.x);
-
-            if (progress < 0.7F) {
-                Vector3d redPos = entity.position().add(0, 1.5, 0).add(right.scale(-2.5));
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_RED.get(),
-                        entity, redPos.x, redPos.y, redPos.z
-                );
-
-                Vector3d bluePos = entity.position().add(0, 1.5, 0).add(right.scale(2.5));
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_BLUE.get(),
-                        entity, bluePos.x, bluePos.y, bluePos.z
-                );
-
-            } else {
-                float  mergeProgress = (progress - 0.7F) / 0.3F;
-                double separation    = 2.5 * (1.0F - mergeProgress);
-
-                Vector3d redPos = entity.position().add(0, 1.5, 0).add(right.scale(-separation));
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_RED.get(),
-                        entity, redPos.x, redPos.y, redPos.z
-                );
-
-                Vector3d bluePos = entity.position().add(0, 1.5, 0).add(right.scale(separation));
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_BLUE.get(),
-                        entity, bluePos.x, bluePos.y, bluePos.z
-                );
-
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_PURPLE.get(),
-                        entity,
-                        entity.getX(), entity.getY() + 1.5, entity.getZ()
-                );
-
+            if (progress >= 0.7F) {
                 if (!chantTriggered) {
                     chantTriggered = true;
                     entity.level.playSound(
@@ -167,15 +127,16 @@ public class HollowPurpleAbility extends Ability {
 
                 if (!fireAnimTriggered) {
                     fireAnimTriggered = true;
-                    if (GojoHollowPurpleAnimation.INSTANCE != null) {
-                        GojoHollowPurpleAnimation.INSTANCE.triggerFire();
-                    }
                 }
             }
         }
     }
 
     private void onChargeEnd(LivingEntity entity, IAbility ability) {
+        this.chargeVisual.stop();
+        net.kazi.kazimod.entities.KokuVfxEntity.impact(entity.level,
+                net.kazi.kazimod.entities.KokuVfxEntity.castOrigin(entity, 1.0F, 2),
+                net.kazi.kazimod.entities.KokuVfxEntity.PURPLE_IMPACT, 4.0F);
         HollowPurpleProjectile projectile = new HollowPurpleProjectile(entity.level, entity, this);
         projectile.moveTo(entity.getX(), entity.getY() + 8.0, entity.getZ());
         entity.level.addFreshEntity(projectile);
@@ -184,9 +145,6 @@ public class HollowPurpleAbility extends Ability {
         this.animationComponent.stop(entity);
         fireAnimTriggered = false;
         chantTriggered    = false;
-        if (GojoHollowPurpleAnimation.INSTANCE != null) {
-            GojoHollowPurpleAnimation.INSTANCE.reset();
-        }
     }
 
     private HollowPurpleProjectile createProjectile(LivingEntity entity) {

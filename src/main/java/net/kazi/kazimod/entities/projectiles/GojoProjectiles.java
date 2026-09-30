@@ -1,5 +1,6 @@
 package net.kazi.kazimod.entities.projectiles;
 
+import net.kazi.kazimod.renderers.entities.projectiles.KokuProjectileRenderer;
 import net.minecraft.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -62,33 +63,10 @@ public class GojoProjectiles {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void registerEntityRenderers(FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(
-                (EntityType) RED.get(),
-                (new AbilityProjectileRenderer.Factory(new CubeModel()))
-                        .setScale((double) 0.0F, (double) 0.0F, (double) 0.0F)
-        );
-        RenderingRegistry.registerEntityRenderingHandler(
-                (EntityType) MAX_OUTPUT_RED.get(),
-                (new AbilityProjectileRenderer.Factory(new CubeModel()))
-                        .setScale((double) 0.0F, (double) 0.0F, (double) 0.0F)
-        );
-
-        RenderingRegistry.registerEntityRenderingHandler(
-                (EntityType) LAPSE_BLUE.get(),
-                (new AbilityProjectileRenderer.Factory(new CubeModel()))
-                        .setScale((double) 0.0F, (double) 0.0F, (double) 0.0F)
-        );
-
-        RenderingRegistry.registerEntityRenderingHandler(
-                (EntityType) HOLLOW_NUKE.get(),
-                (new AbilityProjectileRenderer.Factory(new CubeModel()))
-                        .setScale((double) 0.0F, (double) 0.0F, (double) 0.0F)
-        );
-
-        RenderingRegistry.registerEntityRenderingHandler(
-                (EntityType) HOLLOW_PURPLE.get(),
-                (new AbilityProjectileRenderer.Factory(new CubeModel()))
-                        .setScale((double) 0.0F, (double) 0.0F, (double) 0.0F)
-        );
+        RenderingRegistry.registerEntityRenderingHandler(RED.get(), manager -> new KokuProjectileRenderer<>(manager, 0, 0.7F));
+        RenderingRegistry.registerEntityRenderingHandler(MAX_OUTPUT_RED.get(), manager -> new KokuProjectileRenderer<>(manager, 0, 1.0F));
+        RenderingRegistry.registerEntityRenderingHandler(LAPSE_BLUE.get(), manager -> new KokuProjectileRenderer<>(manager, 1, 1.7F));
+        RenderingRegistry.registerEntityRenderingHandler(HOLLOW_NUKE.get(), manager -> new KokuProjectileRenderer<>(manager, 2, 1.0F));
+        RenderingRegistry.registerEntityRenderingHandler(HOLLOW_PURPLE.get(), manager -> new KokuProjectileRenderer<>(manager, 2, 4.5F));
     }
 }

@@ -4,6 +4,7 @@ import net.kazi.kazimod.KaziMod;
 import net.kazi.kazimod.abilities.HakiRework.BusoshokuHakiFullBodyHardeningRework;
 import net.kazi.kazimod.abilities.HakiRework.HakiSenseAbility;
 import net.kazi.kazimod.abilities.HakiRework.KenbunshokuHakiFutureSightRework;
+import sun.misc.Unsafe;
 import xyz.pixelatedw.mineminenomi.abilities.haki.BusoshokuHakiFullBodyHardeningAbility;
 import xyz.pixelatedw.mineminenomi.abilities.haki.KenbunshokuHakiFutureSightAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
@@ -59,9 +60,18 @@ public final class HakiAbilityInjector {
     }
 
     private static void setStaticFinal(Field field, Object value) throws Exception {
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-        field.set(null, value);
+        try {
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            field.set(null, value);
+        } catch (IllegalAccessException ignored) {
+            // Java 8 may still reject Field#set for static finals after clearing
+            // the modifier. Unsafe updates the field storage directly.
+            Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            Unsafe unsafe = (Unsafe) unsafeField.get(null);
+            unsafe.putObjectVolatile(unsafe.staticFieldBase(field), unsafe.staticFieldOffset(field), value);
+        }
     }
 }

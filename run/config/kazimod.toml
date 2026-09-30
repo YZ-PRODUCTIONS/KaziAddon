@@ -4,6 +4,7 @@
 	#Maximum hold time for Gear Fifth Rework, in ticks.
 	#20 ticks = 1 second.
 	#Default: 1200 (60 seconds).
+	#No longer even enabled this config is redundent
 	#Range: 20 ~ 72000
 	gearFifthMaxHoldTime = 1200
 	#Set to true to require player kills before Awakening Essence can be used.
@@ -20,4 +21,19 @@
 	#Set to true to completely disable Vegapunk Trader spawning.
 	#Default: false.
 	disableVegapunkSpawns = false
+
+	#Haki Sense settings.
+	[kazimod.hakiSense]
+		#Maximum distance, in blocks, at which Haki Sense can detect other players.
+		#Default: 1000.
+		#Changes apply the next time Haki Sense is used.
+		#Range: 1 ~ 100000
+		range = 1000
+
+	#Awakening announcement settings.
+	[kazimod.awakeningMessages]
+		#Set to true to disable fruit-specific awakening messages.
+		#When disabled, every awakening uses: (PlayerName) Has awakened their devil fruit!
+		#Default: false.
+		disableCustomMessages = false
 

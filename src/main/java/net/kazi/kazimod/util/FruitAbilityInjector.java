@@ -64,4 +64,22 @@ public class FruitAbilityInjector {
     public static void removeAbilities(AkumaNoMiItem fruit, AbilityCore<?>... toRemove) {
         updateFruitAbilities(fruit, Arrays.asList(toRemove), Collections.<AbilityCore<?>>emptyList(), false);
     }
+
+    public static void replaceAbility(AkumaNoMiItem fruit, AbilityCore<?> original, AbilityCore<?> replacement) {
+        if (fruit == null || abilitiesField == null || original == null || replacement == null) return;
+        try {
+            AbilityCore<?>[] current = fruit.getAbilities();
+            if (current == null) return;
+            AbilityCore<?>[] updated = Arrays.copyOf(current, current.length);
+            for (int i = 0; i < updated.length; i++) {
+                if (original.equals(updated[i])) {
+                    updated[i] = replacement;
+                }
+            }
+            abilitiesField.set(fruit, updated);
+            LOGGER.info("[FruitAbilityInjector] Replaced an ability in place on {}", fruit.getDevilFruitName());
+        } catch (Exception e) {
+            LOGGER.error("[FruitAbilityInjector] Failed to replace ability on {}", fruit.getDevilFruitName(), e);
+        }
+    }
 }

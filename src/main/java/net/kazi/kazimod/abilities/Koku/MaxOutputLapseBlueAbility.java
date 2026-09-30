@@ -33,6 +33,8 @@ import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class MaxOutputLapseBlueAbility extends Ability {
 
+    private static final float HOLLOW_NUKE_COOLDOWN = 1800.0F;
+
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
             "kazimod", "max_output_lapse_blue",
             new Pair[]{ImmutablePair.of("Fires a guided Blue projectile that pulls in entities and absorbs blocks. Use the ability again to toggle the projectile between moving and stopped.", (Object) null)}
@@ -49,7 +51,7 @@ public class MaxOutputLapseBlueAbility extends Ability {
                     .addEndEvent(this::onChargeEnd);
 
     private final AnimationComponent animationComponent = new AnimationComponent(this);
-    private final Interval particleInterval = new Interval(2);
+    private final KokuChargeVisual chargeVisual = new KokuChargeVisual();
     private ProjectileComponent projectileComponent;
 
     public MaxOutputLapseBlueAbility(AbilityCore<MaxOutputLapseBlueAbility> core) {
@@ -64,6 +66,7 @@ public class MaxOutputLapseBlueAbility extends Ability {
         this.addCanUseCheck(this::canUseCheck);
         this.addUseEvent(this::onUseEvent);
         this.addTickEvent(this::onAbilityTick);
+        this.addRemoveEvent((entity, ability) -> this.chargeVisual.stop());
     }
 
     private AbilityUseResult canUseCheck(LivingEntity entity, IAbility ability) {
@@ -95,37 +98,35 @@ public class MaxOutputLapseBlueAbility extends Ability {
 
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         if (!entity.level.isClientSide) {
-            this.animationComponent.start(entity, KaziAnimations.GOJO_RED);
+            this.animationComponent.start(entity, KaziAnimations.GOJO_BLUE);
+            this.chargeVisual.start(entity, ability, net.kazi.kazimod.entities.KokuVfxEntity.BLUE_CHARGE, (int) CHARGE_TIME);
         }
     }
 
     private void onChargeTick(LivingEntity entity, IAbility ability) {
         AbilityHelper.slowEntityFall(entity);
-        if (!entity.level.isClientSide) {
-            if (particleInterval.canTick()) {
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_BLUE.get(),
-                        entity,
-                        entity.getX(), entity.getY() + 1.0, entity.getZ()
-                );
-            }
-        }
+        this.chargeVisual.update(this.chargeComponent.getContinueTime() / CHARGE_TIME);
     }
 
     private void onChargeEnd(LivingEntity entity, IAbility ability) {
+        this.chargeVisual.stop();
         if (!entity.level.isClientSide) {
             this.projectileComponent.shoot(entity, 0.5F, 0.1F);
-            this.animationComponent.start(entity, KaziAnimations.GOJO_RED);
+            this.animationComponent.start(entity, KaziAnimations.GOJO_BLUE);
         }
     }
 
     private void onAbilityTick(LivingEntity entity, IAbility ability) {
         LapseBlueProjectile proj = LapseBlueProjectile.ACTIVE_PROJECTILES.get(entity.getUUID());
-        if (proj != null && proj.isAlive()) {
+        if (proj != null && proj.isAlive() && proj.shouldRestrictCasterMovement()) {
             AbilityHelper.slowEntityFall(entity);
             AbilityHelper.setDeltaMovement(entity, 0.0, entity.getDeltaMovement().y, 0.0);
             entity.addEffect(new net.minecraft.potion.EffectInstance(
                     (net.minecraft.potion.Effect) ModEffects.MOVEMENT_BLOCKED.get(), 5, 0, false, false));
+        } else if (proj != null && proj.isAlive()) {
+            // Clear the short refreshed effect as soon as the intended 100-tick
+            // restriction ends instead of waiting for its remaining duration.
+            entity.removeEffect(ModEffects.MOVEMENT_BLOCKED.get());
         }
     }
 
@@ -140,6 +141,14 @@ public class MaxOutputLapseBlueAbility extends Ability {
 
     public void startCooldown(PlayerEntity entity) {
         this.cooldownComponent.startCooldown(entity, 700.0F);
+    }
+
+    public static void startHollowNukeCooldown(LivingEntity entity) {
+        IAbilityData data = AbilityDataCapability.get(entity);
+        MaxOutputLapseBlueAbility blue = (MaxOutputLapseBlueAbility) data.getEquippedAbility(INSTANCE);
+        if (blue != null) {
+            blue.cooldownComponent.startCooldown(entity, HOLLOW_NUKE_COOLDOWN);
+        }
     }
 
     public static final ResourceLocation MAX_OUTPUT_BLUE_ICON =

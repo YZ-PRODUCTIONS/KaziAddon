@@ -1,6 +1,7 @@
 package net.kazi.kazimod.mixin;
 
 import java.util.List;
+import net.MrMagicalCart.cartaddon.init.CartAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
@@ -16,6 +17,8 @@ import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.pixelatedw.mineminenomi.api.OneFruitEntry;
 import xyz.pixelatedw.mineminenomi.api.events.onefruit.InventoryDevilFruitEvent;
 import xyz.pixelatedw.mineminenomi.api.helpers.DevilFruitHelper;
+import xyz.pixelatedw.mineminenomi.config.CommonConfig;
 import xyz.pixelatedw.mineminenomi.data.world.OFPWWorldData;
 import xyz.pixelatedw.mineminenomi.items.AkumaNoMiBoxItem;
 import xyz.pixelatedw.mineminenomi.items.AkumaNoMiItem;
@@ -32,9 +36,9 @@ import xyz.pixelatedw.mineminenomi.items.AkumaNoMiItem;
 @Mixin(value = AkumaNoMiBoxItem.class, remap = false)
 public abstract class AkumaNoMiBoxMixin {
 
-    @Shadow public static Pair<Integer, ResourceLocation> TIER_1_FRUITS;
-    @Shadow public static Pair<Integer, ResourceLocation> TIER_2_FRUITS;
-    @Shadow public static Pair<Integer, ResourceLocation> TIER_3_FRUITS;
+    @Shadow @Final @Mutable public static Pair<Integer, ResourceLocation> TIER_1_FRUITS;
+    @Shadow @Final @Mutable public static Pair<Integer, ResourceLocation> TIER_2_FRUITS;
+    @Shadow @Final @Mutable public static Pair<Integer, ResourceLocation> TIER_3_FRUITS;
     @Shadow private Pair<Integer, ResourceLocation> tier;
 
     @Shadow public abstract int getKeySlot(PlayerEntity player);
@@ -49,10 +53,14 @@ public abstract class AkumaNoMiBoxMixin {
     }
 
     @Inject(
-            method = "use(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;",
+            method = {
+                    "use(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;",
+                    "func_77659_a(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;"
+            },
             at = @At("HEAD"),
+            remap = false,
             cancellable = true,
-            require = 0
+            require = 1
     )
     private void kazi$useBox(World world, PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult<ItemStack>> cir) {
         ItemStack boxStack = player.getItemInHand(hand);
@@ -109,11 +117,24 @@ public abstract class AkumaNoMiBoxMixin {
                     .create(LootParameterSets.EMPTY);
             List<ItemStack> loot = lootTable.getRandomItems(context);
             for (ItemStack stack : loot) {
-                if (stack != null && !stack.isEmpty()) {
+                if (stack != null && !stack.isEmpty() && this.kazi$isFruitAllowedForBoxTier(stack)) {
                     return stack;
                 }
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    @Unique
+    private boolean kazi$isFruitAllowedForBoxTier(ItemStack stack) {
+        if (stack.getItem() != CartAbilities.KAMA_KAMA_NO_MI) {
+            return true;
+        }
+
+        int boxTier = this.tier.getLeft();
+        if (CommonConfig.INSTANCE.hasAwakeningsEnabled()) {
+            return boxTier == 3;
+        }
+        return boxTier == 1;
     }
 }

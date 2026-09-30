@@ -574,6 +574,16 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
+          "name": "cartaddon:kama_kama_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
           "name": "mineminenomi:kame_kame_no_mi"
         },
         {

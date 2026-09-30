@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,6 +20,9 @@ import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.BonusOperation;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
+import xyz.pixelatedw.mineminenomi.api.abilities.components.ChargeComponent;
+import xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent;
+import xyz.pixelatedw.mineminenomi.api.events.ability.AbilityUseEvent;
 import xyz.pixelatedw.mineminenomi.api.events.ability.UnlockAbilityEvent;
 import xyz.pixelatedw.mineminenomi.api.events.onefruit.LostDevilFruitEvent;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
@@ -27,6 +31,9 @@ import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.IDevilFruit;
 import xyz.pixelatedw.mineminenomi.init.ModAbilityKeys;
 import xyz.pixelatedw.mineminenomi.items.AkumaNoMiItem;
+import xyz.pixelatedw.mineminenomi.api.ModRegistries;
+import xyz.pixelatedw.mineminenomi.packets.server.SSyncAbilityDataPacket;
+import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +56,8 @@ public class NusuEvents {
         if (!(event.getEntityLiving() instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) event.getEntityLiving();
         if (player.level.isClientSide) return;
+
+        finishUsedSkillHunterExRoll(player);
 
         if (player.getPersistentData().contains(NusuStolenData.VICTIM_KEY)) {
             stripStolen(player);
@@ -185,6 +194,100 @@ public class NusuEvents {
         return NusuStolenData.addHeld(nusuUser, core);
     }
 
+    @SubscribeEvent
+    public void onAbilityUse(AbilityUseEvent.Post event) {
+        LivingEntity entity = event.getEntityLiving();
+        if (entity.level == null || entity.level.isClientSide) return;
+        String rolledKey = entity.getPersistentData().getString(
+                SkillHunterEXAbility.ROLLED_ABILITY_TAG);
+        ResourceLocation usedKey = ModRegistries.ABILITIES.getKey(event.getAbility().getCore());
+        if (usedKey != null && usedKey.toString().equals(rolledKey)) {
+            entity.getPersistentData().putBoolean(SkillHunterEXAbility.ROLLED_USED_TAG, true);
+        }
+    }
+
+    /** Sneak-use discards the temporary EX roll instead of firing it. */
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSkillHunterExDiscard(AbilityUseEvent.Pre event) {
+        LivingEntity entity = event.getEntityLiving();
+        if (!(entity instanceof PlayerEntity) || entity.level.isClientSide || !entity.isShiftKeyDown()) return;
+
+        String rolledKey = entity.getPersistentData().getString(SkillHunterEXAbility.ROLLED_ABILITY_TAG);
+        ResourceLocation usedKey = ModRegistries.ABILITIES.getKey(event.getAbility().getCore());
+        if (rolledKey.isEmpty() || usedKey == null || !rolledKey.equals(usedKey.toString())) return;
+
+        event.getAbility().getComponent(ModAbilityKeys.CHARGE).ifPresent(component -> {
+            ChargeComponent charge = (ChargeComponent) component;
+            if (charge.isCharging()) charge.stopCharging(entity);
+        });
+        event.getAbility().getComponent(ModAbilityKeys.CONTINUOUS).ifPresent(component -> {
+            ContinuousComponent continuous = (ContinuousComponent) component;
+            if (continuous.isContinuous()) continuous.stopContinuity(entity);
+        });
+        entity.getPersistentData().putBoolean(SkillHunterEXAbility.ROLLED_USED_TAG, true);
+        event.setCanceled(true);
+    }
+
+    private static void finishUsedSkillHunterExRoll(PlayerEntity player) {
+        if (!player.getPersistentData().getBoolean(SkillHunterEXAbility.ROLLED_USED_TAG)) return;
+
+        IAbilityData data = AbilityDataCapability.get(player);
+        if (data == null) return;
+        ResourceLocation rolledKey;
+        try {
+            rolledKey = new ResourceLocation(player.getPersistentData().getString(
+                    SkillHunterEXAbility.ROLLED_ABILITY_TAG));
+        } catch (Exception ignored) {
+            clearSkillHunterExRoll(player);
+            return;
+        }
+
+        AbilityCore<?> rolledCore = ModRegistries.ABILITIES.getValue(rolledKey);
+        int slot = player.getPersistentData().getInt(SkillHunterEXAbility.ROLLED_SLOT_TAG);
+        List<IAbility> equipped = data.getRawEquippedAbilities();
+        if (rolledCore == null || slot < 0 || slot >= equipped.size()) {
+            clearSkillHunterExRoll(player);
+            return;
+        }
+
+        IAbility rolledAbility = equipped.get(slot);
+        if (rolledAbility == null || rolledAbility.getCore() != rolledCore) {
+            clearSkillHunterExRoll(player);
+            return;
+        }
+        if (isStillRunning(rolledAbility)) return;
+
+        data.removeEquippedAbility(rolledCore);
+        data.removeUnlockedAbility(rolledCore);
+        SkillHunterEXAbility restored = SkillHunterEXAbility.INSTANCE.createAbility();
+        restored.startReturnCooldown(player);
+        data.setEquippedAbility(slot, restored);
+        clearSkillHunterExRoll(player);
+        syncAbilityData(player, data);
+    }
+
+    private static boolean isStillRunning(IAbility ability) {
+        boolean charging = ability.getComponent(ModAbilityKeys.CHARGE)
+                .map(component -> ((ChargeComponent) component).isCharging()).orElse(false);
+        boolean continuous = ability.getComponent(ModAbilityKeys.CONTINUOUS)
+                .map(component -> ((ContinuousComponent) component).isContinuous()).orElse(false);
+        return charging || continuous;
+    }
+
+    private static void clearSkillHunterExRoll(LivingEntity entity) {
+        SkillHunterEXAbility.restoreWeatherTool(entity);
+        entity.getPersistentData().remove(SkillHunterEXAbility.ROLLED_ABILITY_TAG);
+        entity.getPersistentData().remove(SkillHunterEXAbility.ROLLED_SLOT_TAG);
+        entity.getPersistentData().remove(SkillHunterEXAbility.ROLLED_USED_TAG);
+    }
+
+    public static void syncAbilityData(PlayerEntity player, IAbilityData data) {
+        if (player instanceof net.minecraft.entity.player.ServerPlayerEntity) {
+            WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), data),
+                    (net.minecraft.entity.player.ServerPlayerEntity) player);
+        }
+    }
+
     private static void applyNusuModifiers(LivingEntity nusuUser, AbilityCore<?> core, IAbilityData data) {
         IAbility inst = data.getEquippedAbility(core);
         if (inst == null) inst = data.getPassiveAbility(core);
@@ -313,15 +416,11 @@ public class NusuEvents {
         sendMsg(killer, "\u00a76You killed " + victim.getName().getString() + " - choose a fruit ability to steal");
     }
 
-    private static boolean isNusuUser(LivingEntity entity) {
+    public static boolean isNusuUser(LivingEntity entity) {
         try {
             IDevilFruit devilFruit = DevilFruitCapability.get(entity);
             if (devilFruit == null) return false;
-            Item item = devilFruit.getDevilFruitItem();
-            if (!(item instanceof AkumaNoMiItem)) return false;
-            AbilityCore<?>[] abilities = ((AkumaNoMiItem) item).getAbilities();
-            if (abilities == null) return false;
-            return Arrays.asList(abilities).contains(SkillHunterAbility.INSTANCE);
+            return devilFruit.getDevilFruitItem() == net.kazi.kazimod.init.KaziItems.NUSU_NUSU_NO_MI.get();
         } catch (Exception e) {
             return false;
         }
@@ -338,14 +437,7 @@ public class NusuEvents {
         Item lostItem = event.getItem();
         if (!(lostItem instanceof AkumaNoMiItem)) return;
 
-        boolean isNusuFruit = false;
-        for (AbilityCore<?> fruitCore : ((AkumaNoMiItem) lostItem).getAbilities()) {
-            if (fruitCore == SkillHunterAbility.INSTANCE) {
-                isNusuFruit = true;
-                break;
-            }
-        }
-        if (!isNusuFruit) return;
+        if (lostItem != net.kazi.kazimod.init.KaziItems.NUSU_NUSU_NO_MI.get()) return;
 
         List<AbilityCore<?>> held = new ArrayList<>(NusuStolenData.getHeld(entity));
         for (AbilityCore<?> core : held) {

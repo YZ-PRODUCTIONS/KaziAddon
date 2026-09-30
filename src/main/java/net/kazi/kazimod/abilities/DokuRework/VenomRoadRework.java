@@ -101,3 +101,4 @@ public class VenomRoadRework extends Ability {
         INSTANCE = (new AbilityCore.Builder("Venom Road", AbilityCategory.DEVIL_FRUITS, VenomRoadRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(240.0F)}).addAdvancedDescriptionLine(ProjectileComponent.getProjectileTooltips()).setSourceHakiNature(SourceHakiNature.SPECIAL).setSourceElement(SourceElement.POISON).build();
     }
 }
+

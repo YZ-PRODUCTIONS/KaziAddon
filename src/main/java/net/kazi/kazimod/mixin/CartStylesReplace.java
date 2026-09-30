@@ -10,7 +10,7 @@ import net.MrMagicalCart.cartaddon.abilities.saber.CircleParryAbility;
 import net.MrMagicalCart.cartaddon.abilities.saber.DawnbreakerDashAbility;
 import net.MrMagicalCart.cartaddon.abilities.saber.FinalResortAbility;
 import net.MrMagicalCart.cartaddon.abilities.saber.HiNoKagutsuchiNoEisuAbility;
-import net.MrMagicalCart.cartaddon.abilities.saber.NewDivineDepartureAbility;
+import net.kazi.kazimod.abilities.SaberRework.DivineDepartureClone;
 import net.MrMagicalCart.cartaddon.abilities.saber.SpiderLilySliceAbility;
 import net.MrMagicalCart.cartaddon.abilities.saber.WildFuryAbility;
 import net.MrMagicalCart.cartaddon.abilities.saber.WildGambitAbility;
@@ -23,7 +23,10 @@ import net.kazi.kazimod.abilities.AxeStyleRework.*;
 import net.kazi.kazimod.abilities.KendoStyle.SeveranceAbility;
 import net.kazi.kazimod.abilities.KendoStyle.ZanshiAbility;
 import net.kazi.kazimod.abilities.BlacklegRework.AntiMatterKickCourseRework;
+import net.kazi.kazimod.abilities.BlacklegRework.ConcasseRework;
+import net.kazi.kazimod.abilities.BlacklegRework.ExtraHachisRework;
 import net.kazi.kazimod.abilities.BlacklegRework.PartyTableKickCourseRework;
+import net.kazi.kazimod.abilities.BludgeonRework.*;
 import net.kazi.kazimod.abilities.BrawlerRework.*;
 import net.kazi.kazimod.abilities.DoctorRework.*;
 import net.kazi.kazimod.abilities.NitoryuRework.NitoryuIaiRashomonRework;
@@ -33,14 +36,12 @@ import net.kazi.kazimod.abilities.RyusokenRework.DragonWhirlwindAbility;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoIbukiRework;
 import net.kazi.kazimod.abilities.RyusokenRework.RyuNoKagizumeRework;
 import net.kazi.kazimod.abilities.RyusokenRework.TalonRushRework;
-import net.kazi.kazimod.abilities.SaberRework.CircleParryRework;
-import net.kazi.kazimod.abilities.SaberRework.DawnbreakerDashRework;
-import net.kazi.kazimod.abilities.SaberRework.HeavenSlash;
 import net.kazi.kazimod.abilities.SpearRework.AbsolutePierceRework;
 import net.kazi.kazimod.abilities.SpearRework.DrillJabRework;
 import net.kazi.kazimod.abilities.SpearRework.SkySplitterDescentRework;
 import net.kazi.kazimod.abilities.SpearRework.VaultRework;
 import net.kazi.kazimod.abilities.swordsmanrework.*;
+import net.kazi.kazimod.setup.KaziDickSetup;
 
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -61,7 +62,7 @@ import xyz.pixelatedw.mineminenomi.wypi.WyRegistry;
 
 import java.lang.reflect.Field;
 
-@Mixin(value = WyRegistry.class, remap = false)
+@Mixin(value = WyRegistry.class, remap = false, priority = 1100)
 public abstract class CartStylesReplace {
 
     @Shadow
@@ -77,7 +78,8 @@ public abstract class CartStylesReplace {
     private static <I extends StyleId> void registerEditedStyle(String localizedName, Supplier<I> style, CallbackInfoReturnable<RegistryObject<I>> cir) {
 
         String resourceName = WyHelper.getResourceName(localizedName);
-        WyRegistry.getLangMap().put("style.mineminenomi." + resourceName, localizedName);
+        String displayName = resourceName.equalsIgnoreCase("swordsman") ? "Ittoryu" : localizedName;
+        WyRegistry.getLangMap().put("style.mineminenomi." + resourceName, displayName);
 
         Supplier<I> modifiedStyle = style;
 
@@ -129,7 +131,29 @@ public abstract class CartStylesReplace {
             };
         }
 
-        if (resourceName.equalsIgnoreCase("axestyle")) {
+        if (resourceName.equalsIgnoreCase("bludgeon")) {
+            modifiedStyle = () -> {
+                CharacterCreatorSelectionMap.SelectionInfo info =
+                        new CharacterCreatorSelectionMap.SelectionInfo(CartResources.BLUDGEON);
+
+                info.addTopAbilities(KaziDickSetup.getBludgeonTopReworks());
+
+                AbilityCore<?> perk = getPrivateAbilityCore(CartFightingStyles.class, "BLUDGEON_DAMAGE_PERK");
+                AbilityCore<?>[] reworks = KaziDickSetup.getBludgeonBottomReworks();
+                if (perk == null) {
+                    info.addBottomAbilities(reworks);
+                } else {
+                    AbilityCore<?>[] withPerk = new AbilityCore<?>[reworks.length + 1];
+                    withPerk[0] = perk;
+                    System.arraycopy(reworks, 0, withPerk, 1, reworks.length);
+                    info.addBottomAbilities(withPerk);
+                }
+
+                return (I) new StyleId(info, true, 7);
+            };
+        }
+
+        if (resourceName.equalsIgnoreCase("dual_axe")) {
             modifiedStyle = () -> {
                 CharacterCreatorSelectionMap.SelectionInfo info =
                         new CharacterCreatorSelectionMap.SelectionInfo(CartResources.DOUBLE_AXE);
@@ -161,7 +185,6 @@ public abstract class CartStylesReplace {
                         BlueHoleAbility.INSTANCE,
                         FistsOfLoveBarrageRework.INSTANCE,
                         GalaxyImpactRework.INSTANCE,
-                        QueenPunchAbility.INSTANCE,
                         ReworkedGenkotsuMeteorAbility.INSTANCE,
                         ReworkedHakaiHoAbility.INSTANCE,
                         JinshinHoRework.INSTANCE,
@@ -176,7 +199,7 @@ public abstract class CartStylesReplace {
             };
         }
 
-        if (resourceName.equalsIgnoreCase("blackleg")) {
+        if (resourceName.equalsIgnoreCase("black_leg")) {
             modifiedStyle = () -> {
                 CharacterCreatorSelectionMap.SelectionInfo info =
                         new CharacterCreatorSelectionMap.SelectionInfo(ModResources.BLACK_LEG);
@@ -185,9 +208,9 @@ public abstract class CartStylesReplace {
                         BeoufBurstAbility.INSTANCE,
                         AntiMatterKickCourseRework.INSTANCE,
                         CartBienCuitGrillShotAbility.INSTANCE,
-                        CartConcasseAbility.INSTANCE,
+                        ConcasseRework.INSTANCE,
                         CartDiableJambeAbility.INSTANCE,
-                        CartExtraHachisAbility.INSTANCE,
+                        ExtraHachisRework.INSTANCE,
                         PartyTableKickCourseRework.INSTANCE,
                         CartSkywalkAbility.INSTANCE
                 });
@@ -249,12 +272,11 @@ public abstract class CartStylesReplace {
                         new CharacterCreatorSelectionMap.SelectionInfo(CartResources.SABER);
 
                 info.addTopAbilities(new AbilityCore[]{
-                        CircleParryRework.INSTANCE,
-                        DawnbreakerDashRework.INSTANCE,
+                        CircleParryAbility.INSTANCE,
+                        DawnbreakerDashAbility.INSTANCE,
                         FinalResortAbility.INSTANCE,
-                        HeavenSlash.INSTANCE,
                         HiNoKagutsuchiNoEisuAbility.INSTANCE,
-                        NewDivineDepartureAbility.INSTANCE,
+                        DivineDepartureClone.INSTANCE,
                         SpiderLilySliceAbility.INSTANCE,
                         WildFuryAbility.INSTANCE,
                         WildGambitAbility.INSTANCE
@@ -267,7 +289,7 @@ public abstract class CartStylesReplace {
             };
         }
 
-        if (resourceName.equalsIgnoreCase("trident")) {
+        if (resourceName.equalsIgnoreCase("spear")) {
             modifiedStyle = () -> {
                 CharacterCreatorSelectionMap.SelectionInfo info =
                         new CharacterCreatorSelectionMap.SelectionInfo(CartResources.SPEAR);

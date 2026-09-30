@@ -199,6 +199,7 @@ public class DiamondAwaken extends Ability {
                 .setSourceType(new SourceType[]{SourceType.FIST})
                 .setSourceHakiNature(SourceHakiNature.SPECIAL)
                 .setIcon(DEFAULT_ICON)
+                .setUnlockCheck(entity -> DevilFruitCapability.get(entity).hasAwakenedFruit())
                 .build();
 
         ARMOR_MODIFIER = new AbilityAttributeModifier(

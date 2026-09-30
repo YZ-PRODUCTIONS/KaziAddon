@@ -14,7 +14,8 @@ public class KaziAbilityHelper {
      * @param stacks Number of stacks to add
      */
     public static void addTiredStacks(LivingEntity target, LivingEntity source, int stacks) {
-        if (target == null) return;
+        if (target == null || target.level.isClientSide
+                || net.kazi.kazimod.events.KirinSleepRecovery.isImmune(target)) return;
 
         EffectInstance existingTired = target.getEffect((Effect) KaziEffects.TIRED.get());
 

@@ -56,7 +56,7 @@ public class GalaxyImpactReworkProjectile extends AbilityProjectileEntity implem
 
     public GalaxyImpactReworkProjectile(World world, LivingEntity player) {
         super((EntityType) BrawlerExtraProjectiles.GALAXY_IMPACT.get(), world, player, GalaxyImpactAbility.INSTANCE);
-        this.setDamage(160.0F);     // Doubled from 80
+        this.setDamage(104.0F);
         this.setMaxLife(200);
         this.setArmorPiercing(1.0F);
         this.setCanGetStuckInGround();

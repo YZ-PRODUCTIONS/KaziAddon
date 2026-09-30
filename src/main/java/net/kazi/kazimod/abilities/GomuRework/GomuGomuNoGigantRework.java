@@ -28,6 +28,7 @@ import xyz.pixelatedw.mineminenomi.api.morph.MorphInfo;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
+import xyz.pixelatedw.mineminenomi.init.ModAbilities;
 import xyz.pixelatedw.mineminenomi.init.ModAttributes;
 import xyz.pixelatedw.mineminenomi.init.ModMorphs;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
@@ -116,7 +117,8 @@ public class GomuGomuNoGigantRework extends MorphAbility2 {
     }
 
     private static boolean canUnlock(LivingEntity user) {
-        return DevilFruitCapability.get(user).hasAwakenedFruit();
+        return DevilFruitCapability.get(user).hasDevilFruit(ModAbilities.GOMU_GOMU_NO_MI)
+                && DevilFruitCapability.get(user).hasAwakenedFruit();
     }
 
     static {

@@ -5,11 +5,9 @@
 
 package net.kazi.kazimod.abilities.BrawlerRework;
 
-import java.util.UUID;
 import net.MrMagicalCart.cartaddon.init.CartQuests;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.play.server.SAnimateHandPacket;
 import net.minecraft.potion.EffectInstance;
@@ -23,7 +21,6 @@ import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import xyz.pixelatedw.mineminenomi.api.abilities.Ability;
-import xyz.pixelatedw.mineminenomi.api.abilities.AbilityAttributeModifier;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCategory;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
@@ -31,7 +28,6 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityPool2;
 import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AnimationComponent;
-import xyz.pixelatedw.mineminenomi.api.abilities.components.ChangeStatsComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ChargeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.DealDamageComponent;
@@ -61,24 +57,20 @@ public class FistsOfLoveBarrageRework extends Ability {
     private int punchesPerWave = 5;
     private static final float DAMAGE = 8.0F;
     private final PoolComponent poolComponent;
-    private final ChangeStatsComponent changeStatsComponent;
     private final AnimationComponent animationComponent;
     private final HitTrackerComponent hitTrackerComponent;
     private final RangeComponent rangeComponent;
     private final DealDamageComponent dealDamageComponent;
-    private static final AbilityAttributeModifier STEP_HEIGHT_MODIFIER;
 
     public FistsOfLoveBarrageRework(AbilityCore<FistsOfLoveBarrageRework> core) {
         super(core);
         this.poolComponent = new PoolComponent(this, ModAbilityPools.GRAB_ABILITY, new AbilityPool2[0]);
-        this.changeStatsComponent = new ChangeStatsComponent(this);
         this.animationComponent = new AnimationComponent(this);
         this.hitTrackerComponent = new HitTrackerComponent(this);
         this.rangeComponent = new RangeComponent(this);
         this.dealDamageComponent = new DealDamageComponent(this);
         this.isNew = true;
-        this.addComponents(new AbilityComponent[]{this.changeStatsComponent, this.poolComponent, this.chargeComponent, this.animationComponent, this.hitTrackerComponent, this.repeaterComponent, this.rangeComponent, this.dealDamageComponent});
-        this.changeStatsComponent.addAttributeModifier(ModAttributes.STEP_HEIGHT, STEP_HEIGHT_MODIFIER);
+        this.addComponents(new AbilityComponent[]{this.poolComponent, this.chargeComponent, this.animationComponent, this.hitTrackerComponent, this.repeaterComponent, this.rangeComponent, this.dealDamageComponent});
         super.addCanUseCheck(AbilityHelper::canUseBrawlerAbilities);
         this.addUseEvent(this::onUseEvent);
     }
@@ -95,11 +87,10 @@ public class FistsOfLoveBarrageRework extends Ability {
     private void onContinuityStart(LivingEntity entity, IAbility ability) {
         this.animationComponent.start(entity, ModAnimations.PUNCH_RUSH);
         this.repeaterComponent.start(entity, this.waves, 1);
-        this.changeStatsComponent.applyModifiers(entity);
     }
 
     private void repeaterTriggerEvent(LivingEntity entity, IAbility ability) {
-        float speed = 4.4F;
+        float speed = 3.3F;
         int projectileSpace = 2;
         float projDmageReduction = 0.6F;
 
@@ -123,7 +114,7 @@ public class FistsOfLoveBarrageRework extends Ability {
     private void duringContinuityEvent(LivingEntity entity, IAbility ability) {
         if (entity.isAlive()) {
             Vector3d look = entity.getLookAngle();
-            Vector3d speed = look.multiply(0.7, (double)0.0F, 0.7);
+            Vector3d speed = look.multiply(0.0, (double)0.0F, 0.0);
             entity.move(MoverType.SELF, speed);
         }
 
@@ -173,7 +164,6 @@ public class FistsOfLoveBarrageRework extends Ability {
             ((ServerWorld)entity.level).getChunkSource().broadcastAndSend(entity, new SAnimateHandPacket(entity, 0));
         }
 
-        this.changeStatsComponent.removeModifiers(entity);
         this.animationComponent.stop(entity);
         this.cooldownComponent.startCooldown(entity, 180.0F);
     }
@@ -196,6 +186,5 @@ public class FistsOfLoveBarrageRework extends Ability {
 
     static {
         INSTANCE = (new AbilityCore.Builder("Fists of Love: Barrage", AbilityCategory.STYLE, FistsOfLoveBarrageRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, DealDamageComponent.getTooltip(8.0F), ChargeComponent.getTooltip(40.0F), CooldownComponent.getTooltip(180.0F), RangeComponent.getTooltip(3.25F, RangeType.LINE)}).setSourceHakiNature(SourceHakiNature.HARDENING).setUnlockCheck(FistsOfLoveBarrageRework::canUnlock).build();
-        STEP_HEIGHT_MODIFIER = new AbilityAttributeModifier(UUID.fromString("29b5b8cc-6507-42a6-bc2b-25c3e574e4b9"), INSTANCE, "Fists of Love: Barrage Step Height Modifier", (double)1.0F, Operation.ADDITION);
     }
 }

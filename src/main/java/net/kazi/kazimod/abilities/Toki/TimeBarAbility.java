@@ -40,7 +40,7 @@ public class TimeBarAbility extends PassiveAbility2 {
             "kazimod", "time_bar",
             new Pair[]{
                     ImmutablePair.of(
-                            "Passively accumulates time points, gaining 1 point every 10 seconds. " +
+                            "Passively accumulates time points, gaining 2 points every 10 seconds. " +
                                     "Points are capped at 2000.",
                             (Object) null
                     )
@@ -107,7 +107,7 @@ public class TimeBarAbility extends PassiveAbility2 {
 
     // ── API ───────────────────────────────────────────────────────────────────
     public void addTimePoints(LivingEntity entity, float amount) {
-        this.timePoints = MathHelper.clamp(this.timePoints + amount, 0.0F, MAX_TIME_POINTS);
+        this.timePoints = MathHelper.clamp(this.timePoints + amount * 2.0F, 0.0F, MAX_TIME_POINTS);
         sync(entity);
     }
 

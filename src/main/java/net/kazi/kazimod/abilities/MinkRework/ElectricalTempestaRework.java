@@ -121,11 +121,9 @@ public class ElectricalTempestaRework extends Ability {
             boolean hasSulongActive = CartElectroHelper.hasSulongActive(entity);
             this.dealDamageComponent.getBonusManager().removeBonus(CartElectroHelper.SULONG_DAMAGE_BONUS);
             this.rangeComponent.getBonusManager().removeBonus(CartElectroHelper.SULONG_RANGE_BONUS);
-            this.cooldownComponent.getBonusManager().removeBonus(CartElectroHelper.SULONG_COOLDOWN_BONUS);
             if (hasSulongActive) {
                 this.dealDamageComponent.getBonusManager().addBonus(CartElectroHelper.SULONG_DAMAGE_BONUS, "Sulong Damage Bonus", BonusOperation.MUL, 2.0F);
                 this.rangeComponent.getBonusManager().addBonus(CartElectroHelper.SULONG_RANGE_BONUS, "Sulong Range Bonus", BonusOperation.MUL, 2.0F);
-                this.cooldownComponent.getBonusManager().addBonus(CartElectroHelper.SULONG_COOLDOWN_BONUS, "Sulong Cooldown Bonus", BonusOperation.MUL, 0.5F);
             }
 
             if (this.ballEntity != null) {
@@ -179,7 +177,7 @@ public class ElectricalTempestaRework extends Ability {
     }
 
     static {
-        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "electrical_tempesta", new Pair[]{ImmutablePair.of("The user releases a charge of energy that deals damage to nearby enemies and knocks them back.", (Object)null), ImmutablePair.of("While %s is active the cooldown of this ability is reduced by %s, the damage is increased by %s and the range of the ability is increased by %s.", new Object[]{AbilityHelper.mentionAbility(CartSulongAbility.INSTANCE), AbilityHelper.mentionText(Math.round(50.0F) + "%"), AbilityHelper.mentionText(Math.round(10.0F) + "%"), AbilityHelper.mentionText(Math.round(Math.abs(-1.0F) * 100.0F) + "%")})});
+        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "electrical_tempesta", new Pair[]{ImmutablePair.of("The user releases a charge of energy that deals damage to nearby enemies and knocks them back.", (Object)null), ImmutablePair.of("While %s is active the damage is increased by %s and the range of the ability is increased by %s.", new Object[]{AbilityHelper.mentionAbility(CartSulongAbility.INSTANCE), AbilityHelper.mentionText(Math.round(10.0F) + "%"), AbilityHelper.mentionText(Math.round(Math.abs(-1.0F) * 100.0F) + "%")})});
         INSTANCE = (new AbilityCore.Builder("Electrical Tempesta", AbilityCategory.RACIAL, ElectricalTempestaRework::new)).addDescriptionLine(new ITextComponent[]{DESCRIPTION[0]}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{IDescriptionLine.of(DESCRIPTION[1])}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(240.0F), ChargeComponent.getTooltip(10.0F), RangeComponent.getTooltip(8.0F, 10.0F, RangeType.AOE), DealDamageComponent.getTooltip(20.0F)}).setSourceHakiNature(SourceHakiNature.SPECIAL).setSourceElement(SourceElement.LIGHTNING).setUnlockCheck(ElectricalTempestaRework::canUnlock).build();
     }
 }

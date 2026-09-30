@@ -31,6 +31,6 @@ public class KnockoutBeamReworkProjectile extends AbilityProjectileEntity {
         KaziAbilityHelper.addTiredStacks(hitEntity, super.getThrower(), 3);
 
         // Apply weakened movement effect for 20 seconds (400 ticks)
-        hitEntity.addEffect(new EffectInstance(KaziEffects.WEAKENED_MOVEMENT.get(), 400, 0, false, false));
+        net.kazi.kazimod.events.KirinSleepRecovery.applyMovementPenalty(hitEntity, 400);
     }
 }

@@ -29,6 +29,7 @@ import xyz.pixelatedw.mineminenomi.data.entity.ability.*;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.entities.SphereEntity;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
+import xyz.pixelatedw.mineminenomi.init.ModAbilityKeys;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
@@ -39,7 +40,7 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
 
     private static final ITextComponent[] DESCRIPTION;
     private static final float CHARGE_TIME      = 100.0f;
-    private static final float DOMAIN_DURATION  = 100.0f;
+    private static final float DOMAIN_DURATION  = 200.0f;
     private static final float MIN_COOLDOWN     = 1200.0f;
     private static final float MAX_COOLDOWN     = 2400.0f;
     private static final float RADIUS           = 30.0f;
@@ -143,6 +144,7 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
                     // Set clash cooldown — stopCooldown first so startCooldown isn't ignored
                     super.cooldownComponent.stopCooldown(entity);
                     super.cooldownComponent.startCooldown(entity, MAX_COOLDOWN);
+                    this.startKokuTechniqueCooldowns(entity, MAX_COOLDOWN * 0.25F);
                     shrine.startCooldownForClash(other);
                     return;
                 }
@@ -166,18 +168,14 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
         stopClashVisuals(entity);
         this.clashPosition = new Vector3d(entity.getX(), entity.getY(), entity.getZ());
 
-        this.clashSphere = new SphereEntity(entity.level, entity);
-        this.clashSphere.setColor(SPHERE_COLOR);
-        this.clashSphere.setRadius(RADIUS);
-        this.clashSphere.setDetailLevel(32);
-        this.clashSphere.setAnimationSpeed(1);
-        this.clashSphere.setPos(this.clashPosition.x, this.clashPosition.y, this.clashPosition.z);
-        entity.level.addFreshEntity(this.clashSphere);
+        // The existing collision barrier now renders the imported domain shell.
 
         this.clashBarrier = new InfiniteVoidBarrierEntity(
                 (EntityType<? extends Entity>) KaziEntities.INFINITE_VOID_BARRIER.get(), entity.level);
         this.clashBarrier.setSpawner(entity);
         this.clashBarrier.setRadius(RADIUS);
+        this.clashBarrier.yRot = entity.yRot;
+        this.clashBarrier.beginVoidExpansion();
         this.clashBarrier.setPos(this.clashPosition.x, this.clashPosition.y, this.clashPosition.z);
         entity.level.addFreshEntity(this.clashBarrier);
 
@@ -205,8 +203,7 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
         if (this.clashBarrier != null && this.clashBarrier.isAlive()) {
             this.clashBarrier.setPos(this.clashPosition.x, this.clashPosition.y, this.clashPosition.z);
         }
-        WyHelper.spawnParticleEffect((ParticleEffect) KaziParticleEffects.INFINITE_VOID_STREAK.get(),
-                entity, this.clashPosition.x, this.clashPosition.y, this.clashPosition.z);
+        // Clash uses the same imported shell without changing clash resolution.
     }
 
     // ── Domain events ─────────────────────────────────────────────────────────
@@ -219,16 +216,12 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
         this.streakTickCounter = 0;
         this.replacedBlocks.clear();
         this.lockedPosition = new Vector3d(entity.getX(), entity.getY(), entity.getZ());
-        (this.visualSphere = new SphereEntity(entity.level, entity)).setColor(SPHERE_COLOR);
-        this.visualSphere.setRadius(RADIUS);
-        this.visualSphere.setDetailLevel(32);
-        this.visualSphere.setAnimationSpeed(1);
-        this.visualSphere.setPos(this.lockedPosition.x, this.lockedPosition.y, this.lockedPosition.z);
-        entity.level.addFreshEntity(this.visualSphere);
         (this.barrierEntity = new InfiniteVoidBarrierEntity(
                 (EntityType<? extends Entity>) KaziEntities.INFINITE_VOID_BARRIER.get(),
                 entity.level)).setSpawner(entity);
         this.barrierEntity.setRadius(RADIUS);
+        this.barrierEntity.yRot = entity.yRot;
+        this.barrierEntity.beginVoidExpansion();
         this.barrierEntity.setPos(this.lockedPosition.x, this.lockedPosition.y, this.lockedPosition.z);
         entity.level.addFreshEntity(this.barrierEntity);
         entity.level.playSound(null, entity.blockPosition(),
@@ -243,35 +236,7 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
         if (this.visualSphere != null && this.visualSphere.isAlive()) {
             this.visualSphere.setPos(this.lockedPosition.x, this.lockedPosition.y, this.lockedPosition.z);
         }
-        final ServerWorld sw = (ServerWorld) entity.level;
-
-        if (this.domainTick <= STREAK_PHASE_END) {
-            WyHelper.spawnParticleEffect((ParticleEffect) KaziParticleEffects.INFINITE_VOID_STREAK.get(),
-                    entity, this.lockedPosition.x, this.lockedPosition.y, this.lockedPosition.z);
-        }
-
-        if (this.domainTick > 60) {
-            WyHelper.spawnParticleEffect((ParticleEffect) KaziParticleEffects.INFINITE_VOID.get(),
-                    entity, this.lockedPosition.x, this.lockedPosition.y + 1.0, this.lockedPosition.z);
-            ++this.sparkleTick;
-            if (this.sparkleTick >= SPARKLE_INTERVAL) {
-                this.sparkleTick = 0;
-                for (int i = 0; i < SPARKLE_COUNT; ++i) {
-                    final double rx = this.lockedPosition.x + (entity.level.random.nextDouble() * 2.0 - 1.0) * RADIUS * 0.8;
-                    final double ry = this.lockedPosition.y + (entity.level.random.nextDouble() * 2.0 - 1.0) * RADIUS * 0.8;
-                    final double rz = this.lockedPosition.z + (entity.level.random.nextDouble() * 2.0 - 1.0) * RADIUS * 0.8;
-                    final double dist = Math.sqrt(Math.pow(rx - this.lockedPosition.x, 2.0)
-                            + Math.pow(ry - this.lockedPosition.y, 2.0)
-                            + Math.pow(rz - this.lockedPosition.z, 2.0));
-                    if (dist <= RADIUS) {
-                        for (final ServerPlayerEntity player : sw.players()) {
-                            sw.sendParticles(player, (IParticleData) ParticleTypes.END_ROD,
-                                    true, rx, ry, rz, 1, 0.0, 0.05, 0.0, 0.08);
-                        }
-                    }
-                }
-            }
-        }
+        // Streaks, stars, and the domain core are rendered client-side.
 
         final AxisAlignedBB domainBox = new AxisAlignedBB(
                 this.lockedPosition.x - RADIUS, this.lockedPosition.y - RADIUS, this.lockedPosition.z - RADIUS,
@@ -295,6 +260,7 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
             final float cooldown = this.scaledCooldown();
             this.cleanup(entity);
             super.cooldownComponent.startCooldown(entity, cooldown);
+            this.startKokuTechniqueCooldowns(entity, cooldown * 0.25F);
         }
         this.animationComponent.stop(entity);
     }
@@ -398,6 +364,28 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
         // Always stop first so the new value isn't swallowed by the isOnCooldown guard
         super.cooldownComponent.stopCooldown(entity);
         super.cooldownComponent.startCooldown(entity, MAX_COOLDOWN);
+        this.startKokuTechniqueCooldowns(entity, MAX_COOLDOWN * 0.25F);
+    }
+
+    private void startKokuTechniqueCooldowns(final LivingEntity entity, final float duration) {
+        final IAbilityData data = AbilityDataCapability.get(entity);
+        final AbilityCore<?>[] kokuTechniques = new AbilityCore<?>[]{
+                RedAbility.INSTANCE,
+                LapseBlueAbility.INSTANCE,
+                MaxOutputLapseBlueAbility.INSTANCE,
+                HollowPurpleAbility.INSTANCE,
+                InfinityAbility.INSTANCE
+        };
+
+        for (final AbilityCore<?> core : kokuTechniques) {
+            final IAbility kokuAbility = data.getEquippedAbility(core);
+            if (kokuAbility == null) continue;
+            kokuAbility.getComponent(ModAbilityKeys.COOLDOWN).ifPresent(component -> {
+                final CooldownComponent cooldown = (CooldownComponent) component;
+                cooldown.stopCooldown(entity);
+                cooldown.startCooldown(entity, duration);
+            });
+        }
     }
 
     public void stopChargingNoCD(final LivingEntity entity) {

@@ -1,4 +1,31 @@
 {
+  "unlimited_lost_works_hit": {
+    "subtitle": "kazimod.subtitle.unlimited_lost_works_hit",
+    "sounds": [
+      {
+        "name": "kazimod:unlimited_lost_works_hit",
+        "stream": true
+      }
+    ]
+  },
+  "enhancement_third_charge": {
+    "subtitle": "kazimod.subtitle.enhancement_third_charge",
+    "sounds": [
+      {
+        "name": "kazimod:enhancement_third_charge",
+        "stream": true
+      }
+    ]
+  },
+  "caladbolg_charge": {
+    "subtitle": "kazimod.subtitle.caladbolg_charge",
+    "sounds": [
+      {
+        "name": "kazimod:caladbolg_charge",
+        "stream": true
+      }
+    ]
+  },
   "dismantle": {
     "category": "player",
     "subtitle": "kazimod.subtitle.dismantle",
@@ -64,6 +91,11 @@
     "subtitle": "kazimod.subtitle.blackflashhit",
     "sounds": ["kazimod:blackflashhit"]
   },
+  "ssstik": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.ssstik",
+    "sounds": ["kazimod:ssstik"]
+  },
   "infinitevoid": {
     "category": "player",
     "subtitle": "kazimod.subtitle.infinitevoid",
@@ -113,6 +145,43 @@
     "subtitle": "kazimod.subtitle.luffybossentrance",
     "sounds": [
       "kazimod:luffy_boss_entrance"
+    ]
+  },
+  "mugen_charge_secondary": {
+    "subtitle": "kazimod.subtitle.mugen_charge_secondary",
+    "sounds": [
+      {
+        "name": "kazimod:mugen_charge_secondary",
+        "stream": true
+      }
+    ]
+  },
+  "infinite_creation_charge_secondary": {
+    "subtitle": "kazimod.subtitle.infinite_creation_charge_secondary",
+    "sounds": [
+      {
+        "name": "kazimod:infinite_creation_charge_secondary",
+        "stream": true
+      }
+    ]
+  },
+  "enhancement_fourth_charge": {
+    "subtitle": "kazimod.subtitle.enhancement_fourth_charge",
+    "sounds": [
+      {
+        "name": "kazimod:enhancement_fourth_charge",
+        "stream": true
+      }
+    ]
+  },
+  "reality_marble_charge_music": {
+    "category": "music",
+    "subtitle": "kazimod.subtitle.reality_marble_charge_music",
+    "sounds": [
+      {
+        "name": "kazimod:reality_marble_charge_music",
+        "stream": true
+      }
     ]
   }
 }

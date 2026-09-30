@@ -17,13 +17,17 @@ import net.kazi.kazimod.renderers.entities.VegapunkTraderRenderer;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import xyz.pixelatedw.mineminenomi.models.entities.projectiles.FistModel;
+import xyz.pixelatedw.mineminenomi.models.abilities.SphereModel;
 import xyz.pixelatedw.mineminenomi.renderers.abilities.AbilityProjectileRenderer;
 
+@OnlyIn(Dist.CLIENT)
 public final class KaziClientInit {
 
     private KaziClientInit() {}
@@ -86,6 +90,13 @@ public final class KaziClientInit {
                         return new ResourceLocation("mineminenomi", "textures/models/doppelman.png");
                     }
                 }
+        );
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.DARK_MATTER_PROJECTILE.get(),
+                (new AbilityProjectileRenderer.Factory(new SphereModel()))
+                        .setColor("#000000")
+                        .setScale(1.0D)
         );
 
 

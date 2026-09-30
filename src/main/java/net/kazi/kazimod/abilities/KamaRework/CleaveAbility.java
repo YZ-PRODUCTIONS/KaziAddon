@@ -252,13 +252,7 @@ public class CleaveAbility extends Ability {
                     4.0F, 1.0F
             );
 
-            WyHelper.spawnParticleEffect(
-                    (ParticleEffect) KaziParticleEffects.DISMANTLE.get(),
-                    entity,
-                    target.getX(),
-                    target.getEyeY(),
-                    target.getZ()
-            );
+            net.kazi.kazimod.entities.KamaVfxEntity.slash(entity, target.getX(), target.getEyeY(), target.getZ());
         }
 
         if (isFinalHit) {

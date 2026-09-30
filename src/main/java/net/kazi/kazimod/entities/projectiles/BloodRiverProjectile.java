@@ -23,6 +23,7 @@ public class BloodRiverProjectile extends AbilityProjectileEntity {
     private static final int MAX_LIFE = 32;
     private static final double HITBOX_SIZE = 3.0D;
     private static final float TRAIL_SIZE = 38.0F;
+    private static final float OUTER_TRAIL_SIZE = 52.0F;
     private static final double TRAIL_SPREAD = 0.3D;
 
     public BloodRiverProjectile(EntityType<?> type, World world) {
@@ -48,13 +49,22 @@ public class BloodRiverProjectile extends AbilityProjectileEntity {
                 double offsetX = (WyHelper.randomDouble() - 0.5D) * TRAIL_SPREAD;
                 double offsetY = (WyHelper.randomDouble() - 0.5D) * TRAIL_SPREAD;
                 double offsetZ = (WyHelper.randomDouble() - 0.5D) * TRAIL_SPREAD;
-                SimpleParticleData data = new SimpleParticleData((ParticleType<?>) CartParticleTypes.BATTO.get());
-                data.setLife(32);
-                data.setSize(TRAIL_SIZE);
-                data.setColor(1.0F, 0.08F, 0.08F, 1.0F);
                 if (this.tickCount % 2 == 0) {
-                    WyHelper.spawnParticles(data, (ServerWorld) this.level,
-                            this.getX() + offsetX, this.getY() - 0.4D + offsetY, this.getZ() + offsetZ);
+                    double particleX = this.getX() + offsetX;
+                    double particleY = this.getY() - 0.4D + offsetY;
+                    double particleZ = this.getZ() + offsetZ;
+
+                    SimpleParticleData outer = new SimpleParticleData((ParticleType<?>) CartParticleTypes.BATTO.get());
+                    outer.setLife(32);
+                    outer.setSize(OUTER_TRAIL_SIZE);
+                    outer.setColor(0.45F, 0.0F, 0.0F, 0.7F);
+                    WyHelper.spawnParticles(outer, (ServerWorld) this.level, particleX, particleY, particleZ);
+
+                    SimpleParticleData inner = new SimpleParticleData((ParticleType<?>) CartParticleTypes.BATTO.get());
+                    inner.setLife(32);
+                    inner.setSize(TRAIL_SIZE);
+                    inner.setColor(1.0F, 0.08F, 0.08F, 1.0F);
+                    WyHelper.spawnParticles(inner, (ServerWorld) this.level, particleX, particleY, particleZ);
                 }
             }
         }

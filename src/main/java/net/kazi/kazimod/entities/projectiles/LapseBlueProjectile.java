@@ -3,6 +3,7 @@ package net.kazi.kazimod.entities.projectiles;
 import net.kazi.kazimod.abilities.Koku.DomainExpansionInfiniteVoidAbility;
 import net.kazi.kazimod.abilities.Koku.HollowPurpleAbility;
 import net.kazi.kazimod.abilities.Koku.MaxOutputLapseBlueAbility;
+import net.kazi.kazimod.abilities.Koku.RedAbility;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -20,6 +21,7 @@ import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.data.world.ProtectedAreasData;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
 import xyz.pixelatedw.mineminenomi.init.ModEntityPredicates;
+import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 import java.util.HashMap;
@@ -38,9 +40,13 @@ public class LapseBlueProjectile extends AbilityProjectileEntity {
     private static final double PULL_RADIUS = 23.0;
     private static final double PULL_STRENGTH = 0.65;
     private static final int MAX_LIFE = 140;
+    // The projectile remains active for 140 ticks, but the caster should only be
+    // suspended/immobilized for the first 100. The old shared lifetime kept the
+    // caster stuck for an extra 40 ticks (two seconds).
+    private static final int CASTER_RESTRICTION_TICKS = 100;
     private static final int BLOCK_ABSORB_RADIUS = 2;
     private static final int DAMAGE_INTERVAL_TICKS = 40;
-    private static final float DAMAGE = 35.0F;
+    private static final float DAMAGE = 1.0F;
 
     private int damageTicker = 0;
 
@@ -70,6 +76,10 @@ public class LapseBlueProjectile extends AbilityProjectileEntity {
         return stopped;
     }
 
+    public boolean shouldRestrictCasterMovement() {
+        return this.tickCount < CASTER_RESTRICTION_TICKS;
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -82,6 +92,7 @@ public class LapseBlueProjectile extends AbilityProjectileEntity {
     public void remove() {
         if (!this.level.isClientSide && caster != null) {
             ACTIVE_PROJECTILES.remove(caster.getUUID());
+            caster.removeEffect(ModEffects.MOVEMENT_BLOCKED.get());
             if (storedAbility instanceof MaxOutputLapseBlueAbility && caster instanceof PlayerEntity) {
                 ((MaxOutputLapseBlueAbility) storedAbility).startCooldown((PlayerEntity) caster);
             }
@@ -131,20 +142,7 @@ public class LapseBlueProjectile extends AbilityProjectileEntity {
                 this.setDeltaMovement(Vector3d.ZERO);
             }
 
-            // Spawn blue projectile particle
-            for (net.minecraft.entity.player.ServerPlayerEntity player :
-                    ((net.minecraft.world.server.ServerWorld) this.level).players()) {
-                xyz.pixelatedw.mineminenomi.particles.data.SimpleParticleData blueData =
-                        new xyz.pixelatedw.mineminenomi.particles.data.SimpleParticleData(
-                                (net.minecraft.particles.ParticleType) net.kazi.kazimod.init.KaziParticleTypes.GOJO_BLUE_PROJECTILE.get());
-                blueData.setLife(2);
-                blueData.setMotion(0.0, 0.0, 0.0);
-                ((net.minecraft.world.server.ServerWorld) this.level).sendParticles(
-                        player, blueData, true,
-                        this.getX(), this.getY() + 0.5, this.getZ(),
-                        1, 0, 0, 0, 0
-                );
-            }
+            // Client renderer supplies the blue orb and vortex.
 
             absorbNearbyBlocks();
 
@@ -231,19 +229,28 @@ public class LapseBlueProjectile extends AbilityProjectileEntity {
                             continue;
                         }
 
-                        if (!hollowPurpleOnCooldown && !domainActive && this.storedAbility != null) {
+                        boolean spawnedHollowNuke = false;
+                        if (!hollowPurpleOnCooldown && !domainActive
+                                && HollowNukeProjectile.canForm(caster)
+                                && this.storedAbility != null) {
                             HollowNukeProjectile hollowNuke = new HollowNukeProjectile(
                                     this.level, caster, this.storedAbility
                             );
                             hollowNuke.moveTo(spawnPos.x, spawnPos.y, spawnPos.z);
                             hollowNuke.setDeltaMovement(Vector3d.ZERO);
                             this.level.addFreshEntity(hollowNuke);
+                            HollowNukeProjectile.startFormationCooldown(caster);
+                            spawnedHollowNuke = true;
 
                             HollowPurpleAbility.startCooldownFromOutside(caster);
                         }
 
                         e.remove();
                         this.remove();
+                        if (spawnedHollowNuke) {
+                            RedAbility.startHollowNukeCooldown(caster);
+                            MaxOutputLapseBlueAbility.startHollowNukeCooldown(caster);
+                        }
                         return;
                     }
                 }

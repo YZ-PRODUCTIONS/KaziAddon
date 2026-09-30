@@ -101,7 +101,7 @@ public class ElectricalBurstRework extends Ability {
         Vector3d speed = entity.getLookAngle().multiply(this.dashSpeed, (double)1.0F, this.dashSpeed);
         AbilityHelper.setDeltaMovement(entity, -speed.x, 0.2, -speed.z);
         this.animationComponent.stop(entity);
-        this.cooldownComponent.startCooldown(entity, hasSulongActive ? 192.0F : 240.0F);
+        this.cooldownComponent.startCooldown(entity, 240.0F);
         entity.level.playSound((PlayerEntity)null, entity.blockPosition(), (SoundEvent)ModSounds.LIGHTNING_TELEPORT.get(), SoundCategory.PLAYERS, 3.0F, 1.0F + entity.getRandom().nextFloat() / 3.0F);
     }
 
@@ -111,7 +111,7 @@ public class ElectricalBurstRework extends Ability {
     }
 
     static {
-        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "electrical_burst", new Pair[]{ImmutablePair.of("The user launches a burst of electricity in front of them and moves backwards.", (Object)null), ImmutablePair.of("While %s is active the cooldown of this ability is reduced by %s and the damage is increased by %s.", new Object[]{AbilityHelper.mentionAbility(CartSulongAbility.INSTANCE), AbilityHelper.mentionText(Math.round(25.0F) + "%"), AbilityHelper.mentionText(Math.round(Math.abs(-1.5F) * 100.0F) + "%")})});
+        DESCRIPTION = AbilityHelper.registerDescriptionText("cartaddon", "electrical_burst", new Pair[]{ImmutablePair.of("The user launches a burst of electricity in front of them and moves backwards.", (Object)null), ImmutablePair.of("While %s is active the damage is increased by %s.", new Object[]{AbilityHelper.mentionAbility(CartSulongAbility.INSTANCE), AbilityHelper.mentionText(Math.round(Math.abs(-1.5F) * 100.0F) + "%")})});
         INSTANCE = (new AbilityCore.Builder("Electrical Burst", AbilityCategory.RACIAL, ElectricalBurstRework::new)).addDescriptionLine(new ITextComponent[]{DESCRIPTION[0]}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{IDescriptionLine.of(DESCRIPTION[1])}).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, DealDamageComponent.getTooltip(40.0F), CooldownComponent.getTooltip(240.0F), RangeComponent.getTooltip(5.5F, RangeType.LINE)}).setSourceHakiNature(SourceHakiNature.HARDENING).setSourceType(new SourceType[]{SourceType.FIST}).setSourceElement(SourceElement.LIGHTNING).setUnlockCheck(ElectricalBurstRework::canUnlock).build();
     }
 }

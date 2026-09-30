@@ -10,6 +10,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SAnimateHandPacket;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
@@ -21,6 +23,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
 import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
+import xyz.pixelatedw.mineminenomi.api.abilities.components.ChargeComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ProjectileComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
@@ -37,21 +40,33 @@ public class TakaNamiRework extends Ability {
     private static final int COOLDOWN = 300;
     public static final AbilityCore<TakaNamiRework> INSTANCE;
     private final ProjectileComponent projectileComponent = new ProjectileComponent(this, this::createProjectile);
+    private final ChargeComponent chargeComponent = (new ChargeComponent(this)).addStartEvent(this::startChargeEvent).addTickEvent(this::tickChargeEvent).addEndEvent(this::endChargeEvent);
 
     public TakaNamiRework(AbilityCore<TakaNamiRework> core) {
         super(core);
         super.isNew = true;
-        this.addComponents(new AbilityComponent[]{this.projectileComponent});
+        this.addComponents(new AbilityComponent[]{this.projectileComponent, this.chargeComponent});
         this.addUseEvent(this::onUseEvent);
         this.addCanUseCheck(AbilityHelper::canUseSwordsmanAbilities);
     }
 
     private void onUseEvent(LivingEntity entity, IAbility ability) {
         if (AbilityLimits.canUseNitoryu(entity) && AbilityHelper.canUseSwordsmanAbilities(entity)) {
-            this.fireProjectile(entity);
+            this.chargeComponent.startCharging(entity, 10.0F);
         } else {
             entity.sendMessage(new StringTextComponent("You must be holding a sword in both hands to use this move!"), entity.getUUID());
         }
+    }
+
+    private void startChargeEvent(LivingEntity entity, IAbility ability) {
+    }
+
+    private void tickChargeEvent(LivingEntity entity, IAbility ability) {
+        entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 2, 0, false, false));
+    }
+
+    private void endChargeEvent(LivingEntity entity, IAbility ability) {
+        this.fireProjectile(entity);
     }
 
     private void fireProjectile(LivingEntity entity) {
@@ -84,6 +99,6 @@ public class TakaNamiRework extends Ability {
     }
 
     static {
-        INSTANCE = (new AbilityCore.Builder("Taka Nami", AbilityCategory.STYLE, TakaNamiRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, CooldownComponent.getTooltip(300.0F)}).addAdvancedDescriptionLine(ProjectileComponent.getProjectileTooltips()).setSourceHakiNature(SourceHakiNature.IMBUING).setSourceType(new SourceType[]{SourceType.SLASH}).setSourceElement(SourceElement.AIR).setUnlockCheck(TakaNamiRework::canUnlock).build();
+        INSTANCE = (new AbilityCore.Builder("Taka Nami", AbilityCategory.STYLE, TakaNamiRework::new)).addDescriptionLine(DESCRIPTION).addAdvancedDescriptionLine(new AbilityDescriptionLine.IDescriptionLine[]{AbilityDescriptionLine.NEW_LINE, ChargeComponent.getTooltip(10.0F), CooldownComponent.getTooltip(300.0F)}).addAdvancedDescriptionLine(ProjectileComponent.getProjectileTooltips()).setSourceHakiNature(SourceHakiNature.IMBUING).setSourceType(new SourceType[]{SourceType.SLASH}).setSourceElement(SourceElement.AIR).setUnlockCheck(TakaNamiRework::canUnlock).build();
     }
 }

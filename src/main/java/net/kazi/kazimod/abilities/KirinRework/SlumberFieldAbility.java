@@ -78,7 +78,7 @@ public class SlumberFieldAbility extends Ability {
             UUID targetId = target.getUUID();
 
             // Apply weakened movement effect continuously (refresh every tick)
-            target.addEffect(new EffectInstance(KaziEffects.WEAKENED_MOVEMENT.get(), 25, 0, false, false));
+            net.kazi.kazimod.events.KirinSleepRecovery.applyMovementPenalty(target, 25);
 
             // Check if enough time has passed since last application for this entity
             if (!entityLastHitTick.containsKey(targetId)) {

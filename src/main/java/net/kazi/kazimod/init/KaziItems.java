@@ -13,6 +13,7 @@ import net.kazi.kazimod.abilities.Kyoka.GoryutenmetsuAbility;
 import net.kazi.kazimod.abilities.Kyoka.KurohitsugiAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillBookCreationAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillHunterAbility;
+import net.kazi.kazimod.abilities.Nusu.SkillHunterEXAbility;
 import net.kazi.kazimod.abilities.Nusu.SkillRemoverAbility;
 import net.kazi.kazimod.abilities.SakuRework.*;
 import net.kazi.kazimod.abilities.Tenki.*;
@@ -130,6 +131,7 @@ public class KaziItems {
                 () -> new AkumaNoMiItem(
                         "Nusu Nusu no Mi", 1, FruitType.PARAMECIA,
                         SkillHunterAbility.INSTANCE,
+                        SkillHunterEXAbility.INSTANCE,
                         SkillRemoverAbility.INSTANCE,
                         SkillBookCreationAbility.INSTANCE
                 )

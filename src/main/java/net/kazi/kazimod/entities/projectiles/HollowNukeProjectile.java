@@ -7,7 +7,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
@@ -18,10 +17,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import xyz.pixelatedw.mineminenomi.api.abilities.Ability;
-import xyz.pixelatedw.mineminenomi.api.damagesource.ModIndirectEntityDamageSource;
-import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
-import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
-import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.api.protection.BlockProtectionRule;
 import xyz.pixelatedw.mineminenomi.api.protection.block.AirBlockProtectionRule;
@@ -31,12 +26,9 @@ import xyz.pixelatedw.mineminenomi.api.protection.block.LiquidBlockProtectionRul
 import xyz.pixelatedw.mineminenomi.api.protection.block.OreBlockProtectionRule;
 import xyz.pixelatedw.mineminenomi.config.CommonConfig;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
-import xyz.pixelatedw.mineminenomi.init.ModDamageSource;
 import xyz.pixelatedw.mineminenomi.particles.data.SimpleParticleData;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +37,11 @@ import java.util.UUID;
 public class HollowNukeProjectile extends AbilityProjectileEntity {
 
     public static final Map<UUID, HollowNukeProjectile> ACTIVE_PROJECTILES = new HashMap<>();
+    private static final String FORMATION_COOLDOWN_TAG = "kazimodHollowNukeFormationCooldown";
+    private static final long FORMATION_COOLDOWN_TICKS = 2400L;
+
+    private static final net.minecraft.network.datasync.DataParameter<Integer> VISUAL_START =
+            net.minecraft.network.datasync.EntityDataManager.defineId(HollowNukeProjectile.class, net.minecraft.network.datasync.DataSerializers.INT);
 
     private boolean dealtAOE = false;
     private static final int   EXPLOSION_DELAY      = 100;
@@ -68,7 +65,6 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
 
     public HollowNukeProjectile(World world, LivingEntity player, Ability ability) {
         super((EntityType) GojoProjectiles.HOLLOW_NUKE.get(), world, player, ability);
-        this.setDamage(160.0F);
         this.setMaxLife(EXPLOSION_DELAY + SPHERE_EXPAND_TICKS + SPHERE_STAY_TICKS + 10);
         this.setEntityCollisionSize((double) 23.0F, (double) 23.0F, (double) 23.0F);
         this.setPassThroughEntities();
@@ -76,6 +72,33 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
         this.setUnavoidable();
         this.setHurtThrower();
         this.onTickEvent = this::onTickEvent;
+        this.entityData.set(VISUAL_START, (int) world.getGameTime());
+    }
+
+    @Override
+    public void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(VISUAL_START, 0);
+    }
+
+    public float getVfxAge(float partial) {
+        int elapsed = (int) this.level.getGameTime() - this.entityData.get(VISUAL_START);
+        return Math.max(0.0F, Math.min(1.0F, (elapsed + partial) / EXPLOSION_DELAY)) * 40.0F;
+    }
+
+    public float getWaveRadius(float partial) { return 0.0F; }
+    public float getVfxOpacity(float partial) { return 1.0F; }
+    public float getGroundOffset() { return -1.5F; }
+
+    public static boolean canForm(LivingEntity entity) {
+        return entity.level.getGameTime()
+                >= entity.getPersistentData().getLong(FORMATION_COOLDOWN_TAG);
+    }
+
+    public static void startFormationCooldown(LivingEntity entity) {
+        entity.getPersistentData().putLong(
+                FORMATION_COOLDOWN_TAG,
+                entity.level.getGameTime() + FORMATION_COOLDOWN_TICKS);
     }
 
     @Override
@@ -109,6 +132,9 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
         dealtAOE = true;
 
         sendFlashbang();
+        // The post-impact shell is visual-only; this projectile still detonates and is removed on its original tick.
+        net.kazi.kazimod.entities.KokuVfxEntity.impact(this.level, this.position(),
+                net.kazi.kazimod.entities.KokuVfxEntity.NUKE_IMPACT, 60.0F);
 
         int explosionRadius = 48;
         int shockwaveRadius = 54;
@@ -147,22 +173,8 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
             if (target instanceof LivingEntity) {
                 LivingEntity livingTarget = (LivingEntity) target;
 
-                // Only apply Instant Damage to the thrower themselves, not allies
-                if (target == thrower) {
-                    livingTarget.addEffect(new EffectInstance(
-                            Effects.HARM, 20, 3, false, false));
-                    continue;
-                }
-
-                ModDamageSource source = (ModDamageSource) (new ModIndirectEntityDamageSource(
-                        this.getDamageSource().msgId, this, thrower))
-                        .setSourceElement(SourceElement.SHOCKWAVE)
-                        .setHakiNature(SourceHakiNature.SPECIAL)
-                        .setSourceTypes(new ArrayList<>(Arrays.asList(SourceType.INTERNAL)))
-                        .setUnavoidable()
-                        .setPiercing(1.00F);
-
-                livingTarget.hurt(source, this.getDamage());
+                livingTarget.addEffect(new EffectInstance(
+                        Effects.HARM, 20, 3, false, false));
 
                 Vector3d speed = target.getLookAngle().scale(-1.0F).multiply(5.0F, 0.0F, 5.0F);
                 AbilityHelper.setDeltaMovement(target, speed.x, 1.0F, speed.z);
@@ -190,16 +202,7 @@ public class HollowNukeProjectile extends AbilityProjectileEntity {
                     }
                 }
 
-                SimpleParticleData data = new SimpleParticleData(
-                        (net.minecraft.particles.ParticleType) KaziParticleTypes.GOJO_PURPLE_GROWING.get());
-                data.setMotion(0.0, 0.0, 0.0);
-                for (ServerPlayerEntity player : ((ServerWorld) this.level).players()) {
-                    ((ServerWorld) this.level).sendParticles(
-                            player, data, true,
-                            this.getX(), this.getY() + 0.5, this.getZ(),
-                            1, 0, 0, 0, 0
-                    );
-                }
+                // The renderer supplies the gathering purple mass.
             }
 
             if (this.tickCount == EXPLOSION_DELAY) {

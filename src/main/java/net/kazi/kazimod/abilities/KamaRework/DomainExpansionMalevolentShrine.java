@@ -47,6 +47,7 @@ import xyz.pixelatedw.mineminenomi.api.util.Interval;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
+import xyz.pixelatedw.mineminenomi.init.ModAbilityKeys;
 import xyz.pixelatedw.mineminenomi.entities.SphereEntity;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
@@ -62,7 +63,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
     private static final float  CHARGE_TIME             = 100.0F;
     private static final float  HOLD_TIME               = 400.0F;
     private static final float  RANGE                   = 150.0F;
-    private static final float  DAMAGE                  = 6.0F;
+    private static final float  DAMAGE                  = 3.0F;
     private static final int    DAMAGE_INTERVAL_TICKS   = 20;
     private static final int    PARTICLE_INTERVAL_TICKS = 5;
     private static final double SPAWN_BEHIND_DISTANCE   = 3.0;
@@ -89,6 +90,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
     private final Interval damageInterval   = new Interval(DAMAGE_INTERVAL_TICKS);
     private final Interval particleInterval = new Interval(PARTICLE_INTERVAL_TICKS);
 
+    private net.kazi.kazimod.entities.KamaVfxEntity constructionVisual;
     private SphereEntity           domainEntity      = null;
     private MalevolentShrineEntity shrineEntity      = null;
     private MalevolentShrineEntity clashShrineEntity = null;
@@ -105,6 +107,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
         this.addCanUseCheck(this::canUseCheck);
         this.addUseEvent(this::onUseEvent);
         this.addTickEvent(this::onClashTick);
+        this.addRemoveEvent((entity, ability) -> stopConstructionVisual());
     }
 
     private AbilityUseResult canUseCheck(LivingEntity entity, IAbility ability) {
@@ -135,6 +138,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
     }
 
     private void onClashTick(LivingEntity entity, IAbility ability) {
+        if (!this.chargeComponent.isCharging()) stopConstructionVisual();
         if (entity.level.isClientSide) return;
         if (!DomainClashManager.isInClash(entity.getUUID())) return;
         if (clashShrineEntity != null && clashShrineEntity.isAlive()) {
@@ -146,6 +150,9 @@ public class DomainExpansionMalevolentShrine extends Ability {
         this.animationComponent.start(entity, KaziAnimations.SUKUNA_DOMAIN);
 
         if (!entity.level.isClientSide) {
+            stopConstructionVisual();
+            this.constructionVisual = net.kazi.kazimod.entities.KamaVfxEntity.shrineCharge(
+                    entity, ability, (int) CHARGE_TIME, (float) SPAWN_BEHIND_DISTANCE);
             entity.level.playSound((PlayerEntity) null, entity.blockPosition(),
                     KaziSounds.SHRINE_START_SFX.get(), SoundCategory.PLAYERS, 5.0F, 1.0F);
 
@@ -164,6 +171,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
                     // FIX: stopCooldown first so startCooldown isn't silently ignored
                     this.cooldownComponent.stopCooldown(entity);
                     this.cooldownComponent.startCooldown(entity, COOLDOWN);
+                    this.startKamaTechniqueCooldowns(entity, COOLDOWN * 0.5F);
                     voidAbility.startCooldownForClash(other);
 
                     this.chargeComponent.stopCharging(entity);
@@ -175,9 +183,17 @@ public class DomainExpansionMalevolentShrine extends Ability {
         }
     }
 
-    private void onChargeTick(LivingEntity entity, IAbility ability) {}
+    private void onChargeTick(LivingEntity entity, IAbility ability) {
+        if (this.constructionVisual != null) this.constructionVisual.refresh(this.chargeComponent.getChargePercentage());
+    }
+
+    private void stopConstructionVisual() {
+        if (this.constructionVisual != null) this.constructionVisual.remove();
+        this.constructionVisual = null;
+    }
 
     private void onChargeEnd(LivingEntity entity, IAbility ability) {
+        stopConstructionVisual();
         this.animationComponent.stop(entity);
         if (!DomainClashManager.isInClash(entity.getUUID())) {
             this.damageInterval.restartIntervalToZero();
@@ -205,12 +221,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
         this.activeTicks    = 0;
         this.cleanedUpEarly = false;
 
-        this.domainEntity = new SphereEntity(entity.level, entity);
-        this.domainEntity.setColor(new Color(139, 0, 0, 80));
-        this.domainEntity.setRadius(RANGE);
-        this.domainEntity.setDetailLevel(32);
-        this.domainEntity.setAnimationSpeed(1);
-        entity.level.addFreshEntity(this.domainEntity);
+        // Imported slashes and sky tint replace the old translucent sphere.
 
         Vector3d look = entity.getLookAngle();
         this.shrineEntity = new MalevolentShrineEntity(KaziEntities.MALEVOLENT_SHRINE.get(), entity.level);
@@ -223,6 +234,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
         this.shrineEntity.setDeltaMovement(Vector3d.ZERO);
         this.shrineEntity.setNoGravity(true);
         this.shrineEntity.setInvulnerable(true);
+        this.shrineEntity.activateDomainVisual(RANGE, this.activationPos);
         entity.level.addFreshEntity(this.shrineEntity);
 
         entity.level.playSound((PlayerEntity) null, entity.blockPosition(),
@@ -248,18 +260,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
             Vector3d origin = this.activationPos != null ? this.activationPos
                     : new Vector3d(entity.getX(), entity.getY(), entity.getZ());
 
-            if (particleInterval.canTick()) {
-                for (int i = 0; i < PARTICLE_COUNT; i++) {
-                    double ox = (entity.getRandom().nextDouble() * 2 - 1) * RANGE;
-                    double oy = (entity.getRandom().nextDouble() * 2 - 1) * RANGE;
-                    double oz = (entity.getRandom().nextDouble() * 2 - 1) * RANGE;
-                    if (ox * ox + oy * oy + oz * oz <= RANGE * RANGE) {
-                        WyHelper.spawnParticleEffect(
-                                (ParticleEffect) KaziParticleEffects.DISMANTLE.get(),
-                                entity, origin.x + ox, origin.y + oy, origin.z + oz);
-                    }
-                }
-            }
+            // The domain mesh supplies its ambient slashes; damage below is unchanged.
 
             if (damageInterval.canTick()) {
                 double r = RANGE;
@@ -277,9 +278,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
                     source.setSlash();
                     source.markIndirectDamage();
                     if (dealDamageComponent.hurtTarget(entity, target, DAMAGE, source)) {
-                        WyHelper.spawnParticleEffect(
-                                (ParticleEffect) KaziParticleEffects.DISMANTLE.get(),
-                                entity, target.getX(), target.getEyeY(), target.getZ());
+                        net.kazi.kazimod.entities.KamaVfxEntity.slash(entity, target.getX(), target.getEyeY(), target.getZ());
                         ((ServerWorld) entity.level).playSound(null, target.blockPosition(),
                                 KaziSounds.CLEAVE_HIT_SFX.get(), SoundCategory.PLAYERS, 4.0F, 1.0F);
                     }
@@ -300,6 +299,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
             float cooldown = MIN_COOLDOWN + ratio * (MAX_COOLDOWN - MIN_COOLDOWN);
             this.cooldownComponent.stopCooldown(entity);
             this.cooldownComponent.startCooldown(entity, cooldown);
+            this.startKamaTechniqueCooldowns(entity, cooldown * 0.5F);
         }
         this.cleanedUpEarly = false;
     }
@@ -335,6 +335,27 @@ public class DomainExpansionMalevolentShrine extends Ability {
     public void startCooldownForClash(LivingEntity entity) {
         this.cooldownComponent.stopCooldown(entity);
         this.cooldownComponent.startCooldown(entity, COOLDOWN);
+        this.startKamaTechniqueCooldowns(entity, COOLDOWN * 0.5F);
+    }
+
+    private void startKamaTechniqueCooldowns(LivingEntity entity, float duration) {
+        IAbilityData data = AbilityDataCapability.get(entity);
+        AbilityCore<?>[] kamaTechniques = new AbilityCore<?>[]{
+                DismantleAbility.INSTANCE,
+                CleaveAbility.INSTANCE,
+                SpiderwebCleaveAbility.INSTANCE,
+                FugaAbility.INSTANCE
+        };
+
+        for (AbilityCore<?> core : kamaTechniques) {
+            IAbility kamaAbility = data.getEquippedAbility(core);
+            if (kamaAbility == null) continue;
+            kamaAbility.getComponent(ModAbilityKeys.COOLDOWN).ifPresent(component -> {
+                CooldownComponent cooldown = (CooldownComponent) component;
+                cooldown.stopCooldown(entity);
+                cooldown.startCooldown(entity, duration);
+            });
+        }
     }
 
     public void stopChargingNoCD(LivingEntity entity) {
@@ -369,6 +390,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
     }
 
     public void startClashVisuals(LivingEntity entity, LivingEntity voidUser) {
+        stopConstructionVisual();
         if (entity.level.isClientSide) return;
         cleanupClash(entity);
 
@@ -384,6 +406,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
         this.clashShrineEntity.setDeltaMovement(Vector3d.ZERO);
         this.clashShrineEntity.setNoGravity(true);
         this.clashShrineEntity.setInvulnerable(true);
+        this.clashShrineEntity.activateDomainVisual(RANGE, entity.position());
         entity.level.addFreshEntity(this.clashShrineEntity);
 
         if (voidUser != null && voidUser.isAlive()) {

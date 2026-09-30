@@ -1,8 +1,10 @@
 package net.kazi.kazimod.init;
 
+import net.MrMagicalCart.cartaddon.abilities.aowrework.entities.AOWReworkEntities;
 import net.MrMagicalCart.cartaddon.abilities.aowrework.entities.projectiles.WeatherCloudReworkEntity;
 import net.kazi.kazimod.entities.projectiles.CasinoProjectiles;
 import net.kazi.kazimod.entities.projectiles.CoinProjectile;
+import net.kazi.kazimod.entities.projectiles.ItemKaitenReworkedProjectile;
 import net.kazi.kazimod.entities.projectiles.PetalBladeProjectile;
 import net.kazi.kazimod.entities.projectiles.PlayingCardProjectile;
 import net.kazi.kazimod.entities.ShadowDoppelmanEntity;
@@ -22,7 +24,6 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import xyz.pixelatedw.mineminenomi.models.abilities.CubeModel;
 import xyz.pixelatedw.mineminenomi.models.abilities.SphereModel;
 import xyz.pixelatedw.mineminenomi.renderers.abilities.AbilityProjectileRenderer;
@@ -33,6 +34,32 @@ public class KaziRenderers {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.GAE_BOLG_VFX.get(), GaeBolgVfxRenderer::new);
+        event.enqueueWork(() -> {
+            RenderingRegistry.registerEntityRenderingHandler(
+                    xyz.pixelatedw.mineminenomi.entities.projectiles.mera.MeraProjectiles.DAI_ENKAI_ENTEI.get(),
+                    net.kazi.kazimod.renderers.entities.projectiles.EnteiProjectileRenderer::new);
+            // Deferred setup runs after Forge builds the live renderer map.
+            // Replace its existing Entei renderer as well as the factory above.
+            net.minecraft.client.renderer.entity.EntityRendererManager manager =
+                    Minecraft.getInstance().getEntityRenderDispatcher();
+            manager.register(
+                    xyz.pixelatedw.mineminenomi.entities.projectiles.mera.MeraProjectiles.DAI_ENKAI_ENTEI.get(),
+                    new net.kazi.kazimod.renderers.entities.projectiles.EnteiProjectileRenderer(manager));
+        });
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.ENTEI_BLAST.get(), EnteiBlastRenderer::new);
+        event.enqueueWork(() -> {
+            // Forge 36.2 loads the live renderer map BEFORE deferred client-setup work.
+            // Update both maps: changing RenderingRegistry alone leaves the old sphere active.
+            RenderingRegistry.registerEntityRenderingHandler(
+                    xyz.pixelatedw.mineminenomi.entities.projectiles.zushi.ZushiProjectiles.SAGARI_NO_RYUSEI.get(),
+                    net.kazi.kazimod.renderers.entities.projectiles.SagariMeteorRenderer::new);
+            net.minecraft.client.renderer.entity.EntityRendererManager manager =
+                    Minecraft.getInstance().getEntityRenderDispatcher();
+            manager.register(
+                    xyz.pixelatedw.mineminenomi.entities.projectiles.zushi.ZushiProjectiles.SAGARI_NO_RYUSEI.get(),
+                    new net.kazi.kazimod.renderers.entities.projectiles.SagariMeteorRenderer(manager));
+        });
 
         // ── Entity renderers previously in KaziMod.clientSetup ───────────────
         // These were the source of the dedicated server crash when registered
@@ -42,6 +69,14 @@ public class KaziRenderers {
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.FUGA.get(),
                 FugaProjectileRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.CALADBOLG.get(),
+                CaladbolgProjectileRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.CALADBOLG_IMPACT.get(),
+                CaladbolgImpactRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.HELLFIRE_BIRD.get(),
@@ -83,6 +118,33 @@ public class KaziRenderers {
                 KaziEntities.INFINITE_VOID_BARRIER.get(),
                 InfiniteVoidBarrierRenderer::new);
 
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.EMBEDDED_ITEM_DISPLAY.get(),
+                EmbeddedItemDisplayRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.REALITY_MARBLE_WEAPON.get(),
+                RealityMarbleWeaponRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.REPLICATED_SWORD.get(), ReplicatedSwordRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.REALITY_MARBLE_GEAR.get(),
+                RealityMarbleGearRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.UNLIMITED_LOST_WORKS.get(), UnlimitedLostWorksRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.RHO_AIAS.get(),
+                RhoAiasRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.ENHANCEMENT_LIGHT.get(),
+                EnhancementLightRenderer::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.KAMA_VFX.get(), KamaVfxRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.KOKU_VFX.get(), KokuVfxRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.ZUSHI_VFX.get(), ZushiVfxRenderer::new);
+
         KaziItemModelProps.register();
         KaziAnimations.clientInit();
 
@@ -96,8 +158,7 @@ public class KaziRenderers {
                 ShadowDoppelmanRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(
-                (net.minecraft.entity.EntityType<WeatherCloudReworkEntity>)
-                        ForgeRegistries.ENTITIES.getValue(new ResourceLocation("cartaddon", "weather_cloud_rework")),
+                AOWReworkEntities.WEATHER_CLOUD_REWORK.get(),
                 new WeatherCloudReworkRenderer.Factory());
 
         // ── Casino projectile renderers ───────────────────────────────────────
@@ -138,6 +199,13 @@ public class KaziRenderers {
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.DARK_SPEAR.get(),
                 (new AbilityProjectileRenderer.Factory(new CubeModel())).setScale(0.0D));
+
+        // Exact CartAddon Item Kaiten model, texture, and render scale.
+        RenderingRegistry.registerEntityRenderingHandler(
+                KaziEntities.ITEM_KAITEN.get(),
+                (new AbilityProjectileRenderer.Factory(new SphereModel()))
+                        .setTexture(new ResourceLocation("cartaddon", "textures/models/zoanmorph/takt_dirt.png"))
+                        .setScale(ItemKaitenReworkedProjectile.RENDER_SCALE));
 
         // ── Nagi Nagi no Mi projectile renderers ─────────────────────────────
         RenderingRegistry.registerEntityRenderingHandler(

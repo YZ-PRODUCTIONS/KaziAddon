@@ -81,21 +81,19 @@ public class SpiderwebCleaveAbility extends Ability {
 
     private void startChargeEvent(LivingEntity entity, IAbility ability) {
         this.animationComponent.start(entity, ModAnimations.RYU_NO_IBUKI);
-        if (entity.level.isClientSide) {
-            PARTICLES.spawn(entity, entity.level, entity.getX(), entity.getY(), entity.getZ(), null);
-        }
+
     }
 
     private void tickChargeEvent(LivingEntity entity, IAbility ability) {
         entity.addEffect(new EffectInstance((Effect) ModEffects.MOVEMENT_BLOCKED.get(), 5, 0, false, false));
 
-        if (entity.level.isClientSide && this.chargeComponent.getChargeTime() % 5.0F == 0.0F) {
-            PARTICLES.spawn(entity, entity.level, entity.getX(), entity.getY(), entity.getZ(), null);
-        }
+
     }
 
     private void endChargeEvent(LivingEntity entity, IAbility ability) {
         this.animationComponent.stop(entity);
+        net.kazi.kazimod.entities.KamaVfxEntity.spawn(entity,
+                net.kazi.kazimod.entities.KamaVfxEntity.WEB, entity.position(), AOE_RANGE, 20);
 
         List<LivingEntity> targets = this.rangeComponent.getTargetsInArea(entity, AOE_RANGE);
 
@@ -115,13 +113,7 @@ public class SpiderwebCleaveAbility extends Ability {
                     ((ServerWorld) entity.level).playSound(null, target.blockPosition(),
                             KaziSounds.CLEAVE_HIT_SFX.get(), SoundCategory.PLAYERS, 4.0F, 1.0F);
 
-                    WyHelper.spawnParticleEffect(
-                            (ParticleEffect) KaziParticleEffects.DISMANTLE.get(),
-                            entity,
-                            target.getX(),
-                            target.getEyeY(),
-                            target.getZ()
-                    );
+                    net.kazi.kazimod.entities.KamaVfxEntity.slash(entity, target.getX(), target.getEyeY(), target.getZ());
                 }
             }
         }

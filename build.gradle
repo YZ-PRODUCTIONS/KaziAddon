@@ -86,6 +86,12 @@ repositories {
     // Maven Central
     mavenCentral()
 
+    // User-supplied Mine Mine no Mi and Cart Addon builds.
+    // A flat repository lets ForgeGradle deobfuscate their production JARs.
+    flatDir {
+        dirs 'libs'
+    }
+
     // Minecraft Forge
     maven {
         name = "Forge"
@@ -135,8 +141,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation fg.deobf("curse.maven:mine-mine-no-mi-78726:7170763")
-    implementation fg.deobf("curse.maven:carts-mmnm-addon-1143743:7661122")
+    implementation fg.deobf("local:mine-mine-no-mi-1.16.5:0.10.11")
+    implementation fg.deobf("local:cartaddon:0.7.5")
     implementation fg.deobf("curse.maven:curios-309927:4419403")
 
     implementation 'net.jodah:typetools:0.6.3'
@@ -186,4 +192,13 @@ tasks.named('jar', Jar).configure {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+// The IDE launches from this snapshot, not directories that incremental compilers
+// clear while the game is running. Refresh it only as a game-launch prerequisite.
+tasks.register('prepareStableRunClient', Sync) {
+    dependsOn 'prepareRunClientCompile', 'classes'
+    into layout.buildDirectory.dir('client-runtime')
+    from(sourceSets.main.output.classesDirs) { into 'classes' }
+    from(sourceSets.main.output.resourcesDir) { into 'resources' }
 }

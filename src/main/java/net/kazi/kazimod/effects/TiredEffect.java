@@ -1,6 +1,5 @@
 package net.kazi.kazimod.effects;
 
-import net.MrMagicalCart.cartaddon.init.CartEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -18,9 +17,7 @@ public class TiredEffect extends Effect {
         if (amplifier >= 6) {
             EffectInstance tired = entity.getEffect((Effect)KaziEffects.TIRED.get());
             if (tired != null) {
-                int duration = tired.getDuration();
-                entity.addEffect(new EffectInstance((Effect)CartEffects.SLEEPY.get(), 120, 0));
-                entity.addEffect(new EffectInstance((Effect)CartEffects.DISABLED_ABILITIES.get(),120, 0 ));
+                net.kazi.kazimod.events.KirinSleepRecovery.applySleep(entity);
             }
 
             entity.removeEffect((Effect)KaziEffects.TIRED.get());

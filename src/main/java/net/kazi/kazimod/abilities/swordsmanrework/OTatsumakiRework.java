@@ -54,7 +54,7 @@ public class OTatsumakiRework extends Ability {
     private static final float COOLDOWN = 240.0F;
     private static final float DAMAGE = 30.0F;
     private static final float RANGE = 5.5F;
-    private final Interval damageInterval = new Interval(15);
+    private final Interval damageInterval = new Interval(20);
     public static final AbilityCore<OTatsumakiRework> INSTANCE;
     private final ContinuousComponent continuousComponent = (new ContinuousComponent(this)).addStartEvent(100, this::onStartContinuousEvent).addTickEvent(100, this::onTickContinuousEvent).addEndEvent(100, this::onEndContinuousEvent);
     private final DealDamageComponent dealDamageComponent = new DealDamageComponent(this);

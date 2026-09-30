@@ -5,6 +5,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -28,6 +29,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.PoolComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
+import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.api.math.EasingFunctionHelper;
 import xyz.pixelatedw.mineminenomi.init.ModAbilityPools;
 import xyz.pixelatedw.mineminenomi.init.ModAnimations;
@@ -38,7 +40,11 @@ public class Feast extends Ability {
 
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
             "kazimod", "feast",
-            new Pair[]{ImmutablePair.of("Grabs an opponent from the back and launches it into the ground", (Object) null)});
+            new Pair[]{ImmutablePair.of(
+                    "Grabs an opponent from behind, drains their vitality, and slams them into the ground.",
+                    null)});
+    private static final ResourceLocation ICON =
+            new ResourceLocation("cartaddon", "textures/abilities/life_steal_bite.png");
 
     private static final int PULL_TIME = 200;
     private static final int CHARGE_TIME = 20;
@@ -50,8 +56,8 @@ public class Feast extends Ability {
     private static final double DASH_SPEED_GROUND = 5.0;
     private static final double DASH_SPEED_AIR = 4.0;
 
-    private static final float GRAB_REACH = 4.0F;
-    private static final float GRAB_WIDTH = 2.2F;
+    private static final float GRAB_REACH = 2.0F;
+    private static final float GRAB_WIDTH = 2.0F;
 
     public static final AbilityCore<Feast> INSTANCE;
 
@@ -192,8 +198,10 @@ public class Feast extends Ability {
                         ChargeComponent.getTooltip(CHARGE_TIME),
                         DealDamageComponent.getTooltip(DAMAGE)
                 })
+                .setIcon(ICON)
                 .setSourceHakiNature(SourceHakiNature.HARDENING)
                 .setSourceType(new SourceType[]{SourceType.FIST})
+                .setUnlockCheck(entity -> DevilFruitCapability.get(entity).hasAwakenedFruit())
                 .build();
     }
 }

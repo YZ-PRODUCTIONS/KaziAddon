@@ -87,6 +87,8 @@ public class HollowPurpleProjectile extends AbilityProjectileEntity {
         detonated = true;
 
         if (!this.level.isClientSide) {
+            net.kazi.kazimod.entities.KokuVfxEntity.impact(this.level, Vector3d.atCenterOf(pos),
+                    net.kazi.kazimod.entities.KokuVfxEntity.PURPLE_IMPACT, EXPLOSION_VISUAL_RADIUS);
             // Flashbang nearby players
             for (ServerPlayerEntity player : ((ServerWorld) this.level).players()) {
                 if (player.distanceTo(this) <= 80.0F)
@@ -131,9 +133,7 @@ public class HollowPurpleProjectile extends AbilityProjectileEntity {
 
     private void onTickEvent() {
         if (!this.level.isClientSide) {
-            WyHelper.spawnParticleEffect(
-                    (ParticleEffect) KaziParticleEffects.GOJO_PURPLE.get(), this,
-                    this.getX(), this.getY(), this.getZ());
+            // Flight visuals are handled by KokuProjectileRenderer.
         }
     }
 }

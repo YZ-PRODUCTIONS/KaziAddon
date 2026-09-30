@@ -1,13 +1,21 @@
 package net.kazi.kazimod.mixin;
 
 import net.MrMagicalCart.cartaddon.abilities.axestyle.*;
+import net.MrMagicalCart.cartaddon.abilities.aowrework.abilities.*;
+import net.MrMagicalCart.cartaddon.abilities.aowrework.abilities.zeus.*;
 import net.MrMagicalCart.cartaddon.abilities.blacklegextra.CartAntiMannerKickCourseAbility;
+import net.MrMagicalCart.cartaddon.abilities.blacklegextra.CartConcasseAbility;
+import net.MrMagicalCart.cartaddon.abilities.blacklegextra.CartExtraHachisAbility;
 import net.MrMagicalCart.cartaddon.abilities.blacklegextra.CartPartyTableKickCourseAbility;
+import net.MrMagicalCart.cartaddon.abilities.bludgeon.*;
 import net.MrMagicalCart.cartaddon.abilities.brawlerextra.*;
+import net.MrMagicalCart.cartaddon.abilities.cyborgextra.*;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartElectricalMissileAbility;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartElectricalShowerAbility;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.CartElectricalTempestaAbility;
 import net.MrMagicalCart.cartaddon.abilities.electroextra.ElectricalBurstAbility;
+import net.MrMagicalCart.cartaddon.abilities.goroextra.*;
+import net.MrMagicalCart.cartaddon.abilities.fuwa.ItemKaitenAbility;
 import net.MrMagicalCart.cartaddon.abilities.modifiedhuman.BootBoostAbility;
 import net.MrMagicalCart.cartaddon.abilities.modifiedhuman.CapeGuardAbility;
 import net.MrMagicalCart.cartaddon.abilities.modifiedhuman.ExoRepairAbility;
@@ -23,8 +31,7 @@ import net.MrMagicalCart.cartaddon.abilities.oni.ViciousRoarAbility;
 import net.MrMagicalCart.cartaddon.abilities.rokushikiextra.ReworkedKamieAbility;
 import net.MrMagicalCart.cartaddon.abilities.rokushikiextra.ReworkedSoruAbility;
 import net.MrMagicalCart.cartaddon.abilities.ryusoken.*;
-import net.MrMagicalCart.cartaddon.abilities.saber.CircleParryAbility;
-import net.MrMagicalCart.cartaddon.abilities.saber.DawnbreakerDashAbility;
+import net.MrMagicalCart.cartaddon.abilities.saber.NewDivineDepartureAbility;
 import net.MrMagicalCart.cartaddon.abilities.swordsmenextra.*;
 
 import net.MrMagicalCart.cartaddon.abilities.trident.AbsolutePierceAbility;
@@ -34,6 +41,7 @@ import net.MrMagicalCart.cartaddon.abilities.trident.VaultAbility;
 import net.minecraft.entity.LivingEntity;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -61,7 +69,35 @@ public abstract class AbilityUnlockBlocker {
 
         AbilityCore self = (AbilityCore)(Object) this;
 
-        if (self == ReworkedHiryuKaenAbility.INSTANCE
+        if (kazi$isBlocked(self)) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(
+            method = "isHidden",
+            at = @At("HEAD"),
+            cancellable = true,
+            remap = false
+    )
+    private void kazi$hideBlockedAbilities(CallbackInfoReturnable<Boolean> cir) {
+        AbilityCore<?> self = (AbilityCore<?>)(Object) this;
+        if (kazi$isBlocked(self)) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Unique
+    private static boolean kazi$isBlocked(AbilityCore<?> self) {
+        return self == LightningBlastAbility.INSTANCE
+                || self == ThunderSharkTempoAbility.INSTANCE
+                || self == GrowUpAbility.INSTANCE
+                || self == CoolBallReworkAbility.INSTANCE
+                || self == HeatBallReworkAbility.INSTANCE
+                || self == LightningBallReworkAbility.INSTANCE
+                || self == WeatherEggReworkAbility.INSTANCE
+                || self == TempoWheelAbility.INSTANCE
+                || self == ReworkedHiryuKaenAbility.INSTANCE
                 || self == ReworkedSanbyakurokujuPoundHoAbility.INSTANCE
                 || self == ReworkedYakkodoriAbility.INSTANCE
                 || self == NitoryuIaiRashomonAbility.INSTANCE
@@ -73,12 +109,31 @@ public abstract class AbilityUnlockBlocker {
                 || self == SkySplitterAbility.INSTANCE
                 || self == ReversalAbility.INSTANCE
                 || self == CartPartyTableKickCourseAbility.INSTANCE
+                || self == CartConcasseAbility.INSTANCE
+                || self == CartExtraHachisAbility.INSTANCE
+                || self == ThunderBaguaAbility.INSTANCE
+                || self == KundaliDragonSwarmAbility.INSTANCE
+                || self == WhirlingMaceAbility.INSTANCE
+                || self == StrikingSwingAbility.INSTANCE
+                || self == VajraArrowAbility.INSTANCE
+                || self == ConquerorOfThreeWorldsRagnarakuAbility.INSTANCE
+                || self == DestroyerOfDeathThunderBaguaAbility.INSTANCE
+                || self == ShinsokuHakujakuAbility.INSTANCE
+                || self == CartRadicalBeamAbility.INSTANCE
+                || self == WeaponsLeftAbility.INSTANCE
+                || self == xyz.pixelatedw.mineminenomi.abilities.cyborg.StrongRightAbility.INSTANCE
+                || self == xyz.pixelatedw.mineminenomi.abilities.cyborg.CoupDeVentAbility.INSTANCE
+                || self == xyz.pixelatedw.mineminenomi.abilities.cyborg.FreshFireAbility.INSTANCE
+                || self == xyz.pixelatedw.mineminenomi.abilities.cyborg.CoupDeBooAbility.INSTANCE
+                || self == xyz.pixelatedw.mineminenomi.abilities.cyborg.ColaOverdriveAbility.INSTANCE
+                || self == xyz.pixelatedw.mineminenomi.abilities.cyborg.SouthlandSuplexAbility.INSTANCE
                 || self == TyrantCleaveAbility.INSTANCE
                 || self == BerserkAbility.INSTANCE
                 || self == FutenrakuAbility.INSTANCE
                 || self == PredatorsThrowAbility.INSTANCE
                 || self == YasotakeruAbility.INSTANCE
                 || self == GalaxyImpactAbility.INSTANCE
+                || self == NewDivineDepartureAbility.INSTANCE
                 || self == ReworkedOTatsumakiAbility.INSTANCE
                 || self == ReworkedShiShishiSonsonAbility.INSTANCE
                 || self == RyuNoKagizumeAbility.INSTANCE
@@ -105,16 +160,20 @@ public abstract class AbilityUnlockBlocker {
                 || self == ReworkedKamieAbility.INSTANCE
                 || self == ReworkedSoruAbility.INSTANCE
                 || self == ReworkedJishinHoAbility.INSTANCE
+                || self == ItemKaitenAbility.INSTANCE
+                || self == ReworkedElThorAbility.INSTANCE
+                || self == ReworkedRaigoAbility.INSTANCE
+                || self == ReworkedSangoAbility.INSTANCE
+                || self == ReworkedVariAbility.INSTANCE
+                || self == ReworkedVoltAmaruAbility.INSTANCE
+                || self == ReworkedVoltAmaruFlightAbility.INSTANCE
+                || self == ShinzoMassagePassiveAbility.INSTANCE
+                || self == VoltageUpAbility.INSTANCE
                 || self == CartAntiMannerKickCourseAbility.INSTANCE
                 || self == BusoshokuHakiFullBodyHardeningAbility.INSTANCE
                 || self == KenbunshokuHakiFutureSightAbility.INSTANCE
+                || self == GeneticAwakeningAbility.INSTANCE
                 || self == ModifiedHumanPassiveBonusesAbility.INSTANCE
-                || self == DawnbreakerDashAbility.INSTANCE
-                || self == CircleParryAbility.INSTANCE
-                || self == TekkaiAbility.INSTANCE)
-
-                {
-            cir.setReturnValue(false);
-        }
+                || self == TekkaiAbility.INSTANCE;
     }
 }

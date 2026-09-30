@@ -37,6 +37,7 @@ import xyz.pixelatedw.mineminenomi.api.util.Interval;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
+import xyz.pixelatedw.mineminenomi.init.ModAbilities;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AnimationComponent;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity;
 import xyz.pixelatedw.mineminenomi.init.ModAnimations;
@@ -282,7 +283,8 @@ public class GomuGomuNoKaminariAbility extends Ability {
     /* ==================== UNLOCK CHECK ==================== */
 
     private static boolean canUnlock(LivingEntity user) {
-        return DevilFruitCapability.get(user).hasAwakenedFruit();
+        return DevilFruitCapability.get(user).hasDevilFruit(ModAbilities.GOMU_GOMU_NO_MI)
+                && DevilFruitCapability.get(user).hasAwakenedFruit();
     }
 
     /* ==================== STATIC INIT ==================== */

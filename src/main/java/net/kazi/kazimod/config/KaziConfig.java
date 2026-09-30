@@ -12,6 +12,8 @@ public class KaziConfig {
     public final ForgeConfigSpec.BooleanValue disableVegapunkSpawns;
     public final ForgeConfigSpec.BooleanValue awakeningEssenceRequirePlayerKills;
     public final ForgeConfigSpec.IntValue awakeningEssenceRequiredPlayerKills;
+    public final ForgeConfigSpec.BooleanValue disableCustomAwakeningMessages;
+    public final ForgeConfigSpec.IntValue hakiSenseRange;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -34,7 +36,8 @@ public class KaziConfig {
                 .comment(
                         "Maximum hold time for Gear Fifth Rework, in ticks.",
                         "20 ticks = 1 second.",
-                        "Default: 1200 (60 seconds)."
+                        "Default: 1200 (60 seconds).",
+                        "No longer even enabled this config is redundent"
                 )
                 .defineInRange("gearFifthMaxHoldTime", 1200, 20, 72000);
 
@@ -58,6 +61,30 @@ public class KaziConfig {
                         "Default: 5."
                 )
                 .defineInRange("awakeningEssenceRequiredPlayerKills", 5, 0, 100000);
+
+        builder.comment("Awakening announcement settings.").push("awakeningMessages");
+
+        disableCustomAwakeningMessages = builder
+                .comment(
+                        "Set to true to disable fruit-specific awakening messages.",
+                        "When disabled, every awakening uses: (PlayerName) Has awakened their devil fruit!",
+                        "Default: false."
+                )
+                .define("disableCustomMessages", false);
+
+        builder.pop();
+
+        builder.comment("Haki Sense settings.").push("hakiSense");
+
+        hakiSenseRange = builder
+                .comment(
+                        "Maximum distance, in blocks, at which Haki Sense can detect other players.",
+                        "Default: 1000.",
+                        "Changes apply the next time Haki Sense is used."
+                )
+                .defineInRange("range", 1000, 1, 100000);
+
+        builder.pop();
 
         builder.pop();
     }

@@ -1,6 +1,5 @@
 package net.kazi.kazimod.network;
 
-import net.kazi.kazimod.effects.FlashbangEffect;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,12 +16,14 @@ public class FlashbangPacket {
     public void encode(PacketBuffer buf) {}
 
     public static void handle(FlashbangPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> handleClient());
+        ctx.get().enqueueWork(ClientHandler::handle);
         ctx.get().setPacketHandled(true);
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void handleClient() {
-        FlashbangEffect.triggerFlash();
+    private static final class ClientHandler {
+        private static void handle() {
+            net.kazi.kazimod.effects.FlashbangEffect.triggerFlash();
+        }
     }
 }

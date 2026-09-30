@@ -77,7 +77,8 @@ public class LapseBlueAbility extends Ability {
     private final HitTrackerComponent hitTrackerComponent = new HitTrackerComponent(this);
     private final PoolComponent poolComponent;
 
-    private final Interval particleInterval = new Interval(3);
+    private final KokuChargeVisual pullVisual = new KokuChargeVisual();
+    private int pullVisualTicks;
 
     private LivingEntity slamTarget = null;
     private boolean teleported = false;
@@ -100,6 +101,7 @@ public class LapseBlueAbility extends Ability {
         this.addCanUseCheck(this::canUseCheck);
         this.addCanUseCheck(AbilityHelper::canUseMomentumAbilities);
         this.addUseEvent(this::onUseEvent);
+        this.addRemoveEvent((entity, ability) -> this.pullVisual.stop());
     }
 
     private AbilityUseResult canUseCheck(LivingEntity entity, IAbility ability) {
@@ -134,22 +136,16 @@ public class LapseBlueAbility extends Ability {
         this.slamTarget = null;
         this.teleported = false;
         this.slammed = false;
-        this.animationComponent.start(entity, KaziAnimations.GOJO_RED);
+        this.animationComponent.start(entity, KaziAnimations.GOJO_BLUE);
+        this.pullVisualTicks = 0;
+        this.pullVisual.start(entity, ability, net.kazi.kazimod.entities.KokuVfxEntity.BLUE_PULL, (int) PULL_CONTINUITY_TIME);
     }
 
     private void onPullTick(LivingEntity entity, IAbility ability) {
         if (!entity.level.isClientSide) {
             Vector3d look = entity.getLookAngle().normalize();
 
-            if (particleInterval.canTick()) {
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_BLUE.get(),
-                        entity,
-                        entity.getX() + look.x * 2.0,
-                        entity.getY() + 1.0,
-                        entity.getZ() + look.z * 2.0
-                );
-            }
+            this.pullVisual.update(++this.pullVisualTicks / PULL_CONTINUITY_TIME);
 
             for (int i = 5; i <= (int) PULL_RANGE; i += 3) {
                 Vector3d point = entity.position().add(0, 1, 0).add(look.scale(i));
@@ -181,6 +177,7 @@ public class LapseBlueAbility extends Ability {
     }
 
     private void onPullEnd(LivingEntity entity, IAbility ability) {
+        this.pullVisual.stop();
         if (!entity.level.isClientSide) {
             if (this.grabEntityComponent.hasGrabbedEntity()) {
                 this.chargeComponent.startCharging(entity, CHARGE_TIME);

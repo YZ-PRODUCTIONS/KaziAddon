@@ -58,9 +58,10 @@ public class RedAbility extends Ability {
     private static final ResourceLocation RED_ICON =
             new ResourceLocation("kazimod", "textures/abilities/red.png");
 
-    public static final float COOLDOWN = 300.0F;
-    public static final float MAX_OUTPUT_COOLDOWN = 700.0F;
+    public static final float COOLDOWN = 400.0F;
+    public static final float MAX_OUTPUT_COOLDOWN = 800.0F;
     private static final float CHARGE_TIME = 20.0F;
+    private static final float HOLLOW_NUKE_COOLDOWN = 1800.0F;
     public static final AbilityCore<RedAbility> INSTANCE;
 
     private final ProjectileComponent projectileComponent =
@@ -74,7 +75,7 @@ public class RedAbility extends Ability {
             .addTickEvent(this::onChargeTick)
             .addEndEvent(this::onChargeEnd);
 
-    private final Interval particleInterval = new Interval(2);
+    private final KokuChargeVisual chargeVisual = new KokuChargeVisual();
     private RedMode currentMode = RedMode.NORMAL;
 
     public RedAbility(AbilityCore<RedAbility> core) {
@@ -91,6 +92,7 @@ public class RedAbility extends Ability {
         });
         this.addCanUseCheck(this::canUseCheck);
         this.addUseEvent(this::onUseEvent);
+        this.addRemoveEvent((entity, ability) -> this.chargeVisual.stop());
     }
 
     private AbilityUseResult canUseCheck(LivingEntity entity, IAbility ability) {
@@ -133,6 +135,7 @@ public class RedAbility extends Ability {
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         if (!entity.level.isClientSide) {
             this.animationComponent.start(entity, KaziAnimations.GOJO_RED);
+            this.chargeVisual.start(entity, ability, net.kazi.kazimod.entities.KokuVfxEntity.RED_CHARGE, (int) CHARGE_TIME);
             entity.level.playSound(
                     (PlayerEntity) null,
                     entity.blockPosition(),
@@ -144,22 +147,15 @@ public class RedAbility extends Ability {
     }
 
     private void onChargeTick(LivingEntity entity, IAbility ability) {
-        if (!entity.level.isClientSide) {
-            if (this.particleInterval.canTick()) {
-                Vector3d look = entity.getLookAngle().normalize().scale(2.0);
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) KaziParticleEffects.GOJO_RED_CHARGE.get(),
-                        entity,
-                        entity.getX() + look.x,
-                        entity.getY() + 2.5,
-                        entity.getZ() + look.z
-                );
-            }
-        }
+        this.chargeVisual.update(this.chargeComponent.getChargePercentage());
     }
 
     private void onChargeEnd(LivingEntity entity, IAbility ability) {
+        this.chargeVisual.stop();
         if (!entity.level.isClientSide) {
+            net.kazi.kazimod.entities.KokuVfxEntity.impact(entity.level,
+                    net.kazi.kazimod.entities.KokuVfxEntity.castOrigin(entity, 1.0F, 0),
+                    net.kazi.kazimod.entities.KokuVfxEntity.RED_IMPACT, 2.0F);
             this.animationComponent.stop(entity);
             if (currentMode == RedMode.MAX_OUTPUT) {
                 this.maxOutputProjectileComponent.shoot(entity, 3.0F, 1.0F);
@@ -186,6 +182,14 @@ public class RedAbility extends Ability {
 
     private MaxOutputRedProjectile createMaxOutputProjectile(LivingEntity entity) {
         return new MaxOutputRedProjectile(entity.level, entity, this);
+    }
+
+    public static void startHollowNukeCooldown(LivingEntity entity) {
+        IAbilityData data = AbilityDataCapability.get(entity);
+        RedAbility red = (RedAbility) data.getEquippedAbility(INSTANCE);
+        if (red != null) {
+            red.cooldownComponent.startCooldown(entity, HOLLOW_NUKE_COOLDOWN);
+        }
     }
 
     private static boolean canUnlock(LivingEntity user) {

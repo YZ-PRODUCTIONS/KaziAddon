@@ -37,7 +37,7 @@ public class AwakeningEssenceItem extends Item {
     public static final String SPHERE_TAG    = "AwakenningSphereUUID";
     public static final String COOLDOWN_END_TAG = "AwakeningEssenceCooldownEnd";
     public static final String ACTIVE_TRIAL_BOSS_TAG = "AwakeningTrialBossUUID";
-    private static final long TRIAL_COOLDOWN_MS = 5L * 60L * 1000L;
+    private static final long TRIAL_COOLDOWN_MS = 60L * 60L * 1000L;
 
     private static final ResourceLocation KOKU_KOKU_NO_MI = new ResourceLocation("kazimod",     "koku_koku_no_mi");
     private static final ResourceLocation KAMA_KAMA_NO_MI = new ResourceLocation("cartaddon",   "kama_kama_no_mi");
@@ -46,6 +46,10 @@ public class AwakeningEssenceItem extends Item {
     private static final ResourceLocation OPE_OPE_NO_MI = new ResourceLocation("mineminenomi","ope_ope_no_mi");
     private static final ResourceLocation KYOKA_KYOKA_NO_MI = new ResourceLocation("kazimod", "kyoka_kyoka_no_mi");
     private static final ResourceLocation NAGI_NAGI_NO_MI = new ResourceLocation("mineminenomi", "nagi_nagi_no_mi");
+    private static final ResourceLocation NETSU_NETSU_NO_MI = new ResourceLocation("mineminenomi", "netsu_netsu_no_mi");
+    private static final ResourceLocation KIRA_KIRA_NO_MI = new ResourceLocation("mineminenomi", "kira_kira_no_mi");
+    private static final ResourceLocation BATTO_BATTO_NO_MI_MODEL_VAMPIRE =
+            new ResourceLocation("cartaddon", "batto_batto_no_mi_model_vampire");
 
     public AwakeningEssenceItem() {
         super(new Item.Properties()
@@ -84,8 +88,12 @@ public class AwakeningEssenceItem extends Item {
         boolean isOpe = fruit.isPresent() && OPE_OPE_NO_MI.equals(fruit.get());
         boolean isKyoka = fruit.isPresent() && KYOKA_KYOKA_NO_MI.equals(fruit.get());
         boolean isNagi = fruit.isPresent() && NAGI_NAGI_NO_MI.equals(fruit.get());
+        boolean isNetsu = fruit.isPresent() && NETSU_NETSU_NO_MI.equals(fruit.get());
+        boolean isKira = fruit.isPresent() && KIRA_KIRA_NO_MI.equals(fruit.get());
+        boolean isVampire = fruit.isPresent() && BATTO_BATTO_NO_MI_MODEL_VAMPIRE.equals(fruit.get());
 
-        if (!isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi) {
+        if (!isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi
+                && !isNetsu && !isKira && !isVampire) {
             player.sendMessage(new StringTextComponent(
                             "\u00a7cOnly a user eligible for awakening can use this item."),
                     player.getUUID());
@@ -98,7 +106,9 @@ public class AwakeningEssenceItem extends Item {
             return ActionResult.fail(stack);
         }
 
-        if (hasActiveTrial(serverWorld, player.getUUID())) {
+        boolean bypassBossTrial = isNetsu || isKira || isVampire;
+
+        if (!bypassBossTrial && hasActiveTrial(serverWorld, player.getUUID())) {
             player.sendMessage(new StringTextComponent(
                             "\u00a7cYou already have an awakening challenge in progress."),
                     player.getUUID());
@@ -106,12 +116,12 @@ public class AwakeningEssenceItem extends Item {
         }
 
         long cooldownEnd = player.getPersistentData().getLong(COOLDOWN_END_TAG);
-        if (cooldownEnd > now) {
+        if (!player.isCreative() && cooldownEnd > now) {
             long remainingSeconds = Math.max(1L, (cooldownEnd - now + 999L) / 1000L);
             long minutes = remainingSeconds / 60L;
             long seconds = remainingSeconds % 60L;
             player.sendMessage(new StringTextComponent(
-                            "\u00a7cYou must wait " + minutes + "m " + seconds + "s before starting another awakening challenge."),
+                            "\u00a7cYou must wait " + minutes + "m " + seconds + "s before using another Awakening Essence."),
                     player.getUUID());
             return ActionResult.fail(stack);
         }
@@ -125,6 +135,16 @@ public class AwakeningEssenceItem extends Item {
                         player.getUUID());
                 return ActionResult.fail(stack);
             }
+        }
+
+        if (bypassBossTrial) {
+            if (!AwakeningEssenceDeathHandler.grantAwakeningWithoutTrial(player)) {
+                return ActionResult.fail(stack);
+            }
+            if (!player.isCreative()) {
+                player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
+            }
+            return ActionResult.success(stack);
         }
 
         List<ServerPlayerEntity> nearbyPlayers = serverWorld.players();
@@ -191,7 +211,9 @@ public class AwakeningEssenceItem extends Item {
         bossEntity.getPersistentData().putString(SUMMONER_TAG, player.getUUID().toString());
         AwakeningEssenceDeathHandler.registerTrialBoss(bossEntity.getUUID());
         player.getPersistentData().putString(ACTIVE_TRIAL_BOSS_TAG, bossEntity.getUUID().toString());
-        player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
+        if (!player.isCreative()) {
+            player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
+        }
 
         // Spawn barrier
         InfiniteVoidBarrierEntity barrier = new InfiniteVoidBarrierEntity(

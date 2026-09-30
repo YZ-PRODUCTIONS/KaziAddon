@@ -48,8 +48,8 @@ public class DismantleAbility extends Ability {
             }
     );
 
-    private static final float NORMAL_COOLDOWN  = 200.0F;
-    private static final float BARRAGE_COOLDOWN = 600.0F; // 30 seconds
+    private static final float NORMAL_COOLDOWN  = 300.0F;
+    private static final float BARRAGE_COOLDOWN = 400.0F; // 30 seconds
     private static final int   CHARGE_TIME      = 20;     // barrage only
     private static final int   DISTANCE         = 38;
     private static final float WIDTH            = 3.0F;
@@ -140,7 +140,7 @@ public class DismantleAbility extends Ability {
     // -------------------------------------------------------------------------
     private void executeSlash(LivingEntity entity, IAbility ability) {
         boolean isBarrage = altModeComponent.isMode(Mode.BARRAGE);
-        float percentageDamage = entity.getMaxHealth() * (isBarrage ? 0.05F : 0.20F);
+        float percentageDamage = entity.getMaxHealth() * (isBarrage ? 0.02F : 0.10F);
 
         List targets = this.rangeComponent.getTargetsInLine(entity, (float) DISTANCE, WIDTH);
 
@@ -169,13 +169,7 @@ public class DismantleAbility extends Ability {
                     if (!entity.level.isClientSide) {
                         ((ServerWorld) entity.level).playSound(null, target.blockPosition(),
                                 KaziSounds.CLEAVE_HIT_SFX.get(), SoundCategory.PLAYERS, 4.0F, 1.0F);
-                        WyHelper.spawnParticleEffect(
-                                (ParticleEffect) KaziParticleEffects.DISMANTLE.get(),
-                                entity,
-                                target.getX(),
-                                target.getEyeY(),
-                                target.getZ()
-                        );
+                        net.kazi.kazimod.entities.KamaVfxEntity.dismantle(entity, target.getX(), target.getEyeY(), target.getZ());
                     }
                     break;
                 }

@@ -23,7 +23,7 @@ public class RedProjectile extends AbilityProjectileEntity {
     public RedProjectile(World world, LivingEntity player, Ability ability) {
         super((EntityType) GojoProjectiles.RED.get(), world, player, ability);
         super.setPassThroughEntities();
-        this.setDamage(100.0F);
+        this.setDamage(50.0F);
         this.setMaxLife(80);
         this.setHurtTime(5);
         this.setUnavoidable();
@@ -37,20 +37,23 @@ public class RedProjectile extends AbilityProjectileEntity {
     private void onEntityImpactEvent(LivingEntity hitEntity) {
         Vector3d direction = this.getDeltaMovement().normalize();
         AbilityHelper.setDeltaMovement(hitEntity, direction.x * 1.40, 1.25, direction.z * 1.40);
+        net.kazi.kazimod.entities.KokuVfxEntity.impact(this.level, hitEntity.position().add(0.0D, 1.0D, 0.0D),
+                net.kazi.kazimod.entities.KokuVfxEntity.RED_IMPACT, 3.0F);
     }
 
     private void onBlockImpactEvent(BlockPos hit) {
         ExplosionAbility explosion = super.createExplosion(this.getThrower(), this.level,
                 (double) hit.getX(), (double) hit.getY(), (double) hit.getZ(), 4.0F);
         explosion.setStaticDamage(3.0F);
-        explosion.setSmokeParticles(new CommonExplosionParticleEffect(2));
+        explosion.setSmokeParticles(null);
         explosion.doExplosion();
+            net.kazi.kazimod.entities.KokuVfxEntity.impact(this.level, Vector3d.atCenterOf(hit),
+                    net.kazi.kazimod.entities.KokuVfxEntity.RED_IMPACT, 4.0F);
     }
 
     private void onTickEvent() {
         if (!this.level.isClientSide) {
-            WyHelper.spawnParticleEffect((ParticleEffect) KaziParticleEffects.GOJO_RED.get(), this,
-                    this.getX(), this.getY(), this.getZ());
+            // Flight visuals are handled by KokuProjectileRenderer.
         }
     }
 }

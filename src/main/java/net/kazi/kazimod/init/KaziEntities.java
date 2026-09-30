@@ -20,6 +20,42 @@ public class KaziEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(ForgeRegistries.ENTITIES, "kazimod");
 
+    public static final RegistryObject<EntityType<ReplicatedSwordEntity>> REPLICATED_SWORD =
+            ENTITY_TYPES.register("replicated_sword", () ->
+                    EntityType.Builder.<ReplicatedSwordEntity>of(ReplicatedSwordEntity::new, EntityClassification.MISC)
+                            .sized(0.3F, 0.3F).clientTrackingRange(96).setUpdateInterval(1)
+                            .noSummon().noSave().build("replicated_sword"));
+
+    public static final RegistryObject<EntityType<GaeBolgVfxEntity>> GAE_BOLG_VFX =
+            ENTITY_TYPES.register("gae_bolg_vfx", () ->
+                    EntityType.Builder.<GaeBolgVfxEntity>of(GaeBolgVfxEntity::new, EntityClassification.MISC)
+                            .sized(0.1F, 0.1F).clientTrackingRange(128).setUpdateInterval(1)
+                            .noSummon().noSave().build("gae_bolg_vfx"));
+
+    public static final RegistryObject<EntityType<KamaVfxEntity>> KAMA_VFX =
+            ENTITY_TYPES.register("kama_vfx", () ->
+                    EntityType.Builder.<KamaVfxEntity>of(KamaVfxEntity::new, EntityClassification.MISC)
+                            .sized(1.0F, 1.0F).clientTrackingRange(16).setUpdateInterval(1)
+                            .noSummon().noSave().build("kama_vfx"));
+
+    public static final RegistryObject<EntityType<EnteiBlastEntity>> ENTEI_BLAST =
+            ENTITY_TYPES.register("entei_blast", () ->
+                    EntityType.Builder.<EnteiBlastEntity>of(EnteiBlastEntity::new, EntityClassification.MISC)
+                            .sized(1.0F, 1.0F).clientTrackingRange(16).setUpdateInterval(1)
+                            .noSummon().noSave().build("entei_blast"));
+
+    public static final RegistryObject<EntityType<KokuVfxEntity>> KOKU_VFX =
+            ENTITY_TYPES.register("koku_vfx", () ->
+                    EntityType.Builder.<KokuVfxEntity>of(KokuVfxEntity::new, EntityClassification.MISC)
+                            .sized(1.0F, 1.0F).clientTrackingRange(16).setUpdateInterval(1)
+                            .noSummon().noSave().build("koku_vfx"));
+
+    public static final RegistryObject<EntityType<ZushiVfxEntity>> ZUSHI_VFX =
+            ENTITY_TYPES.register("zushi_vfx", () ->
+                    EntityType.Builder.<ZushiVfxEntity>of(ZushiVfxEntity::new, EntityClassification.MISC)
+                            .sized(1.0F, 1.0F).clientTrackingRange(16).setUpdateInterval(1)
+                            .noSummon().noSave().build("zushi_vfx"));
+
     public static final RegistryObject<EntityType<MalevolentShrineEntity>> MALEVOLENT_SHRINE =
             ENTITY_TYPES.register("malevolent_shrine", () ->
                     EntityType.Builder.<MalevolentShrineEntity>of(MalevolentShrineEntity::new, EntityClassification.MISC)
@@ -33,6 +69,26 @@ public class KaziEntities {
                             .sized(0.5f, 0.5f)
                             .clientTrackingRange(64)
                             .build("fuga"));
+
+    public static final RegistryObject<EntityType<CaladbolgProjectile>> CALADBOLG =
+            ENTITY_TYPES.register("caladbolg", () ->
+                    EntityType.Builder.<CaladbolgProjectile>of(CaladbolgProjectile::new, EntityClassification.MISC)
+                            .sized(0.5F, 0.5F)
+                            .clientTrackingRange(128)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .noSave()
+                            .build("caladbolg"));
+
+    public static final RegistryObject<EntityType<CaladbolgImpactEntity>> CALADBOLG_IMPACT =
+            ENTITY_TYPES.register("caladbolg_impact", () ->
+                    EntityType.Builder.<CaladbolgImpactEntity>of(CaladbolgImpactEntity::new, EntityClassification.MISC)
+                            .sized(1.0F, 1.0F)
+                            .clientTrackingRange(128)
+                            .setUpdateInterval(20)
+                            .noSummon()
+                            .noSave()
+                            .build("caladbolg_impact"));
 
     public static final RegistryObject<EntityType<ShockWilleProjectile>> SHOCK_WILLE =
             ENTITY_TYPES.register("shock_wille", () ->
@@ -124,6 +180,65 @@ public class KaziEntities {
                             .noSummon()
                             .noSave()
                             .build("awakening_barrier"));
+
+    public static final RegistryObject<EntityType<EmbeddedItemDisplayEntity>> EMBEDDED_ITEM_DISPLAY =
+            ENTITY_TYPES.register("embedded_item_display", () ->
+                    EntityType.Builder.<EmbeddedItemDisplayEntity>of(EmbeddedItemDisplayEntity::new,
+                                    EntityClassification.MISC)
+                            .sized(0.01F, 0.01F)
+                            .clientTrackingRange(128)
+                            .setUpdateInterval(20)
+                            .noSummon()
+                            .noSave()
+                            .build("embedded_item_display"));
+
+    public static final RegistryObject<EntityType<RealityMarbleWeaponEntity>> REALITY_MARBLE_WEAPON =
+            ENTITY_TYPES.register("reality_marble_weapon", () ->
+                    EntityType.Builder.<RealityMarbleWeaponEntity>of(RealityMarbleWeaponEntity::new,
+                                    EntityClassification.MISC)
+                            .sized(0.5F, 0.5F)
+                            .clientTrackingRange(128)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .noSave()
+                            .build("reality_marble_weapon"));
+
+    public static final RegistryObject<EntityType<RealityMarbleGearEntity>> REALITY_MARBLE_GEAR =
+            ENTITY_TYPES.register("reality_marble_gear", () ->
+                    EntityType.Builder.<RealityMarbleGearEntity>of(RealityMarbleGearEntity::new,
+                                    EntityClassification.MISC)
+                            .sized(2.0F, 2.0F)
+                            .clientTrackingRange(128)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .noSave()
+                            .build("reality_marble_gear"));
+
+    public static final RegistryObject<EntityType<UnlimitedLostWorksEntity>> UNLIMITED_LOST_WORKS =
+            ENTITY_TYPES.register("unlimited_lost_works", () ->
+                    EntityType.Builder.<UnlimitedLostWorksEntity>of(UnlimitedLostWorksEntity::new, EntityClassification.MISC)
+                            .sized(1.0F, 1.0F).clientTrackingRange(64).setUpdateInterval(1)
+                            .noSummon().noSave().build("unlimited_lost_works"));
+
+    public static final RegistryObject<EntityType<EnhancementLightEntity>> ENHANCEMENT_LIGHT =
+            ENTITY_TYPES.register("enhancement_light", () ->
+                    EntityType.Builder.<EnhancementLightEntity>of(EnhancementLightEntity::new, EntityClassification.MISC)
+                            .sized(1.0F, 1.0F)
+                            .clientTrackingRange(128)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .noSave()
+                            .build("enhancement_light"));
+
+    public static final RegistryObject<EntityType<RhoAiasEntity>> RHO_AIAS =
+            ENTITY_TYPES.register("rho_aias", () ->
+                    EntityType.Builder.<RhoAiasEntity>of(RhoAiasEntity::new, EntityClassification.MISC)
+                            .sized(5.0F, 5.0F)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .noSummon()
+                            .noSave()
+                            .build("rho_aias"));
 
     public static final RegistryObject<EntityType<CoinProjectile>> CASINO_COIN =
             ENTITY_TYPES.register("casino_coin", () ->
@@ -293,4 +408,23 @@ public class KaziEntities {
                             .sized(2.0f, 2.0f)
                             .clientTrackingRange(64)
                             .build("silent_death"));
+
+    // ── Fuwa Fuwa no Mi projectiles ─────────────────────────────────────
+    public static final RegistryObject<EntityType<ItemKaitenReworkedProjectile>> ITEM_KAITEN =
+            ENTITY_TYPES.register("item_kaiten", () ->
+                    EntityType.Builder.<ItemKaitenReworkedProjectile>of(ItemKaitenReworkedProjectile::new, EntityClassification.MISC)
+                            .sized(ItemKaitenReworkedProjectile.ENTITY_WIDTH, ItemKaitenReworkedProjectile.ENTITY_HEIGHT)
+                            .clientTrackingRange(10)
+                            .setUpdateInterval(1)
+                            .setShouldReceiveVelocityUpdates(true)
+                            .build("kazimod:item_kaiten"));
+
+    // ── Yami Yami no Mi projectiles ──────────────────────────────────────
+    public static final RegistryObject<EntityType<DarkMatterReworkProjectile>> DARK_MATTER_PROJECTILE =
+            ENTITY_TYPES.register("dark_matter_projectile", () ->
+                    EntityType.Builder.<DarkMatterReworkProjectile>of(DarkMatterReworkProjectile::new, EntityClassification.MISC)
+                            .sized(1.0F, 1.0F)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("dark_matter_projectile"));
 }

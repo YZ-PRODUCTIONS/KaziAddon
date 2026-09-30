@@ -62,6 +62,7 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
     private static final DataParameter<Boolean> FINISHED;
     private static final DataParameter<Boolean> PLAYING_PARTICLES;
     private static final DataParameter<Integer> IMPACT_TICK;
+    private static final DataParameter<Integer> EFFECT_START = EntityDataManager.defineId(FugaProjectile.class, DataSerializers.INT);
     private static final BlockProtectionRule    GRIEF_RULE;
 
     public float   multiplier     = 0.0F;
@@ -139,41 +140,7 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
                 }
             }
 
-            double currentTop = MAX_RISE_HEIGHT * progress;
-
-            for (int i = 0; i < PARTICLES_WAVE; i++) {
-                double angle  = this.random.nextDouble() * Math.PI * 2.0;
-                double r      = Math.sqrt(this.random.nextDouble()) * AOE_RADIUS;
-                double spawnY = y + currentTop + (this.random.nextDouble() * 6.0 - 3.0);
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) ModParticleEffects.HEAT_DASH.get(), this,
-                        x + Math.cos(angle) * r, Math.max(y, spawnY), z + Math.sin(angle) * r);
-            }
-
-            for (int i = 0; i < PARTICLES_GROUND; i++) {
-                double angle  = this.random.nextDouble() * Math.PI * 2.0;
-                double r      = Math.sqrt(this.random.nextDouble()) * AOE_RADIUS;
-                double spawnY = y + this.random.nextDouble() * 3.0;
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) ModParticleEffects.HEAT_DASH.get(), this,
-                        x + Math.cos(angle) * r, spawnY, z + Math.sin(angle) * r);
-            }
-
-            if (currentTop > 4.0) {
-                for (int i = 0; i < PARTICLES_FILL; i++) {
-                    double angle  = this.random.nextDouble() * Math.PI * 2.0;
-                    double r      = Math.sqrt(this.random.nextDouble()) * AOE_RADIUS;
-                    double spawnY = y + this.random.nextDouble() * currentTop;
-                    WyHelper.spawnParticleEffect(
-                            (ParticleEffect) ModParticleEffects.HEAT_DASH.get(), this,
-                            x + Math.cos(angle) * r, spawnY, z + Math.sin(angle) * r);
-                }
-            }
-
-            WyHelper.spawnParticles(ParticleTypes.FLAME, sw,
-                    x, y + currentTop * 0.5, z,
-                    (float) AOE_RADIUS, (float)(currentTop * 0.5 + 1.0), (float) AOE_RADIUS,
-                    PARTICLES_FLAME);
+            // The client mesh replaces the old particle plume; fire refresh above is unchanged.
 
             if (elapsed >= PARTICLE_DURATION) {
                 this.remove();
@@ -250,18 +217,7 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
                 }
             }
 
-            ServerWorld sw = (ServerWorld) this.level;
-            for (int i = 0; i < 80; i++) {
-                double angle = this.random.nextDouble() * Math.PI * 2.0;
-                double r     = Math.sqrt(this.random.nextDouble()) * AOE_RADIUS;
-                WyHelper.spawnParticleEffect(
-                        (ParticleEffect) ModParticleEffects.HEAT_DASH.get(), this,
-                        ix + Math.cos(angle) * r, iy + this.random.nextDouble() * 5.0, iz + Math.sin(angle) * r);
-            }
-
-            WyHelper.spawnParticles(ParticleTypes.FLAME, sw,
-                    ix, iy + 2.0, iz,
-                    (float) AOE_RADIUS, 3.0f, (float) AOE_RADIUS, 60);
+            // Impact visuals are rendered from the synchronized finished state.
         }
 
         this.setImpactTick(this.tickCount);
@@ -278,6 +234,7 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
         this.entityData.define(FINISHED,          false);
         this.entityData.define(PLAYING_PARTICLES, false);
         this.entityData.define(IMPACT_TICK,       0);
+        this.entityData.define(EFFECT_START,      0);
     }
 
     @Override public void setSize(float size) { this.entityData.set(SIZE, size); }
@@ -290,7 +247,15 @@ public class FugaProjectile extends AbilityProjectileEntity implements IFlexible
     public void setPlayingParticles()   { this.entityData.set(PLAYING_PARTICLES, true); }
 
     public int getImpactTick()          { return (Integer) this.entityData.get(IMPACT_TICK); }
-    public void setImpactTick(int tick) { this.entityData.set(IMPACT_TICK, tick); }
+    public void setImpactTick(int tick) {
+        this.entityData.set(IMPACT_TICK, tick);
+        this.entityData.set(EFFECT_START, (int) this.level.getGameTime());
+    }
+
+    public float getEffectAge(float partial) {
+        int elapsed = (int) this.level.getGameTime() - this.entityData.get(EFFECT_START);
+        return Math.max(0.0F, elapsed + partial);
+    }
 
     static {
         SIZE              = EntityDataManager.defineId(FugaProjectile.class, DataSerializers.FLOAT);
