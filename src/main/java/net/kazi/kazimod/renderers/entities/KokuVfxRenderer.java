@@ -36,7 +36,7 @@ extends EntityRenderer<KokuVfxEntity> {
     }
 
     private static double visualExtent(KokuVfxEntity entity) {
-        return entity.getMode() == 3 || entity.getMode() == 4 || entity.getMode() == KokuVfxEntity.NUKE_IMPACT
+        return entity.getMode() == 3 || entity.getMode() == 4 || KokuVfxEntity.isNukeMode(entity.getMode())
                 ? Math.max(8.0D, entity.getSize() * 2.0D + Math.abs(entity.getGroundOffset())) : 8.0D;
     }
 
@@ -56,7 +56,9 @@ extends EntityRenderer<KokuVfxEntity> {
         }
         KokuVfxMesh.Sink out = KokuVfxMesh.withDetail(sink(stack, buffer),
                 VfxDetail.level(entity, this.entityRenderDispatcher, visualExtent(entity)));
-        if (entity.getMode() == KokuVfxEntity.NUKE_IMPACT) {
+        if (entity.getMode() == KokuVfxEntity.RED_NUKE_IMPACT) {
+            KokuVfxMesh.redNuke(out, entity.getNukeAge(partial), entity.getWaveRadius(partial), entity.getVfxOpacity(partial), entity.getGroundOffset());
+        } else if (entity.getMode() == KokuVfxEntity.NUKE_IMPACT) {
             KokuVfxMesh.nuke(out, entity.getNukeAge(partial), entity.getWaveRadius(partial), entity.getVfxOpacity(partial), entity.getGroundOffset());
         } else if (entity.getMode() == 3 || entity.getMode() == 4) {
             KokuVfxMesh.impact(out, entity.getMode() == 3 ? 0 : 2, entity.getProgress(partial), entity.getAge(partial), entity.getSize());

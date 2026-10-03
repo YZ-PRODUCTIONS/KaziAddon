@@ -13,6 +13,7 @@ import net.kazi.kazimod.abilities.MochiRework.KuriMochiClone;
 import net.kazi.kazimod.abilities.MochiRework.MochiGinchakuClone;
 import net.kazi.kazimod.abilities.MochiRework.ZanGiriMochiClone;
 import net.kazi.kazimod.abilities.GoroRework.*;
+import net.kazi.kazimod.abilities.GoruRework.SeriousnessAbility;
 import net.kazi.kazimod.abilities.GasuRework.GastilleRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
 import net.kazi.kazimod.abilities.KameRework.KameGuardPointRework;
@@ -64,6 +65,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.events.ability.UnlockAbilityEvent;
 import xyz.pixelatedw.mineminenomi.api.events.onefruit.EatDevilFruitEvent;
+import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
@@ -115,6 +117,26 @@ public class AwakeningAbilityLoginFix {
             VoltAmaruRework.INSTANCE,
             VoltAmaruFlightRework.INSTANCE
     );
+
+    private static final List<AbilityCore<?>> AWAKENED_GORU_ABILITIES = Arrays.asList(
+            net.kazi.kazimod.abilities.GoruRework.ShaNaqbaImuruAbility.INSTANCE,
+            SeriousnessAbility.INSTANCE,
+            net.kazi.kazimod.abilities.GoruRework.EaAbility.INSTANCE,
+            net.kazi.kazimod.abilities.GoruRework.EnkiduAbility.INSTANCE,
+            net.kazi.kazimod.abilities.GoruRework.GateOfBabylonAbility.INSTANCE
+    );
+
+    // Keep this explicit: the fruit's ability list also contains our awakening moves after injection.
+    private static final Set<AbilityCore<?>> AWAKENED_GORU_REMOVALS = new HashSet<>(Arrays.asList(
+            net.MrMagicalCart.cartaddon.abilities.goru.GonBombaAbility.INSTANCE,
+            net.MrMagicalCart.cartaddon.abilities.goru.GoldenTouchAbility.INSTANCE,
+            net.MrMagicalCart.cartaddon.abilities.goru.GoldenAgeAbility.INSTANCE,
+            net.MrMagicalCart.cartaddon.abilities.goru.GoldenBodyAbility.INSTANCE,
+            net.MrMagicalCart.cartaddon.abilities.goru.GoldenTesoroAbility.INSTANCE,
+            net.MrMagicalCart.cartaddon.abilities.goru.GoruGoruAxeAbility.INSTANCE,
+            net.MrMagicalCart.cartaddon.abilities.goru.GoldenGuardAbility.INSTANCE,
+            net.MrMagicalCart.cartaddon.abilities.goru.GonFuocoDiDioAbility.INSTANCE
+    ));
 
     private static final List<AbilityCore<?>> AWAKENED_SUPA_ABILITIES = Arrays.asList(
             RealityMarbleAbility.INSTANCE,
@@ -226,7 +248,19 @@ public class AwakeningAbilityLoginFix {
     }
 
     @SubscribeEvent
+    public void onSeriousnessEligibilityTick(TickEvent.PlayerTickEvent event) {
+        PlayerEntity player = event.player;
+        if (event.phase != TickEvent.Phase.END || player.level.isClientSide
+                || SeriousnessAbility.isEligible(player)) return;
+        IAbilityData data = AbilityDataCapability.get(player);
+        if (data != null && removeSeriousnessPassive(player, data)) {
+            WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), data), player);
+        }
+    }
+
+    @SubscribeEvent
     public void onDevilFruitEaten(EatDevilFruitEvent.Post event) {
+        syncGoruKaziAbilities(event.getPlayer());
         syncGoroKaziAbilities(event.getPlayer());
         syncGasuReworks(event.getPlayer());
         syncKameRework(event.getPlayer());
@@ -234,6 +268,7 @@ public class AwakeningAbilityLoginFix {
     }
 
     public static void syncPlayerAwakeningReplacements(PlayerEntity player) {
+        syncGoruKaziAbilities(player);
         syncAwakenedSupaAbilities(player);
         syncGoroKaziAbilities(player);
         syncGasuReworks(player);
@@ -246,6 +281,7 @@ public class AwakeningAbilityLoginFix {
 
     private static void restoreAwakenedFruitAbilities(PlayerEntity player) {
         if (player == null || player.level.isClientSide) return;
+        syncGoruKaziAbilities(player);
 
         IDevilFruit devilFruit = DevilFruitCapability.get(player);
         boolean isAwakenedSupa = devilFruit != null
@@ -272,6 +308,13 @@ public class AwakeningAbilityLoginFix {
 
         IAbilityData abilityData = AbilityDataCapability.get(player);
         if (abilityData == null) return;
+
+        // Repair Ea grants from the old shared Goro/Goru synchronization path.
+        if (!devilFruit.hasDevilFruit(CartAbilities.GORU_GORU_NO_MI)) {
+            for (AbilityCore<?> core : AWAKENED_GORU_ABILITIES) {
+                removeProgressionAbility(player, abilityData, core);
+            }
+        }
 
         for (AbilityCore<?> retiredCore : RETIRED_GORO_ABILITIES) {
             abilityData.removeEquippedAbility(retiredCore);
@@ -463,6 +506,12 @@ public class AwakeningAbilityLoginFix {
         IDevilFruit devilFruit = DevilFruitCapability.get(entity);
         if (devilFruit == null || !devilFruit.hasAwakenedFruit()) return;
 
+        if (devilFruit.hasDevilFruit(CartAbilities.GORU_GORU_NO_MI)
+                && AWAKENED_GORU_REMOVALS.contains(core)) {
+            event.setResult(Event.Result.DENY);
+            return;
+        }
+
         if (devilFruit.hasDevilFruit(ModAbilities.SUPA_SUPA_NO_MI)
                 && AWAKENED_SUPA_REMOVALS.contains(core)) {
             event.setResult(Event.Result.DENY);
@@ -642,6 +691,91 @@ public class AwakeningAbilityLoginFix {
                 abilityData.setEquippedAbility(slot, replacementCore.createAbility());
             }
         }
+    }
+
+    private static void syncGoruKaziAbilities(PlayerEntity player) {
+        if (player == null || player.level.isClientSide || KaziConfig.INSTANCE.disableFruitChanges.get()) return;
+        IDevilFruit fruit = DevilFruitCapability.get(player);
+        IAbilityData data = AbilityDataCapability.get(player);
+        if (data == null) return;
+        if (fruit == null || !fruit.hasDevilFruit(CartAbilities.GORU_GORU_NO_MI)) {
+            if (removeSeriousnessPassive(player, data)) {
+                WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), data), player);
+            }
+            return;
+        }
+
+        // The former shared grant path gave gold users the entire lightning set.
+        // Keep legitimate Goro ownership and explicit command/other unlocks intact.
+        if (!fruit.hasDevilFruit(ModAbilities.GORO_GORO_NO_MI)) {
+            for (AbilityCore<?> core : KAZI_GORO_ABILITIES) {
+                removeProgressionAbility(player, data, core);
+            }
+        }
+
+        if (fruit.hasAwakenedFruit()) {
+            for (IAbility ability : new ArrayList<>(data.getEquippedAndPassiveAbilities())) {
+                if (AWAKENED_GORU_REMOVALS.contains(ability.getCore())) {
+                    AbilityHelper.emergencyStopAbility(player, ability);
+                }
+            }
+            for (AbilityCore<?> core : AWAKENED_GORU_REMOVALS) {
+                data.removeEquippedAbility(core);
+                data.removePassiveAbility(core);
+                data.removeUnlockedAbility(core);
+            }
+        }
+
+        for (AbilityCore<?> core : AWAKENED_GORU_ABILITIES) {
+            if (fruit.hasAwakenedFruit()) {
+                if (!data.hasUnlockedAbility(core)) {
+                    data.addUnlockedAbility(core, AbilityUnlock.PROGRESSION);
+                }
+            } else {
+                removeProgressionAbility(player, data, core);
+            }
+        }
+
+        AbilityCore<?> observation = net.kazi.kazimod.abilities.GoruRework.ShaNaqbaImuruAbility.INSTANCE;
+        if (fruit.hasAwakenedFruit()) {
+            if (data.getPassiveAbility(observation) == null) data.addPassiveAbility(observation.createAbility());
+        } else data.removePassiveAbility(observation);
+
+        if (fruit.hasAwakenedFruit()) {
+            if (data.getPassiveAbility(SeriousnessAbility.INSTANCE) == null) {
+                data.addPassiveAbility(SeriousnessAbility.INSTANCE.createAbility());
+            }
+        } else {
+            removeSeriousnessPassive(player, data);
+        }
+
+        AbilityValidationEvents.checkForPossibleFruitAbilities(player);
+        WyNetwork.sendTo(new SSyncAbilityDataPacket(player.getId(), data), player);
+    }
+
+    private static boolean removeSeriousnessPassive(PlayerEntity player, IAbilityData data) {
+        IAbility passive = data.getPassiveAbility(SeriousnessAbility.INSTANCE);
+        boolean progressionUnlock = data.getUnlockTypeForAbility(SeriousnessAbility.INSTANCE)
+                == AbilityUnlock.PROGRESSION;
+        if (passive == null && !progressionUnlock) return false;
+        if (passive != null) {
+            AbilityHelper.emergencyStopAbility(player, passive);
+            data.removePassiveAbility(SeriousnessAbility.INSTANCE);
+        }
+        // Explicit command unlocks retain their provenance, but cannot stay active without awakened Goru.
+        removeProgressionAbility(player, data, SeriousnessAbility.INSTANCE);
+        return true;
+    }
+
+    private static void removeProgressionAbility(PlayerEntity player, IAbilityData data, AbilityCore<?> core) {
+        if (data.getUnlockTypeForAbility(core) != AbilityUnlock.PROGRESSION) return;
+        for (IAbility ability : data.getEquippedAndPassiveAbilities()) {
+            if (core.equals(ability.getCore())) {
+                AbilityHelper.emergencyStopAbility(player, ability);
+            }
+        }
+        data.removeEquippedAbility(core);
+        data.removeUnlockedAbility(core);
     }
 
     private static void syncAwakenedSupaAbilities(PlayerEntity player) {

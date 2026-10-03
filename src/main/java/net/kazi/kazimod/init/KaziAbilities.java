@@ -22,6 +22,7 @@ import net.kazi.kazimod.abilities.GasuRework.GastilleRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
 import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.GoroRework.*;
+import net.kazi.kazimod.abilities.GoruRework.SeriousnessAbility;
 import net.kazi.kazimod.abilities.FuwaRework.ItemKaitenReworked;
 import net.kazi.kazimod.abilities.HakiRework.BusoshokuHakiFullBodyHardeningRework;
 import net.kazi.kazimod.abilities.HakiRework.HakiSenseAbility;
@@ -299,6 +300,11 @@ public class KaziAbilities {
             RealityMarbleAbility.INSTANCE,
             ProjectionAbility.INSTANCE,
             EnhancementAbility.INSTANCE,
+            net.kazi.kazimod.abilities.GoruRework.EaAbility.INSTANCE,
+            net.kazi.kazimod.abilities.GoruRework.ShaNaqbaImuruAbility.INSTANCE,
+            SeriousnessAbility.INSTANCE,
+            net.kazi.kazimod.abilities.GoruRework.EnkiduAbility.INSTANCE,
+            net.kazi.kazimod.abilities.GoruRework.GateOfBabylonAbility.INSTANCE,
             KanshouBakuyaAbility.INSTANCE,
             TimeTheftAbility.INSTANCE,
             TimeReversalAbility.INSTANCE,

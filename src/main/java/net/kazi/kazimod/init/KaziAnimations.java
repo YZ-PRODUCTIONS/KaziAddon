@@ -6,6 +6,7 @@ import net.kazi.kazimod.animations.gojo.GojoHollowPurpleAnimation;
 import net.kazi.kazimod.animations.gojo.GojoRedAnimation;
 import net.kazi.kazimod.animations.kama.SukunaDomainAnimation;
 import net.kazi.kazimod.animations.kama.FugaSukunaAnimation;
+import net.kazi.kazimod.animations.supa.EaChargeAnimation;
 import net.kazi.kazimod.animations.tenki.LightningFuryAnimation;
 import net.kazi.kazimod.animations.toki.ChronostasisAnimation;
 import net.kazi.kazimod.animations.toki.TimeTheftAnimation;
@@ -24,6 +25,7 @@ public class KaziAnimations {
     public static final AnimationId<GojoRedAnimation>       GOJO_RED        = register("gojo_red");
     public static final AnimationId<GojoDomainAnimation>    GOJO_DOMAIN     = register("gojo_domain");
     public static final AnimationId<GojoHollowPurpleAnimation> GOJO_HOLLOW_PURPLE = register("gojo_hollow_purple");
+    public static final AnimationId<EaChargeAnimation> EA_CHARGE = register("ea_charge");
 
 
     public KaziAnimations() {
@@ -43,6 +45,7 @@ public class KaziAnimations {
         AnimationId.register(new GojoRedAnimation(GOJO_RED));
         AnimationId.register(new GojoDomainAnimation(GOJO_DOMAIN));
         AnimationId.register(new GojoHollowPurpleAnimation(GOJO_HOLLOW_PURPLE));
+        AnimationId.register(new EaChargeAnimation(EA_CHARGE));
 
     }
 }

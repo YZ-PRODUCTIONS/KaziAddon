@@ -31,6 +31,8 @@ public class SkillHunterEXAbility extends Ability {
     public static final String ROLLED_ABILITY_TAG = "kazimodSkillHunterExRolledAbility";
     public static final String ROLLED_SLOT_TAG = "kazimodSkillHunterExRolledSlot";
     public static final String ROLLED_USED_TAG = "kazimodSkillHunterExRolledUsed";
+    public static final String ROLLED_EXPIRY_TAG = "kazimodSkillHunterExRolledExpiry";
+    public static final long ROLLED_LIFETIME_TICKS = 15L * 20L;
     private static final String WEATHER_TOOL_TAG = "kazimodSkillHunterExWeatherTool";
     private static final String WEATHER_TOOL_MARKER = "kazimodSkillHunterExVirtualClimaTact";
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
@@ -81,6 +83,8 @@ public class SkillHunterEXAbility extends Ability {
         user.getPersistentData().putString(ROLLED_ABILITY_TAG, chosenKey.toString());
         user.getPersistentData().putInt(ROLLED_SLOT_TAG, slot);
         user.getPersistentData().putBoolean(ROLLED_USED_TAG, false);
+        user.getPersistentData().putLong(ROLLED_EXPIRY_TAG,
+                user.level.getGameTime() + ROLLED_LIFETIME_TICKS);
         NusuEvents.syncAbilityData((PlayerEntity) user, data);
         SkillHunterAbility.sendMsg(user, "\u00a7aSkill Hunter EX became "
                 + chosen.getLocalizedName().getString() + " for one use!");
@@ -119,6 +123,7 @@ public class SkillHunterEXAbility extends Ability {
         user.getPersistentData().remove(ROLLED_ABILITY_TAG);
         user.getPersistentData().remove(ROLLED_SLOT_TAG);
         user.getPersistentData().remove(ROLLED_USED_TAG);
+        user.getPersistentData().remove(ROLLED_EXPIRY_TAG);
     }
 
     private static List<AbilityCore<?>> getEligibleMineMineNoMiAbilities(

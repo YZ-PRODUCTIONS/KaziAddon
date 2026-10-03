@@ -7,6 +7,8 @@ public final class KokuVfxMesh {
     private static final float PI = (float)Math.PI;
     private static final int[] COLORS = new int[]{16713787, 36095, 10822143};
     private static final int[] LIGHTS = new int[]{16736652, 0x87FFFF, 15246591};
+    private static final ThreadLocal<RedNukeSink> RED_NUKE_SINK = ThreadLocal.withInitial(RedNukeSink::new);
+    private static final RingGrid[] RING_GRIDS = {new RingGrid(96), new RingGrid(64), new RingGrid(40)};
 
     private KokuVfxMesh() {
     }
@@ -125,6 +127,36 @@ public final class KokuVfxMesh {
         KokuVfxMesh.ring(out, wave * 0.92f, 0.0f, Math.max(0.025f, radius * 0.025f), COLORS[style], fade * 0.6f, true);
         KokuVfxMesh.lightning(out, time, wave * 1.2f, style == 2 ? 18 : 8, LIGHTS[style], fade);
         KokuVfxMesh.debris(out, time, wave, 32, fade, false);
+    }
+
+    /** Ea's red impact: every original nuke feature is uniformly half-sized.
+     * waveRadius and groundOffset are supplied in the final world-space dimensions.
+     */
+    public static void redNuke(Sink out, float age, float waveRadius, float opacity, float groundOffset) {
+        RedNukeSink red = RED_NUKE_SINK.get();
+        red.out = out;
+        try {
+            nuke(red, age, waveRadius * 2, opacity, groundOffset * 2);
+        } finally {
+            red.out = null;
+        }
+    }
+
+    private static final class RedNukeSink implements Sink {
+        private Sink out;
+        private int previousColor = -1, crimson;
+        @Override public int detail() { return out.detail(); }
+        @Override public void vertex(float x, float y, float z, int color, float alpha) {
+            // Sphere vertices share one color; remap it once instead of per corner.
+            if (color != previousColor) {
+                int r = color >> 16 & 255, g = color >> 8 & 255, b = color & 255;
+                int bright = Math.max(r, Math.max(g, b)), dark = Math.min(r, Math.min(g, b));
+                // Preserve brightness and white-hot highlights while moving the hue to red.
+                crimson = bright << 16 | dark << 8 | dark;
+                previousColor = color;
+            }
+            out.vertex(x * 0.5F, y * 0.5F, z * 0.5F, crimson, alpha);
+        }
     }
 
     public static void nuke(Sink out, float age, float waveRadius, float opacity, float groundOffset) {
@@ -272,15 +304,34 @@ public final class KokuVfxMesh {
         if (radius <= 0.0f || alpha <= 0.0f) {
             return;
         }
-        int segments = detailCount(out, 96, 64, 40);
+        RingGrid grid = RING_GRIDS[detailCount(out, 0, 1, 2)];
+        int segments = grid.cos.length - 1;
         for (int i = 0; i < segments; ++i) {
-            float a = (float)i * (float)Math.PI / (segments / 2.0f);
-            float b = (float)(i + 1) * (float)Math.PI / (segments / 2.0f);
+            float ca = grid.cos[i], sa = grid.sin[i];
+            float cb = grid.cos[i + 1], sb = grid.sin[i + 1];
             if (horizontal) {
-                KokuVfxMesh.quad(out, KokuVfxMesh.cos(a) * (radius - width), y, KokuVfxMesh.sin(a) * (radius - width), KokuVfxMesh.cos(a) * (radius + width), y, KokuVfxMesh.sin(a) * (radius + width), KokuVfxMesh.cos(b) * (radius + width), y, KokuVfxMesh.sin(b) * (radius + width), KokuVfxMesh.cos(b) * (radius - width), y, KokuVfxMesh.sin(b) * (radius - width), color, alpha);
+                KokuVfxMesh.quad(out, ca * (radius - width), y, sa * (radius - width),
+                        ca * (radius + width), y, sa * (radius + width),
+                        cb * (radius + width), y, sb * (radius + width),
+                        cb * (radius - width), y, sb * (radius - width), color, alpha);
                 continue;
             }
-            KokuVfxMesh.line(out, KokuVfxMesh.cos(a) * radius, KokuVfxMesh.sin(a) * radius, 0.0f, KokuVfxMesh.cos(b) * radius, KokuVfxMesh.sin(b) * radius, 0.0f, width, color, alpha);
+            KokuVfxMesh.line(out, ca * radius, sa * radius, 0.0f, cb * radius, sb * radius,
+                    0.0f, width, color, alpha);
+        }
+    }
+
+    /** Immutable unit circles shared by every shockwave; preserve the original seam endpoint. */
+    private static final class RingGrid {
+        private final float[] cos, sin;
+        private RingGrid(int segments) {
+            cos = new float[segments + 1];
+            sin = new float[segments + 1];
+            for (int i = 0; i <= segments; i++) {
+                float angle = (float) i * (float) Math.PI / (segments / 2.0F);
+                cos[i] = KokuVfxMesh.cos(angle);
+                sin[i] = KokuVfxMesh.sin(angle);
+            }
         }
     }
 

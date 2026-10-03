@@ -8,6 +8,12 @@ import net.minecraftforge.fml.RegistryObject;
 public class KaziSounds {
     public static final RegistryObject<SoundEvent> MAMMOTH_ROAR = KaziRegistry.registerSound("mammoth_roar");
 
+    public static final RegistryObject<SoundEvent> EA_CAST_SFX = KaziRegistry.registerSound("Ea Cast");
+    public static final RegistryObject<SoundEvent> WINDS_RAPTURE_CHARGE_SFX =
+            KaziRegistry.registerSound("Winds Rapture Charge");
+    public static final RegistryObject<SoundEvent> WINDS_RAPTURE_RELEASE_SFX =
+            KaziRegistry.registerSound("Winds Rapture Release");
+
     public static final RegistryObject<SoundEvent> DISMANTLE_SFX = KaziRegistry.registerSound("Dismantle");
     public static final RegistryObject<SoundEvent> CLEAVE_START_SFX = KaziRegistry.registerSound("Cleave Start");
     public static final RegistryObject<SoundEvent> CLEAVE_HIT_SFX = KaziRegistry.registerSound("Cleave Hit");

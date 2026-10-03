@@ -32,19 +32,25 @@ public final class ZushiVisualEvents {
 
     @SubscribeEvent
     public static void equipped(EquipAbilityEvent event) {
-        if (!event.getEntityLiving().level.isClientSide) ZushiAbilityBehavior.install(event.getAbility());
+        // Saved slots can be equipped before AbilityDataBase has a data owner.
+        // Throwing here aborts MMNM's entire remaining ability-data load.
+        if (isSupportedServerEvent(event.getEntityLiving(), event.getAbility())) {
+            ZushiAbilityBehavior.install(event.getAbility());
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void beforeUse(AbilityUseEvent.Pre event) {
-        if (!event.getEntityLiving().level.isClientSide) ZushiAbilityBehavior.install(event.getAbility());
+        if (isSupportedServerEvent(event.getEntityLiving(), event.getAbility())) {
+            ZushiAbilityBehavior.install(event.getAbility());
+        }
     }
 
     @SubscribeEvent
     public static void abilityTick(AbilityTickEvent event) {
         LivingEntity caster = event.getEntityLiving();
         IAbility ability = event.getAbility();
-        if (caster.level.isClientSide || !ZushiAbilityBehavior.supports(ability)) return;
+        if (!isSupportedServerEvent(caster, ability)) return;
         // Covers saved/command-created abilities as well as normally equipped ones.
         ZushiAbilityBehavior.install(ability);
         ContinuousComponent continuous = ability.getComponent(ModAbilityKeys.CONTINUOUS).orElse(null);
@@ -52,6 +58,11 @@ public final class ZushiVisualEvents {
                 || ability.getComponent(ModAbilityKeys.DISABLE).map(disable -> disable.isDisabled()).orElse(false)) {
             clear(ability);
         }
+    }
+
+    private static boolean isSupportedServerEvent(LivingEntity caster, IAbility ability) {
+        return caster != null && caster.level != null && !caster.level.isClientSide
+                && ZushiAbilityBehavior.supports(ability);
     }
 
     public static void clear(IAbility ability) {
