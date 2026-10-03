@@ -6,6 +6,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 
 public class KaziSounds {
+    public static final RegistryObject<SoundEvent> MAMMOTH_ROAR = KaziRegistry.registerSound("mammoth_roar");
 
     public static final RegistryObject<SoundEvent> DISMANTLE_SFX = KaziRegistry.registerSound("Dismantle");
     public static final RegistryObject<SoundEvent> CLEAVE_START_SFX = KaziRegistry.registerSound("Cleave Start");
@@ -50,4 +51,8 @@ public class KaziSounds {
     public static void register(IEventBus eventBus) {
         KaziRegistry.SOUNDS.register(eventBus);
     }
+    public static final RegistryObject<SoundEvent> SAHUR_YELL_SFX =
+            KaziRegistry.registerSound("sahur_yell");
+    public static final RegistryObject<SoundEvent> TUNG_SFX =
+            KaziRegistry.registerSound("tung");
 }

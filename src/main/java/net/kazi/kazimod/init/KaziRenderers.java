@@ -164,24 +164,20 @@ public class KaziRenderers {
         // ── Casino projectile renderers ───────────────────────────────────────
         RenderingRegistry.registerEntityRenderingHandler(
                 CasinoProjectiles.DICE.get(),
-                DiceProjectileRenderer::new);
+                manager->new net.kazi.kazimod.kake.KakeProjectileRenderer<>(manager,1));
 
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.GIANT_DICE.get(),
-                GiantDiceRenderer::new);
+                manager->new net.kazi.kazimod.kake.KakeProjectileRenderer<>(manager,4));
 
         RenderingRegistry.registerEntityRenderingHandler(
                 CasinoProjectiles.COIN.get(),
-                manager -> new net.minecraft.client.renderer.entity.EntityRenderer<CoinProjectile>(manager) {
-                    @Override
-                    public ResourceLocation getTextureLocation(CoinProjectile entity) {
-                        return new ResourceLocation("kazimod", "textures/particle/coin.png");
-                    }
-                });
+                manager->new net.kazi.kazimod.kake.KakeProjectileRenderer<>(manager,0));
+        RenderingRegistry.registerEntityRenderingHandler(CasinoProjectiles.CHIP.get(),manager->new net.kazi.kazimod.kake.KakeProjectileRenderer<>(manager,3));
 
         RenderingRegistry.registerEntityRenderingHandler(
                 CasinoProjectiles.PLAYING_CARD.get(),
-                new PlayingCardRenderer.Factory());
+                manager->new net.kazi.kazimod.kake.KakeProjectileRenderer<>(manager,2));
 
         // ── Saku Saku / Akuma Akuma projectile renderers ───────────────────────
         RenderingRegistry.registerEntityRenderingHandler(

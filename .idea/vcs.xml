@@ -2,8 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/voxelmap-forge-1.20.1/upstream/VoxelMap-1.20" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/voxelmap-forge-1.20.1/upstream/VoxelMap-1.20.2" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/voxelmap-forge-1.20.1/upstream/VoxelMap-Updated" vcs="Git" />
   </component>
 </project>

@@ -1,0 +1,9 @@
+Elephant voice - trumpeting.ogg
+Author: Info-farmer (Wikimedia Commons)
+Source: https://commons.wikimedia.org/wiki/File:Elephant_voice_-_trumpeting.ogg
+Original: https://upload.wikimedia.org/wikipedia/commons/4/40/Elephant_voice_-_trumpeting.ogg
+License: CC0 1.0 Universal Public Domain Dedication
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Used as mammoth_roar.ogg for Ancient Stampede.
+Converted to mono, normalized, and faded slightly at the edges for game playback.

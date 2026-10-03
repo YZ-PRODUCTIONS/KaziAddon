@@ -29,77 +29,107 @@
   "dismantle": {
     "category": "player",
     "subtitle": "kazimod.subtitle.dismantle",
-    "sounds": ["kazimod:dismantle"]
+    "sounds": [
+      "kazimod:dismantle"
+    ]
   },
   "cleave_start": {
     "category": "player",
     "subtitle": "kazimod.subtitle.cleave_start",
-    "sounds": ["kazimod:cleave_start"]
+    "sounds": [
+      "kazimod:cleave_start"
+    ]
   },
   "cleave_hit": {
     "category": "player",
     "subtitle": "kazimod.subtitle.cleave_hit",
-    "sounds": ["kazimod:cleave_hit"]
+    "sounds": [
+      "kazimod:cleave_hit"
+    ]
   },
   "shrine_music": {
     "category": "player",
     "subtitle": "kazimod.subtitle.shrine_music",
-    "sounds": ["kazimod:shrine_music"]
+    "sounds": [
+      "kazimod:shrine_music"
+    ]
   },
   "shrine_start": {
     "category": "player",
     "subtitle": "kazimod.subtitle.shrine_start",
-    "sounds": ["kazimod:shrine_start"]
+    "sounds": [
+      "kazimod:shrine_start"
+    ]
   },
   "fuga": {
     "category": "player",
     "subtitle": "kazimod.subtitle.fuga",
-    "sounds": ["kazimod:fuga"]
+    "sounds": [
+      "kazimod:fuga"
+    ]
   },
   "fuga_hit": {
     "category": "player",
     "subtitle": "kazimod.subtitle.fuga_hit",
-    "sounds": ["kazimod:fuga_hit"]
+    "sounds": [
+      "kazimod:fuga_hit"
+    ]
   },
   "timetheft": {
     "category": "player",
     "subtitle": "kazimod.subtitle.timetheft",
-    "sounds": ["kazimod:timetheft"]
+    "sounds": [
+      "kazimod:timetheft"
+    ]
   },
   "timeacceleration": {
     "category": "player",
     "subtitle": "kazimod.subtitle.timeacceleration",
-    "sounds": ["kazimod:timeacceleration"]
+    "sounds": [
+      "kazimod:timeacceleration"
+    ]
   },
   "chronostasis": {
     "category": "player",
     "subtitle": "kazimod.subtitle.chronostasis",
-    "sounds": ["kazimod:chronostasis"]
+    "sounds": [
+      "kazimod:chronostasis"
+    ]
   },
   "redcharge": {
     "category": "player",
     "subtitle": "kazimod.subtitle.redcharge",
-    "sounds": ["kazimod:redcharge"]
+    "sounds": [
+      "kazimod:redcharge"
+    ]
   },
   "redfire": {
     "category": "player",
     "subtitle": "kazimod.subtitle.redfire",
-    "sounds": ["kazimod:redfire"]
+    "sounds": [
+      "kazimod:redfire"
+    ]
   },
   "blackflashhit": {
     "category": "player",
     "subtitle": "kazimod.subtitle.blackflashhit",
-    "sounds": ["kazimod:blackflashhit"]
+    "sounds": [
+      "kazimod:blackflashhit"
+    ]
   },
   "ssstik": {
     "category": "player",
     "subtitle": "kazimod.subtitle.ssstik",
-    "sounds": ["kazimod:ssstik"]
+    "sounds": [
+      "kazimod:ssstik"
+    ]
   },
   "infinitevoid": {
     "category": "player",
     "subtitle": "kazimod.subtitle.infinitevoid",
-    "sounds": ["kazimod:infinitevoid"]
+    "sounds": [
+      "kazimod:infinitevoid"
+    ]
   },
   "infinitevoidmusic": {
     "category": "player",
@@ -114,7 +144,9 @@
   "purplechant": {
     "category": "player",
     "subtitle": "kazimod.subtitle.purplechant",
-    "sounds": ["kazimod:purplechant"]
+    "sounds": [
+      "kazimod:purplechant"
+    ]
   },
   "hollownukemusic": {
     "category": "player",
@@ -182,6 +214,28 @@
         "name": "kazimod:reality_marble_charge_music",
         "stream": true
       }
+    ]
+  },
+  "sahur_yell": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.sahur_yell",
+    "sounds": [
+      "kazimod:sahur_yell"
+    ]
+  },
+  "mammoth_roar": {
+    "subtitle": "kazimod.subtitle.mammoth_roar",
+    "sounds": ["kazimod:mammoth_roar"]
+  },
+  "mahoraga_wheel": {
+    "subtitle": "kazimod.subtitle.mahoraga_wheel",
+    "sounds": [{"name": "kazimod:mahoraga_wheel", "attenuation_distance": 32}]
+  },
+  "tung": {
+    "category": "player",
+    "subtitle": "kazimod.subtitle.tung",
+    "sounds": [
+      "kazimod:tung"
     ]
   }
 }

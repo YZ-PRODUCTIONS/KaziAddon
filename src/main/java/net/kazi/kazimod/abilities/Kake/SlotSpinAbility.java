@@ -17,7 +17,10 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
-import net.kazi.kazimod.particles.LuckySlotParticleEffect;
+import net.kazi.kazimod.kake.KakeVfxEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.SoundCategory;
 
 public class SlotSpinAbility extends Ability {
 
@@ -31,7 +34,7 @@ public class SlotSpinAbility extends Ability {
             }
     );
 
-    private static final float COOLDOWN  = 600.0f;
+    private static final float COOLDOWN  = 300.0f;
     private static final float SPIN_TIME = 20.0f;
 
     public static final DamageSource ZERO_ROLL = new DamageSource("kazi_zero_roll") {
@@ -46,6 +49,8 @@ public class SlotSpinAbility extends Ability {
 
     private final ContinuousComponent spinContinuous;
     private int spinTick = 0;
+    private KakeVfxEntity machine;
+    public boolean isSpinning(){return spinContinuous.isContinuous();}
 
     public SlotSpinAbility(AbilityCore<SlotSpinAbility> core) {
         super(core);
@@ -57,6 +62,7 @@ public class SlotSpinAbility extends Ability {
 
         super.addComponents(new AbilityComponent[]{ spinContinuous });
         super.addUseEvent(this::onUse);
+        addRemoveEvent((entity,ability)->{if(machine!=null){machine.remove();machine=null;}});
     }
 
     private void onUse(LivingEntity entity, IAbility ability) {
@@ -92,15 +98,16 @@ public class SlotSpinAbility extends Ability {
 
         entity.getPersistentData().putInt("kazi_pending_roll", rolled);
         spinTick = 0;
+        if(machine!=null)machine.remove();
+        machine=KakeVfxEntity.spawn(entity,KakeVfxEntity.SLOT,entity.position(),80,2,0,true);
+        entity.level.playSound(null,entity.blockPosition(),SoundEvents.LEVER_CLICK,SoundCategory.PLAYERS,1,1.2F);
         spinContinuous.startContinuity(entity, SPIN_TIME);
     }
 
     private void onSpinTick(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
         spinTick++;
-        if (spinTick % 2 == 0) {
-            LuckySlotParticleEffect.spawnSpinningNumber(entity, entity.level, this.random.nextInt(10));
-        }
+        if(spinTick%4==0)entity.level.playSound(null,entity.blockPosition(),SoundEvents.NOTE_BLOCK_HAT,SoundCategory.PLAYERS,.6F,1.1F+spinTick*.025F);
     }
 
     private void onSpinEnd(LivingEntity entity, IAbility ability) {
@@ -134,8 +141,8 @@ public class SlotSpinAbility extends Ability {
             }
         }
 
-        // Spawn the final revealed number particle
-        LuckySlotParticleEffect.spawnForNumber(entity, entity.level, rolled);
+        if(machine!=null&&machine.isAlive())machine.reveal(rolled);
+        entity.level.playSound(null,entity.blockPosition(),rolled==0?SoundEvents.NOTE_BLOCK_BASS:SoundEvents.NOTE_BLOCK_BELL,SoundCategory.PLAYERS,1,rolled==0?.6F:1F+rolled*.07F);
 
         // Action bar message
         if (entity instanceof PlayerEntity) {
@@ -156,6 +163,7 @@ public class SlotSpinAbility extends Ability {
                 SlotSpinAbility::new
         ))
                 .addDescriptionLine(DESCRIPTION)
+                .setIcon(new ResourceLocation("kazimod","textures/abilities/slot_spin.png"))
                 .build();
     }
 }

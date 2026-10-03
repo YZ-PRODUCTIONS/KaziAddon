@@ -1,0 +1,70 @@
+MAHORAGA - KAGE AWAKENING
+
+Unlock: awaken Kage Kage no Mi with Awakening Essence, then equip Mahoraga.
+Use once to summon, again to dismiss. Cooldown after dismissal/death: 60 seconds.
+Dismissal stops combat immediately, then sinks the shadowed guardian into a black portal
+over three seconds. Repeated dismissal requests cannot restart the exit animation.
+Logout/dimension cleanup remains immediate. Active guardian projectiles are removed on dismissal.
+Only one guardian per owner. Owner death, logout, dimension change, fruit loss,
+or removing the equipped summon ability dismisses it.
+
+Base health: 700 HP. Model height: approximately 4.6 blocks.
+Normal slash: 32 damage. Overhead slam: 48 damage, 8-block radius.
+Punch barrage: six 10-damage punches. Aerial takedown: 18 + 36 landing damage.
+Thrown block: 38 damage. Air blast: 32 damage. These are pre-Haki base damages.
+Invisible, unbreakable Protection IV netherite armor uses vanilla armor/enchantment rules.
+Permanent silent full-body Haki uses native MMNM armor/toughness bonuses at max mastery.
+All melee and unreflected ranged attacks use internal destruction, Logia bypass,
+and the native Haoshoku infusion damage-boost formula, without Haki visual effects.
+Block pose halves frontal adaptable damage after armor/other reductions.
+34-tick guard cooldown; reactive guard can interrupt recovery but not committed strikes.
+
+ADAPTATION
+Each hostile hit restarts the 200-tick quiet timer and interrupts a turning wheel.
+After that quiet period the wheel performs a 20-tick, 45-degree turn.
+Each completed turn learns ALL distinct remembered attacks, not just the latest hit.
+New hits accumulate in a batch and never overwrite earlier hits when restarting the timer.
+Each attack receives one +33% step and each distinct category one +15% step per turn.
+Repeated hits or several abilities sharing a category do not multiply that turn's gain.
+All unfinished adaptations continue together during subsequent quiet periods until immunity.
+Pending memory is bounded to the most recent 128 distinct attacks and 32 categories.
+Exact attack resistance: 33%, 66%, 99%, 100%.
+Element OR physical-type resistance: +15% per turn, reaching 100% on turn seven.
+For a hit covered by both, the stronger resistance applies; the two do not add.
+Haki nature never becomes a learned category. Special and void damage are exempt.
+Learning belongs to that summon and resets when a new Mahoraga is summoned.
+
+COMBAT
+Defends owner, scoreboard teammates, MMNM crewmates and owner's tamed entities.
+Learns individual opponents' melee pressure, ranged use and retreating behavior.
+Uses predictive pursuit, reactive blocks, collision-checked lateral dodges,
+MMNM Geppo, aerial takedowns, block throws and air blasts.
+Returns toward the owner before reaching the hard 50-block leash.
+If displaced past the leash, moves to safe nearby ground or dismisses if blocked.
+Block removal respects mobGriefing, Forge break cancellation and tile entities.
+
+MODEL
+Source: C:/blockbench/mahoraga.bbmodel. Original source file was not edited.
+All 420 optimized cubes and embedded texture preserved. Sword/head-wing transforms unchanged.
+Resting fingers are curled into fists; two thumb joints complete the closed hand pose.
+Two animation-only joints control abdomen/cheek inflation; no new cubes.
+Monotone motion curves, staggered body follow-through, short lunges and blended transitions.
+Run uses an upright support leg, folded heel recovery, opposing arm swings and mild hip bounce.
+Walk/run blending shares one continuous footfall phase while retaining each gait's cadence.
+Overhead slam extends and strikes with the right blade arm only; the left arm counterbalances.
+The downstroke still lands at tick 24; damage, range and cooldowns are unchanged.
+17 animation clips in mahoraga_animated.bbmodel, including reverse-summon dismissal.
+Portal, sword arcs, impact rings and air pressure trails use small batched meshes.
+
+VERIFICATION
+82 standalone Java checks cover adaptation timing, interruptions, immunity, multi-attack batches,
+shared-category deduplication, bounded memory, tactical learning, projectile prediction,
+action mapping and guard recovery.
+3847 animation checks cover running posture, seamless loops, blade-only slam timing,
+and reversed dismissal keys without unwinding the adaptation wheel.
+Geometry, non-finger original transforms and texture match the source exactly.
+Animation contact sheet and closed-fist render visually inspected.
+Full Gradle build passed. Earlier implementation also passed a server startup check.
+The latest armor/Haki/audio changes have not had an in-game combat test.
+Existing unrelated resource/configuration warnings remain in the modpack.
+Client-side combat, animation blending and multiplayer balance need in-game testing.

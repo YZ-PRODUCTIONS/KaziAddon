@@ -4,7 +4,6 @@
       "name": "mineminenomi:fruits",
       "rolls": 5,
       "entries": [
-
         {
           "type": "minecraft:item",
           "weight": 100,
@@ -115,7 +114,6 @@
           ],
           "name": "cartaddon:fuwa_fuwa_no_mi"
         },
-
         {
           "type": "minecraft:item",
           "weight": 100,
@@ -266,7 +264,6 @@
           ],
           "name": "mineminenomi:gomu_gomu_no_mi"
         },
-
         {
           "type": "minecraft:item",
           "weight": 100,
@@ -456,6 +453,16 @@
             }
           ],
           "name": "cartaddon:kama_kama_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "kazimod:ki_ki_no_mi_model_tung_tung_tung_sahur"
         }
       ],
       "conditions": [

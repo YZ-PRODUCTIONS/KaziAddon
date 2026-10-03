@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "kazimod:items/ki_ki_no_mi_model_tung_tung_tung_sahur"
+  }
+}

@@ -66,4 +66,8 @@ public class KaziResources {
         PlayingCard            = new ResourceLocation("kazimod", "textures/particle/playing_card.png");
         PetalBlade             = new ResourceLocation("kazimod", "textures/particle/petal_blade.png");
     }
+    public static final ResourceLocation AngelParticle1         = new ResourceLocation("kazimod", "textures/particle/angel_particle_1.png");
+    public static final ResourceLocation AngelParticle2         = new ResourceLocation("kazimod", "textures/particle/angel_particle_2.png");
+    public static final ResourceLocation DivineResonance        = new ResourceLocation("kazimod", "textures/particle/divine_resonance_particle.png");
+    public static final ResourceLocation LightPortal            = new ResourceLocation("kazimod", "textures/particle/light_portal_particle.png");
 }

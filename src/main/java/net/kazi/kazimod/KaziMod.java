@@ -47,6 +47,8 @@ public class KaziMod {
         KaziBlocks.BLOCKS.register(modEventBus);
         KaziBlocks.ITEMS.register(modEventBus);
         NusuEvents.register();
+        net.kazi.kazimod.mammoth.MammothFeatures.init(modEventBus);
+        net.kazi.kazimod.mahoraga.MahoragaFeatures.init(modEventBus);
 
         modEventBus.addListener((Consumer<FMLCommonSetupEvent>) this::commonSetup);
 
@@ -63,6 +65,7 @@ public class KaziMod {
         MinecraftForge.EVENT_BUS.register(new RecipeRemovalHandler());
         MinecraftForge.EVENT_BUS.register(new BossWaterCancelHandler());
         MinecraftForge.EVENT_BUS.register(new BootBoostFallHandler());
+        net.kazi.kazimod.preserved.PreservedFeatures.init();
         LOGGER.info("kazimod constructed");
     }
 

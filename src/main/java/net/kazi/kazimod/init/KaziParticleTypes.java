@@ -61,4 +61,12 @@ public class KaziParticleTypes {
     public static void register(IEventBus eventBus) {
         KaziRegistry.PARTICLE_TYPES.register(eventBus);
     }
+    public static final RegistryObject<ParticleType<SimpleParticleData>> ANGEL_PARTICLE_1 =
+            KaziRegistry.registerParticleType("angel_particle_1", SimpleParticleData::new);
+    public static final RegistryObject<ParticleType<SimpleParticleData>> ANGEL_PARTICLE_2 =
+            KaziRegistry.registerParticleType("angel_particle_2", SimpleParticleData::new);
+    public static final RegistryObject<ParticleType<SimpleParticleData>> DIVINE_RESONANCE =
+            KaziRegistry.registerParticleType("divine_resonance_particle", SimpleParticleData::new);
+    public static final RegistryObject<ParticleType<SimpleParticleData>> LIGHT_PORTAL =
+            KaziRegistry.registerParticleType("light_portal_particle", SimpleParticleData::new);
 }

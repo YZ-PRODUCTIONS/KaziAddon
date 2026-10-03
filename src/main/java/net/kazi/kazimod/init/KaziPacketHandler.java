@@ -16,8 +16,8 @@ import java.util.Optional;
 
 public class KaziPacketHandler {
 
-    // Reality Marble music control adds a packet; reject mismatched older peers at login.
-    private static final String PROTOCOL_VERSION = "5";
+    // Mammoth attack animation synchronization requires matching client/server packets.
+    private static final String PROTOCOL_VERSION = "7";
     private static int id = 0;
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
@@ -76,6 +76,11 @@ public class KaziPacketHandler {
                 net.kazi.kazimod.network.RealityMarbleMusicPacket::handle,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT)
         );
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.MammothAnimationPacket.class,
+                net.kazi.kazimod.network.MammothAnimationPacket::encode,
+                net.kazi.kazimod.network.MammothAnimationPacket::decode,
+                net.kazi.kazimod.network.MammothAnimationPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 
     public static void syncEntitySize(Entity entity) {

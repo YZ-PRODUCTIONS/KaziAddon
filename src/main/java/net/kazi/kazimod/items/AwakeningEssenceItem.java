@@ -91,9 +91,11 @@ public class AwakeningEssenceItem extends Item {
         boolean isNetsu = fruit.isPresent() && NETSU_NETSU_NO_MI.equals(fruit.get());
         boolean isKira = fruit.isPresent() && KIRA_KIRA_NO_MI.equals(fruit.get());
         boolean isVampire = fruit.isPresent() && BATTO_BATTO_NO_MI_MODEL_VAMPIRE.equals(fruit.get());
+        boolean isKame = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.KAME_KAME_NO_MI);
+        boolean isKage = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.KAGE_KAGE_NO_MI);
 
         if (!isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi
-                && !isNetsu && !isKira && !isVampire) {
+                && !isNetsu && !isKira && !isVampire && !isKame && !isKage) {
             player.sendMessage(new StringTextComponent(
                             "\u00a7cOnly a user eligible for awakening can use this item."),
                     player.getUUID());
@@ -106,7 +108,7 @@ public class AwakeningEssenceItem extends Item {
             return ActionResult.fail(stack);
         }
 
-        boolean bypassBossTrial = isNetsu || isKira || isVampire;
+        boolean bypassBossTrial = isNetsu || isKira || isVampire || isKame || isKage;
 
         if (!bypassBossTrial && hasActiveTrial(serverWorld, player.getUUID())) {
             player.sendMessage(new StringTextComponent(

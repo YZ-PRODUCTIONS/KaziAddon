@@ -1,6 +1,6 @@
 package net.kazi.kazimod.entities.projectiles;
 
-import net.kazi.kazimod.particles.PlayingCardParticleEffect;
+import net.kazi.kazimod.kake.KakeVisuals;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
@@ -24,6 +24,7 @@ public class PlayingCardProjectile extends AbilityProjectileEntity {
         setGravity(0.0f);
         setPassThroughEntities();
         setEntityCollisionSize(1.0);
-        // No onTickEvent — PlayingCardRenderer handles the visual as a spinning quad
+        this.onEntityImpactEvent=target->KakeVisuals.impact(this,getThrower(),3);
+        this.onBlockImpactEvent=pos->KakeVisuals.impact(this,getThrower(),3);
     }
 }

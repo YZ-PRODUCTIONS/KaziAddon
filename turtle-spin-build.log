@@ -1,0 +1,124 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.4/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+MixinGradle did not locate the diffplug APT plugin, skipping eclipse task configuration
+
+> Task :downloadMcpConfig
+> Task :extractSrg UP-TO-DATE
+> Task :createMcpToSrg UP-TO-DATE
+
+> Task :compileJava
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\setup\HakiAbilityInjector.java:7: warning: sun.misc.Unsafe is internal proprietary API and may be removed in a future release
+import sun.misc.Unsafe;
+               ^
+Note: SpongePowered MIXIN Annotation Processor Version=0.8.5 (MixinGradle Version=0.7)
+Note: Supported obfuscation types: ObfuscationServiceMCP supports [notch] ObfuscationServiceFG3 supports [searge]
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\client\TenkiTornadoRendererMixin.java:12: warning: Mixin target net.kazi.kazimod.renderers.abilities.WhiteTornadoRenderer is public and should be specified in value
+@Mixin(targets="net.kazi.kazimod.renderers.abilities.WhiteTornadoRenderer",remap=false)
+^
+Note: Loading searge mappings from C:\Users\User\IdeaProjects\KaziAddon\build\createMcpToSrg\output.tsrg
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiBoltVfxMixin.java:7: warning: Mixin target net.kazi.kazimod.abilities.Tenki.ThunderstormAbility is public and should be specified in value
+@Mixin(targets={"net.kazi.kazimod.abilities.Tenki.ThunderstormAbility","net.kazi.kazimod.abilities.Tenki.TornadoWrathAbility"},remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiBoltVfxMixin.java:7: warning: Mixin target net.kazi.kazimod.abilities.Tenki.TornadoWrathAbility is public and should be specified in value
+@Mixin(targets={"net.kazi.kazimod.abilities.Tenki.ThunderstormAbility","net.kazi.kazimod.abilities.Tenki.TornadoWrathAbility"},remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiCloudVfxMixin.java:10: warning: Mixin target net.kazi.kazimod.abilities.Tenki.CloudyDayAbility is public and should be specified in value
+@Mixin(targets={"net.kazi.kazimod.abilities.Tenki.CloudyDayAbility","net.kazi.kazimod.abilities.Tenki.GaleStormAbility","net.kazi.kazimod.abilities.Tenki.ThunderstormAbility"},remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiCloudVfxMixin.java:10: warning: Mixin target net.kazi.kazimod.abilities.Tenki.GaleStormAbility is public and should be specified in value
+@Mixin(targets={"net.kazi.kazimod.abilities.Tenki.CloudyDayAbility","net.kazi.kazimod.abilities.Tenki.GaleStormAbility","net.kazi.kazimod.abilities.Tenki.ThunderstormAbility"},remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiCloudVfxMixin.java:10: warning: Mixin target net.kazi.kazimod.abilities.Tenki.ThunderstormAbility is public and should be specified in value
+@Mixin(targets={"net.kazi.kazimod.abilities.Tenki.CloudyDayAbility","net.kazi.kazimod.abilities.Tenki.GaleStormAbility","net.kazi.kazimod.abilities.Tenki.ThunderstormAbility"},remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiExplosionVfxMixin.java:9: warning: Mixin target net.kazi.kazimod.entities.projectiles.WindGustProjectile is public and should be specified in value
+@Mixin(targets={"net.kazi.kazimod.entities.projectiles.WindGustProjectile","net.kazi.kazimod.entities.projectiles.GomuGomuNoKaminariProjectile","xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity"},remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiExplosionVfxMixin.java:9: warning: Mixin target net.kazi.kazimod.entities.projectiles.GomuGomuNoKaminariProjectile is public and should be specified in value
+@Mixin(targets={"net.kazi.kazimod.entities.projectiles.WindGustProjectile","net.kazi.kazimod.entities.projectiles.GomuGomuNoKaminariProjectile","xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity"},remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiExplosionVfxMixin.java:9: warning: Mixin target xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity is public and should be specified in value
+@Mixin(targets={"net.kazi.kazimod.entities.projectiles.WindGustProjectile","net.kazi.kazimod.entities.projectiles.GomuGomuNoKaminariProjectile","xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity"},remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiGaleStormMixin.java:14: warning: Mixin target net.kazi.kazimod.abilities.Tenki.GaleStormAbility is public and should be specified in value
+@Mixin(targets="net.kazi.kazimod.abilities.Tenki.GaleStormAbility",remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiLightningVfxMixin.java:15: warning: Mixin target net.kazi.kazimod.abilities.Tenki.LightningJabAbility is public and should be specified in value
+@Mixin(targets="net.kazi.kazimod.abilities.Tenki.LightningJabAbility",remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiTornadoModeMixin.java:9: warning: Mixin target net.kazi.kazimod.abilities.Tenki.TornadoWrathAbility is public and should be specified in value
+@Mixin(targets="net.kazi.kazimod.abilities.Tenki.TornadoWrathAbility",remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\balance\TenkiWindVfxMixin.java:9: warning: Mixin target net.kazi.kazimod.entities.projectiles.WindGustProjectile is public and should be specified in value
+@Mixin(targets="net.kazi.kazimod.entities.projectiles.WindGustProjectile",remap=false)
+^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\AkumaNoMiBoxMixin.java:55: warning: Cannot find target method "func_77659_a(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;" for @Inject.method="func_77659_a(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;" in xyz.pixelatedw.mineminenomi.items.AkumaNoMiBoxItem
+    @Inject(
+    ^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\CartRaceReplace.java:177: warning: Cannot find target method "addUnlockedAbility(Lxyz/pixelatedw/mineminenomi/api/abilities/AbilityCore;Lxyz/pixelatedw/mineminenomi/api/abilities/AbilityUnlock;)Z" for @Inject.method="addUnlockedAbility(Lxyz/pixelatedw/mineminenomi/api/abilities/AbilityCore;Lxyz/pixelatedw/mineminenomi/api/abilities/AbilityUnlock;)Z" in xyz.pixelatedw.mineminenomi.wypi.WyRegistry
+    @Inject(
+    ^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\CartRaceReplace.java:192: warning: Cannot find target method "addUnlockedAbility(Lxyz/pixelatedw/mineminenomi/api/abilities/AbilityCoreUnlockWrapper;)Z" for @Inject.method="addUnlockedAbility(Lxyz/pixelatedw/mineminenomi/api/abilities/AbilityCoreUnlockWrapper;)Z" in xyz.pixelatedw.mineminenomi.wypi.WyRegistry
+    @Inject(
+    ^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\CartRaceReplace.java:207: warning: Cannot find target method "addPassiveAbility(Lxyz/pixelatedw/mineminenomi/api/abilities/IAbility;)Z" for @Inject.method="addPassiveAbility(Lxyz/pixelatedw/mineminenomi/api/abilities/IAbility;)Z" in xyz.pixelatedw.mineminenomi.wypi.WyRegistry
+    @Inject(
+    ^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\mixin\CartRaceReplace.java:222: warning: Cannot find target method "setEquippedAbility(ILxyz/pixelatedw/mineminenomi/api/abilities/IAbility;)Z" for @Inject.method="setEquippedAbility(ILxyz/pixelatedw/mineminenomi/api/abilities/IAbility;)Z" in xyz.pixelatedw.mineminenomi.wypi.WyRegistry
+    @Inject(
+    ^
+Note: Writing refmap to C:\Users\User\IdeaProjects\KaziAddon\build\tmp\compileJava\compileJava-refmap.json
+Note: Writing refmap to C:\Users\User\IdeaProjects\KaziAddon\build\tmp\compileJava\compileJava-refmap.json
+Note: Writing searge composite mappings to C:\Users\User\IdeaProjects\KaziAddon\build\tmp\compileJava\compileJava-mappings.tsrg
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\setup\HakiAbilityInjector.java:7: warning: Unsafe is internal proprietary API and may be removed in a future release
+import sun.misc.Unsafe;
+               ^
+Note: Writing refmap to C:\Users\User\IdeaProjects\KaziAddon\build\tmp\compileJava\compileJava-refmap.json
+Note: Writing refmap to C:\Users\User\IdeaProjects\KaziAddon\build\tmp\compileJava\compileJava-refmap.json
+Note: Writing searge composite mappings to C:\Users\User\IdeaProjects\KaziAddon\build\tmp\compileJava\compileJava-mappings.tsrg
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\setup\HakiAbilityInjector.java:7: warning: Unsafe is internal proprietary API and may be removed in a future release
+import sun.misc.Unsafe;
+               ^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\setup\HakiAbilityInjector.java:71: warning: Unsafe is internal proprietary API and may be removed in a future release
+            Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+                                ^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\setup\HakiAbilityInjector.java:73: warning: Unsafe is internal proprietary API and may be removed in a future release
+            Unsafe unsafe = (Unsafe) unsafeField.get(null);
+            ^
+C:\Users\User\IdeaProjects\KaziAddon\src\main\java\net\kazi\kazimod\setup\HakiAbilityInjector.java:73: warning: Unsafe is internal proprietary API and may be removed in a future release
+            Unsafe unsafe = (Unsafe) unsafeField.get(null);
+                             ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+24 warnings
+
+> Task :addMixinsToJar
+> Task :processResources
+> Task :classes
+> Task :jar
+> Task :configureReobfTaskForReobfJar
+> Task :reobfJar
+> Task :configureReobfTaskForReobfJarJar
+> Task :addMixinsToJarJar
+> Task :jarJar SKIPPED
+> Task :reobfJarJar SKIPPED
+> Task :assemble
+> Task :compileTestJava NO-SOURCE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :test NO-SOURCE
+> Task :check UP-TO-DATE
+> Task :build
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.4/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 22s
+11 actionable tasks: 9 executed, 2 up-to-date

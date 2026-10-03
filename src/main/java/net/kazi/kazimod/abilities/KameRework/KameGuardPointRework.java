@@ -74,7 +74,7 @@ public class KameGuardPointRework extends MorphAbility2 {
     }
 
     private void preventJumping(LivingEntity user, IAbility ability) {
-        if (!this.isContinuous()) return;
+        if (!this.isContinuous() || !ModMorphs.KAME_GUARD.get().isActive(user)) return;
 
         user.setJumping(false);
         Vector3d movement = user.getDeltaMovement();

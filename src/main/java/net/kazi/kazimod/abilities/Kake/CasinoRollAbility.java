@@ -28,11 +28,10 @@ import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
-import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
-import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import net.kazi.kazimod.init.KaziEffects;
-import net.kazi.kazimod.init.KaziParticleEffects;
-import net.kazi.kazimod.particles.LuckySlotParticleEffect;
+import net.kazi.kazimod.kake.KakeVfxEntity;
+import net.kazi.kazimod.kake.KakeVisuals;
+import net.minecraft.util.ResourceLocation;
 import net.kazi.kazimod.entities.GiantDiceEntity;
 import net.kazi.kazimod.entities.projectiles.CasinoChipProjectile;
 import net.kazi.kazimod.entities.projectiles.CoinProjectile;
@@ -71,16 +70,6 @@ public class CasinoRollAbility extends Ability {
 
     private static final double STORM_RADIUS    = 40.0;
     private static final double STORM_RADIUS_SQ = STORM_RADIUS * STORM_RADIUS;
-    private static final int    STORM_POINTS    = 16;
-    private static final double[] STORM_COS     = new double[STORM_POINTS];
-    private static final double[] STORM_SIN     = new double[STORM_POINTS];
-    static {
-        for (int i = 0; i < STORM_POINTS; i++) {
-            double a = i * (2.0 * Math.PI / STORM_POINTS);
-            STORM_COS[i] = Math.cos(a); STORM_SIN[i] = Math.sin(a);
-        }
-    }
-
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
             "kazimod", "casino_roll",
             new Pair[]{ ImmutablePair.of(
@@ -102,6 +91,7 @@ public class CasinoRollAbility extends Ability {
     private int           contTick    = 0;
     private Vector3d      stormOrigin = null;
     private AxisAlignedBB stormBox    = null;
+    private KakeVfxEntity visual;
 
     public CasinoRollAbility(AbilityCore<CasinoRollAbility> core) {
         super(core);
@@ -126,6 +116,7 @@ public class CasinoRollAbility extends Ability {
                 continuousComponent, swingTrigger
         });
         super.addUseEvent(this::onUse);
+        addRemoveEvent((entity,ability)->{if(continuousComponent.isContinuous())continuousComponent.stopContinuity(entity);stopVisual();});
     }
 
     private void onUse(LivingEntity entity, IAbility ability) {
@@ -144,6 +135,7 @@ public class CasinoRollAbility extends Ability {
             }
         }
 
+        KakeVisuals.cast(entity,mode.ordinal());
         switch (mode) {
             case COIN_FLICK:       doCoinFlick(entity);      break;
             case LOADED_DICE:      doLoadedDice(entity);     break;
@@ -181,6 +173,7 @@ public class CasinoRollAbility extends Ability {
 
     private void onContinuousEnd(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
+        stopVisual();
         if (activeMode == ActiveMode.STORM) { stormOrigin = null; stormBox = null; }
         if (activeMode == ActiveMode.JACKPOT) entity.getPersistentData().putBoolean("kazi_jackpot_dmg_buff", false);
         contTick = 0; activeMode = ActiveMode.NONE;
@@ -217,10 +210,12 @@ public class CasinoRollAbility extends Ability {
 
     private void doDoubleDown(LivingEntity entity) {
         entity.getPersistentData().putBoolean("kazi_double_down", true);
+        KakeVisuals.aura(entity,KakeVfxEntity.DOUBLE,36,2);
     }
 
     private void startJackpotShot(LivingEntity entity) {
         activeMode = ActiveMode.JACKPOT_SHOT; contTick = 0;
+        visual=KakeVisuals.aura(entity,KakeVfxEntity.SHOT,(int)JACKPOT_SHOT_DUR,2);
         continuousComponent.startContinuity(entity, JACKPOT_SHOT_DUR);
     }
 
@@ -235,6 +230,7 @@ public class CasinoRollAbility extends Ability {
 
     private void startChipRain(LivingEntity entity) {
         activeMode = ActiveMode.CHIP_RAIN; contTick = 0;
+        visual=KakeVisuals.aura(entity,KakeVfxEntity.RAIN,(int)CHIP_RAIN_DUR,28);
         continuousComponent.startContinuity(entity, CHIP_RAIN_DUR);
     }
 
@@ -254,6 +250,7 @@ public class CasinoRollAbility extends Ability {
 
     private void doLuckySeven(LivingEntity entity) {
         if (entity.level.isClientSide) return;
+        KakeVisuals.aura(entity,KakeVfxEntity.SEVEN,32,4);
         List<LivingEntity> targets = entity.level.getEntitiesOfClass(LivingEntity.class,
                 new AxisAlignedBB(entity.getX()-LUCKY_SEVEN_RADIUS, entity.getY()-2, entity.getZ()-LUCKY_SEVEN_RADIUS,
                         entity.getX()+LUCKY_SEVEN_RADIUS, entity.getY()+10, entity.getZ()+LUCKY_SEVEN_RADIUS),
@@ -267,6 +264,7 @@ public class CasinoRollAbility extends Ability {
         double bx = stormOrigin.x, by = entity.getY(), bz = stormOrigin.z;
         stormBox = new AxisAlignedBB(bx-STORM_RADIUS, by-4, bz-STORM_RADIUS, bx+STORM_RADIUS, by+36, bz+STORM_RADIUS);
         activeMode = ActiveMode.STORM; contTick = 0;
+        visual=KakeVfxEntity.spawn(entity,KakeVfxEntity.STORM,stormOrigin,(int)STORM_DUR,(float)STORM_RADIUS,0,false);
         continuousComponent.startContinuity(entity, STORM_DUR);
     }
 
@@ -281,18 +279,6 @@ public class CasinoRollAbility extends Ability {
                         if (dx*dx + dz*dz < STORM_RADIUS_SQ) return;
                         AbilityHelper.setDeltaMovement(t, new Vector3d(bx, t.getY(), bz).subtract(t.position()).normalize());
                     });
-        }
-
-        if (contTick % 4 == 0) {
-            ParticleEffect<?> cardFx = (ParticleEffect<?>) KaziParticleEffects.PLAYING_CARD.get();
-            double[] yLayers = { by+1, by+9, by+17 };
-            for (double ry : yLayers) {
-                for (int i = 0; i < STORM_POINTS; i++) {
-                    WyHelper.spawnParticleEffect(cardFx, entity,
-                            bx + STORM_RADIUS*STORM_COS[i], ry,
-                            bz + STORM_RADIUS*STORM_SIN[i]);
-                }
-            }
         }
 
         if (contTick % 3 == 0) {
@@ -341,6 +327,7 @@ public class CasinoRollAbility extends Ability {
         entity.getPersistentData().putBoolean("kazi_jackpot_dmg_buff", true);
         entity.getPersistentData().putInt("kazi_jackpot_dmg_ticks", JACKPOT_BUFF_TICKS);
         activeMode = ActiveMode.JACKPOT; contTick = 0;
+        visual=KakeVisuals.aura(entity,KakeVfxEntity.JACKPOT,(int)JACKPOT_DUR,JACKPOT_RADIUS);
         continuousComponent.startContinuity(entity, JACKPOT_DUR);
     }
 
@@ -402,6 +389,7 @@ public class CasinoRollAbility extends Ability {
             if (ls != null) ls.setSlotNumber(entity, -1);
         }
     }
+    private void stopVisual(){if(visual!=null){visual.remove();visual=null;}}
 
     public void setModeForRoll(LivingEntity entity, int roll) {
         switch (roll) {
@@ -421,6 +409,7 @@ public class CasinoRollAbility extends Ability {
         INSTANCE = (new AbilityCore.Builder<>("Casino Roll", AbilityCategory.DEVIL_FRUITS,
                 AbilityType.ACTION, CasinoRollAbility::new))
                 .addDescriptionLine(DESCRIPTION)
+                .setIcon(new ResourceLocation("kazimod","textures/abilities/casino_roll.png"))
                 .setSourceHakiNature(SourceHakiNature.SPECIAL)
                 .setSourceElement(SourceElement.NONE)
                 .setSourceType(SourceType.PROJECTILE, SourceType.UNKNOWN)
