@@ -14,10 +14,7 @@ public final class VfxDetail {
     private VfxDetail() { }
 
     public static int level(Entity entity, EntityRendererManager renderer, double visualRadius) {
-        Minecraft client = Minecraft.getInstance();
-        int detail = client.options.particles == ParticleStatus.MINIMAL ? 2
-                : client.options.particles == ParticleStatus.DECREASED
-                || client.options.graphicsMode == GraphicsFanciness.FAST ? 1 : 0;
+        int detail = settingsLevel();
         Vector3d camera = renderer.camera.getPosition();
         double distance = camera.distanceToSqr(entity.position());
         // Measure from the effect's edge, not only its origin: large blasts must
@@ -25,6 +22,19 @@ public final class VfxDetail {
         if (distance > (visualRadius + 96) * (visualRadius + 96)) return 2;
         if (distance > (visualRadius + 40) * (visualRadius + 40)) return Math.max(1, detail);
         return detail;
+    }
+
+    /** Use the distance to an elongated effect's surface, rather than its enclosing sphere. */
+    public static int levelForDistance(double distance) {
+        int detail = settingsLevel();
+        return distance > 96 ? 2 : distance > 40 ? Math.max(1, detail) : detail;
+    }
+
+    private static int settingsLevel() {
+        Minecraft client = Minecraft.getInstance();
+        return client.options.particles == ParticleStatus.MINIMAL ? 2
+                : client.options.particles == ParticleStatus.DECREASED
+                || client.options.graphicsMode == GraphicsFanciness.FAST ? 1 : 0;
     }
 
     static int count(int detail, int high, int medium, int low) {

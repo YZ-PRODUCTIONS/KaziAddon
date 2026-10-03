@@ -57,6 +57,7 @@ public class NusuEvents {
         PlayerEntity player = (PlayerEntity) event.getEntityLiving();
         if (player.level.isClientSide) return;
 
+        expireUnusedSkillHunterExRoll(player);
         finishUsedSkillHunterExRoll(player);
 
         if (player.getPersistentData().contains(NusuStolenData.VICTIM_KEY)) {
@@ -266,6 +267,59 @@ public class NusuEvents {
         syncAbilityData(player, data);
     }
 
+    private static void expireUnusedSkillHunterExRoll(PlayerEntity player) {
+        if (!SkillHunterEXAbility.hasActiveRoll(player)
+                || player.getPersistentData().getBoolean(SkillHunterEXAbility.ROLLED_USED_TAG)) {
+            return;
+        }
+
+        // Older saves with an active roll predate the timestamp. Give those
+        // rolls a full grace period when they are first loaded.
+        if (!player.getPersistentData().contains(SkillHunterEXAbility.ROLLED_EXPIRY_TAG)) {
+            player.getPersistentData().putLong(SkillHunterEXAbility.ROLLED_EXPIRY_TAG,
+                    player.level.getGameTime() + SkillHunterEXAbility.ROLLED_LIFETIME_TICKS);
+            return;
+        }
+        if (player.level.getGameTime() < player.getPersistentData().getLong(
+                SkillHunterEXAbility.ROLLED_EXPIRY_TAG)) {
+            return;
+        }
+
+        IAbilityData data = AbilityDataCapability.get(player);
+        if (data == null) return;
+
+        AbilityCore<?> rolledCore = null;
+        try {
+            rolledCore = ModRegistries.ABILITIES.getValue(new ResourceLocation(
+                    player.getPersistentData().getString(SkillHunterEXAbility.ROLLED_ABILITY_TAG)));
+        } catch (Exception ignored) {
+            // A removed or renamed move still needs Skill Hunter EX restored.
+        }
+
+        if (rolledCore != null) {
+            List<IAbility> equipped = data.getRawEquippedAbilities();
+            for (int slot = 0; slot < equipped.size(); slot++) {
+                IAbility equippedAbility = equipped.get(slot);
+                if (equippedAbility != null && equippedAbility.getCore() == rolledCore) {
+                    data.setEquippedAbility(slot, null);
+                }
+            }
+            data.removeUnlockedAbility(rolledCore);
+        }
+
+        int originalSlot = player.getPersistentData().getInt(SkillHunterEXAbility.ROLLED_SLOT_TAG);
+        List<IAbility> equipped = data.getRawEquippedAbilities();
+        if (originalSlot >= 0 && originalSlot < equipped.size()) {
+            SkillHunterEXAbility restored = SkillHunterEXAbility.INSTANCE.createAbility();
+            restored.startReturnCooldown(player);
+            data.setEquippedAbility(originalSlot, restored);
+        }
+
+        clearSkillHunterExRoll(player);
+        syncAbilityData(player, data);
+        sendMsg(player, "\u00a7eYour unused Skill Hunter EX roll expired");
+    }
+
     private static boolean isStillRunning(IAbility ability) {
         boolean charging = ability.getComponent(ModAbilityKeys.CHARGE)
                 .map(component -> ((ChargeComponent) component).isCharging()).orElse(false);
@@ -279,6 +333,7 @@ public class NusuEvents {
         entity.getPersistentData().remove(SkillHunterEXAbility.ROLLED_ABILITY_TAG);
         entity.getPersistentData().remove(SkillHunterEXAbility.ROLLED_SLOT_TAG);
         entity.getPersistentData().remove(SkillHunterEXAbility.ROLLED_USED_TAG);
+        entity.getPersistentData().remove(SkillHunterEXAbility.ROLLED_EXPIRY_TAG);
     }
 
     public static void syncAbilityData(PlayerEntity player, IAbilityData data) {

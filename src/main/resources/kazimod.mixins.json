@@ -32,6 +32,7 @@
     "AkumaNoMiBoxMixin"
   ],
   "client": [
+    "client.ShaNaqbaImuruAuraMixin",
     "client.LaserBeamRendererMixin",
     "client.KRoomSwordItemRendererMixin",
     "client.PunctureWilleSwordRenderMixin",

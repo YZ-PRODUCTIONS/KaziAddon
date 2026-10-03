@@ -25,6 +25,7 @@ extends Entity {
     public static final int PURPLE_IMPACT = 4;
     public static final int BLUE_PULL = 5;
     public static final int NUKE_IMPACT = 6;
+    public static final int RED_NUKE_IMPACT = 7;
     private static final DataParameter<Integer> MODE = EntityDataManager.defineId(KokuVfxEntity.class, DataSerializers.INT);
     private static final DataParameter<Integer> OWNER = EntityDataManager.defineId(KokuVfxEntity.class, DataSerializers.INT);
     private static final DataParameter<Integer> AGE = EntityDataManager.defineId(KokuVfxEntity.class, DataSerializers.INT);
@@ -32,6 +33,7 @@ extends Entity {
     private static final DataParameter<Float> PROGRESS = EntityDataManager.defineId(KokuVfxEntity.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SIZE = EntityDataManager.defineId(KokuVfxEntity.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> GROUND_OFFSET = EntityDataManager.defineId(KokuVfxEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> ANIMATION_SPEED = EntityDataManager.defineId(KokuVfxEntity.class, DataSerializers.FLOAT);
     private IAbility sourceAbility;
     private int lastRefresh;
 
@@ -57,15 +59,21 @@ extends Entity {
     }
 
     public static void impact(World world, Vector3d position, int mode, float radius) {
+        impact(world, position, mode, radius, 1.0F, 1.0F);
+    }
+
+    public static void impact(World world, Vector3d position, int mode, float radius,
+                              float animationSpeed, float durationMultiplier) {
         if (world.isClientSide) {
             return;
         }
         KokuVfxEntity effect = new KokuVfxEntity((EntityType<? extends KokuVfxEntity>)((EntityType)KaziEntities.KOKU_VFX.get()), world);
         effect.entityData.set(MODE, mode);
-        effect.entityData.set(DURATION, mode == NUKE_IMPACT ? 140 : mode == PURPLE_IMPACT ? 32 : 16);
+        effect.entityData.set(DURATION, Math.round((isNukeMode(mode) ? 140 : mode == PURPLE_IMPACT ? 32 : 16) * durationMultiplier));
+        effect.entityData.set(ANIMATION_SPEED, animationSpeed);
         effect.entityData.set(SIZE, Float.valueOf(radius));
         effect.setPos(position.x, position.y, position.z);
-        if (mode == NUKE_IMPACT) {
+        if (isNukeMode(mode)) {
             int x = net.minecraft.util.math.MathHelper.floor(position.x);
             int z = net.minecraft.util.math.MathHelper.floor(position.z);
             effect.entityData.set(GROUND_OFFSET, (float) (world.getHeight(net.minecraft.world.gen.Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z) - position.y));
@@ -122,14 +130,17 @@ extends Entity {
         }
     }
 
-    public float getNukeAge(float partial) { return 40.0F + getAge(partial); }
+    public float getNukeAge(float partial) { return 40.0F + getAge(partial) * entityData.get(ANIMATION_SPEED); }
+
+    public static boolean isNukeMode(int mode) { return mode == NUKE_IMPACT || mode == RED_NUKE_IMPACT; }
 
     public float getWaveRadius(float partial) {
-        return getSize() * (float) Math.pow(MathHelper.clamp(getAge(partial) / 100.0F, 0.0F, 1.0F), 0.7D);
+        return getSize() * (float) Math.pow(MathHelper.clamp(getAge(partial) * entityData.get(ANIMATION_SPEED) / 100.0F, 0.0F, 1.0F), 0.7D);
     }
 
     public float getVfxOpacity(float partial) {
-        return MathHelper.clamp((140.0F - getAge(partial)) / 40.0F, 0.0F, 1.0F);
+        float duration = entityData.get(DURATION);
+        return MathHelper.clamp((duration - getAge(partial)) / (duration * (40.0F / 140.0F)), 0.0F, 1.0F);
     }
 
     public float getGroundOffset() { return this.entityData.get(GROUND_OFFSET); }
@@ -164,6 +175,7 @@ extends Entity {
         this.entityData.define(PROGRESS, Float.valueOf(0.0f));
         this.entityData.define(SIZE, Float.valueOf(1.0f));
         this.entityData.define(GROUND_OFFSET, -1.5F);
+        this.entityData.define(ANIMATION_SPEED, 1.0F);
     }
 
     protected void readAdditionalSaveData(CompoundNBT nbt) {

@@ -1,4 +1,16 @@
 {
+  "winds_rapture_charge": {
+    "subtitle": "kazimod.subtitle.winds_rapture_charge",
+    "sounds": ["kazimod:winds_rapture_charge"]
+  },
+  "winds_rapture_release": {
+    "subtitle": "kazimod.subtitle.winds_rapture_release",
+    "sounds": ["kazimod:winds_rapture_release"]
+  },
+  "ea_cast": {
+    "subtitle": "kazimod.subtitle.ea_cast",
+    "sounds": [{"name": "kazimod:ea_cast", "stream": true}]
+  },
   "unlimited_lost_works_hit": {
     "subtitle": "kazimod.subtitle.unlimited_lost_works_hit",
     "sounds": [

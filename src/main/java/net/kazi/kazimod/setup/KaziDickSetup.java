@@ -51,6 +51,7 @@ import net.kazi.kazimod.abilities.GasuRework.GastilleRework;
 import net.kazi.kazimod.abilities.GasuRework.KarakuniRework;
 import net.kazi.kazimod.abilities.GomuRework.*;
 import net.kazi.kazimod.abilities.GoroRework.*;
+import net.kazi.kazimod.abilities.GoruRework.SeriousnessAbility;
 import net.kazi.kazimod.abilities.FuwaRework.ItemKaitenReworked;
 import net.kazi.kazimod.abilities.HieRework.IceAgeRework;
 import net.kazi.kazimod.abilities.HoroRework.MiniHollowRework;
@@ -528,6 +529,14 @@ public class KaziDickSetup {
                 SilentBoxAbility.INSTANCE,
                 SilentDeathAbility.INSTANCE
         );
+
+        // ── GORU GORU NO MI ──────────────────────────────────
+        FruitAbilityInjector.addAbilities(CartAbilities.GORU_GORU_NO_MI,
+                net.kazi.kazimod.abilities.GoruRework.ShaNaqbaImuruAbility.INSTANCE,
+                SeriousnessAbility.INSTANCE,
+                net.kazi.kazimod.abilities.GoruRework.EnkiduAbility.INSTANCE,
+                net.kazi.kazimod.abilities.GoruRework.GateOfBabylonAbility.INSTANCE,
+                net.kazi.kazimod.abilities.GoruRework.EaAbility.INSTANCE);
 
         // ── SUPA SUPA NO MI ──────────────────────────────────
         FruitAbilityInjector.removeAbilities(ModAbilities.SUPA_SUPA_NO_MI,

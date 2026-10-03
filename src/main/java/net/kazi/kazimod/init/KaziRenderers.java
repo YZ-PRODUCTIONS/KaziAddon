@@ -34,6 +34,11 @@ public class KaziRenderers {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.GATE_OF_BABYLON.get(), GateOfBabylonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.BABYLON_WEAPON.get(), BabylonWeaponRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.BABYLON_IMPACT.get(), BabylonImpactRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.ENKIDU_VFX.get(), EnkiduVfxRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.EA_VFX.get(), EaVfxRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(KaziEntities.GAE_BOLG_VFX.get(), GaeBolgVfxRenderer::new);
         event.enqueueWork(() -> {
             RenderingRegistry.registerEntityRenderingHandler(

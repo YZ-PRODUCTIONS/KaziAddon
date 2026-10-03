@@ -11,9 +11,8 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IWorld;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import xyz.pixelatedw.mineminenomi.api.abilities.Ability;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCategory;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
@@ -38,7 +37,11 @@ import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class KurozuRework
 extends Ability {
-    private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText("kazimod", "kurouzu", new Pair[]{ImmutablePair.of((Object)"Creates a strong gravitational force, that pulls the opponent towards the user.", null)});
+    // Cart initializes its Yami replacements during mod construction. Registering
+    // description text here would initialize WyRegistry/Forge registries too early.
+    private static final ITextComponent[] DESCRIPTION = {
+            new StringTextComponent("Creates a strong gravitational force, that pulls the opponent towards the user.")
+    };
     private static final float COOLDOWN = 300.0f;
     private static final float DAMAGE = 30.0f;
     private static final float CONTINUITY_TIME = 100.0f;

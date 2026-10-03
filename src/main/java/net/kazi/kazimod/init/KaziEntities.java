@@ -20,6 +20,36 @@ public class KaziEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(ForgeRegistries.ENTITIES, "kazimod");
 
+    public static final RegistryObject<EntityType<GateOfBabylonEntity>> GATE_OF_BABYLON =
+            ENTITY_TYPES.register("gate_of_babylon", () ->
+                    EntityType.Builder.<GateOfBabylonEntity>of(GateOfBabylonEntity::new, EntityClassification.MISC)
+                            .sized(0.1F, 0.1F).clientTrackingRange(10).setUpdateInterval(1)
+                            .noSummon().noSave().build("gate_of_babylon"));
+
+    public static final RegistryObject<EntityType<BabylonWeaponEntity>> BABYLON_WEAPON =
+            ENTITY_TYPES.register("babylon_weapon", () ->
+                    EntityType.Builder.<BabylonWeaponEntity>of(BabylonWeaponEntity::new, EntityClassification.MISC)
+                            .sized(0.6F, 0.6F).clientTrackingRange(8).setUpdateInterval(1)
+                            .noSummon().noSave().build("babylon_weapon"));
+
+    public static final RegistryObject<EntityType<BabylonImpactEntity>> BABYLON_IMPACT =
+            ENTITY_TYPES.register("babylon_impact", () ->
+                    EntityType.Builder.<BabylonImpactEntity>of(BabylonImpactEntity::new, EntityClassification.MISC)
+                            .sized(0.1F, 0.1F).clientTrackingRange(8).setUpdateInterval(20)
+                            .noSummon().noSave().build("babylon_impact"));
+
+    public static final RegistryObject<EntityType<EnkiduVfxEntity>> ENKIDU_VFX =
+            ENTITY_TYPES.register("enkidu_vfx", () ->
+                    EntityType.Builder.<EnkiduVfxEntity>of(EnkiduVfxEntity::new, EntityClassification.MISC)
+                            .sized(0.1F, 0.1F).clientTrackingRange(10).setUpdateInterval(2)
+                            .noSummon().noSave().build("enkidu_vfx"));
+
+    public static final RegistryObject<EntityType<EaVfxEntity>> EA_VFX =
+            ENTITY_TYPES.register("ea_vfx", () ->
+                    EntityType.Builder.<EaVfxEntity>of(EaVfxEntity::new, EntityClassification.MISC)
+                            .sized(0.1F, 0.1F).clientTrackingRange(12).setUpdateInterval(1)
+                            .noSummon().noSave().build("ea_vfx"));
+
     public static final RegistryObject<EntityType<ReplicatedSwordEntity>> REPLICATED_SWORD =
             ENTITY_TYPES.register("replicated_sword", () ->
                     EntityType.Builder.<ReplicatedSwordEntity>of(ReplicatedSwordEntity::new, EntityClassification.MISC)
