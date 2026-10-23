@@ -256,3 +256,325 @@
 [22Oct2026 17:55:26.531] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
 [22Oct2026 17:55:26.531] [Render thread/INFO] [net.minecraft.client.renderer.texture.AtlasTexture/]: Created: 1024x512x0 minecraft:textures/atlas/mob_effects.png-atlas
 [22Oct2026 17:55:26.733] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: DONT_CRASH
+[22Oct2026 17:56:28.147] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[22Oct2026 17:56:28.147] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22Oct2026 17:56:28.148] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22Oct2026 17:56:28.148] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[22Oct2026 17:56:28.148] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22Oct2026 17:56:28.150] [Render thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar, mine-mine-no-mi-1.16.5-0.10.11_mapped_official_1.16.5.jar, curios-309927-4419403_mapped_official_1.16.5.jar, cartaddon-0.7.5_mapped_official_1.16.5.jar, main
+[22Oct2026 17:56:28.923] [Render thread/ERROR] [net.minecraft.tags.TagCollectionReader/]: Couldn't load entity_type tag mineminenomi:magnetic as it is missing following references: cartaddom:pacifista_mark_two (from cartaddon-0.7.5_mapped_official_1.16.5.jar),cartaddom:pacifista_world_boss (from cartaddon-0.7.5_mapped_official_1.16.5.jar)
+[22Oct2026 17:56:28.946] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:zoro_robe
+com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:zoro_robe'
+	at net.minecraft.item.crafting.ShapedRecipe.lambda$itemFromJson$0(ShapedRecipe.java:262) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at java.util.Optional.orElseThrow(Optional.java:290) ~[?:1.8.0_482]
+	at net.minecraft.item.crafting.ShapedRecipe.itemFromJson(ShapedRecipe.java:261) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.ShapedRecipe$Serializer.fromJson(ShapedRecipe.java:281) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.ShapedRecipe$Serializer.fromJson(ShapedRecipe.java:272) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.fromJson(RecipeManager.java:141) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.apply(RecipeManager.java:61) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.apply(RecipeManager.java:38) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.resources.ReloadListener.lambda$reload$1(ReloadListener.java:14) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at java.util.concurrent.CompletableFuture.uniAccept(CompletableFuture.java:670) ~[?:1.8.0_482]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:646) ~[?:1.8.0_482]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:456) ~[?:1.8.0_482]
+	at net.minecraft.resources.AsyncReloader.lambda$null$3(AsyncReloader.java:66) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.doRunTask(ThreadTaskExecutor.java:136) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.RecursiveEventLoop.doRunTask(RecursiveEventLoop.java:22) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.pollTask(ThreadTaskExecutor.java:109) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.managedBlock(ThreadTaskExecutor.java:119) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.makeServerStem(Minecraft.java:1865) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.loadWorld(Minecraft.java:1714) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.loadLevel(Minecraft.java:1683) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.loadWorld(WorldSelectionList.java:364) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.joinWorld(WorldSelectionList.java:273) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.mouseClicked(WorldSelectionList.java:228) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.widget.list.AbstractList.mouseClicked(AbstractList.java:309) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.INestedGuiEventHandler.mouseClicked(INestedGuiEventHandler.java:28) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$onPress$0(MouseHelper.java:87) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.Screen.wrapScreenError(Screen.java:427) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.onPress(MouseHelper.java:85) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$null$4(MouseHelper.java:181) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.execute(ThreadTaskExecutor.java:86) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$setup$5(MouseHelper.java:180) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at org.lwjgl.glfw.GLFWMouseButtonCallbackI.callback(GLFWMouseButtonCallbackI.java:36) ~[lwjgl-glfw-3.2.2.jar:build 10]
+	at org.lwjgl.system.JNI.invokeV(Native Method) ~[lwjgl-3.2.2.jar:build 10]
+	at org.lwjgl.glfw.GLFW.glfwWaitEventsTimeout(GLFW.java:3174) ~[lwjgl-glfw-3.2.2.jar:build 10]
+	at com.mojang.blaze3d.systems.RenderSystem.limitDisplayFPS(RenderSystem.java:112) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1000) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:607) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:184) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_482]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_482]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_482]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_482]
+	at net.minecraftforge.userdev.FMLUserdevClientLaunchProvider.lambda$launchService$0(FMLUserdevClientLaunchProvider.java:38) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:37) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:54) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:72) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:82) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:66) [modlauncher-8.1.3.jar:?]
+	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:94) [forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+[22Oct2026 17:56:28.965] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:reinforced_striker_from_smithing
+com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:reinforced_striker'
+	at net.minecraft.item.crafting.ShapedRecipe.lambda$itemFromJson$0(ShapedRecipe.java:262) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at java.util.Optional.orElseThrow(Optional.java:290) ~[?:1.8.0_482]
+	at net.minecraft.item.crafting.ShapedRecipe.itemFromJson(ShapedRecipe.java:261) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.SmithingRecipe$Serializer.fromJson(SmithingRecipe.java:72) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.SmithingRecipe$Serializer.fromJson(SmithingRecipe.java:68) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.fromJson(RecipeManager.java:141) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.apply(RecipeManager.java:61) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.apply(RecipeManager.java:38) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.resources.ReloadListener.lambda$reload$1(ReloadListener.java:14) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at java.util.concurrent.CompletableFuture.uniAccept(CompletableFuture.java:670) ~[?:1.8.0_482]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:646) ~[?:1.8.0_482]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:456) ~[?:1.8.0_482]
+	at net.minecraft.resources.AsyncReloader.lambda$null$3(AsyncReloader.java:66) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.doRunTask(ThreadTaskExecutor.java:136) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.RecursiveEventLoop.doRunTask(RecursiveEventLoop.java:22) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.pollTask(ThreadTaskExecutor.java:109) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.managedBlock(ThreadTaskExecutor.java:119) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.makeServerStem(Minecraft.java:1865) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.loadWorld(Minecraft.java:1714) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.loadLevel(Minecraft.java:1683) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.loadWorld(WorldSelectionList.java:364) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.joinWorld(WorldSelectionList.java:273) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.mouseClicked(WorldSelectionList.java:228) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.widget.list.AbstractList.mouseClicked(AbstractList.java:309) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.INestedGuiEventHandler.mouseClicked(INestedGuiEventHandler.java:28) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$onPress$0(MouseHelper.java:87) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.Screen.wrapScreenError(Screen.java:427) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.onPress(MouseHelper.java:85) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$null$4(MouseHelper.java:181) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.execute(ThreadTaskExecutor.java:86) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$setup$5(MouseHelper.java:180) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at org.lwjgl.glfw.GLFWMouseButtonCallbackI.callback(GLFWMouseButtonCallbackI.java:36) ~[lwjgl-glfw-3.2.2.jar:build 10]
+	at org.lwjgl.system.JNI.invokeV(Native Method) ~[lwjgl-3.2.2.jar:build 10]
+	at org.lwjgl.glfw.GLFW.glfwWaitEventsTimeout(GLFW.java:3174) ~[lwjgl-glfw-3.2.2.jar:build 10]
+	at com.mojang.blaze3d.systems.RenderSystem.limitDisplayFPS(RenderSystem.java:112) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1000) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:607) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:184) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_482]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_482]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_482]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_482]
+	at net.minecraftforge.userdev.FMLUserdevClientLaunchProvider.lambda$launchService$0(FMLUserdevClientLaunchProvider.java:38) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:37) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:54) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:72) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:82) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:66) [modlauncher-8.1.3.jar:?]
+	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:94) [forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+[22Oct2026 17:56:28.969] [Render thread/INFO] [net.minecraft.item.crafting.RecipeManager/]: Loaded 7 recipes
+[22Oct2026 17:56:29.676] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1058 advancements
+[22Oct2026 17:56:30.534] [Render thread/INFO] [net.minecraftforge.registries.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
+[22Oct2026 17:56:30.800] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[22Oct2026 17:56:30.800] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22Oct2026 17:56:30.800] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22Oct2026 17:56:30.800] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[22Oct2026 17:56:30.801] [Render thread/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[22Oct2026 17:56:30.801] [Render thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar, mine-mine-no-mi-1.16.5-0.10.11_mapped_official_1.16.5.jar, curios-309927-4419403_mapped_official_1.16.5.jar, cartaddon-0.7.5_mapped_official_1.16.5.jar, main
+[22Oct2026 17:56:31.492] [Render thread/ERROR] [net.minecraft.tags.TagCollectionReader/]: Couldn't load entity_type tag mineminenomi:magnetic as it is missing following references: cartaddom:pacifista_mark_two (from cartaddon-0.7.5_mapped_official_1.16.5.jar),cartaddom:pacifista_world_boss (from cartaddon-0.7.5_mapped_official_1.16.5.jar)
+[22Oct2026 17:56:31.496] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:zoro_robe
+com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:zoro_robe'
+	at net.minecraft.item.crafting.ShapedRecipe.lambda$itemFromJson$0(ShapedRecipe.java:262) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at java.util.Optional.orElseThrow(Optional.java:290) ~[?:1.8.0_482]
+	at net.minecraft.item.crafting.ShapedRecipe.itemFromJson(ShapedRecipe.java:261) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.ShapedRecipe$Serializer.fromJson(ShapedRecipe.java:281) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.ShapedRecipe$Serializer.fromJson(ShapedRecipe.java:272) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.fromJson(RecipeManager.java:141) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.apply(RecipeManager.java:61) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.apply(RecipeManager.java:38) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.resources.ReloadListener.lambda$reload$1(ReloadListener.java:14) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at java.util.concurrent.CompletableFuture.uniAccept(CompletableFuture.java:670) ~[?:1.8.0_482]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:646) ~[?:1.8.0_482]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:456) ~[?:1.8.0_482]
+	at net.minecraft.resources.AsyncReloader.lambda$null$3(AsyncReloader.java:66) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.doRunTask(ThreadTaskExecutor.java:136) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.RecursiveEventLoop.doRunTask(RecursiveEventLoop.java:22) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.pollTask(ThreadTaskExecutor.java:109) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.managedBlock(ThreadTaskExecutor.java:119) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.makeServerStem(Minecraft.java:1865) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.loadWorld(Minecraft.java:1717) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.loadLevel(Minecraft.java:1683) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.loadWorld(WorldSelectionList.java:364) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.joinWorld(WorldSelectionList.java:273) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.mouseClicked(WorldSelectionList.java:228) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.widget.list.AbstractList.mouseClicked(AbstractList.java:309) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.INestedGuiEventHandler.mouseClicked(INestedGuiEventHandler.java:28) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$onPress$0(MouseHelper.java:87) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.Screen.wrapScreenError(Screen.java:427) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.onPress(MouseHelper.java:85) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$null$4(MouseHelper.java:181) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.execute(ThreadTaskExecutor.java:86) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$setup$5(MouseHelper.java:180) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at org.lwjgl.glfw.GLFWMouseButtonCallbackI.callback(GLFWMouseButtonCallbackI.java:36) ~[lwjgl-glfw-3.2.2.jar:build 10]
+	at org.lwjgl.system.JNI.invokeV(Native Method) ~[lwjgl-3.2.2.jar:build 10]
+	at org.lwjgl.glfw.GLFW.glfwWaitEventsTimeout(GLFW.java:3174) ~[lwjgl-glfw-3.2.2.jar:build 10]
+	at com.mojang.blaze3d.systems.RenderSystem.limitDisplayFPS(RenderSystem.java:112) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1000) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:607) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:184) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_482]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_482]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_482]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_482]
+	at net.minecraftforge.userdev.FMLUserdevClientLaunchProvider.lambda$launchService$0(FMLUserdevClientLaunchProvider.java:38) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:37) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:54) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:72) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:82) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:66) [modlauncher-8.1.3.jar:?]
+	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:94) [forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+[22Oct2026 17:56:31.497] [Render thread/ERROR] [net.minecraft.item.crafting.RecipeManager/]: Parsing error loading recipe cartaddon:reinforced_striker_from_smithing
+com.google.gson.JsonSyntaxException: Unknown item 'cartaddon:reinforced_striker'
+	at net.minecraft.item.crafting.ShapedRecipe.lambda$itemFromJson$0(ShapedRecipe.java:262) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at java.util.Optional.orElseThrow(Optional.java:290) ~[?:1.8.0_482]
+	at net.minecraft.item.crafting.ShapedRecipe.itemFromJson(ShapedRecipe.java:261) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.SmithingRecipe$Serializer.fromJson(SmithingRecipe.java:72) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.SmithingRecipe$Serializer.fromJson(SmithingRecipe.java:68) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.fromJson(RecipeManager.java:141) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.apply(RecipeManager.java:61) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.item.crafting.RecipeManager.apply(RecipeManager.java:38) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.resources.ReloadListener.lambda$reload$1(ReloadListener.java:14) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at java.util.concurrent.CompletableFuture.uniAccept(CompletableFuture.java:670) ~[?:1.8.0_482]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:646) ~[?:1.8.0_482]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:456) ~[?:1.8.0_482]
+	at net.minecraft.resources.AsyncReloader.lambda$null$3(AsyncReloader.java:66) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.doRunTask(ThreadTaskExecutor.java:136) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.RecursiveEventLoop.doRunTask(RecursiveEventLoop.java:22) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.pollTask(ThreadTaskExecutor.java:109) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.managedBlock(ThreadTaskExecutor.java:119) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.makeServerStem(Minecraft.java:1865) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.loadWorld(Minecraft.java:1717) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.loadLevel(Minecraft.java:1683) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.loadWorld(WorldSelectionList.java:364) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.joinWorld(WorldSelectionList.java:273) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.WorldSelectionList$Entry.mouseClicked(WorldSelectionList.java:228) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.widget.list.AbstractList.mouseClicked(AbstractList.java:309) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.INestedGuiEventHandler.mouseClicked(INestedGuiEventHandler.java:28) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$onPress$0(MouseHelper.java:87) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.gui.screen.Screen.wrapScreenError(Screen.java:427) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.onPress(MouseHelper.java:85) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$null$4(MouseHelper.java:181) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.util.concurrent.ThreadTaskExecutor.execute(ThreadTaskExecutor.java:86) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.MouseHelper.lambda$setup$5(MouseHelper.java:180) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at org.lwjgl.glfw.GLFWMouseButtonCallbackI.callback(GLFWMouseButtonCallbackI.java:36) ~[lwjgl-glfw-3.2.2.jar:build 10]
+	at org.lwjgl.system.JNI.invokeV(Native Method) ~[lwjgl-3.2.2.jar:build 10]
+	at org.lwjgl.glfw.GLFW.glfwWaitEventsTimeout(GLFW.java:3174) ~[lwjgl-glfw-3.2.2.jar:build 10]
+	at com.mojang.blaze3d.systems.RenderSystem.limitDisplayFPS(RenderSystem.java:112) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1000) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:607) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:184) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_482]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_482]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_482]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_482]
+	at net.minecraftforge.userdev.FMLUserdevClientLaunchProvider.lambda$launchService$0(FMLUserdevClientLaunchProvider.java:38) ~[forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:37) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:54) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:72) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:82) [modlauncher-8.1.3.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:66) [modlauncher-8.1.3.jar:?]
+	at net.minecraftforge.userdev.LaunchTesting.main(LaunchTesting.java:94) [forge-1.16.5-36.2.39_mapped_official_1.16.5-recomp.jar:?]
+[22Oct2026 17:56:31.500] [Render thread/INFO] [net.minecraft.item.crafting.RecipeManager/]: Loaded 7 recipes
+[22Oct2026 17:56:32.061] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1058 advancements
+[22Oct2026 17:56:32.152] [Render thread/INFO] [net.minecraftforge.registries.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
+[22Oct2026 17:56:32.513] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[22Oct2026 17:56:32.537] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Starting integrated minecraft server version 1.16.5
+[22Oct2026 17:56:32.537] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[22Oct2026 17:56:32.601] [Server thread/INFO] [net.kazi.kazimod.KaziMod/]: Loaded 2 UUID entries from the local KaziMod banlist
+[22Oct2026 17:56:32.678] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[22Oct2026 17:56:32.777] [KaziMod Remote Banlist/INFO] [net.kazi.kazimod.KaziMod/]: Refreshed KaziMod UUID banlist from GitHub: 2 entries
+[22Oct2026 17:56:33.056] [Render thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[22Oct2026 17:56:33.196] [Render thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 33%
+[22Oct2026 17:56:33.297] [Render thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Time elapsed: 608 ms
+[22Oct2026 17:56:33.435] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Changing view distance to 9, from 10
+[22Oct2026 17:56:34.306] [Netty Local Client IO #0/INFO] [net.minecraftforge.fml.network.NetworkHooks/]: Connected to a modded server.
+[22Oct2026 17:56:34.361] [Server thread/INFO] [net.minecraftforge.common.AdvancementLoadFix/]: Using new advancement loading for net.minecraft.advancements.PlayerAdvancements@58267afe
+[22Oct2026 17:56:34.389] [Server thread/INFO] [net.minecraft.server.management.PlayerList/]: Dev[local:E:57c3fc2b] logged in with entity id 50 at (3192.22117458206, 75.92337800096526, 1246.8450822047698)
+[22Oct2026 17:56:34.406] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Dev joined the game
+[22Oct2026 17:56:34.664] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 72 advancements
+[22Oct2026 17:56:34.758] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[22Oct2026 17:56:34.768] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[22Oct2026 17:56:34.979] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[22Oct2026 17:56:34.979] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[22Oct2026 17:56:34.980] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
+[22Oct2026 17:56:56.925] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Set own game mode to Survival Mode]
+[22Oct2026 17:56:56.929] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Set own game mode to Survival Mode
+[22Oct2026 17:57:02.615] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Set own game mode to Creative Mode]
+[22Oct2026 17:57:02.617] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Set own game mode to Creative Mode
+[22Oct2026 17:57:04.302] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[22Oct2026 17:57:04.315] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[22Oct2026 17:57:04.403] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[22Oct2026 17:57:04.404] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[22Oct2026 17:57:04.404] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
+[22Oct2026 17:57:11.493] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Set own game mode to Survival Mode]
+[22Oct2026 17:57:11.494] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Set own game mode to Survival Mode
+[22Oct2026 17:57:37.751] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[22Oct2026 17:57:37.755] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[22Oct2026 17:57:37.852] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[22Oct2026 17:57:37.852] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[22Oct2026 17:57:37.853] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
+[22Oct2026 17:57:42.744] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Removed Devil Fruit for Dev]
+[22Oct2026 17:57:42.747] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Removed Devil Fruit for Dev
+[22Oct2026 17:57:43.774] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Set own game mode to Creative Mode]
+[22Oct2026 17:57:43.776] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Set own game mode to Creative Mode
+[22Oct2026 17:58:23.680] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Removed Devil Fruit for Dev]
+[22Oct2026 17:58:23.689] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Removed Devil Fruit for Dev
+[22Oct2026 17:58:55.818] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Tusk: Act 4's mode set to ACT_4
+[22Oct2026 17:58:56.719] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] All four Acts mastered
+[22Oct2026 17:58:58.350] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] All four Acts mastered
+[22Oct2026 17:59:17.967] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Removed Devil Fruit for Dev]
+[22Oct2026 17:59:17.968] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Removed Devil Fruit for Dev
+[22Oct2026 17:59:39.551] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[22Oct2026 17:59:39.554] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[22Oct2026 17:59:39.644] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[22Oct2026 17:59:39.645] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[22Oct2026 17:59:39.645] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
+[22Oct2026 17:59:56.860] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 72 advancements
+[22Oct2026 18:00:01.216] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Applied enchantment Sharpness V to Dev's item]
+[22Oct2026 18:00:01.218] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Applied enchantment Sharpness V to Dev's item
+[22Oct2026 18:00:04.419] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Taming ritual: defeat Toad to earn its loyalty.
+[22Oct2026 18:00:10.505] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Toad has been tamed. You can now summon it as an ally.
+[22Oct2026 18:00:14.020] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Taming ritual: defeat Divine Dog: Totality to earn its loyalty.
+[22Oct2026 18:00:29.105] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Divine Dog: Totality has been tamed. You can now summon it as an ally.
+[22Oct2026 18:00:32.567] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Taming ritual: defeat Piercing Ox to earn its loyalty.
+[22Oct2026 18:00:47.154] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Piercing Ox has been tamed. You can now summon it as an ally.
+[22Oct2026 18:00:49.869] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Taming ritual: defeat Max Elephant to earn its loyalty.
+[22Oct2026 18:01:14.879] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Set own game mode to Survival Mode]
+[22Oct2026 18:01:14.880] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Set own game mode to Survival Mode
+[22Oct2026 18:01:18.919] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: ]
+[22Oct2026 18:01:18.919] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Set own game mode to Creative Mode
+[22Oct2026 18:01:21.954] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Max Elephant has been tamed. You can now summon it as an ally.
+[22Oct2026 18:01:24.825] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Taming ritual: defeat Agito to earn its loyalty.
+[22Oct2026 18:01:47.706] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Agito has been tamed. You can now summon it as an ally.
+[22Oct2026 18:02:02.477] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Taming ritual: defeat Mahoraga to earn its loyalty.
+[22Oct2026 18:02:45.216] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Mahoraga has been tamed. You can now summon it as an ally.
+[22Oct2026 18:02:48.857] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] You've obtained 5 belly!
+[22Oct2026 18:03:12.203] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[22Oct2026 18:03:12.216] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[22Oct2026 18:03:12.273] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[22Oct2026 18:03:12.273] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[22Oct2026 18:03:12.274] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
+[22Oct2026 18:03:47.710] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] You've obtained 59 belly!
+[22Oct2026 18:04:37.189] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Removed Devil Fruit for Dev]
+[22Oct2026 18:04:37.192] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Removed Devil Fruit for Dev
+[22Oct2026 18:04:49.408] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Unlocked Super Saiyan! Maximum Ki: 180. Select it with Saiyan Transformation's alternate mode.
+[22Oct2026 18:04:52.209] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Unlocked Super Saiyan 2! Maximum Ki: 260. Select it with Saiyan Transformation's alternate mode.
+[22Oct2026 18:04:53.509] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Unlocked Super Saiyan 3! Maximum Ki: 360. Select it with Saiyan Transformation's alternate mode.
+[22Oct2026 18:04:54.810] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Unlocked Super Saiyan God! Maximum Ki: 500. Select it with Saiyan Transformation's alternate mode.
+[22Oct2026 18:04:55.960] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Unlocked Super Saiyan Blue! Maximum Ki: 700. Select it with Saiyan Transformation's alternate mode.
+[22Oct2026 18:04:57.117] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Unlocked Ultra Instinct! Maximum Ki: 900. Select it with Saiyan Transformation's alternate mode.
+[22Oct2026 18:05:19.442] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Super Saiyan 2's mode set to SUPER_SAIYAN_2
+[22Oct2026 18:05:23.735] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Super Saiyan 3's mode set to SUPER_SAIYAN_3
+[22Oct2026 18:05:24.870] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Super Saiyan God's mode set to SUPER_SAIYAN_GOD
+[22Oct2026 18:05:25.397] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Super Saiyan Blue's mode set to SUPER_SAIYAN_BLUE
+[22Oct2026 18:05:29.026] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Ultra Instinct's mode set to ULTRA_INSTINCT
+[22Oct2026 18:06:40.367] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: [Dev: Removed Devil Fruit for Dev]
+[22Oct2026 18:06:40.373] [Render thread/INFO] [net.minecraft.client.gui.NewChatGui/]: [CHAT] Removed Devil Fruit for Dev
+[22Oct2026 18:06:45.502] [Server thread/INFO] [net.minecraft.server.integrated.IntegratedServer/]: Saving and pausing game...
+[22Oct2026 18:06:45.514] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[22Oct2026 18:06:45.540] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[22Oct2026 18:06:45.540] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[22Oct2026 18:06:45.540] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[New World]'/mineminenomi:challenges
