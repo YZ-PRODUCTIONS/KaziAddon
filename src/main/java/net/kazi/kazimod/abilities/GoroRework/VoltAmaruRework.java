@@ -38,7 +38,6 @@ import xyz.pixelatedw.mineminenomi.api.morph.MorphInfo;
 import xyz.pixelatedw.mineminenomi.config.ClientConfig;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
-import xyz.pixelatedw.mineminenomi.entities.LightningDischargeEntity;
 import xyz.pixelatedw.mineminenomi.init.ModAttributes;
 import xyz.pixelatedw.mineminenomi.init.ModDamageSource;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
@@ -50,6 +49,7 @@ import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 
 /** Kazi-owned copy of Mine Mine no Mi 0.10.11's Volt Amaru. */
 public class VoltAmaruRework extends Ability {
+    private net.kazi.kazimod.goro.GoroVfxEntity auraVfx;
     private static final ResourceLocation DEFAULT_ICON =
             new ResourceLocation("mineminenomi", "textures/abilities/volt_amaru.png");
     private static final ResourceLocation ALT_ICON =
@@ -125,6 +125,7 @@ public class VoltAmaruRework extends Ability {
     private final ContinuousComponent continuousComponent =
             new ContinuousComponent(this, true)
                     .addStartEvent(this::onContinuityStart)
+                    .addTickEvent(this::onContinuityTick)
                     .addEndEvent(this::onContinuityEnd);
     private final ChangeStatsComponent changeStatsComponent = new ChangeStatsComponent(this);
     private final MorphComponent morphComponent = new MorphComponent(this);
@@ -189,15 +190,8 @@ public class VoltAmaruRework extends Ability {
 
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         skinOverlayComponent.showAll(entity);
-        LightningDischargeEntity ball = new LightningDischargeEntity(
-                entity, entity.getX(), entity.getY(), entity.getZ(), entity.yRot, entity.xRot);
-        ball.setSize(4.0F);
-        ball.setLightningLength(10.0F);
-        ball.setAliveTicks(20);
-        ball.setColor(
-                ClientConfig.INSTANCE.isGoroBlue()
-                        ? ElThorRework.BLUE_THUNDER : ElThorRework.YELLOW_THUNDER);
-        entity.level.addFreshEntity(ball);
+        net.kazi.kazimod.goro.GoroVfxEntity.spawn(entity.level, entity.position().add(0, 1, 0),
+                net.kazi.kazimod.goro.GoroVfxEntity.BURST, 7, 20);
         entity.addEffect(new EffectInstance(
                 ModEffects.MOVEMENT_BLOCKED.get(), 20, 1, false, false));
     }
@@ -227,7 +221,13 @@ public class VoltAmaruRework extends Ability {
         }
     }
 
+    private void onContinuityTick(LivingEntity entity, IAbility ability) {
+        auraVfx = net.kazi.kazimod.goro.GoroVfxEntity.refresh(auraVfx, entity, entity.position(),
+                net.kazi.kazimod.goro.GoroVfxEntity.AMARU, Math.max(3, entity.getBbHeight() * .6F), true);
+    }
+
     private void onContinuityEnd(LivingEntity entity, IAbility ability) {
+        auraVfx = net.kazi.kazimod.goro.GoroVfxEntity.stop(auraVfx);
         skinOverlayComponent.hideAll(entity);
         morphComponent.stopMorph(entity);
         changeStatsComponent.removeModifiers(entity);

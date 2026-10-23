@@ -5,6 +5,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.kazi.kazimod.kake.KakeVisuals;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
@@ -33,6 +34,7 @@ public class DiceProjectile extends AbilityProjectileEntity {
                 this.bounceCount++;
                 Vector3d m = this.getDeltaMovement();
                 this.setDeltaMovement(m.x, Math.abs(m.y) * 0.7, m.z);
+                KakeVisuals.impact(this,getThrower(),2);
             } else {
                 explode();
             }
@@ -41,7 +43,8 @@ public class DiceProjectile extends AbilityProjectileEntity {
 
     private void explode() {
         if (!this.level.isClientSide) {
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.5f, false, Explosion.Mode.NONE);
+            KakeVisuals.impact(this,getThrower(),2);
+            KakeVisuals.explode(this,1.5F);
             this.remove();
         }
     }

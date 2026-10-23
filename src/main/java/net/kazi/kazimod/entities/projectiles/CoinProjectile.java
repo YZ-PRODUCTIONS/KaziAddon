@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
-import net.kazi.kazimod.particles.CoinParticleEffect;
+import net.kazi.kazimod.kake.KakeVisuals;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
 
@@ -24,10 +24,7 @@ public class CoinProjectile extends AbilityProjectileEntity {
         this.setKnockbackStrength(2);
         this.setGravity(0.01f);
         this.setEntityCollisionSize(0.8);
-        this.onTickEvent = () -> {
-            if (!this.level.isClientSide) {
-                CoinParticleEffect.spawnAt(this, this.level, this.getX(), this.getY(), this.getZ());
-            }
-        };
+        this.onEntityImpactEvent=target->KakeVisuals.impact(this,getThrower(),1);
+        this.onBlockImpactEvent=pos->KakeVisuals.impact(this,getThrower(),1);
     }
 }

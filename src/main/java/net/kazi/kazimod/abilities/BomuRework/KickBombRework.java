@@ -1,8 +1,9 @@
 package net.kazi.kazimod.abilities.BomuRework;
 
+import net.kazi.kazimod.bomu.BomuVisuals;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -69,7 +70,7 @@ public class KickBombRework extends DropHitAbility {
             ExplosionAbility explosion = AbilityHelper.newExplosion(entity, world, cx, cy, cz, 7.0F);
             explosion.setStaticDamage(DAMAGE);
             explosion.setSmokeParticles(new CommonExplosionParticleEffect(8));
-            explosion.doExplosion();
+            BomuVisuals.explode(explosion);
 
             // 10x10x10 AOE shockwave
             doAoeBlast(entity, world, cx, cy, cz);
@@ -113,7 +114,7 @@ public class KickBombRework extends DropHitAbility {
             }
         });
 
-        // Block destruction + explosion particles across full 10x10x10
+        // Preserve block destruction; one mesh blast covers the entire area.
         int icx = (int) Math.floor(cx);
         int icy = (int) Math.floor(cy);
         int icz = (int) Math.floor(cz);
@@ -128,26 +129,10 @@ public class KickBombRework extends DropHitAbility {
                         world.destroyBlock(pos, true, source);
                     }
 
-                    // Explosion particle at every block in the AOE
-                    if (world instanceof ServerWorld) {
-                        ((ServerWorld) world).sendParticles(
-                                ParticleTypes.EXPLOSION,
-                                x + 0.5, y + 0.5, z + 0.5,
-                                1, 0, 0, 0, 0.0
-                        );
-                    }
                 }
             }
         }
 
-        // Big emitter burst at epicenter
-        if (world instanceof ServerWorld) {
-            ((ServerWorld) world).sendParticles(
-                    ParticleTypes.EXPLOSION_EMITTER,
-                    cx, cy, cz,
-                    3, 1.0, 1.0, 1.0, 0.5
-            );
-        }
     }
 
     static {

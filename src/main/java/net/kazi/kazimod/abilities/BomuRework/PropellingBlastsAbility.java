@@ -1,6 +1,7 @@
 package net.kazi.kazimod.abilities.BomuRework;
 
-import net.kazi.kazimod.init.KaziParticleEffects;
+import net.kazi.kazimod.bomu.BomuVisuals;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,8 +24,6 @@ import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
-import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
-import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class PropellingBlastsAbility extends Ability {
 
@@ -93,10 +92,7 @@ public class PropellingBlastsAbility extends Ability {
                 SoundEvents.GENERIC_EXPLODE, SoundCategory.PLAYERS,
                 2.0F, 1.5F + this.random.nextFloat() / 3.0F);
 
-        if (!entity.level.isClientSide) {
-            WyHelper.spawnParticleEffect((ParticleEffect) KaziParticleEffects.BAKUGO.get(), entity,
-                    entity.getX(), entity.getY() - 0.5, entity.getZ());
-        }
+        BomuVisuals.propel(entity);
 
         if (this.stackComponent.getStacks() <= 0) {
             super.cooldownComponent.startCooldown(entity, getCooldownTicks());

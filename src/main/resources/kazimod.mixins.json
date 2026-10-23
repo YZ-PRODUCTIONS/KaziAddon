@@ -6,7 +6,6 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "kazimod.refmap.json",
   "mixins": [
-    "WyRegistryConcurrencyMixin",
     "Supamixins.PairedSwordsContainerMixin",
     "CartStylesReplace",
     "CartRaceReplace",

@@ -207,6 +207,8 @@ public class RaigoRework extends Ability {
                         ? ElThorRework.BLUE_THUNDER : ElThorRework.YELLOW_THUNDER,
                 multiplier);
         boltOuter.seed = boltInner.seed;
+        net.kazi.kazimod.goro.GoroVisuals.mark(boltInner);
+        net.kazi.kazimod.goro.GoroVisuals.mark(boltOuter);
         entity.level.addFreshEntity(boltInner);
         entity.level.addFreshEntity(boltOuter);
         entity.level.playSound(

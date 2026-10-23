@@ -1,0 +1,11 @@
+Earth surface: NASA Blue Marble (2002), land, ocean, ice and cloud composite.
+NASA Goddard Space Flight Center. Reto Stockli (land surface, shallow water,
+clouds); Robert Simmon (ocean color, compositing).
+
+NASA source and credits:
+https://science.nasa.gov/earth/earth-observatory/the-blue-marble-true-color-global-imagery-at-1km-resolution/
+
+Source image mirror (unaltered pixels, converted from JPEG to PNG):
+https://raw.githubusercontent.com/mrdoob/three.js/r180/examples/textures/land_ocean_ice_cloud_2048.jpg
+
+The texture is bundled locally; gameplay makes no network requests.

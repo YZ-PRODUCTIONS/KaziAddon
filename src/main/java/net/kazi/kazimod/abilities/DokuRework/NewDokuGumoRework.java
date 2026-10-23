@@ -48,6 +48,7 @@ extends Ability {
     private final ContinuousComponent continuousComponent = new ContinuousComponent((IAbility)this).addTickEvent(this::duringContinuityEvent).addEndEvent(this::endContinuityEvent);
     private final RangeComponent rangeComponent = new RangeComponent((IAbility)this);
     private final AltModeComponent<Mode> altModeComponent = new AltModeComponent<Mode>((IAbility)this, Mode.class, Mode.NORMAL, true).addChangeModeEvent(this::onAltModeChange);
+    private net.kazi.kazimod.doku.DokuGasEntity gas;
 
     public NewDokuGumoRework(AbilityCore<NewDokuGumoRework> core) {
         super(core);
@@ -74,12 +75,13 @@ extends Ability {
             if (target.hasEffect((Effect)ModEffects.DOKU_POISON.get())) continue;
             target.addEffect(new EffectInstance((Effect)ModEffects.DOKU_POISON.get(), duration, poisonIntensity));
         }
-        if (this.continuousComponent.getContinueTime() % 2.0f == 0.0f) {
-            WyHelper.spawnParticleEffect((ParticleEffect)((ParticleEffect)ModParticleEffects.DOKU_GUMO.get()), (Entity)player, (double)player.getX(), (double)player.getY(), (double)player.getZ(), (ParticleEffect.Details)(hasVenomDemon ? NewDokuHelper.DETAILS : null));
-        }
+        gas = net.kazi.kazimod.doku.DokuGasEntity.refresh(gas, player,
+                net.kazi.kazimod.doku.DokuGasEntity.CLOUD, rangeComponent.getRange(), hasVenomDemon, true);
     }
 
     private void endContinuityEvent(LivingEntity player, IAbility ability) {
+        if (gas != null) gas.finish();
+        gas = null;
         this.cooldownComponent.startCooldown(player, 800.0f);
     }
 

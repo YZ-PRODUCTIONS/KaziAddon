@@ -1,5 +1,7 @@
 package net.kazi.kazimod.init;
 
+import xyz.pixelatedw.mineminenomi.items.weapons.AbilitySwordItem;
+
 import net.kazi.kazimod.items.AwakeningEssenceItem;
 import net.kazi.kazimod.items.ShadowMaceItem;
 import net.kazi.kazimod.items.ShadowSpearItem;
@@ -49,4 +51,8 @@ public class KaziItems2 {
     public static void init() {
         // no-op: items are registered via the static DeferredRegister fields above
     }
+public static final RegistryObject<Item> TRIPLE_T_BAT =
+            ITEMS.register("triple_t_bat", () -> new AbilitySwordItem(null, 7, -2.2F));
+    public static final RegistryObject<Item> TRIPLE_T_STAFF =
+            ITEMS.register("triple_t_staff", () -> new AbilitySwordItem(null, 8, -2.6F));
 }

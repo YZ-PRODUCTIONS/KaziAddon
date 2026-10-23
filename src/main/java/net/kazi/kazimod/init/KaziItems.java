@@ -1,5 +1,7 @@
 package net.kazi.kazimod.init;
 
+import net.kazi.kazimod.abilities.TripelT.*;
+
 import net.kazi.kazimod.abilities.Koku.*;
 import net.kazi.kazimod.abilities.Kake.CasinoRollAbility;
 import net.kazi.kazimod.abilities.Kake.LuckySlotAbility;
@@ -30,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class KaziItems {
+    public static RegistryObject<AkumaNoMiItem> KI_KI_NO_MI_MODEL_TUNG_TUNG_TUNG_SAHUR;
 
     public static RegistryObject<AkumaNoMiItem> TOSHI_TOSHI_NO_MI;
     public static RegistryObject<AkumaNoMiItem> TOKI_TOKI_NO_MI;
@@ -151,6 +154,20 @@ public class KaziItems {
                         IllusionCloneBarrageAbility.INSTANCE,
                         InvisibleExecutionAbility.INSTANCE,
                         IllusionCounterAbility.INSTANCE
+                )
+        );
+    
+        KI_KI_NO_MI_MODEL_TUNG_TUNG_TUNG_SAHUR = KaziRegistry.registerItem(
+                "ki_ki_no_mi_model_tung_tung_tung_sahur",
+                () -> new AkumaNoMiItem(
+                        "Ki Ki no mi Model: Tung Tung Tung Sahur", 3, FruitType.MYTHICAL_ZOAN,
+                        TripelTFormAbility.INSTANCE,
+                        TripelTGodFormAbility.INSTANCE,
+                        TripelTFlightAbility.INSTANCE,
+                        HomeRunSwingAbility.INSTANCE,
+                        TungTungTungBarrageAbility.INSTANCE,
+                        SahurYellAbility.INSTANCE,
+                        SwingingCounterAbility.INSTANCE
                 )
         );
     }

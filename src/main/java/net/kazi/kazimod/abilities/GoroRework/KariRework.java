@@ -20,18 +20,15 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.RangeComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
-import xyz.pixelatedw.mineminenomi.api.util.Interval;
 import xyz.pixelatedw.mineminenomi.config.ClientConfig;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
 import xyz.pixelatedw.mineminenomi.init.ModDamageSource;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
-import xyz.pixelatedw.mineminenomi.init.ModParticleEffects;
-import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
-import xyz.pixelatedw.mineminenomi.particles.effects.goro.KariParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 /** Kazi-owned copy of Mine Mine no Mi 0.10.11's Kari. */
 public class KariRework extends Ability {
+    private net.kazi.kazimod.goro.GoroVfxEntity cageVfx;
     private static final ResourceLocation DEFAULT_ICON =
             new ResourceLocation("mineminenomi", "textures/abilities/kari.png");
     private static final ResourceLocation ALT_ICON =
@@ -63,8 +60,6 @@ public class KariRework extends Ability {
                     .addTickEvent(this::onChargeTick)
                     .addEndEvent(this::onChargeEnd);
     private final RangeComponent rangeComponent = new RangeComponent(this);
-    private static final KariParticleEffect.Details DETAILS = new KariParticleEffect.Details();
-    private final Interval particleInterval = new Interval(2);
 
     public KariRework(AbilityCore<KariRework> core) {
         super(core);
@@ -81,7 +76,6 @@ public class KariRework extends Ability {
 
     private void onUseEvent(LivingEntity entity, IAbility ability) {
         if (!chargeComponent.isCharging()) {
-            particleInterval.restartIntervalToZero();
             chargeComponent.startCharging(entity, 60.0F);
         } else {
             chargeComponent.stopCharging(entity);
@@ -92,15 +86,9 @@ public class KariRework extends Ability {
         if (entity.level.isClientSide) return;
 
         entity.addEffect(new EffectInstance(ModEffects.MOVEMENT_BLOCKED.get(), 2, 1));
-        if (particleInterval.canTick()) {
-            DETAILS.setRange(2);
-            DETAILS.setSize(2.0F);
-            WyHelper.spawnParticleEffect(
-                    (ParticleEffect) ModParticleEffects.KARI.get(), entity,
-                    entity.getX(), entity.getY(), entity.getZ(), DETAILS);
-        }
-
         float range = rangeComponent.getBonusManager().applyBonus(2.0F);
+        cageVfx = net.kazi.kazimod.goro.GoroVfxEntity.refresh(cageVfx, entity, entity.position(),
+                net.kazi.kazimod.goro.GoroVfxEntity.CAGE, range, true);
         List<Entity> targets = WyHelper.getNearbyEntities(
                 entity.position(), entity.level, range, null, Entity.class);
         for (Entity target : targets) {
@@ -122,6 +110,9 @@ public class KariRework extends Ability {
 
     private void onChargeEnd(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
+        cageVfx = net.kazi.kazimod.goro.GoroVfxEntity.stop(cageVfx);
+        net.kazi.kazimod.goro.GoroVfxEntity.spawn(entity.level, entity.position().add(0, 1, 0),
+                net.kazi.kazimod.goro.GoroVfxEntity.BURST, rangeComponent.getBonusManager().applyBonus(2.0F), 16);
         entity.level.playSound(
                 null, entity.getX(), entity.getY(), entity.getZ(),
                 SoundEvents.LIGHTNING_BOLT_IMPACT, SoundCategory.WEATHER,

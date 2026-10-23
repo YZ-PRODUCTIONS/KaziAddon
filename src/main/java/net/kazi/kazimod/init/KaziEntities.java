@@ -1,5 +1,7 @@
 package net.kazi.kazimod.init;
 
+import net.kazi.kazimod.entities.boss.rebelus.TrueFormRebelusBossEntity;
+
 import net.kazi.kazimod.entities.*;
 import net.kazi.kazimod.entities.boss.bakugo.BakugoBossEntity;
 import net.kazi.kazimod.entities.boss.aizen.AizenBossEntity;
@@ -276,6 +278,10 @@ public class KaziEntities {
                             .sized(0.5f, 0.5f)
                             .build("casino_coin"));
 
+    public static final RegistryObject<EntityType<CasinoChipProjectile>> CASINO_CHIP =
+            ENTITY_TYPES.register("casino_chip",()->EntityType.Builder.<CasinoChipProjectile>of(CasinoChipProjectile::new,EntityClassification.MISC)
+                    .sized(.5F,.5F).build("casino_chip"));
+
     public static final RegistryObject<EntityType<DiceProjectile>> CASINO_DICE =
             ENTITY_TYPES.register("casino_dice", () ->
                     EntityType.Builder.<DiceProjectile>of(DiceProjectile::new, EntityClassification.MISC)
@@ -457,4 +463,48 @@ public class KaziEntities {
                             .clientTrackingRange(64)
                             .setUpdateInterval(1)
                             .build("dark_matter_projectile"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.goro.GoroVfxEntity>> GORO_VFX =
+            ENTITY_TYPES.register("goro_vfx", () -> EntityType.Builder.<net.kazi.kazimod.goro.GoroVfxEntity>of(
+                    net.kazi.kazimod.goro.GoroVfxEntity::new, EntityClassification.MISC)
+                    .sized(1, 1).clientTrackingRange(16).setUpdateInterval(2).noSave().noSummon().build("goro_vfx"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.doku.DokuGasEntity>> DOKU_GAS =
+            ENTITY_TYPES.register("doku_gas", () -> EntityType.Builder.<net.kazi.kazimod.doku.DokuGasEntity>of(
+                    net.kazi.kazimod.doku.DokuGasEntity::new, EntityClassification.MISC)
+                    .sized(1, 1).clientTrackingRange(12).setUpdateInterval(3).noSave().noSummon().build("doku_gas"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.bomu.BomuVfxEntity>> BOMU_VFX =
+            ENTITY_TYPES.register("bomu_vfx", () -> EntityType.Builder.<net.kazi.kazimod.bomu.BomuVfxEntity>of(
+                    net.kazi.kazimod.bomu.BomuVfxEntity::new, EntityClassification.MISC)
+                    .sized(1, 1).clientTrackingRange(12).setUpdateInterval(3).noSave().noSummon().build("bomu_vfx"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.entities.GuraVfxEntity>> GURA_VFX =
+            ENTITY_TYPES.register("gura_vfx", () -> EntityType.Builder.<net.kazi.kazimod.entities.GuraVfxEntity>of(
+                    net.kazi.kazimod.entities.GuraVfxEntity::new, EntityClassification.MISC)
+                    .sized(1, 1).clientTrackingRange(16).setUpdateInterval(2).noSave().noSummon().build("gura_vfx"));
+    public static final RegistryObject<EntityType<TrueFormRebelusBossEntity>> TRUE_FORM_REBELUS_BOSS =
+            ENTITY_TYPES.register("true_form_rebelus_boss", () ->
+                    EntityType.Builder.<TrueFormRebelusBossEntity>of(TrueFormRebelusBossEntity::new, EntityClassification.MONSTER)
+                            .sized(1.1f, 3.25f)
+                            .clientTrackingRange(80)
+                            .noSave()
+                            .build("true_form_rebelus_boss"));
+    public static final RegistryObject<EntityType<TripelTBatProjectile>> TRIPLE_T_BAT_PROJECTILE =
+            ENTITY_TYPES.register("triple_t_bat_projectile", () ->
+                    EntityType.Builder.<TripelTBatProjectile>of(TripelTBatProjectile::new, EntityClassification.MISC)
+                            .sized(0.8f, 0.8f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("triple_t_bat_projectile"));
+public static final RegistryObject<EntityType<LightArrowProjectile>> LIGHT_ARROW_PROJECTILE =
+            ENTITY_TYPES.register("light_arrow_projectile", () ->
+                    EntityType.Builder.<LightArrowProjectile>of(LightArrowProjectile::new, EntityClassification.MISC)
+                            .sized(0.8f, 0.8f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("light_arrow_projectile"));
+    public static final RegistryObject<EntityType<LightPortalProjectile>> LIGHT_PORTAL_PROJECTILE =
+            ENTITY_TYPES.register("light_portal_projectile", () ->
+                    EntityType.Builder.<LightPortalProjectile>of(LightPortalProjectile::new, EntityClassification.MISC)
+                            .sized(1.5f, 3.5f)
+                            .clientTrackingRange(64)
+                            .setUpdateInterval(1)
+                            .build("light_portal_projectile"));
 }

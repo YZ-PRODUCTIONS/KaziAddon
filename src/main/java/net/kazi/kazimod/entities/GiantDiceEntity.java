@@ -5,6 +5,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.*;
+import net.kazi.kazimod.kake.KakeVisuals;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.AxisAlignedBB;
 import xyz.pixelatedw.mineminenomi.api.damagesource.AbilityDamageSource;
@@ -19,6 +21,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class GiantDiceEntity extends Entity {
+    private static final DataParameter<Integer> PHASE=EntityDataManager.defineId(GiantDiceEntity.class,DataSerializers.INT),IMPACT_TIME=EntityDataManager.defineId(GiantDiceEntity.class,DataSerializers.INT);
+    private static final DataParameter<Float> GROUND=EntityDataManager.defineId(GiantDiceEntity.class,DataSerializers.FLOAT);
 
     private static final int    HOVER_TICKS   = 60;
     private static final float  STOMP_DAMAGE  = 80.0f;
@@ -43,6 +47,7 @@ public class GiantDiceEntity extends Entity {
         this(KaziEntities.GIANT_DICE.get(), world);
         this.ownerUUID  = owner.getUUID();
         this.targetUUID = target.getUUID();
+        this.entityData.set(GROUND,(float)target.getY());
         this.moveTo(target.getX(), target.getY() + HOVER_HEIGHT, target.getZ(), 0, 0);
     }
 
@@ -59,6 +64,7 @@ public class GiantDiceEntity extends Entity {
 
         LivingEntity target = findByUUID(targetUUID);
         if (target == null || !target.isAlive()) { this.remove(); return; }
+        entityData.set(GROUND,(float)target.getY());
 
         if (!descending) {
             // Hover and track target position
@@ -66,7 +72,7 @@ public class GiantDiceEntity extends Entity {
             double ly = this.getY() + ((target.getY() + HOVER_HEIGHT) - this.getY()) * 0.25;
             double lz = this.getZ() + (target.getZ() - this.getZ()) * 0.25;
             this.moveTo(lx, ly, lz);
-            if (ticksAlive >= HOVER_TICKS) descending = true;
+            if (ticksAlive >= HOVER_TICKS){descending = true;entityData.set(PHASE,1);}
         } else {
             // During descent: track the target's X/Z every tick so they can't run away,
             // then drop straight down at STOMP_SPEED blocks per tick
@@ -86,7 +92,9 @@ public class GiantDiceEntity extends Entity {
 
     private void doStomp(LivingEntity primaryTarget) {
         stomped = true;
+        entityData.set(PHASE,2);entityData.set(IMPACT_TIME,(int)level.getGameTime());
         LivingEntity owner = findByUUID(ownerUUID);
+        KakeVisuals.impact(this,owner,7);
         List<LivingEntity> victims = this.level.getEntitiesOfClass(
                 LivingEntity.class,
                 new AxisAlignedBB(
@@ -99,7 +107,7 @@ public class GiantDiceEntity extends Entity {
                     ? AbilityDamageSource.causeAbilityDamage(owner, CasinoRollAbility.INSTANCE).bypassArmor()
                     : net.minecraft.util.DamageSource.MAGIC;
             v.hurt(src, STOMP_DAMAGE);
-            v.addEffect(new EffectInstance(ModEffects.DIZZY.get(), STUN_TICKS, 0, false, true));
+            v.addEffect(new EffectInstance(ModEffects.DIZZY.get(), STUN_TICKS, 0, false, false));
             v.setDeltaMovement(v.getDeltaMovement().x, 0.7, v.getDeltaMovement().z);
         }
     }
@@ -114,9 +122,14 @@ public class GiantDiceEntity extends Entity {
         return null;
     }
 
-    public boolean isDescending() { return descending; }
+    public boolean isDescending() { return entityData.get(PHASE)==1; }
+    public boolean isStomped(){return entityData.get(PHASE)==2;}
+    public int stompAge(){return (int)level.getGameTime()-entityData.get(IMPACT_TIME);}
+    public float visualGround(){return entityData.get(GROUND);}
+    @Override public AxisAlignedBB getBoundingBoxForCulling(){return getBoundingBox().inflate(5,12,5);}
+    @Override public boolean shouldRenderAtSqrDistance(double distance){return distance<192*192;}
 
-    @Override protected void defineSynchedData() {}
+    @Override protected void defineSynchedData() {entityData.define(PHASE,0);entityData.define(IMPACT_TIME,0);entityData.define(GROUND,0F);}
 
     @Override
     public IPacket<?> getAddEntityPacket() {
@@ -128,6 +141,7 @@ public class GiantDiceEntity extends Entity {
         ticksAlive  = nbt.getInt("TicksAlive");
         stomped     = nbt.getBoolean("Stomped");
         descending  = nbt.getBoolean("Descending");
+        entityData.set(PHASE,stomped?2:descending?1:0);entityData.set(IMPACT_TIME,(int)level.getGameTime());entityData.set(GROUND,(float)(getY()-(descending||stomped?0:HOVER_HEIGHT)));
         if (nbt.hasUUID("OwnerUUID"))  ownerUUID  = nbt.getUUID("OwnerUUID");
         if (nbt.hasUUID("TargetUUID")) targetUUID = nbt.getUUID("TargetUUID");
     }

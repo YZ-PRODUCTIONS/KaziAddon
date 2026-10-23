@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "kazimod:shadow_sword",
-    "kazimod:kanshou_bakuya"
+    "kazimod:kanshou_bakuya",
+    "kazimod:triple_t_bat",
+    "kazimod:triple_t_staff"
   ]
 }

@@ -1,8 +1,6 @@
 package net.kazi.kazimod.abilities.Kake;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,13 +16,11 @@ import xyz.pixelatedw.mineminenomi.api.abilities.PassiveAbility2;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.GaugeComponent;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
-import xyz.pixelatedw.mineminenomi.api.helpers.RendererHelper;
-import xyz.pixelatedw.mineminenomi.init.ModResources;
+import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
+import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.packets.server.ability.SSyncAbilityPacket;
-import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 
-import java.awt.Color;
 
 public class LuckySlotAbility extends PassiveAbility2 {
 
@@ -42,6 +38,8 @@ public class LuckySlotAbility extends PassiveAbility2 {
 
     // The current rolled number, -1 means not yet rolled
     private int slotNumber = -1;
+    private static final int ROLL_LIFETIME = 30 * 20;
+    private int rollTicksRemaining;
 
     public LuckySlotAbility(AbilityCore<LuckySlotAbility> core) {
         super(core);
@@ -55,7 +53,27 @@ public class LuckySlotAbility extends PassiveAbility2 {
 
     public void setSlotNumber(LivingEntity entity, int number) {
         this.slotNumber = Math.max(-1, Math.min(9, number));
+        this.rollTicksRemaining = this.slotNumber >= 0 ? ROLL_LIFETIME : 0;
         sync(entity);
+    }
+
+    @Override
+    public void tick(LivingEntity entity) {
+        super.tick(entity);
+        if (entity.level.isClientSide || !hasRolled()) {
+            return;
+        }
+        if (--this.rollTicksRemaining <= 0) {
+            setSlotNumber(entity, -1);
+            IAbilityData data = AbilityDataCapability.get(entity);
+            CasinoRollAbility casino = data == null ? null : data.getEquippedAbility(CasinoRollAbility.INSTANCE);
+            if (casino != null) {
+                casino.setModeForRoll(entity, -1);
+                if (entity instanceof PlayerEntity) {
+                    WyNetwork.sendTo(new SSyncAbilityPacket(entity.getId(), casino), (PlayerEntity) entity);
+                }
+            }
+        }
     }
 
     public int getSlotNumber() {
@@ -77,44 +95,23 @@ public class LuckySlotAbility extends PassiveAbility2 {
     @Override
     public CompoundNBT save(CompoundNBT nbt) {
         nbt.putInt("slotNumber", this.slotNumber);
+        nbt.putInt("rollTicksRemaining", this.rollTicksRemaining);
         return nbt;
     }
 
     @Override
     public void load(CompoundNBT nbt) {
-        this.slotNumber = nbt.getInt("slotNumber");
+        this.slotNumber = nbt.contains("slotNumber") ? Math.max(-1, Math.min(9, nbt.getInt("slotNumber"))) : -1;
+        this.rollTicksRemaining = hasRolled()
+                ? Math.max(0, Math.min(ROLL_LIFETIME, nbt.contains("rollTicksRemaining")
+                    ? nbt.getInt("rollTicksRemaining") : ROLL_LIFETIME)) : 0;
     }
 
     // ── Gauge renderer ────────────────────────────────────────────────────────
 
     @OnlyIn(Dist.CLIENT)
     public void renderGauge(PlayerEntity player, MatrixStack matrixStack, int posX, int posY, LuckySlotAbility ability) {
-        RenderSystem.enableBlend();
-        Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager().bind(ModResources.WIDGETS);
-        RendererHelper.drawAbilityIcon(INSTANCE, matrixStack, (float) posX, (float) (posY - 38), 0, 32.0F, 32.0F);
-
-        String label = ability.hasRolled() ? String.valueOf(ability.getSlotNumber()) : "?";
-        // Color changes based on the number — low = red, mid = yellow, high = green
-        Color color;
-        if (!ability.hasRolled()) {
-            color = new Color(200, 200, 200); // grey for unrolled
-        } else if (ability.getSlotNumber() <= 3) {
-            color = new Color(255, 80, 80);   // red for low
-        } else if (ability.getSlotNumber() <= 6) {
-            color = new Color(255, 220, 50);  // yellow for mid
-        } else {
-            color = new Color(80, 255, 120);  // green for high
-        }
-
-        WyHelper.drawStringWithBorder(
-                mc.font, matrixStack,
-                label,
-                posX + 16 - mc.font.width(label) / 2,
-                posY - 25,
-                color.getRGB()
-        );
-        RenderSystem.disableBlend();
+        net.kazi.kazimod.kake.KakeHud.render(player,matrixStack,posX,posY,ability.getSlotNumber());
     }
 
     // ── Static initialiser ────────────────────────────────────────────────────
@@ -127,6 +124,7 @@ public class LuckySlotAbility extends PassiveAbility2 {
                 LuckySlotAbility::new
         ))
                 .addDescriptionLine(new ITextComponent[]{ DESCRIPTION[0] })
+                .setIcon(new net.minecraft.util.ResourceLocation("kazimod","textures/abilities/lucky_slot.png"))
                 .setHidden()
                 .build();
     }

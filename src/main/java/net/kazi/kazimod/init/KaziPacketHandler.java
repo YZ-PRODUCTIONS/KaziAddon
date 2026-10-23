@@ -16,8 +16,8 @@ import java.util.Optional;
 
 public class KaziPacketHandler {
 
-    // Reality Marble music control adds a packet; reject mismatched older peers at login.
-    private static final String PROTOCOL_VERSION = "5";
+    // Seiryu's synchronized body path requires matching client/server packets.
+    private static final String PROTOCOL_VERSION = "11";
     private static int id = 0;
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
@@ -28,6 +28,16 @@ public class KaziPacketHandler {
     );
 
     public static void register() {
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.progression.FruitlessProgressionPacket.class,
+                net.kazi.kazimod.progression.FruitlessProgressionPacket::encode,
+                net.kazi.kazimod.progression.FruitlessProgressionPacket::decode,
+                net.kazi.kazimod.progression.FruitlessProgressionPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.seiryu.SeiryuSpinePacket.class,
+                net.kazi.kazimod.seiryu.SeiryuSpinePacket::encode,
+                net.kazi.kazimod.seiryu.SeiryuSpinePacket::decode,
+                net.kazi.kazimod.seiryu.SeiryuSpinePacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(
                 id++,
                 SyncEntitySizePacket.class,
@@ -76,6 +86,11 @@ public class KaziPacketHandler {
                 net.kazi.kazimod.network.RealityMarbleMusicPacket::handle,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT)
         );
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.MammothAnimationPacket.class,
+                net.kazi.kazimod.network.MammothAnimationPacket::encode,
+                net.kazi.kazimod.network.MammothAnimationPacket::decode,
+                net.kazi.kazimod.network.MammothAnimationPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 
     public static void syncEntitySize(Entity entity) {

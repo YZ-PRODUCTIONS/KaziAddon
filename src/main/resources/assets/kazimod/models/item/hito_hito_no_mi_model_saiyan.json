@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "kazimod:items/hito_hito_no_mi_model_saiyan"
+  }
+}

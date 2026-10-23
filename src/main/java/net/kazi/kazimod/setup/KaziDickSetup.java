@@ -219,7 +219,13 @@ public class KaziDickSetup {
 
         // ── AWA AWA NO MI ────────────────────────────────────────────────────
         FruitAbilityInjector.removeAbilities(ModAbilities.KAME_KAME_NO_MI, KameGuardPointAbility.INSTANCE);
-        FruitAbilityInjector.addAbilities(ModAbilities.KAME_KAME_NO_MI, KameGuardPointRework.INSTANCE);
+        FruitAbilityInjector.addAbilities(ModAbilities.KAME_KAME_NO_MI, KameGuardPointRework.INSTANCE,
+                net.kazi.kazimod.abilities.KameRework.WorldTurtleFormAbility.INSTANCE,
+                net.kazi.kazimod.abilities.KameRework.WorldTurtleFlightAbility.INSTANCE,
+                net.kazi.kazimod.abilities.KameRework.DivineShieldAbility.INSTANCE,
+                net.kazi.kazimod.abilities.KameRework.DestructionAbility.INSTANCE,
+                net.kazi.kazimod.abilities.KameRework.SupernovaAbility.INSTANCE,
+                net.kazi.kazimod.abilities.KameRework.WorldShakingSpinAbility.INSTANCE);
 
         FruitAbilityInjector.removeAbilities(ModAbilities.AWA_AWA_NO_MI, GoldenHourAbility.INSTANCE);
         FruitAbilityInjector.addAbilities(ModAbilities.AWA_AWA_NO_MI, GoldenHourRework.INSTANCE);
@@ -416,6 +422,7 @@ public class KaziDickSetup {
         FruitAbilityInjector.addAbilities(ModAbilities.DOKU_DOKU_NO_MI,
                 NewChloroBallRework.INSTANCE, NewDokuFuguRework.INSTANCE, NewDokuGumoRework.INSTANCE,
                 NewHydraRework.INSTANCE, NewVenomDemonRework.INSTANCE, NewVenomRoadRework.INSTANCE,
+                net.kazi.kazimod.doku.VenomRoadFlightAbility.INSTANCE,
                 ReworkedPoisonImmunityRework.INSTANCE);
 
         // ── BOMU BOMU NO MI ──────────────────────────────────────────────────
