@@ -26,7 +26,6 @@ import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.api.math.VectorHelper;
 import xyz.pixelatedw.mineminenomi.api.morph.MorphInfo;
 import xyz.pixelatedw.mineminenomi.api.util.Interval;
-import xyz.pixelatedw.mineminenomi.config.ClientConfig;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity;
 import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModMorphs;
@@ -36,8 +35,6 @@ import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 /** Kazi-owned copy of Mine Mine no Mi 0.10.11's Sango. */
 public class SangoRework extends Ability {
-    private static final ResourceLocation DEFAULT_ICON =
-            new ResourceLocation("mineminenomi", "textures/abilities/sango.png");
     private static final ResourceLocation ALT_ICON =
             new ResourceLocation("mineminenomi", "textures/abilities/alts/sango.png");
     private static final ITextComponent[] DESCRIPTION = AbilityHelper.registerDescriptionText(
@@ -55,7 +52,7 @@ public class SangoRework extends Ability {
                             ChargeComponent.getTooltip(40.0F))
                     .setSourceHakiNature(SourceHakiNature.SPECIAL)
                     .setSourceElement(SourceElement.LIGHTNING)
-                    .setIcon(DEFAULT_ICON)
+                    .setIcon(ALT_ICON)
                     .build();
 
     private final ChargeComponent chargeComponent =
@@ -76,7 +73,7 @@ public class SangoRework extends Ability {
     }
 
     private void updateDisplayIcon() {
-        this.setDisplayIcon(ClientConfig.INSTANCE.isGoroBlue() ? ALT_ICON : DEFAULT_ICON);
+        this.setDisplayIcon(ALT_ICON);
     }
 
     private void onUseEvent(LivingEntity entity, IAbility ability) {
@@ -125,8 +122,7 @@ public class SangoRework extends Ability {
         setBoltProperties(
                 boltOuter, size, beamDistance, damage,
                 40, true,
-                ClientConfig.INSTANCE.isGoroBlue()
-                        ? ElThorRework.BLUE_THUNDER : ElThorRework.YELLOW_THUNDER,
+                ElThorRework.BLUE_THUNDER,
                 multiplier);
         boltOuter.seed = boltInner.seed;
         entity.level.addFreshEntity(boltInner);

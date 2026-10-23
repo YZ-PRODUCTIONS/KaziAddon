@@ -2,102 +2,111 @@ package net.kazi.kazimod.preserved.cerberus;
 
 import java.util.*;
 import net.MrMagicalCart.cartaddon.abilities.inucerberus.*;
-import net.MrMagicalCart.cartaddon.init.CartAbilities;
 import net.kazi.kazimod.api.KaziRegistry;
-import net.kazi.kazimod.util.FruitAbilityInjector;
 import net.minecraft.entity.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.*;
 import xyz.pixelatedw.mineminenomi.api.abilities.*;
-import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
-import xyz.pixelatedw.mineminenomi.api.enums.AbilityCommandGroup;
-import xyz.pixelatedw.mineminenomi.api.damagesource.*;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.*;
+import xyz.pixelatedw.mineminenomi.packets.server.SSyncAbilityDataPacket;
+import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 
+/** Keeps old save IDs readable, but leaves Cart Addon's Cerberus moveset untouched. */
 public final class CerberusFeatures {
     public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(ForgeRegistries.ENTITIES,"kazimod");
     public static final RegistryObject<EntityType<CerberusEffectEntity>> EFFECT=ENTITIES.register("cerberus_hellfire",()->
             EntityType.Builder.<CerberusEffectEntity>of(CerberusEffectEntity::new,EntityClassification.MISC)
                     .sized(2.2F,2.2F).clientTrackingRange(12).updateInterval(1).setShouldReceiveVelocityUpdates(true).noSave().build("cerberus_hellfire"));
     public static final Map<CerberusAbility.Move,AbilityCore<CerberusAbility>> CORES=new EnumMap<>(CerberusAbility.Move.class);
-    public static final AbilityCore<CerberusHuntPassive> HUNT=new AbilityCore.Builder<CerberusHuntPassive>("Three-Headed Hunt",AbilityCategory.DEVIL_FRUITS,AbilityType.PASSIVE,CerberusHuntPassive::new)
-            .setIcon(icon("fang")).addDescriptionLine(new StringTextComponent("Triple Fang: left, right, then a heavy center bite. Different attacks build three Hunt marks for 6 seconds. The next bite consumes them to slow prey; Threefold Execution also halves healing for 4 seconds. Retains Cerberus night vision.")).build();
-    private static final List<AbilityCore<?>> OLD=Arrays.asList(MaulingAbility.INSTANCE,HadesCrossAbility.INSTANCE,
-            HellHathNoFuryAbility.INSTANCE,HellHeadMotorAbility.INSTANCE,HellHeadMotor2Ability.INSTANCE,
-            CerberusRideableAbility.INSTANCE,GatesOfHellAbility.INSTANCE,InuCerberusPassiveAbility.INSTANCE);
-    public static ResourceLocation icon(String name){return new ResourceLocation("kazimod","textures/abilities/cerberus_"+name+".png");}
-    public static void init(IEventBus bus){
+    public static final AbilityCore<CerberusHuntPassive> HUNT=new AbilityCore.Builder<CerberusHuntPassive>(
+            "Three-Headed Hunt",AbilityCategory.DEVIL_FRUITS,AbilityType.PASSIVE,CerberusHuntPassive::new).build();
+
+    public static ResourceLocation icon(String name) {
+        return new ResourceLocation("kazimod","textures/abilities/cerberus_"+name+".png");
+    }
+
+    public static void init(IEventBus bus) {
         ENTITIES.register(bus);
+        // Hidden, inert entries allow existing player saves to migrate without missing registry IDs.
+        HUNT.setHidden();
+        HUNT.setIcon(InuCerberusPassiveAbility.INSTANCE.getIcon());
         KaziRegistry.registerAbility(HUNT);
-        for(CerberusAbility.Move move:CerberusAbility.Move.values()){
-            AbilityCore.Builder<CerberusAbility> builder=new AbilityCore.Builder<CerberusAbility>(move.title,AbilityCategory.DEVIL_FRUITS,c->new CerberusAbility(c,move))
-                    .setIcon(icon(move.icon)).addDescriptionLine(new StringTextComponent(move.description))
-                    .addAdvancedDescriptionLine(CooldownComponent.getTooltip(move.cooldown));
-            if(move==CerberusAbility.Move.GATES)builder.setSourceElement(SourceElement.FIRE).setSourceType(SourceType.PROJECTILE).setSourceHakiNature(SourceHakiNature.SPECIAL);
-            else builder.setSourceType(SourceType.BLUNT).setSourceHakiNature(SourceHakiNature.IMBUING);
-            AbilityCore<CerberusAbility> core=builder.build();
-            CORES.put(move,core);KaziRegistry.registerAbility(core);
+        for(CerberusAbility.Move move:CerberusAbility.Move.values()) {
+            AbilityCore<CerberusAbility> core=new AbilityCore.Builder<CerberusAbility>(
+                    move.title,AbilityCategory.DEVIL_FRUITS,c->new CerberusAbility(c,move)).build();
+            core.setHidden();
+            core.setIcon(original(move).getIcon());
+            CORES.put(move,core);
+            KaziRegistry.registerAbility(core);
         }
-        AbilityCommandGroup.create("CERBERUS_REWORK",()->CORES.values().toArray(new AbilityCore[0]));
-        bus.addListener((FMLCommonSetupEvent event)->event.enqueueWork(()->{
-            List<AbilityCore<?>> additions=new ArrayList<>(CORES.values());additions.add(0,HUNT);
-            FruitAbilityInjector.updateFruitAbilities(CartAbilities.INU_INU_NO_MI_MODEL_CERBERUS,OLD,additions,false);
-            InuCerberusGuardPointAbility.INSTANCE.setIcon(icon("full"));
-            InuCerberusHeavyPointAbility.INSTANCE.setIcon(icon("hybrid"));
-            InuCerberusPassiveAbility.INSTANCE.setIcon(icon("fang"));
-            InuCerberusImmunityPassiveAbility.INSTANCE.setIcon(icon("fang"));
-        }));
         MinecraftForge.EVENT_BUS.addListener(CerberusFeatures::login);
-        MinecraftForge.EVENT_BUS.addListener(CerberusCombat::attack);
-        MinecraftForge.EVENT_BUS.addListener(CerberusCombat::meleeHit);
-        MinecraftForge.EVENT_BUS.addListener(CerberusCombat::heal);
-        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedOutEvent e)->CerberusCombat.clear(e.getPlayer()));
-        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerChangedDimensionEvent e)->CerberusCombat.clear(e.getPlayer()));
     }
-    private static void login(PlayerEvent.PlayerLoggedInEvent event){
-        if(event.getPlayer().level.isClientSide)return;
+
+    private static void login(PlayerEvent.PlayerLoggedInEvent event) {
+        if(event.getPlayer().level.isClientSide) return;
         IAbilityData data=AbilityDataCapability.get(event.getPlayer());
-        if(data==null)return;
-        // Removing an unlock also clears its equipped slots. Snapshot those first.
-        List<IAbility> equipped=data.getRawEquippedAbilities();
+        if(data!=null && restoreAbilities(data))
+            WyNetwork.sendToAllTrackingAndSelf(new SSyncAbilityDataPacket(event.getPlayer().getId(),data),event.getPlayer());
+    }
+
+    static boolean restoreAbilities(IAbilityData data) {
+        List<IAbility> equipped=new ArrayList<>(data.getRawEquippedAbilities());
+        Map<AbilityCore<?>,AbilityCore<?>> replacements=new LinkedHashMap<>();
+        replacements.put(HUNT,InuCerberusPassiveAbility.INSTANCE);
+        for(CerberusAbility.Move move:CerberusAbility.Move.values())
+            replacements.put(CORES.get(move),original(move));
+
         boolean changed=false;
-        for(AbilityCore<?> old:OLD)if(data.hasUnlockedAbility(old)){
+        for(Map.Entry<AbilityCore<?>,AbilityCore<?>> entry:replacements.entrySet()) {
+            AbilityCore<?> retired=entry.getKey(), original=entry.getValue();
+            boolean present=data.hasUnlockedAbility(retired) || data.hasPassiveAbility(retired)
+                    || equipped.stream().anyMatch(a->a!=null && a.getCore()==retired);
+            if(!present) continue;
+            AbilityUnlock unlock=data.getUnlockTypeForAbility(retired);
+            if(unlock==null || unlock==AbilityUnlock.NONE) unlock=AbilityUnlock.PROGRESSION;
+            // Removing the unlock also clears equipped/passive instances, so retain the slot snapshot above.
+            data.removeUnlockedAbility(retired);
+            data.removeEquippedAbility(retired);
+            data.removePassiveAbility(retired);
+            if(!data.hasUnlockedAbility(original)) data.addUnlockedAbility(original,unlock);
+            if(original.getType()==AbilityType.PASSIVE && !data.hasPassiveAbility(original))
+                data.addPassiveAbility(original.createAbility());
             changed=true;
-            AbilityCore<?> replacement=replacement(old);
-            if(!data.hasUnlockedAbility(replacement))data.addUnlockedAbility(replacement,data.getUnlockTypeForAbility(old));
-            data.removeUnlockedAbility(old);
         }
-        if(data.hasUnlockedAbility(InuCerberusGuardPointAbility.INSTANCE)
-                || data.hasUnlockedAbility(InuCerberusHeavyPointAbility.INSTANCE)) {
-            for(AbilityCore<?> core:CORES.values())if(!data.hasUnlockedAbility(core)){data.addUnlockedAbility(core,AbilityUnlock.PROGRESSION);changed=true;}
-            if(!data.hasUnlockedAbility(HUNT)){data.addUnlockedAbility(HUNT,AbilityUnlock.PROGRESSION);changed=true;}
-        }
+        if(!changed) return false;
+
         Set<AbilityCore<?>> used=new HashSet<>();
-        for(IAbility a:equipped)if(a!=null)used.add(a.getCore());
-        for(int slot=0;slot<equipped.size();slot++){
-            IAbility a=equipped.get(slot);if(a==null || !OLD.contains(a.getCore()))continue;
-            changed=true;
-            AbilityCore<?> core=replacement(a.getCore());
-            if(used.contains(core))data.setEquippedAbility(slot,null);
-            else{data.setEquippedAbility(slot,core.createAbility());used.add(core);}
+        for(IAbility ability:data.getEquippedAbilities()) used.add(ability.getCore());
+        for(int slot=0;slot<equipped.size();slot++) {
+            IAbility previous=equipped.get(slot);
+            if(previous==null) continue;
+            AbilityCore<?> replacement=replacements.get(previous.getCore());
+            if(replacement==null) continue;
+            data.setEquippedAbility(slot,null);
+            if(replacement.getType()==AbilityType.PASSIVE || !used.add(replacement)) continue;
+            data.setEquippedAbility(slot,replacement.createAbility());
         }
-        if(changed)xyz.pixelatedw.mineminenomi.wypi.WyNetwork.sendToAllTrackingAndSelf(
-                new xyz.pixelatedw.mineminenomi.packets.server.SSyncAbilityDataPacket(event.getPlayer().getId(),data),event.getPlayer());
+        return true;
     }
-    private static AbilityCore<?> replacement(AbilityCore<?> old){
-        if(old==InuCerberusPassiveAbility.INSTANCE)return HUNT;
-        CerberusAbility.Move move=old==GatesOfHellAbility.INSTANCE?CerberusAbility.Move.GATES:
-                old==HellHathNoFuryAbility.INSTANCE?CerberusAbility.Move.FURY:
-                old==MaulingAbility.INSTANCE?CerberusAbility.Move.EXECUTION:
-                old==HadesCrossAbility.INSTANCE?CerberusAbility.Move.VIGIL:
-                old==CerberusRideableAbility.INSTANCE?CerberusAbility.Move.TERRITORY:CerberusAbility.Move.HOWL;
-        return CORES.get(move);
+
+    static AbilityCore<?> original(CerberusAbility.Move move) {
+        switch(move) {
+            case FURY: return HellHathNoFuryAbility.INSTANCE;
+            case EXECUTION: return MaulingAbility.INSTANCE;
+            case VIGIL: return HadesCrossAbility.INSTANCE;
+            case TERRITORY: return CerberusRideableAbility.INSTANCE;
+            case GATES: return GatesOfHellAbility.INSTANCE;
+            // Both replacements came from the head-launch move; restore its actual fruit-menu variant.
+            default: return HellHeadMotor2Ability.INSTANCE;
+        }
     }
-    public static boolean legacy(AbilityCore<?> core){return OLD.contains(core);}
+
+    public static boolean legacy(AbilityCore<?> core) {
+        // The old blocker is no longer used, including if an older config still lists its mixin.
+        return false;
+    }
 }

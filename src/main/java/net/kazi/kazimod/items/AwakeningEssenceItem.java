@@ -4,6 +4,7 @@ import net.kazi.kazimod.config.KaziConfig;
 import net.kazi.kazimod.entities.InfiniteVoidBarrierEntity;
 import net.kazi.kazimod.events.AwakeningEssenceDeathHandler;
 import net.kazi.kazimod.init.KaziEntities;
+import net.kazi.kazimod.progression.FruitlessProgression;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -62,6 +63,9 @@ public class AwakeningEssenceItem extends Item {
     public ActionResult<ItemStack> use(World world, PlayerEntity playerIn, Hand hand) {
         ItemStack stack = playerIn.getItemInHand(hand);
 
+        ActionResult<ItemStack> saiyan = net.kazi.kazimod.saiyan.SaiyanFeatures.awaken(world, playerIn, hand);
+        if (saiyan != null) return saiyan;
+
         if (world.isClientSide) return ActionResult.pass(stack);
 
         ServerPlayerEntity player      = (ServerPlayerEntity) playerIn;
@@ -81,6 +85,13 @@ public class AwakeningEssenceItem extends Item {
                 ? java.util.Optional.empty()
                 : devilFruit.getDevilFruit();
 
+        boolean isFruitless = FruitlessProgression.fruitless(player);
+        if (isFruitless && FruitlessProgression.unlocked(player)) {
+            player.sendMessage(new net.minecraft.util.text.TranslationTextComponent(
+                    "message.kazimod.fruitless.already_unlocked"), player.getUUID());
+            return ActionResult.fail(stack);
+        }
+
         boolean isKoku = fruit.isPresent() && KOKU_KOKU_NO_MI.equals(fruit.get());
         boolean isKama = fruit.isPresent() && KAMA_KAMA_NO_MI.equals(fruit.get());
         boolean isGomu = fruit.isPresent() && GOMU_GOMU_NO_MI.equals(fruit.get());
@@ -93,22 +104,24 @@ public class AwakeningEssenceItem extends Item {
         boolean isVampire = fruit.isPresent() && BATTO_BATTO_NO_MI_MODEL_VAMPIRE.equals(fruit.get());
         boolean isKame = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.KAME_KAME_NO_MI);
         boolean isKage = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.KAGE_KAGE_NO_MI);
+        boolean isGuru = net.kazi.kazimod.tusk.TuskState.hasFruit(player);
+        boolean tuskMasterySkip = isGuru && net.kazi.kazimod.tusk.TuskState.awakened(player);
 
-        if (!isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi
-                && !isNetsu && !isKira && !isVampire && !isKame && !isKage) {
+        if (!isFruitless && !isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi
+                && !isNetsu && !isKira && !isVampire && !isKame && !isKage && !isGuru) {
             player.sendMessage(new StringTextComponent(
                             "\u00a7cOnly a user eligible for awakening can use this item."),
                     player.getUUID());
             return ActionResult.fail(stack);
         }
 
-        if (devilFruit.hasAwakenedFruit()) {
+        if (!isFruitless && devilFruit.hasAwakenedFruit() && !tuskMasterySkip) {
             player.sendMessage(new StringTextComponent("\u00a7eYour fruit is already awakened."),
                     player.getUUID());
             return ActionResult.fail(stack);
         }
 
-        boolean bypassBossTrial = isNetsu || isKira || isVampire || isKame || isKage;
+        boolean bypassBossTrial = isNetsu || isKira || isVampire || isKame || isKage || isGuru;
 
         if (!bypassBossTrial && hasActiveTrial(serverWorld, player.getUUID())) {
             player.sendMessage(new StringTextComponent(
@@ -137,6 +150,23 @@ public class AwakeningEssenceItem extends Item {
                         player.getUUID());
                 return ActionResult.fail(stack);
             }
+        }
+
+        if (isFruitless) {
+            if (!FruitlessProgression.unlock(player, stack)) return ActionResult.fail(stack);
+            if (!player.isCreative()) {
+                player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
+            }
+            return ActionResult.success(stack);
+        }
+
+        if (isGuru) {
+            boolean used = tuskMasterySkip
+                    ? net.kazi.kazimod.tusk.TuskFeatures.skipMastery(player, stack)
+                    : net.kazi.kazimod.tusk.TuskFeatures.awaken(player, stack);
+            if (!used) return ActionResult.fail(stack);
+            if (!player.isCreative()) player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
+            return ActionResult.success(stack);
         }
 
         if (bypassBossTrial) {

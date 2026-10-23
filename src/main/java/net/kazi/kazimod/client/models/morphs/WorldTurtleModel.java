@@ -63,6 +63,7 @@ public final class WorldTurtleModel<T extends LivingEntity> extends MorphModel<T
                 s.mulPose(Vector3f.ZP.rotationDegrees(n.rotation[2]+(p==null?0:p.rotation[2])));
                 s.mulPose(Vector3f.YP.rotationDegrees(n.rotation[1]+(p==null?0:p.rotation[1])));
                 s.mulPose(Vector3f.XP.rotationDegrees(n.rotation[0]+(p==null?0:p.rotation[0])));
+                net.kazi.kazimod.client.zoan.ZoanTransitions.rigJoint(n.name,s);
                 s.translate(-n.origin[0],-n.origin[1],-n.origin[2]);
                 draw(n.children,s,buffer,light,overlay,r,g,b,alpha);s.popPose();
             }else if(n.quads!=null)for(CerberusRig.Quad q:n.quads){

@@ -17,11 +17,15 @@ import xyz.pixelatedw.mineminenomi.particles.SimpleParticle;
 public final class PreservedClient {
     public static void init(IEventBus bus) {
         net.kazi.kazimod.worldturtle.WorldTurtleClient.init(bus);
+        net.kazi.kazimod.seiryu.SeiryuClient.init(bus);
         bus.addListener((net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent e)->net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(net.kazi.kazimod.kake.KakeVisuals.EFFECT.get(),net.kazi.kazimod.kake.KakeVfxRenderer::new));
         bus.addListener(PreservedClient::setup);
         bus.addListener(PreservedClient::particles);
     }
     private static void setup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.GORO_VFX.get(), net.kazi.kazimod.goro.GoroVfxRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.DOKU_GAS.get(), net.kazi.kazimod.doku.DokuGasRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.BOMU_VFX.get(), net.kazi.kazimod.bomu.BomuVfxRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(net.kazi.kazimod.preserved.tenki.TenkiEffects.EFFECT.get(),net.kazi.kazimod.preserved.tenki.TenkiRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(net.kazi.kazimod.preserved.sahur.SahurEffects.LIGHT.get(),
                 net.kazi.kazimod.preserved.sahur.SahurLightRenderer::new);

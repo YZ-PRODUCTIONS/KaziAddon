@@ -1,6 +1,7 @@
 package net.kazi.kazimod.mahoraga;
 
 import net.kazi.kazimod.api.KaziRegistry;
+import net.kazi.kazimod.shikigami.TenShadowsTaming;
 import net.kazi.kazimod.util.FruitAbilityInjector;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,6 +32,7 @@ import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 public final class MahoragaFeatures {
     public static final String SUMMON_TAG = "kazimodMahoragaSummon";
     public static final String RESERVE_TAG = "kazimodMahoragaReserve";
+    public static final String DEFEATED_TAG = "kazimodMahoragaDefeated";
     private static final DeferredRegister<EntityType<?>> TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, "kazimod");
     private static final DeferredRegister<net.minecraft.util.SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS,"kazimod");
     public static final RegistryObject<net.minecraft.util.SoundEvent> WHEEL_SOUND = SOUNDS.register("mahoraga_wheel",()->new net.minecraft.util.SoundEvent(new net.minecraft.util.ResourceLocation("kazimod","mahoraga_wheel")));
@@ -47,7 +49,7 @@ public final class MahoragaFeatures {
         TYPES.register(bus);
         SOUNDS.register(bus);
         KaziRegistry.registerAbility(MahoragaAbility.INSTANCE);
-        AbilityCommandGroup.create("KAGE_AWAKENING", () -> new xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore[]{MahoragaAbility.INSTANCE});
+        AbilityCommandGroup.create("KAGE_AWAKENING", net.kazi.kazimod.shikigami.ShikigamiFeatures::awakeningAbilities);
         bus.addListener((net.minecraftforge.event.entity.EntityAttributeCreationEvent e) -> e.put(MAHORAGA.get(), MahoragaEntity.createAttributes().build()));
         bus.addListener((FMLCommonSetupEvent e) -> e.enqueueWork(() -> {
             FruitAbilityInjector.addAbilities(ModAbilities.KAGE_KAGE_NO_MI, MahoragaAbility.INSTANCE);
@@ -136,6 +138,10 @@ public final class MahoragaFeatures {
 
     public static boolean allied(LivingEntity owner, Entity other) {
         if (owner==null || other==null) return false;
+        if(TenShadowsTaming.isTaming(owner)||TenShadowsTaming.isTaming(other))return owner==other;
+        if(other instanceof net.kazi.kazimod.shikigami.ShikigamiEntity)
+            return owner.getUUID().equals(((net.kazi.kazimod.shikigami.ShikigamiEntity)other).ownerId())
+                    || allied(owner,((net.kazi.kazimod.shikigami.ShikigamiEntity)other).owner());
         if (owner==other || owner.isAlliedTo(other) || other.isAlliedTo(owner)) return true;
         if (other instanceof MahoragaEntity) return owner.getUUID().equals(((MahoragaEntity)other).ownerId());
         if (other instanceof net.minecraft.entity.passive.TameableEntity
@@ -170,6 +176,7 @@ public final class MahoragaFeatures {
     public static MahoragaEntity summon(LivingEntity owner) {
         MahoragaEntity existing=find(owner);
         if (existing!=null) return existing.isDismissing()?null:existing;
+        if(!TenShadowsTaming.canSummon(owner,"mahoraga"))return null;
         MahoragaEntity entity=new MahoragaEntity(MAHORAGA.get(),owner.level);
         Vector3d forward=owner.getLookAngle().multiply(1,0,1).normalize();
         for (int attempt=0; attempt<16; attempt++) {
@@ -182,11 +189,14 @@ public final class MahoragaFeatures {
                 entity.setPos(ground.getX()+.5,ground.getY()+1.01,ground.getZ()+.5);
                 if (!owner.level.noCollision(entity)) continue;
                 entity.setOwner(owner);
+                TenShadowsTaming.prepare(entity);
                 entity.restoreFor(owner);
                 entity.yRot=entity.yBodyRot=owner.yRot;
                 entity.beginSummon();
                 if (!owner.level.addFreshEntity(entity)) return null;
                 owner.getPersistentData().putUUID(SUMMON_TAG,entity.getUUID());
+                owner.getPersistentData().remove(DEFEATED_TAG);
+                TenShadowsTaming.started(entity);
                 return entity;
             }
         }

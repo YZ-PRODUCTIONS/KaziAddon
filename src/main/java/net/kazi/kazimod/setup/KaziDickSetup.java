@@ -422,6 +422,7 @@ public class KaziDickSetup {
         FruitAbilityInjector.addAbilities(ModAbilities.DOKU_DOKU_NO_MI,
                 NewChloroBallRework.INSTANCE, NewDokuFuguRework.INSTANCE, NewDokuGumoRework.INSTANCE,
                 NewHydraRework.INSTANCE, NewVenomDemonRework.INSTANCE, NewVenomRoadRework.INSTANCE,
+                net.kazi.kazimod.doku.VenomRoadFlightAbility.INSTANCE,
                 ReworkedPoisonImmunityRework.INSTANCE);
 
         // ── BOMU BOMU NO MI ──────────────────────────────────────────────────

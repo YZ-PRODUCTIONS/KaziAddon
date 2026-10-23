@@ -1,0 +1,22 @@
+Saiyan ability sounds: downloaded from Soundsverse, October 18, 2026.
+Converted to mono 44.1 kHz Ogg Vorbis, loudness normalized.
+
+saiyan_blast.ogg
+https://soundsverse.com/dragon-ball-z/goku/ki-blast
+saiyan_charge.ogg
+https://soundsverse.com/dragon-ball-z/goku/kamehameha-charge
+saiyan_kamehameha.ogg
+https://soundsverse.com/dragon-ball-z/goku/kamehameha-fire
+saiyan_teleport.ogg
+https://soundsverse.com/dragon-ball-z/goku/goku-instant-transmission
+saiyan_power_up.ogg
+https://soundsverse.com/dragon-ball-z/goku/son-goku-power-up
+
+saiyan_transform.ogg
+https://soundsverse.com/dragon-ball-super/goku-dragon-ball-super/super-saiyan-god-transformation-burst
+Download: https://soundsverse.com/wp-content/uploads/s/goku-dbs-super-saiyan-god-transformation-burst-sound-effect.zip
+Two-second transformation burst, converted to mono Ogg with a short ending fade.
+
+Source advertises royalty-free use. This attribution is not independent
+verification of underlying anime audio redistribution rights. Confirm rights
+before public or commercial redistribution.

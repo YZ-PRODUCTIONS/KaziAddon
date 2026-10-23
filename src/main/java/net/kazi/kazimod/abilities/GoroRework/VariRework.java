@@ -1,6 +1,5 @@
 package net.kazi.kazimod.abilities.GoroRework;
 
-import java.awt.Color;
 import java.util.List;
 import net.kazi.kazimod.api.KaziRegistry;
 import net.minecraft.entity.LivingEntity;
@@ -31,7 +30,6 @@ import xyz.pixelatedw.mineminenomi.api.math.VectorHelper;
 import xyz.pixelatedw.mineminenomi.api.morph.MorphInfo;
 import xyz.pixelatedw.mineminenomi.api.util.Interval;
 import xyz.pixelatedw.mineminenomi.config.ClientConfig;
-import xyz.pixelatedw.mineminenomi.entities.LightningDischargeEntity;
 import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModDamageSource;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
@@ -41,6 +39,7 @@ import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 /** Kazi-owned copy of Mine Mine no Mi 0.10.11's Vari. */
 public class VariRework extends Ability {
+    private net.kazi.kazimod.goro.GoroVfxEntity chargeVfx;
     private static final ResourceLocation DEFAULT_ICON =
             new ResourceLocation("mineminenomi", "textures/abilities/vari.png");
     private static final ResourceLocation ALT_ICON =
@@ -133,24 +132,13 @@ public class VariRework extends Ability {
         Vector3d pos = VectorHelper.calculateRotationBasedOffsetPosition(
                 entity.position(), entity.yBodyRot, 0.5D, 1.15D, 0.8D);
         float multiplier = getVoltAmaruMultiplier(entity);
-        LightningDischargeEntity discharge = new LightningDischargeEntity(
-                entity, pos.x, pos.y, pos.z, entity.yRot, entity.xRot);
-        discharge.setAliveTicks(5);
-        discharge.setLightningLength(0.2F * multiplier);
-        discharge.setColor(Color.WHITE);
-        discharge.setOutlineColor(
-                ClientConfig.INSTANCE.isGoroBlue()
-                        ? ElThorRework.BLUE_THUNDER : ElThorRework.YELLOW_THUNDER);
-        discharge.setRenderTransparent();
-        discharge.setDetails(20);
-        discharge.setDensity(40);
-        discharge.setSize(0.2F * multiplier);
-        discharge.setSkipSegments(1);
-        entity.level.addFreshEntity(discharge);
+        chargeVfx = net.kazi.kazimod.goro.GoroVfxEntity.refresh(chargeVfx, entity, pos,
+                net.kazi.kazimod.goro.GoroVfxEntity.HAND, (.3F + chargeComponent.getChargePercentage() * .65F) * multiplier, true);
     }
 
     private void onChargeEnd(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
+        chargeVfx = net.kazi.kazimod.goro.GoroVfxEntity.stop(chargeVfx);
 
         float multiplier = getVoltAmaruMultiplier(entity);
         ModDamageSource source = AbilityDamageSource.causeAbilityDamage(entity, getCore())
@@ -160,20 +148,8 @@ public class VariRework extends Ability {
         Vector3d pos = VectorHelper.calculateRotationBasedOffsetPosition(
                 entity.position(), entity.yBodyRot, 0.5D, 1.15D, 0.8D);
 
-        LightningDischargeEntity discharge = new LightningDischargeEntity(
-                entity, pos.x, pos.y, pos.z, entity.yRot, entity.xRot);
-        discharge.setAliveTicks(15);
-        discharge.setLightningLength(radius / 2.0F * multiplier);
-        discharge.setColor(Color.WHITE);
-        discharge.setOutlineColor(
-                ClientConfig.INSTANCE.isGoroBlue()
-                        ? ElThorRework.BLUE_THUNDER : ElThorRework.YELLOW_THUNDER);
-        discharge.setRenderTransparent();
-        discharge.setDetails(20);
-        discharge.setDensity(40);
-        discharge.setSize(radius / 2.0F * multiplier);
-        discharge.setSkipSegments(1);
-        entity.level.addFreshEntity(discharge);
+        net.kazi.kazimod.goro.GoroVfxEntity.spawn(entity.level, pos,
+                net.kazi.kazimod.goro.GoroVfxEntity.BURST, radius * multiplier, 20);
 
         List<LivingEntity> targets = WyHelper.getNearbyEntities(
                 pos, entity.level, radius,

@@ -165,12 +165,13 @@ public final class MammothModel<T extends LivingEntity> extends MorphModel<T> {
         s.mulPose(Vector3f.ZP.rotationDegrees(n.rotation[2]+(p==null?0:p.rotation[2])));
         s.mulPose(Vector3f.YP.rotationDegrees(n.rotation[1]+(p==null?0:p.rotation[1])));
         s.mulPose(Vector3f.XP.rotationDegrees(n.rotation[0]+(p==null?0:p.rotation[0])));
+        net.kazi.kazimod.client.zoan.ZoanTransitions.rigJoint(n.name,s);
         s.translate(-o[0],-o[1],-o[2]);
     }
     private void attach(String bone,MatrixStack s) { for(CerberusRig.Node n:paths.get(bone))transform(n,s); }
     private void renderSkin(AbstractClientPlayerEntity player,MatrixStack s,int light,int overlay,float r,float g,float b,float alpha) {
         PlayerModel<T> skin=player.getModelName().equals("slim")?slimSkin:classicSkin;
-        IVertexBuilder buf=Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.entityTranslucent(player.getSkinTextureLocation()));
+        IVertexBuilder buf=net.kazi.kazimod.client.zoan.ZoanTransitions.buffers(Minecraft.getInstance().renderBuffers().bufferSource()).getBuffer(RenderType.entityTranslucent(player.getSkinTextureLocation()));
         skinPart("head",skin.head,player.isModelPartShown(PlayerModelPart.HAT)?skin.hat:null,s,buf,light,overlay,r,g,b,alpha);
         if(player.isSpectator())return;
         skinPart("body",skin.body,player.isModelPartShown(PlayerModelPart.JACKET)?skin.jacket:null,s,buf,light,overlay,r,g,b,alpha);

@@ -71,6 +71,7 @@ extends MorphAbility2 {
     private final HitTriggerComponent hitTriggerComponent = new HitTriggerComponent((IAbility)this).addOnHitEvent(100, this::hitTriggerEvent);
     private final DamageTakenComponent damageTakenComponent = new DamageTakenComponent((IAbility)this, this::damageTakenEvent, DamageTakenComponent.DamageState.HURT);
     private final DealDamageComponent dealDamageComponent = new DealDamageComponent((IAbility)this);
+    private net.kazi.kazimod.doku.DokuGasEntity gas;
 
     public NewVenomDemonRework(AbilityCore<NewVenomDemonRework> core) {
         super(core);
@@ -126,9 +127,8 @@ extends MorphAbility2 {
                     }
                 }
             }
-            if (this.continuousComponent.getContinueTime() % 2.0f == 0.0f) {
-                WyHelper.spawnParticleEffect((ParticleEffect)((ParticleEffect)ModParticleEffects.VENOM_DEMON.get()), (Entity)entity, (double)entity.getX(), (double)entity.getY(), (double)entity.getZ());
-            }
+            gas = net.kazi.kazimod.doku.DokuGasEntity.refresh(gas, entity,
+                    net.kazi.kazimod.doku.DokuGasEntity.DEMON, Math.max(3, entity.getBbHeight() * .65F), true, true);
         }
     }
 
@@ -137,6 +137,8 @@ extends MorphAbility2 {
     }
 
     private void endContinuityEvent(LivingEntity entity, IAbility ability) {
+        if (gas != null) gas.finish();
+        gas = null;
         NewVenomRoadRework venomRoad;
         NewDokuGumoRework dokuGumo;
         NewChloroBallRework chloroBall;

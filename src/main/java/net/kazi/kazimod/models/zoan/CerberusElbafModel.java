@@ -69,9 +69,31 @@ public final class CerberusElbafModel<T extends LivingEntity> extends MorphModel
         float gaitPhase, lastLimbSwing, lastAge, runBlend;
         float movementBlend, lookYaw, lookPitch;
         boolean gaitInitialized;
+        boolean motorActive;
+        float motorStarted, motorStopped = -100;
         int biteIndex = -1;
         final CerberusJumpMotion jump = new CerberusJumpMotion();
         Motion(float age) { since = firstSeen = lastAge = age; }
+        void updateMotor(boolean active, float age) {
+            if (active && !motorActive) motorStarted = age;
+            if (!active && motorActive) motorStopped = age;
+            motorActive = active;
+        }
+        String motorAction(float age) {
+            if (motorActive) return age-motorStarted < 16 ? "hell_head_motor" : "hell_head_motor_hold";
+            return age-motorStopped < 16 ? "hell_head_motor" : "";
+        }
+        float motorTime(float age) {
+            return motorActive ? (age-motorStarted)/20 : Math.max(0, .8F-(age-motorStopped)/20);
+        }
+        void advanceGait(float limbSwing, float dt, boolean fury) {
+            // Ability-driven travel can have no vanilla limb swing at all.
+            if (fury) gaitPhase += dt/13;
+            else if (gaitInitialized) gaitPhase += MathHelper.clamp(limbSwing-lastLimbSwing,0,3)/(6+runBlend*4);
+            gaitInitialized = true;
+            lastLimbSwing = limbSwing;
+            gaitPhase %= 1;
+        }
     }
     private final boolean headless;
     private final boolean hybrid;
@@ -112,14 +134,14 @@ public final class CerberusElbafModel<T extends LivingEntity> extends MorphModel
         String action = "";
         float charge = 0;
         boolean riding = false;
+        boolean fury = false, motor = false, mauling = false;
         for (IAbility ability : AbilityDataCapability.get(entity).getEquippedAndPassiveAbilities()) {
             String type = ability.getClass().getSimpleName();
             boolean active = false, charging = false;
-            float progress = 0, activeTime = 0;
+            float progress = 0;
             for (AbilityComponent<?> component : ability.getComponents().values()) {
                 if (component instanceof ContinuousComponent) {
                     active |= ((ContinuousComponent)component).isContinuous();
-                    activeTime = ((ContinuousComponent)component).getContinueTime()/20;
                 }
                 if (component instanceof ChargeComponent) {
                     ChargeComponent c = (ChargeComponent)component;
@@ -129,27 +151,19 @@ public final class CerberusElbafModel<T extends LivingEntity> extends MorphModel
             if (type.equals("CerberusRideableAbility")) riding |= active;
             if (type.equals("HadesCrossAbility") && active) motion.hadesArmedAt = age;
             if (!active && !charging) continue;
-            if (ability instanceof net.kazi.kazimod.preserved.cerberus.CerberusAbility) {
-                net.kazi.kazimod.preserved.cerberus.CerberusAbility a = (net.kazi.kazimod.preserved.cerberus.CerberusAbility)ability;
-                action = a.animation(activeTime);
-                charge = MathHelper.clamp(activeTime/2,0,1);
-                if(a.move == net.kazi.kazimod.preserved.cerberus.CerberusAbility.Move.FURY) running = true;
-                break;
-            }
-            if (type.equals("GatesOfHellAbility")) { action = charging ? "gates_charge" : "gates_fire"; charge = progress; break; }
-            if (type.equals("MaulingAbility")) { action = "mauling"; break; }
-            // Fury uses the locomotion gallop, not a second animation layered over its legs.
-            if (type.equals("HellHathNoFuryAbility")) { running = true; action = ""; break; }
-            if (type.equals("HellHeadMotorAbility") || type.equals("HellHeadMotor2Ability")) action = "hell_head_motor_hold";
-            if (type.equals("HadesCrossAbility") && entity.getAttackAnim(age-entity.tickCount) > 0) action = "hades_cross";
+            if (type.equals("GatesOfHellAbility")) { action = charging ? "gates_charge" : "gates_fire"; charge = progress; }
+            if (type.equals("MaulingAbility")) mauling = true;
+            if (type.equals("HellHathNoFuryAbility")) fury = true;
+            if (type.equals("HellHeadMotorAbility") || type.equals("HellHeadMotor2Ability")) motor = true;
         }
+        motion.updateMotor(motor, age);
+        if (action.isEmpty()) action = mauling ? "mauling" : motion.motorAction(age);
+        // Use each form's run cycle once, with a real-time stride during the charge.
+        if (fury) { running = true; movement = 1; }
         CerberusRig.Pose idleRoot=pose.get("Cerberus - Elbaf");
         if(idleRoot!=null) idleRoot.position[1] *= 1-movement;
         motion.runBlend += MathHelper.clamp((running?1:0)-motion.runBlend,-dt/6,dt/6);
-        if (motion.gaitInitialized) motion.gaitPhase += MathHelper.clamp(limbSwing-motion.lastLimbSwing,0,3)/(6+motion.runBlend*4);
-        motion.gaitInitialized = true;
-        motion.lastLimbSwing = limbSwing;
-        motion.gaitPhase %= 1;
+        motion.advanceGait(limbSwing, dt, fury);
         float groundedMovement=movement*(1-motion.jump.weight());
         rig.apply(pose,"walk",motion.gaitPhase*1.2F,groundedMovement*(1-motion.runBlend));
         rig.apply(pose,"run",motion.gaitPhase*.65F,groundedMovement*motion.runBlend);
@@ -177,12 +191,14 @@ public final class CerberusElbafModel<T extends LivingEntity> extends MorphModel
         }
         if (!action.isEmpty()) {
             float time = action.equals("gates_charge") ? charge : action.equals("hades_cross") ? (age-motion.strikeAt)/20 : elapsed;
+            if (action.equals("hell_head_motor")) time = motion.motorTime(age);
             motion.lastTime = time;
             rig.apply(pose, action, time, weight);
         } else if (age-motion.strikeAt < 9) {
             rig.apply(pose, "cerberus_bite_"+Math.max(0,motion.biteIndex), (age-motion.strikeAt)/20, 1);
         }
-        if (headless) rig.apply(pose, "hell_head_motor_hold", age/20, 1);
+        if (headless && !action.startsWith("hell_head_motor") && !motion.previousAction.startsWith("hell_head_motor"))
+            rig.apply(pose, "hell_head_motor_hold", age/20, 1);
         if (riding || entity.isVehicle()) rig.apply(pose, "rideable", age/20, 1);
         rig.apply(pose,"leap",motion.jump.time(),motion.jump.weight());
         if (age-motion.firstSeen < 24) rig.apply(pose, "guard_point", (age-motion.firstSeen)/20, 1);
@@ -243,6 +259,7 @@ public final class CerberusElbafModel<T extends LivingEntity> extends MorphModel
         stack.mulPose(Vector3f.ZP.rotationDegrees(rot[2]+(p==null?0:p.rotation[2])));
         stack.mulPose(Vector3f.YP.rotationDegrees(rot[1]+(p==null?0:p.rotation[1])));
         stack.mulPose(Vector3f.XP.rotationDegrees(rot[0]+(p==null?0:p.rotation[0])));
+        net.kazi.kazimod.client.zoan.ZoanTransitions.rigJoint(node.name,stack);
         stack.translate(-o[0],-o[1],-o[2]);
     }
     public static void renderHeads(MatrixStack stack, IVertexBuilder buffer, int light, int overlay, float age) {

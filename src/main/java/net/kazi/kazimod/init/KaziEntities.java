@@ -463,6 +463,18 @@ public class KaziEntities {
                             .clientTrackingRange(64)
                             .setUpdateInterval(1)
                             .build("dark_matter_projectile"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.goro.GoroVfxEntity>> GORO_VFX =
+            ENTITY_TYPES.register("goro_vfx", () -> EntityType.Builder.<net.kazi.kazimod.goro.GoroVfxEntity>of(
+                    net.kazi.kazimod.goro.GoroVfxEntity::new, EntityClassification.MISC)
+                    .sized(1, 1).clientTrackingRange(16).setUpdateInterval(2).noSave().noSummon().build("goro_vfx"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.doku.DokuGasEntity>> DOKU_GAS =
+            ENTITY_TYPES.register("doku_gas", () -> EntityType.Builder.<net.kazi.kazimod.doku.DokuGasEntity>of(
+                    net.kazi.kazimod.doku.DokuGasEntity::new, EntityClassification.MISC)
+                    .sized(1, 1).clientTrackingRange(12).setUpdateInterval(3).noSave().noSummon().build("doku_gas"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.bomu.BomuVfxEntity>> BOMU_VFX =
+            ENTITY_TYPES.register("bomu_vfx", () -> EntityType.Builder.<net.kazi.kazimod.bomu.BomuVfxEntity>of(
+                    net.kazi.kazimod.bomu.BomuVfxEntity::new, EntityClassification.MISC)
+                    .sized(1, 1).clientTrackingRange(12).setUpdateInterval(3).noSave().noSummon().build("bomu_vfx"));
     public static final RegistryObject<EntityType<net.kazi.kazimod.entities.GuraVfxEntity>> GURA_VFX =
             ENTITY_TYPES.register("gura_vfx", () -> EntityType.Builder.<net.kazi.kazimod.entities.GuraVfxEntity>of(
                     net.kazi.kazimod.entities.GuraVfxEntity::new, EntityClassification.MISC)

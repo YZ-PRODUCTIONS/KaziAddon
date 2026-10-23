@@ -247,6 +247,7 @@ public class KaziAbilities {
             NewHydraRework.INSTANCE,
             NewVenomDemonRework.INSTANCE,
             NewVenomRoadRework.INSTANCE,
+            net.kazi.kazimod.doku.VenomRoadFlightAbility.INSTANCE,
             ReworkedPoisonImmunityRework.INSTANCE,
             PadHoRework.INSTANCE,
             TsuppariPadHoRework.INSTANCE,

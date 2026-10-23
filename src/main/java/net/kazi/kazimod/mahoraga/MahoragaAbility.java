@@ -2,6 +2,7 @@ package net.kazi.kazimod.mahoraga;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
+import net.kazi.kazimod.shikigami.TenShadowsTaming;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,9 +26,11 @@ public final class MahoragaAbility extends Ability {
             .setIcon(new ResourceLocation("kazimod", "textures/abilities/mahoraga.png"))
             .addDescriptionLine(new StringTextComponent("Kage awakening: summon an adaptive guardian that protects you and your teammates within 50 blocks. Use again to dismiss."))
             .addDescriptionLine(new StringTextComponent("After 10 seconds without a hit, each wheel turn adapts to ALL remembered attacks: +33% resistance per distinct attack and +15% per distinct element or type, up to immunity. Adaptations expire 30 minutes after first learned; Haki categories and special damage cannot be adapted to."))
-            .addAdvancedDescriptionLine(CooldownComponent.getTooltip(1200), ContinuousComponent.getTooltip())
+            .addDescriptionLine(new StringTextComponent("Cooldown: 10 seconds after dismissal, 20 minutes if Mahoraga is defeated."))
+            .addDescriptionLine(new StringTextComponent("Defeat Mahoraga in a taming ritual before using it as an ally. Its death removes taming; win the ritual again after the death cooldown."))
+            .addAdvancedDescriptionLine(CooldownComponent.getTooltip(200, 24000), ContinuousComponent.getTooltip())
             .build();
-    private final ContinuousComponent continuous = new ContinuousComponent(this);
+    private final ContinuousComponent continuous = new ContinuousComponent(this, true);
     private float guardianHealth, guardianMaxHealth=700;
     private boolean guardianActive;
     public MahoragaAbility(AbilityCore<MahoragaAbility> core) {
@@ -37,6 +40,7 @@ public final class MahoragaAbility extends Ability {
         if(isClientSide())addComponents(new GaugeComponent(this,this::renderGauge));
         addCanUseCheck((user, ability) -> continuous.isContinuous() || awakened(user)
                 ? AbilityUseResult.success() : AbilityUseResult.fail(new StringTextComponent("Awaken Kage Kage no Mi first.")));
+        addCanUseCheck((user,ability)->TenShadowsTaming.canUse(user,"mahoraga",continuous.isContinuous()));
         addUseEvent((user, ability) -> {
             if (continuous.isContinuous()) continuous.stopContinuity(user);
             else if (!user.level.isClientSide) {
@@ -50,8 +54,10 @@ public final class MahoragaAbility extends Ability {
         });
         continuous.addEndEvent((user, ability) -> {
             if (!user.level.isClientSide) {
+                boolean defeated = user.getPersistentData().getBoolean(MahoragaFeatures.DEFEATED_TAG);
+                user.getPersistentData().remove(MahoragaFeatures.DEFEATED_TAG);
                 MahoragaFeatures.dismiss(user);
-                cooldownComponent.startCooldown(user, 1200);
+                cooldownComponent.startCooldown(user,TenShadowsTaming.endCooldown(user,"mahoraga",defeated));
             }
         });
         addRemoveEvent((user, ability) -> {
@@ -85,6 +91,7 @@ public final class MahoragaAbility extends Ability {
     @OnlyIn(Dist.CLIENT)
     private void renderGauge(PlayerEntity player,MatrixStack stack,int x,int y,MahoragaAbility ability) {
         if(ability.guardianHealth<=0)return;
+        int[] at=net.kazi.kazimod.shikigami.SummonHud.position(x,y);x=at[0];y=at[1];
         Minecraft mc=Minecraft.getInstance();
         RendererHelper.drawAbilityIcon(INSTANCE,stack,x+4,y-42,0,24,24);
         int left=x+2,top=y-16,width=28;

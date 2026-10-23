@@ -1,15 +1,24 @@
 {
   "winds_rapture_charge": {
     "subtitle": "kazimod.subtitle.winds_rapture_charge",
-    "sounds": ["kazimod:winds_rapture_charge"]
+    "sounds": [
+      "kazimod:winds_rapture_charge"
+    ]
   },
   "winds_rapture_release": {
     "subtitle": "kazimod.subtitle.winds_rapture_release",
-    "sounds": ["kazimod:winds_rapture_release"]
+    "sounds": [
+      "kazimod:winds_rapture_release"
+    ]
   },
   "ea_cast": {
     "subtitle": "kazimod.subtitle.ea_cast",
-    "sounds": [{"name": "kazimod:ea_cast", "stream": true}]
+    "sounds": [
+      {
+        "name": "kazimod:ea_cast",
+        "stream": true
+      }
+    ]
   },
   "unlimited_lost_works_hit": {
     "subtitle": "kazimod.subtitle.unlimited_lost_works_hit",
@@ -237,17 +246,77 @@
   },
   "mammoth_roar": {
     "subtitle": "kazimod.subtitle.mammoth_roar",
-    "sounds": ["kazimod:mammoth_roar"]
+    "sounds": [
+      "kazimod:mammoth_roar"
+    ]
   },
   "mahoraga_wheel": {
     "subtitle": "kazimod.subtitle.mahoraga_wheel",
-    "sounds": [{"name": "kazimod:mahoraga_wheel", "attenuation_distance": 32}]
+    "sounds": [
+      {
+        "name": "kazimod:mahoraga_wheel",
+        "attenuation_distance": 32
+      }
+    ]
   },
   "tung": {
     "category": "player",
     "subtitle": "kazimod.subtitle.tung",
     "sounds": [
       "kazimod:tung"
+    ]
+  },
+  "saiyan_blast": {
+    "subtitle": "subtitles.kazimod.saiyan_blast",
+    "sounds": [
+      {
+        "name": "kazimod:saiyan/saiyan_blast",
+        "stream": false
+      }
+    ]
+  },
+  "saiyan_charge": {
+    "subtitle": "subtitles.kazimod.saiyan_charge",
+    "sounds": [
+      {
+        "name": "kazimod:saiyan/saiyan_charge",
+        "stream": false
+      }
+    ]
+  },
+  "saiyan_kamehameha": {
+    "subtitle": "subtitles.kazimod.saiyan_kamehameha",
+    "sounds": [
+      {
+        "name": "kazimod:saiyan/saiyan_kamehameha",
+        "stream": false
+      }
+    ]
+  },
+  "saiyan_teleport": {
+    "subtitle": "subtitles.kazimod.saiyan_teleport",
+    "sounds": [
+      {
+        "name": "kazimod:saiyan/saiyan_teleport",
+        "stream": false
+      }
+    ]
+  },
+  "saiyan_ultra_instinct_theme": {
+    "subtitle": "subtitles.kazimod.saiyan_ultra_instinct_theme",
+    "sounds": [{"name": "kazimod:saiyan/ultra_instinct_theme", "stream": true, "attenuation_distance": 48}]
+  },
+  "saiyan_transform": {
+    "subtitle": "subtitles.kazimod.saiyan_transform",
+    "sounds": [{"name": "kazimod:saiyan/saiyan_transform", "stream": false}]
+  },
+  "saiyan_power_up": {
+    "subtitle": "subtitles.kazimod.saiyan_power_up",
+    "sounds": [
+      {
+        "name": "kazimod:saiyan/saiyan_power_up",
+        "stream": false
+      }
     ]
   }
 }

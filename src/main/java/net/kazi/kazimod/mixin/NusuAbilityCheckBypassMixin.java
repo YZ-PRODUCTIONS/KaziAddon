@@ -203,6 +203,15 @@ public abstract class NusuAbilityCheckBypassMixin {
     /** Cart's style requirements share this Nusu mixin source but require their own target. */
     @Mixin(value = AbilityLimits.class, remap = false)
     public abstract static class AbilityLimitsMixin {
+        @Inject(method = {"fruitless", "fruitlessHardCheck"}, at = @At("RETURN"),
+                cancellable = true, remap = false)
+        private static void kazi$requireFruitlessEssence(LivingEntity entity, IAbility ability,
+                CallbackInfoReturnable<AbilityUseResult> cir) {
+            if (cir.getReturnValue().isSuccess()) {
+                cir.setReturnValue(net.kazi.kazimod.progression.FruitlessProgression.canUse(entity, ability));
+            }
+        }
+
         @Inject(method = {"fruitless", "fruitlessHardCheck", "requiresSantoryu",
                 "requiresBluntWeapon", "requiresTwinBarrel", "requiresGun", "requiresDagger",
                 "requirestwoAxe", "requiresAxe", "requiresGreatBlade", "requiresSpear"},

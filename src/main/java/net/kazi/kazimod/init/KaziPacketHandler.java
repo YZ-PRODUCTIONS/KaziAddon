@@ -16,8 +16,8 @@ import java.util.Optional;
 
 public class KaziPacketHandler {
 
-    // Mammoth attack animation synchronization requires matching client/server packets.
-    private static final String PROTOCOL_VERSION = "7";
+    // Seiryu's synchronized body path requires matching client/server packets.
+    private static final String PROTOCOL_VERSION = "11";
     private static int id = 0;
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
@@ -28,6 +28,16 @@ public class KaziPacketHandler {
     );
 
     public static void register() {
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.progression.FruitlessProgressionPacket.class,
+                net.kazi.kazimod.progression.FruitlessProgressionPacket::encode,
+                net.kazi.kazimod.progression.FruitlessProgressionPacket::decode,
+                net.kazi.kazimod.progression.FruitlessProgressionPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.seiryu.SeiryuSpinePacket.class,
+                net.kazi.kazimod.seiryu.SeiryuSpinePacket::encode,
+                net.kazi.kazimod.seiryu.SeiryuSpinePacket::decode,
+                net.kazi.kazimod.seiryu.SeiryuSpinePacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(
                 id++,
                 SyncEntitySizePacket.class,

@@ -1,6 +1,7 @@
 package net.kazi.kazimod.abilities.BomuRework;
 
-import net.kazi.kazimod.init.KaziParticleEffects;
+import net.kazi.kazimod.bomu.BomuVfxEntity;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
@@ -38,8 +39,6 @@ import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModAbilityPools;
 import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
-import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
-import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class ExplosiveHoldAbility extends Ability {
 
@@ -252,13 +251,8 @@ public class ExplosiveHoldAbility extends Ability {
                     4.0F, 1.0F
             );
 
-            WyHelper.spawnParticleEffect(
-                    (ParticleEffect) KaziParticleEffects.BAKUGO.get(),
-                    entity,
-                    target.getX(),
-                    target.getEyeY(),
-                    target.getZ()
-            );
+            BomuVfxEntity.spawn(entity.level, target.getX(), target.getEyeY(), target.getZ(),
+                    isFinalBlast ? 3F : 1.8F, BomuVfxEntity.BLAST, 26);
         }
 
         if (isFinalBlast) {

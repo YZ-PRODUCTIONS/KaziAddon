@@ -4,6 +4,9 @@
 
 package net.kazi.kazimod.abilities.BomuRework;
 
+import net.kazi.kazimod.bomu.BomuVisuals;
+import net.kazi.kazimod.bomu.BomuVfxEntity;
+
 import java.awt.Color;
 import java.util.function.Predicate;
 import net.minecraft.entity.LivingEntity;
@@ -36,6 +39,7 @@ public class ExplosivePunchRework extends PunchAbility2 {
     private static final float THRESHOLD = 600.0F;
     private static final float COOLDOWN = 200.0F;
     public static final AbilityCore<ExplosivePunchRework> INSTANCE;
+    private BomuVfxEntity handEffect;
 
     public ExplosivePunchRework(AbilityCore<ExplosivePunchRework> core) {
         super(core);
@@ -45,10 +49,13 @@ public class ExplosivePunchRework extends PunchAbility2 {
     }
 
     private void onContinuityStart(LivingEntity entity, IAbility ability) {
-
+        BomuVisuals.stop(handEffect);
+        handEffect = BomuVisuals.hands(entity, (int) THRESHOLD);
     }
 
     private void onContinuityEnd(LivingEntity entity, IAbility ability) {
+        BomuVisuals.stop(handEffect);
+        handEffect = null;
     }
 
     @Override
@@ -66,7 +73,7 @@ public class ExplosivePunchRework extends PunchAbility2 {
         ExplosionAbility explosion = AbilityHelper.newExplosion(entity, entity.level, target.getX(), target.getY(), target.getZ(), 4.0F);
         explosion.setStaticDamage(35.0F);
         explosion.setSmokeParticles(new CommonExplosionParticleEffect(3));
-        explosion.doExplosion();
+        BomuVisuals.explode(explosion);
         return true;
     }
 

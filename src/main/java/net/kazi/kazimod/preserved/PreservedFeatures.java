@@ -21,6 +21,7 @@ public final class PreservedFeatures {
         net.kazi.kazimod.preserved.sahur.SahurEffects.init(bus);
         net.kazi.kazimod.preserved.tenki.TenkiEffects.init(bus);
         net.kazi.kazimod.worldturtle.WorldTurtleEffects.init(bus);
+        net.kazi.kazimod.seiryu.SeiryuFlight.init(bus);
         net.kazi.kazimod.kake.KakeVisuals.init(bus);
         AbilityCore<?>[] abilities = {TripelTFormAbility.INSTANCE, TripelTGodFormAbility.INSTANCE,
                 TripelTArmoryAbility.INSTANCE, TripelTFlightAbility.INSTANCE, HomeRunSwingAbility.INSTANCE,

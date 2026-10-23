@@ -2,6 +2,8 @@ package net.kazi.kazimod.mahoraga;
 
 import java.util.*;
 import javax.annotation.Nullable;
+import net.kazi.kazimod.shikigami.TenShadowsBeast;
+import net.kazi.kazimod.shikigami.TenShadowsTaming;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.*;
@@ -31,10 +33,11 @@ import xyz.pixelatedw.mineminenomi.entities.mobs.OPEntity;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.init.ModDamageSource;
 
-public final class MahoragaEntity extends OPEntity {
+public final class MahoragaEntity extends OPEntity implements TenShadowsBeast {
     public static final float MODEL_SCALE=.54F;
     public static final ResourceLocation TEXTURE=new ResourceLocation("kazimod","textures/entities/mahoraga.png");
     private static final DataParameter<Optional<UUID>> OWNER=EntityDataManager.defineId(MahoragaEntity.class,DataSerializers.OPTIONAL_UUID);
+    private static final DataParameter<Boolean> TAMING=EntityDataManager.defineId(MahoragaEntity.class,DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> ACTION=EntityDataManager.defineId(MahoragaEntity.class,DataSerializers.INT);
     private static final DataParameter<Integer> START=EntityDataManager.defineId(MahoragaEntity.class,DataSerializers.INT);
     private static final DataParameter<Integer> WHEEL=EntityDataManager.defineId(MahoragaEntity.class,DataSerializers.INT);
@@ -67,7 +70,7 @@ public final class MahoragaEntity extends OPEntity {
     @Override protected void registerGoals() { goalSelector.addGoal(0,new SwimGoal(this)); }
     @Override protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(OWNER,Optional.empty());entityData.define(ACTION,0);entityData.define(START,0);
+        entityData.define(OWNER,Optional.empty());entityData.define(TAMING,false);entityData.define(ACTION,0);entityData.define(START,0);
         entityData.define(WHEEL,0);entityData.define(TURN,0);entityData.define(IMPACT,-1000);entityData.define(ROCK,0);
         entityData.define(IMPACT_POS,BlockPos.ZERO);
         entityData.define(DISMISS_FROM,80F);
@@ -81,6 +84,9 @@ public final class MahoragaEntity extends OPEntity {
         setHealth(getMaxHealth());
     }
     @Nullable public UUID ownerId() { return entityData.get(OWNER).orElse(null); }
+    @Override public String shadowId(){return "mahoraga";}
+    @Override public boolean isTaming(){return entityData.get(TAMING);}
+    @Override public void setTaming(boolean taming){entityData.set(TAMING,taming);}
     @Nullable public LivingEntity owner() {
         UUID id=ownerId(); if(id==null)return null;
         Entity e=level instanceof ServerWorld?((ServerWorld)level).getEntity(id):level.getPlayerByUUID(id);
@@ -114,8 +120,8 @@ public final class MahoragaEntity extends OPEntity {
     }
     public boolean validEnemy(LivingEntity target) {
         LivingEntity owner=owner();
-        return !isDismissing() && owner!=null && target!=null && target!=this && target!=owner && target.isAlive()
-                && target.level==level && !MahoragaFeatures.allied(owner,target)
+        return !isDismissing() && owner!=null && target!=null && target!=this && target.isAlive()
+                && target.level==level && (isTaming()?target==owner:!MahoragaFeatures.allied(owner,target))
                 && !AbilityHelper.isInCreativeOrSpectator(target) && target.distanceToSqr(owner)<=2500;
     }
     public void defend(LivingEntity attacker) {
@@ -123,11 +129,11 @@ public final class MahoragaEntity extends OPEntity {
         if(getTarget()==null || !validEnemy(getTarget()) || distanceToSqr(attacker)<distanceToSqr(getTarget())*1.4) setTarget(attacker);
         lastThreat=level.getGameTime();
     }
-    @Override public boolean isAlliedTo(Entity other) { return other==this || MahoragaFeatures.allied(owner(),other); }
+    @Override public boolean isAlliedTo(Entity other) { return other==this || !isTaming()&&MahoragaFeatures.allied(owner(),other); }
     @Override public boolean hurt(DamageSource source,float amount) {
         if(level.isClientSide)return super.hurt(source,amount);
         if((action()==MahoragaAction.SUMMON || isDismissing()) && source!=DamageSource.OUT_OF_WORLD)return false;
-        if(MahoragaFeatures.allied(owner(),source.getEntity()))return false;
+        if(!isTaming()&&MahoragaFeatures.allied(owner(),source.getEntity()))return false;
         if(amount<=0 || !Float.isFinite(amount))return false;
         MahoragaDamage signature=MahoragaDamage.identify(source);
         adaptation.observe(signature.attack,signature.category,level.getGameTime());entityData.set(TURN,0);
@@ -180,6 +186,7 @@ public final class MahoragaEntity extends OPEntity {
         }
         LivingEntity target=getTarget();
         if(!validEnemy(target) || level.getGameTime()-lastThreat>600) { setTarget(null);target=null; }
+        if(isTaming()&&validEnemy(owner)){setTarget(owner);target=owner;lastThreat=level.getGameTime();}
         if(tickCount%10==0) {
             LivingEntity attacker=owner.getLastHurtByMob();
             if(owner.tickCount-owner.getLastHurtByMobTimestamp()<200 && validEnemy(attacker))defend(attacker);
@@ -390,13 +397,12 @@ public final class MahoragaEntity extends OPEntity {
     @Override public AxisAlignedBB getBoundingBoxForCulling() { return getBoundingBox().inflate(5); }
     @Override protected void dropCustomDeathLoot(DamageSource source,int looting,boolean recentlyHit) {}
     @Override public void die(DamageSource source) {
-        LivingEntity owner=owner();
-        if(owner!=null)owner.getPersistentData().remove(MahoragaFeatures.RESERVE_TAG);
         super.die(source);
+        if(!level.isClientSide&&dead)TenShadowsTaming.died(this,source);
     }
 
     public void preserveFor(LivingEntity owner) {
-        if(level.isClientSide)return;
+        if(level.isClientSide||!isAlive()||isTaming())return;
         CompoundNBT saved=new CompoundNBT();
         saved.putFloat("Health",Math.max(0,getHealth()));
         saved.putFloat("MaxHealth",getMaxHealth());
@@ -406,6 +412,7 @@ public final class MahoragaEntity extends OPEntity {
     }
 
     public void restoreFor(LivingEntity owner) {
+        if(isTaming())return;
         if(!owner.getPersistentData().contains(MahoragaFeatures.RESERVE_TAG,10))return;
         CompoundNBT saved=owner.getPersistentData().getCompound(MahoragaFeatures.RESERVE_TAG);
         if(saved.contains("Health"))setHealth(MathHelper.clamp(saved.getFloat("Health"),1,getMaxHealth()));

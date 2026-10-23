@@ -1,6 +1,8 @@
 package net.kazi.kazimod.abilities.BomuRework;
 
-import net.kazi.kazimod.init.KaziParticleEffects;
+import net.kazi.kazimod.bomu.BomuVisuals;
+import net.kazi.kazimod.bomu.BomuVfxEntity;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -23,9 +25,6 @@ import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
-import xyz.pixelatedw.mineminenomi.init.ModParticleEffects;
-import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
-import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.server.ServerWorld;
@@ -48,10 +47,10 @@ public class StunGrenadeAbility extends Ability {
     private static final int    EFFECT_DURATION = 140;
 
     public static final AbilityCore<StunGrenadeAbility> INSTANCE;
+    private BomuVfxEntity chargeEffect;
 
     private final ChargeComponent chargeComponent = (new ChargeComponent(this,
             (comp) -> (double) comp.getChargePercentage() > 0.2))
-            .addTickEvent(this::duringChargeEvent)
             .addEndEvent(this::stopChargeEvent);
 
     private final AnimationComponent animationComponent = new AnimationComponent(this);
@@ -70,18 +69,14 @@ public class StunGrenadeAbility extends Ability {
 
     private void useEvent(LivingEntity player, IAbility ability) {
         this.chargeComponent.startCharging(player, (float) CHARGE_TIME);
-    }
-
-    private void duringChargeEvent(LivingEntity player, IAbility ability) {
-        // Bakugo particles pulse around the user while charging
-        WyHelper.spawnParticleEffect(
-                (ParticleEffect) KaziParticleEffects.BAKUGO.get(),
-                player,
-                player.getX(), player.getY(), player.getZ()
-        );
+        BomuVisuals.stop(chargeEffect);
+        chargeEffect = BomuVisuals.hands(player, CHARGE_TIME + 2);
     }
 
     private void stopChargeEvent(LivingEntity player, IAbility ability) {
+        BomuVisuals.stop(chargeEffect);
+        chargeEffect = null;
+        if (player.level.isClientSide) return;
         // Explosion sound at the user's position
         ((ServerWorld) player.level).playSound(
                 null,
@@ -98,6 +93,8 @@ public class StunGrenadeAbility extends Ability {
 
         // Scale radius with charge, up to MAX_RANGE
         float radius = this.chargeComponent.getChargePercentage() * (float) MAX_RANGE;
+        BomuVfxEntity.spawn(player.level, player.getX(), player.getEyeY(), player.getZ(),
+                Math.max(MIN_RANGE, radius), BomuVfxEntity.FLASH, 22);
 
         for (LivingEntity target : this.rangeComponent.getTargetsInArea(player, radius)) {
             // Blindness — same duration and amplifier as Flash
@@ -105,14 +102,6 @@ public class StunGrenadeAbility extends Ability {
             // Dizzy — same duration
             target.addEffect(new EffectInstance((Effect) ModEffects.DIZZY.get(), EFFECT_DURATION, 0));
 
-            // Bakugo particle burst at each target's eye level
-            WyHelper.spawnParticleEffect(
-                    (ParticleEffect) KaziParticleEffects.BAKUGO.get(),
-                    player,
-                    target.getX(),
-                    target.getY() + (double) target.getEyeHeight(),
-                    target.getZ()
-            );
         }
 
         this.cooldownComponent.startCooldown(player, (float) COOLDOWN);

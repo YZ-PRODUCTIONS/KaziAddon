@@ -49,6 +49,10 @@ public class KaziMod {
         NusuEvents.register();
         net.kazi.kazimod.mammoth.MammothFeatures.init(modEventBus);
         net.kazi.kazimod.mahoraga.MahoragaFeatures.init(modEventBus);
+        net.kazi.kazimod.agito.AgitoFeatures.init(modEventBus);
+        net.kazi.kazimod.shikigami.ShikigamiFeatures.init(modEventBus);
+        net.kazi.kazimod.saiyan.SaiyanFeatures.init(modEventBus);
+        net.kazi.kazimod.tusk.TuskFeatures.init(modEventBus);
 
         modEventBus.addListener((Consumer<FMLCommonSetupEvent>) this::commonSetup);
 

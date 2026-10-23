@@ -31,13 +31,12 @@ import xyz.pixelatedw.mineminenomi.config.ClientConfig;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity;
 import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModMorphs;
-import xyz.pixelatedw.mineminenomi.init.ModParticleEffects;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
-import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 /** Kazi-owned copy of Mine Mine no Mi 0.10.11's El Thor. */
 public class ElThorRework extends Ability {
+    private net.kazi.kazimod.goro.GoroVfxEntity aimVfx;
     private static final ResourceLocation DEFAULT_ICON =
             new ResourceLocation("mineminenomi", "textures/abilities/el_thor.png");
     private static final ResourceLocation ALT_ICON =
@@ -102,24 +101,13 @@ public class ElThorRework extends Ability {
         if (!particleInterval.canTick()) return;
 
         RayTraceResult mop = WyHelper.rayTraceBlocksAndEntities(entity, 256.0D, 0.4F);
-        double x = mop.getLocation().x;
-        double y = mop.getLocation().y;
-        double z = mop.getLocation().z;
-        double particleAmount = chargeComponent.getChargeTime();
-        for (int n = 0; n < particleAmount; n++) {
-            double offsetX = WyHelper.randomDouble() * n * 0.225D;
-            double offsetZ = WyHelper.randomDouble() * n * 0.225D;
-            if (entity instanceof PlayerEntity) {
-                WyHelper.spawnParticleEffectForOwner(
-                        (ParticleEffect) ModParticleEffects.EL_THOR_AIM.get(),
-                        (PlayerEntity) entity,
-                        x + offsetX, y, z + offsetZ, null);
-            }
-        }
+        aimVfx = net.kazi.kazimod.goro.GoroVfxEntity.refresh(aimVfx, entity, mop.getLocation(),
+                net.kazi.kazimod.goro.GoroVfxEntity.AIM, 2 + 4 * chargeComponent.getChargePercentage(), false);
     }
 
     private void onChargeEnd(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
+        aimVfx = net.kazi.kazimod.goro.GoroVfxEntity.stop(aimVfx);
 
         RayTraceResult mop = WyHelper.rayTraceBlocksAndEntities(entity);
         double time = chargeComponent.getChargePercentage();
@@ -150,6 +138,8 @@ public class ElThorRework extends Ability {
                 ClientConfig.INSTANCE.isGoroBlue() ? BLUE_THUNDER : YELLOW_THUNDER,
                 multiplier);
         boltOuter.seed = boltInner.seed;
+        net.kazi.kazimod.goro.GoroVisuals.mark(boltInner);
+        net.kazi.kazimod.goro.GoroVisuals.mark(boltOuter);
         entity.level.addFreshEntity(boltInner);
         entity.level.addFreshEntity(boltOuter);
         entity.level.playSound(
