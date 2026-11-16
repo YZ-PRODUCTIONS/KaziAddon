@@ -308,7 +308,7 @@ public class AwakeningEssenceDeathHandler {
         } else if (fruitId.contains("kyoka_kyoka_no_mi")) {
             return "\u00a75\u00a7l\u2605 \u00a7d" + playerName + ": Shatter, Kyoka Suigetsu. \u00a75\u00a7l\u2605";
         } else if (fruitId.contains("nagi_nagi_no_mi")) {
-            return "\u00a78\u00a7l\u2605 \u00a7f" + playerName + ": I must level up! \u00a78\u00a7l\u2605";
+            return "\u00a78\u00a7l\u2605 \u00a7f" + playerName + " has conquered their inner dragons. \u00a78\u00a7l\u2605";
         } else if (fruitId.contains("netsu_netsu_no_mi")) {
             return "\u00a76\u00a7l\u2605 \u00a7c" + playerName + ": I stand at the pinnacle of all races. \u00a76\u00a7l\u2605";
         } else if (fruitId.contains("kira_kira_no_mi")) {

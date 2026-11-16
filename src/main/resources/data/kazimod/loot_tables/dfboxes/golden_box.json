@@ -52,16 +52,6 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
-          "name": "kazimod:yagi_yagi_no_mi_model_mountain_goat"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
           "name": "kazimod:nusu_nusu_no_mi"
         },
         {
@@ -152,27 +142,7 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
-          "name": "cartaddon:numa_numa_no_mi"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
           "name": "cartaddon:uma_uma_no_mi_model_pegasus"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
-          "name": "cartaddon:numa_numa_no_mi"
         },
         {
           "type": "minecraft:item",
@@ -493,6 +463,16 @@
             }
           ],
           "name": "kazimod:petal_petal_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "kazimod:kyoka_kyoka_no_mi"
         }
       ],
       "conditions": [

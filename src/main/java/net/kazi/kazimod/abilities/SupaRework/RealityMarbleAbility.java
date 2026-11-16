@@ -38,7 +38,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -812,8 +814,11 @@ public class RealityMarbleAbility extends Ability {
         }
     }
 
-    /** Restores temporary terrain before a disconnect can stop an integrated server. */
-    private void queueLogoutRestoration(LivingEntity entity) {
+    /** Restore temporary terrain on death, logout, or dimension changes. */
+    private void cleanupMarble(LivingEntity entity) {
+        // A normal charge stop would finish charging and spawn a new marble.
+        if (this.chargeComponent.isCharging()) this.chargeComponent.forceStopCharging(entity);
+        if (this.continuousComponent.isContinuous()) this.continuousComponent.stopContinuity(entity);
         finishLostWorks(entity);
         clearChargeMovementLock(entity);
         fadeChargeMusic(entity);
@@ -951,21 +956,38 @@ public class RealityMarbleAbility extends Ability {
         }
     }
 
+    private static void cleanupCasterMarble(LivingEntity entity) {
+        if (entity.level.isClientSide) return;
+        IAbilityData abilityData = AbilityDataCapability.get(entity);
+        RealityMarbleAbility ability = abilityData == null ? null : abilityData.getEquippedAbility(INSTANCE);
+        if (ability != null) {
+            ability.cleanupMarble(entity);
+        } else {
+            // Death handlers may already have removed the equipped ability.
+            ActiveMarble trackedMarble = ACTIVE_MARBLES.remove(entity.getUUID());
+            if (trackedMarble != null) {
+                queueLogoutRestoration(entity.getUUID(), trackedMarble.world,
+                        trackedMarble.originalStates, trackedMarble.center);
+            }
+        }
+    }
+
     @Mod.EventBusSubscriber(modid = "kazimod")
     public static class LogoutCleanupHandler {
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onCasterDeath(LivingDeathEvent event) {
+            if (!event.isCanceled()) cleanupCasterMarble(event.getEntityLiving());
+        }
+
         @SubscribeEvent
         public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-            IAbilityData abilityData = AbilityDataCapability.get(event.getPlayer());
-            RealityMarbleAbility ability = abilityData.getEquippedAbility(INSTANCE);
-            if (ability != null) {
-                ability.queueLogoutRestoration(event.getPlayer());
-            } else {
-                ActiveMarble trackedMarble = ACTIVE_MARBLES.remove(event.getPlayer().getUUID());
-                if (trackedMarble != null) {
-                    queueLogoutRestoration(event.getPlayer().getUUID(), trackedMarble.world,
-                            trackedMarble.originalStates, trackedMarble.center);
-                }
-            }
+            cleanupCasterMarble(event.getPlayer());
+        }
+
+        @SubscribeEvent
+        public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+            // The player is already in the destination; tracking retains the original world.
+            cleanupCasterMarble(event.getPlayer());
         }
 
         @SubscribeEvent

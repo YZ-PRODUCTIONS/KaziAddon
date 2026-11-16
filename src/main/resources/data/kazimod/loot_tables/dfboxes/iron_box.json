@@ -142,16 +142,6 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
-          "name": "cartaddon:numa_numa_no_mi"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
           "name": "cartaddon:inu_inu_no_mi_model_kyubi_no_kitsune"
         },
         {
@@ -403,6 +393,16 @@
             }
           ],
           "name": "mineminenomi:mera_mera_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "kazimod:yagi_yagi_no_mi_model_mountain_goat"
         }
       ],
       "conditions": [
@@ -753,7 +753,6 @@
             {
               "function": "mineminenomi:fruit_already_exists"
             }
-
           ],
           "name": "mineminenomi:oto_oto_no_mi"
         },

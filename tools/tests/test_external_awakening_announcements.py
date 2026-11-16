@@ -64,7 +64,13 @@ fixtures = {
 
 # Compile the real helper as well, so deduplication covers the production call site.
 handler = (ROOT / 'src/main/java/net/kazi/kazimod/events/AwakeningEssenceDeathHandler.java').read_text(encoding='utf-8')
-broadcast = handler[handler.index('    static void broadcastAwakening('):handler.index('    private static String getAwakeningAnnouncement(')]
+start = handler.index('    static void broadcastAwakening(')
+end = handler.index('{', start) + 1
+depth = 1
+while depth:
+    depth += (handler[end] == '{') - (handler[end] == '}')
+    end += 1
+broadcast = handler[start:end]
 fixtures['net.kazi.kazimod.events.AwakeningEssenceDeathHandler'] = '''
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;

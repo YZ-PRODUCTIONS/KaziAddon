@@ -104,6 +104,10 @@ public class AwakeningEssenceItem extends Item {
         boolean isKira = fruit.isPresent() && KIRA_KIRA_NO_MI.equals(fruit.get());
         boolean isVampire = fruit.isPresent() && BATTO_BATTO_NO_MI_MODEL_VAMPIRE.equals(fruit.get());
         boolean isKame = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.KAME_KAME_NO_MI);
+        boolean isSupa = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.SUPA_SUPA_NO_MI);
+        boolean isGoru = devilFruit != null && devilFruit.hasDevilFruit(net.MrMagicalCart.cartaddon.init.CartAbilities.GORU_GORU_NO_MI);
+        boolean isSahur = devilFruit != null && devilFruit.hasDevilFruit(
+                net.kazi.kazimod.init.KaziItems.KI_KI_NO_MI_MODEL_TUNG_TUNG_TUNG_SAHUR.get());
         boolean isKage = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.KAGE_KAGE_NO_MI);
         boolean isGuru = net.kazi.kazimod.tusk.TuskState.hasFruit(player);
         boolean isPetal = net.kazi.kazimod.petal.PetalState.fruit(player);
@@ -113,7 +117,7 @@ public class AwakeningEssenceItem extends Item {
         boolean tuskMasterySkip = isGuru && net.kazi.kazimod.tusk.TuskState.awakened(player);
 
         if (!isFruitless && !isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi
-                && !isNetsu && !isKira && !isVampire && !isKame && !isKage && !isGuru && !isPetal && !isSabi && !isIshi && !isLeopard && !isYagi) {
+                && !isNetsu && !isKira && !isVampire && !isKame && !isSupa && !isGoru && !isSahur && !isKage && !isGuru && !isPetal && !isSabi && !isIshi && !isLeopard && !isYagi) {
             player.sendMessage(new StringTextComponent(
                             "\u00a7cOnly a user eligible for awakening can use this item."),
                     player.getUUID());
@@ -126,7 +130,7 @@ public class AwakeningEssenceItem extends Item {
             return ActionResult.fail(stack);
         }
 
-        boolean bypassBossTrial = isNetsu || isKira || isVampire || isKame || isKage || isGuru || isPetal || isSabi || isIshi || isLeopard || isYagi;
+        boolean bypassBossTrial = isNagi || isNetsu || isKira || isVampire || isKame || isSupa || isGoru || isSahur || isKage || isGuru || isPetal || isSabi || isIshi || isLeopard || isYagi;
 
         if (!bypassBossTrial && hasActiveTrial(serverWorld, player.getUUID())) {
             player.sendMessage(new StringTextComponent(
@@ -251,10 +255,6 @@ public class AwakeningEssenceItem extends Item {
                 bossEntity = KaziEntities.LAW_BOSS.get().spawn(
                         serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
                 entranceSound = xyz.pixelatedw.mineminenomi.init.ModSounds.ROOM_CREATE_SFX.get();
-            } else if (isNagi) {
-                bossEntity = KaziEntities.SUN_JIN_WOO_BOSS.get().spawn(
-                        serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
-                entranceSound = net.minecraft.util.SoundEvents.ENDERMAN_TELEPORT;
             } else {
                 bossEntity = KaziEntities.BAKUGO_BOSS.get().spawn(
                         serverWorld, null, null, player, spawnPos, SpawnReason.EVENT, true, false);
