@@ -1,0 +1,25 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '6.0.54'
+}
+
+group = 'local.autointentdodge'
+version = '1.1.0'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+minecraft.mappings channel: 'official', version: '1.16.5'
+
+def modsDir = providers.gradleProperty('zitoModsDir').getOrElse(
+    new File(System.getProperty('user.home'), 'curseforge/minecraft/Instances/Red Line/mods').path
+)
+repositories {
+    flatDir { dirs modsDir }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.42'
+    compileOnly fg.deobf('local:zitoenpiece:0.3.2')
+    compileOnly fg.deobf('local:mine-mine-no-mi-1.16.5:0.10.11')
+}
+
+jar.finalizedBy('reobfJar')

@@ -1,0 +1,5 @@
+Hyper Goner model supplied by the user.
+Source folder: hyper_goner_by_dj_cool_2000_db2lxb0
+Creator credited by the supplied source: DJ Cool 2000.
+Converted from hyper goner.dae; original geometry and srsly / LUAGH shape keys retained.
+See art/hyper_goner/README.txt in the source project for conversion details.
