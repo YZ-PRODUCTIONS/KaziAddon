@@ -3,7 +3,6 @@ package net.kazi.kazimod.init;
 import net.kazi.kazimod.entities.boss.rebelus.TrueFormRebelusBossEntity;
 
 import net.kazi.kazimod.entities.*;
-import net.kazi.kazimod.entities.asriel.*;
 import net.kazi.kazimod.entities.boss.bakugo.BakugoBossEntity;
 import net.kazi.kazimod.entities.boss.aizen.AizenBossEntity;
 import net.kazi.kazimod.entities.boss.gojo.GojoBossEntity;
@@ -22,49 +21,6 @@ public class KaziEntities {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(ForgeRegistries.ENTITIES, "kazimod");
-
-    public static final RegistryObject<EntityType<ChaosBeamAttackEntity>> CHAOS_BEAM =
-            ENTITY_TYPES.register("chaos_beam", () ->
-                    EntityType.Builder.<ChaosBeamAttackEntity>of(ChaosBeamAttackEntity::new, EntityClassification.MISC)
-                            .sized(0.1F, 0.1F).clientTrackingRange(16).setUpdateInterval(1)
-                            .noSummon().noSave().build("chaos_beam"));
-    public static final RegistryObject<EntityType<AsrielStarEntity>> ASRIEL_STAR =
-            ENTITY_TYPES.register("asriel_star", () ->
-                    EntityType.Builder.<AsrielStarEntity>of(AsrielStarEntity::new, EntityClassification.MISC)
-                            .sized(0.7F, 0.7F).clientTrackingRange(8).setUpdateInterval(1)
-                            .noSummon().noSave().build("asriel_star"));
-    public static final RegistryObject<EntityType<AsrielLightningEntity>> ASRIEL_LIGHTNING =
-            ENTITY_TYPES.register("asriel_lightning", () ->
-                    EntityType.Builder.<AsrielLightningEntity>of(AsrielLightningEntity::new, EntityClassification.MISC)
-                            .sized(0.1F, 0.1F).clientTrackingRange(8).setUpdateInterval(10)
-                            .noSummon().noSave().build("asriel_lightning"));
-    public static final RegistryObject<EntityType<AsrielStarBurstEntity>> ASRIEL_STAR_BURST =
-            ENTITY_TYPES.register("asriel_star_burst", () ->
-                    EntityType.Builder.<AsrielStarBurstEntity>of(AsrielStarBurstEntity::new, EntityClassification.MISC)
-                            .sized(0.1F, 0.1F).clientTrackingRange(10).setUpdateInterval(10)
-                            .noSummon().noSave().build("asriel_star_burst"));
-    public static final RegistryObject<EntityType<AsrielChaosProjectile>> ASRIEL_CHAOS_PROJECTILE =
-            ENTITY_TYPES.register("asriel_chaos_projectile", () ->
-                    EntityType.Builder.<AsrielChaosProjectile>of(AsrielChaosProjectile::new, EntityClassification.MISC)
-                            .sized(0.35F, 0.35F).clientTrackingRange(8).setUpdateInterval(1)
-                            .noSummon().noSave().build("asriel_chaos_projectile"));
-    public static final RegistryObject<EntityType<AsrielChaosFieldEntity>> ASRIEL_CHAOS_FIELD =
-            ENTITY_TYPES.register("asriel_chaos_field", () ->
-                    EntityType.Builder.<AsrielChaosFieldEntity>of(AsrielChaosFieldEntity::new, EntityClassification.MISC)
-                            .sized(0.1F, 0.1F).clientTrackingRange(8).setUpdateInterval(2)
-                            .noSummon().noSave().build("asriel_chaos_field"));
-
-    public static final RegistryObject<EntityType<DragonStrikeEntity>> DRAGON_STRIKE =
-            ENTITY_TYPES.register("dragon_strike", () ->
-                    EntityType.Builder.<DragonStrikeEntity>of(DragonStrikeEntity::new, EntityClassification.MISC)
-                            .sized(1.1F, 1.1F).clientTrackingRange(8).setUpdateInterval(2)
-                            .noSummon().noSave().build("dragon_strike"));
-
-    public static final RegistryObject<EntityType<DragonAttackVfxEntity>> DRAGON_ATTACK_VFX =
-            ENTITY_TYPES.register("dragon_attack_vfx", () ->
-                    EntityType.Builder.<DragonAttackVfxEntity>of(DragonAttackVfxEntity::new, EntityClassification.MISC)
-                            .sized(.1F, .1F).clientTrackingRange(10).setUpdateInterval(2)
-                            .noSummon().noSave().build("dragon_attack_vfx"));
 
     public static final RegistryObject<EntityType<GateOfBabylonEntity>> GATE_OF_BABYLON =
             ENTITY_TYPES.register("gate_of_babylon", () ->

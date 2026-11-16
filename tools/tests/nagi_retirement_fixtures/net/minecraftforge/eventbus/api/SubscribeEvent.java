@@ -1,2 +1,0 @@
-package net.minecraftforge.eventbus.api;
-public @interface SubscribeEvent {}

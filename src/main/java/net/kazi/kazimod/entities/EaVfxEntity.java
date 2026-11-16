@@ -9,7 +9,6 @@ import java.util.Queue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.kazi.kazimod.abilities.GoruRework.EaAbility;
-import net.kazi.kazimod.abilities.NagiAwakening.ImagineBreakerNegation;
 import net.kazi.kazimod.init.KaziPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,8 +20,6 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.*;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.HandSide;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -34,7 +31,6 @@ import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.IAbilityData;
 import xyz.pixelatedw.mineminenomi.init.ModEntityPredicates;
-import xyz.pixelatedw.mineminenomi.init.ModSounds;
 
 /** One server-owned cast: a following charge, fixed rupture, then a harmless collapse. */
 public final class EaVfxEntity extends Entity {
@@ -49,7 +45,6 @@ public final class EaVfxEntity extends Entity {
     private LivingEntity owner;
     private EaAbility ability;
     private boolean collapsed;
-    private boolean pillarDropSoundPlayed;
     private Vector3d pendingBlockImpact;
     private boolean terrainQueued;
     private final Queue<TerrainPass> terrainPasses = new ArrayDeque<>();
@@ -106,12 +101,6 @@ public final class EaVfxEntity extends Entity {
         state.putBoolean("pillar", true);
         state.putLong("start", level.getGameTime());
         entityData.set(STATE, state);
-        if (!level.isClientSide) {
-            // Volume also controls vanilla sound range: 12 reaches 192 blocks,
-            // covering the caster even at the pillar's maximum targeting distance.
-            level.playSound(null, getX(), getY(), getZ(), SoundEvents.BEACON_ACTIVATE,
-                    SoundCategory.PLAYERS, 12.0F, 0.65F);
-        }
     }
     public boolean isPillar() { return entityData.get(STATE).getBoolean("pillar"); }
 
@@ -124,20 +113,10 @@ public final class EaVfxEntity extends Entity {
                 getX() + PILLAR_RADIUS, getY() + top, getZ() + PILLAR_RADIUS));
         if (level.isClientSide) return;
         if (owner == null || !owner.isAlive() || owner.level != level) { remove(); return; }
-        if (!pillarDropSoundPlayed && age >= net.kazi.kazimod.models.abilities.UtaPillarMesh.DROP_TICK
-                && age < PILLAR_IMPACT_TICK) {
-            pillarDropSoundPlayed = true;
-            level.playSound(null, getX(), getY(), getZ(), ModSounds.DASH_ABILITY_SWOOSH_SFX.get(),
-                    SoundCategory.PLAYERS, 12.0F, 0.6F);
-        }
         if (age >= net.kazi.kazimod.models.abilities.UtaPillarMesh.DROP_TICK
                 && age < PILLAR_IMPACT_TICK && tickCount % 4 == 0) shake(6, 1.2F);
         if (!collapsed && age >= PILLAR_IMPACT_TICK) {
             collapsed = true;
-            level.playSound(null, getX(), getY(), getZ(), SoundEvents.ANVIL_LAND,
-                    SoundCategory.PLAYERS, 6.0F, 0.65F);
-            level.playSound(null, getX(), getY(), getZ(), ModSounds.GENERIC_EXPLOSION.get(),
-                    SoundCategory.PLAYERS, 12.0F, 0.65F);
             for (LivingEntity target : level.getEntitiesOfClass(LivingEntity.class,
                     getBoundingBox(), this::isEnemy)) {
                 Vector3d delta = target.position().subtract(position());
@@ -169,8 +148,7 @@ public final class EaVfxEntity extends Entity {
         Vector3d end = origin.add(direction.scale(maxRange));
         BlockRayTraceResult hit = level.clip(new RayTraceContext(origin, end,
                 RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, caster));
-        // Destructible terrain is cut away by the deployed beam, not a permanent range cap.
-        float range = maxRange;
+        float range = hit.getType() == RayTraceResult.Type.MISS ? maxRange : (float)origin.distanceTo(hit.getLocation());
         pendingBlockImpact = !isWinds() && hit.getType() == RayTraceResult.Type.BLOCK ? hit.getLocation() : null;
         CompoundNBT state = entityData.get(STATE).copy();
         Vector3d center = getChargeCenter(1);
@@ -310,22 +288,8 @@ public final class EaVfxEntity extends Entity {
             if (!isWinds() && tickCount % 16 == 0 && getChargeProgress(0) > 0.5) shake(12, 0.45F);
         } else {
             float age = getPhaseAge(0);
-            // Check the deployed beam before either combat or terrain effects run.
-            Vector3d beamStart = getOrigin();
-            if (getReleaseLength() > 0 && ImagineBreakerNegation.negateBeam(this, owner, EaAbility.INSTANCE,
-                    beamStart, beamStart.add(getBeamDirection().scale(getReleaseLength())), getReleaseRadius())) {
-                terrainPasses.clear();
-                pendingBlockImpact = null;
-                return;
-            }
             if (isWinds()) {
-                if (age >= WindsRaptureShape.RELEASE_TICKS + WindsRaptureShape.FADE_TICKS && terrainPasses.isEmpty()) { remove(); return; }
-                if (!terrainQueued && age >= WindsRaptureShape.DEPLOY_TICKS) {
-                    terrainQueued = true;
-                    terrainPasses.add(new TerrainPass(getOrigin(), getBeamDirection(),
-                            getReleaseLength(), WindsRaptureShape.MAX_RADIUS));
-                }
-                eraseTerrain();
+                if (age >= WindsRaptureShape.RELEASE_TICKS + WindsRaptureShape.FADE_TICKS) { remove(); return; }
                 if (WindsRaptureShape.damaging(age) && owner != null && owner.isAlive() && owner.level == level) damageTargets();
                 refreshBounds();
                 return;
@@ -407,7 +371,7 @@ public final class EaVfxEntity extends Entity {
             if (hitTargets.contains(target.getUUID()) || !EaRuptureShape.intersects(start.x, start.y, start.z,
                     dir.x, dir.y, dir.z, getReleaseLength(), getReleaseRadius(),
                     box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ)) continue;
-            // Cover protects targets until the terrain pass actually removes it.
+            // The rupture stops at solid terrain; side lobes cannot hit through cover either.
             BlockRayTraceResult wall = level.clip(new RayTraceContext(start, box.getCenter(),
                     RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, owner));
             if (wall.getType() != RayTraceResult.Type.MISS) continue;

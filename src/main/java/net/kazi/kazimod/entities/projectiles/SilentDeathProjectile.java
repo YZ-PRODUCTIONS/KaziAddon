@@ -1,6 +1,6 @@
 package net.kazi.kazimod.entities.projectiles;
 
-import net.kazi.kazimod.entities.boss.sunjinwoo.abilities.SilentDeathAbility;
+import net.kazi.kazimod.abilities.NagiRework.SilentDeathAbility;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;

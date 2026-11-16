@@ -36,7 +36,7 @@ import net.MrMagicalCart.cartaddon.abilities.uoseriyu.BoloBreathAbility;
 import net.MrMagicalCart.cartaddon.abilities.uoseriyu.TatsumakiAbility;
 import net.MrMagicalCart.cartaddon.init.CartAbilities;
 import net.kazi.kazimod.KaziMod;
-import net.kazi.kazimod.abilities.NagiAwakening.*;
+import net.kazi.kazimod.abilities.NagiRework.*;
 import net.kazi.kazimod.abilities.AwaRework.GoldenHourRework;
 import net.kazi.kazimod.abilities.BaneRework.SpringSnipeRework;
 import net.kazi.kazimod.abilities.BaraRework.KuchuKirimomiDaiCircusRework;
@@ -530,8 +530,10 @@ public class KaziDickSetup {
 
         // ── NAGI NAGI NO MI ──────────────────────────────────
         FruitAbilityInjector.addAbilities(ModAbilities.NAGI_NAGI_NO_MI,
-                IllusionShatterAbility.INSTANCE,
-                DragonStrikeAbility.INSTANCE
+                SilentSliceAbility.INSTANCE,
+                SilentStepAbility.INSTANCE,
+                SilentBoxAbility.INSTANCE,
+                SilentDeathAbility.INSTANCE
         );
 
         // ── GORU GORU NO MI ──────────────────────────────────

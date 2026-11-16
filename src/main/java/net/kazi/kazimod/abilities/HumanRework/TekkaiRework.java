@@ -6,9 +6,6 @@
 package net.kazi.kazimod.abilities.HumanRework;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.text.StringTextComponent;
-import xyz.pixelatedw.mineminenomi.api.abilities.AbilityUseResult;
-import xyz.pixelatedw.mineminenomi.init.ModMorphs;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
@@ -58,9 +55,6 @@ public class TekkaiRework extends Ability {
         super.setDisplayIcon(TEKKAI_HEAVY_ICON);
         super.addComponents(new AbilityComponent[]{this.continuousComponent, this.altModeComponent, this.animationComponent, this.poolComponent});
         super.addUseEvent(this::onUseEvent);
-        this.addCanUseCheck((entity, ability) -> this.isContinuous() || !ModMorphs.KAME_GUARD.get().isActive(entity)
-                ? AbilityUseResult.success()
-                : AbilityUseResult.fail(new StringTextComponent("Tekkai cannot be used during Kame Guard Point.")));
     }
 
     private void onUseEvent(LivingEntity entity, IAbility ability) {
@@ -76,10 +70,6 @@ public class TekkaiRework extends Ability {
     }
 
     private void onContinuityTick(LivingEntity entity, IAbility ability) {
-        if (ModMorphs.KAME_GUARD.get().isActive(entity)) {
-            this.continuousComponent.stopContinuity(entity);
-            return;
-        }
         if (this.altModeComponent.isMode(TekkaiRework.Mode.HEAVY)) {
             entity.addEffect(new EffectInstance((Effect)ModEffects.GUARDING.get(), 2, 1, false, false));
             AbilityHelper.setDeltaMovement(entity, (double)0.0F, (double)-5.0F, (double)0.0F);
@@ -110,7 +100,6 @@ public class TekkaiRework extends Ability {
         }
         this.altModeComponent.setMode(entity, TekkaiRework.Mode.HEAVY);
         if (!this.continuousComponent.isContinuous()) {
-            if (ModMorphs.KAME_GUARD.get().isActive(entity)) return;
             this.continuousComponent.triggerContinuity(entity, (float)CONTINUITY_THRESHOLD);
         }
     }
@@ -122,7 +111,6 @@ public class TekkaiRework extends Ability {
         }
         this.altModeComponent.setMode(entity, TekkaiRework.Mode.WALK);
         if (!this.continuousComponent.isContinuous()) {
-            if (ModMorphs.KAME_GUARD.get().isActive(entity)) return;
             this.continuousComponent.triggerContinuity(entity, (float)CONTINUITY_THRESHOLD);
         }
     }

@@ -12,7 +12,6 @@ import java.util.List;
 import net.MrMagicalCart.cartaddon.abilities.brawlerextra.GalaxyImpactAbility;
 import net.MrMagicalCart.cartaddon.entities.mobs.marines.GarpEntity;
 import net.MrMagicalCart.cartaddon.entities.projectiles.brawlerextra.BrawlerExtraProjectiles;
-import net.kazi.kazimod.init.KaziBlocks;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -211,6 +210,6 @@ public class GalaxyImpactReworkProjectile extends AbilityProjectileEntity implem
                 CoreBlockProtectionRule.INSTANCE,
                 FoliageBlockProtectionRule.INSTANCE,
                 OreBlockProtectionRule.INSTANCE
-        })).addBannedBlocks(KaziBlocks.CUSTOM_COARSE_DIRT, KaziBlocks.CUSTOM_COARSE_SAND).build();
+        })).build();
     }
 }

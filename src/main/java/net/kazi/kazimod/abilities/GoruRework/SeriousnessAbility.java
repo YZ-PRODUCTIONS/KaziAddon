@@ -39,64 +39,11 @@ public final class SeriousnessAbility extends PassiveAbility2 {
             .setUnlockCheck(SeriousnessAbility::isEligible)
             .build();
 
-    private final net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsSequence drawSequence =
-            new net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsSequence(.5);
-    private net.minecraft.world.World drawWorld;
-
     public SeriousnessAbility(AbilityCore<SeriousnessAbility> core) {
         super(core);
-        addRemoveEvent((user, ability) -> {
-            if (!user.level.isClientSide) net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsCutscenes.cancel(user);
-            drawSequence.stop();
-        });
         if (super.isClientSide()) {
             this.addComponents(new GaugeComponent(this, this::renderGauge));
         }
-    }
-
-    public static boolean canPlayDraw(LivingEntity user) {
-        return canContinueDraw(user)
-                && user.getHealth() < user.getMaxHealth() * .5F;
-    }
-
-    public static boolean canContinueDraw(LivingEntity user) {
-        return getActivePassive(user) != null && user.isAlive() && user.getHealth() > 0;
-    }
-
-    /** Reset the replay timer without interrupting a scene or rearming its health-cycle latch. */
-    public static void resetCutsceneCooldown(LivingEntity user) {
-        if (user.level.isClientSide) return;
-        net.minecraft.nbt.CompoundNBT data = user.getPersistentData();
-        if (user instanceof PlayerEntity) data = data.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
-        data.remove("kazimod:ea_draw_next_cutscene");
-    }
-
-    @Override public void tick(LivingEntity user) {
-        if (!user.level.isClientSide) {
-            if (drawWorld != null && drawWorld != user.level) {
-                net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsCutscenes.cancel(user);
-                drawSequence.stop();
-            }
-            drawWorld = user.level;
-            boolean eligible = canContinueDraw(user);
-            boolean start = drawSequence.update(user.getHealth(), user.getMaxHealth(), user.level.getGameTime(), eligible);
-            if (!eligible) net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsCutscenes.cancel(user);
-            else if (start && user.level instanceof net.minecraft.world.server.ServerWorld) {
-                long now = ((net.minecraft.world.server.ServerWorld) user.level).getServer().overworld().getGameTime();
-                net.minecraft.nbt.CompoundNBT data = user.getPersistentData();
-                if (user instanceof PlayerEntity) {
-                    if (!data.contains(PlayerEntity.PERSISTED_NBT_TAG, 10))
-                        data.put(PlayerEntity.PERSISTED_NBT_TAG, new net.minecraft.nbt.CompoundNBT());
-                    data = data.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
-                }
-                String key = "kazimod:ea_draw_next_cutscene";
-                if (net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsCutsceneCooldown.ready(now, data.getLong(key))) {
-                    data.putLong(key, net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsCutsceneCooldown.nextAllowedTick(now));
-                    net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsCutscenes.start(user, drawSequence.startTick(), true);
-                } else drawSequence.stop();
-            }
-        }
-        super.tick(user);
     }
 
     public static boolean isEligible(LivingEntity user) {

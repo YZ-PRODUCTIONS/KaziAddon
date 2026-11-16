@@ -53,7 +53,6 @@ public final class EnkiduVfxEntity extends Entity {
         state.putInt("owner", owner.getId());
         state.putBoolean("area", mode == Mode.AREA);
         state.putBoolean("absolute", mode == Mode.ABSOLUTE);
-        state.putBoolean("counter", mode == Mode.COUNTER);
         state.putLong("start", level.getGameTime());
         if (selected != null) bindings.add(new Binding(selected));
         writeTargets(state);
@@ -68,9 +67,6 @@ public final class EnkiduVfxEntity extends Entity {
     public int getPhase() { return entityData.get(STATE).getInt("phase"); }
     public Mode getMode() { return entityData.get(STATE).getBoolean("absolute") ? Mode.ABSOLUTE
             : entityData.get(STATE).getBoolean("area") ? Mode.AREA : Mode.SINGLE; }
-    public boolean isAimedCast() {
-        return getMode() != Mode.ABSOLUTE && !entityData.get(STATE).getBoolean("counter");
-    }
     public float getPhaseAge(float partial) {
         return Math.max(0, level.getGameTime() - entityData.get(STATE).getLong("start") + partial);
     }
@@ -111,10 +107,8 @@ public final class EnkiduVfxEntity extends Entity {
         else candidates = validCandidate(selected) ? Collections.singletonList(selected) : Collections.emptyList();
         bindings.clear();
         for (LivingEntity target : candidates) bindings.add(new Binding(target));
-        if (bindings.isEmpty() && !isAimedCast()) { fade(); return; }
-        if (getMode() == Mode.SINGLE && !bindings.isEmpty())
-            setPos(selected.getX(), selected.getY(), selected.getZ());
-        // An aimed miss still throws its chains before retracting, without creating a victim.
+        if (bindings.isEmpty()) { fade(); return; }
+        if (getMode() == Mode.SINGLE) setPos(selected.getX(), selected.getY(), selected.getZ());
         phase(LAUNCHING);
         sound(SoundEvents.TRIDENT_RETURN, 1.2F, 1.35F);
         sound(SoundEvents.CHAIN_PLACE, 1.4F, 0.65F);
@@ -148,22 +142,11 @@ public final class EnkiduVfxEntity extends Entity {
             fade(); return;
         }
         if (isCharging()) {
-            double chargeReach = isAimedCast() ? EnkiduAbility.RANGE + 4 : 48;
-            if (owner.position().distanceToSqr(position()) > chargeReach * chargeReach) { fade(); return; }
+            if (owner.position().distanceToSqr(position()) > 48 * 48) { fade(); return; }
             if (getMode() == Mode.SINGLE) {
-                if (validCandidate(selected)) {
-                    setPos(selected.getX(), selected.getY(), selected.getZ());
-                    refreshBounds();
-                } else if (!isAimedCast()) {
-                    fade(); return;
-                } else if (selected != null) {
-                    // Keep the last aimed position when the chosen target escapes or disappears.
-                    selected = null;
-                    bindings.clear();
-                    CompoundNBT state = entityData.get(STATE).copy();
-                    writeTargets(state);
-                    entityData.set(STATE, state);
-                }
+                if (!validCandidate(selected)) { fade(); return; }
+                setPos(selected.getX(), selected.getY(), selected.getZ());
+                refreshBounds();
             }
             if (tickCount % 10 == 0) sound(SoundEvents.CHAIN_STEP, 0.6F, 0.8F + age * 0.01F);
         } else if (getPhase() == LAUNCHING && age >= TRAVEL_TICKS) {
@@ -195,14 +178,7 @@ public final class EnkiduVfxEntity extends Entity {
                 && EnkiduAbility.clearPath(owner, owner.getEyePosition(1), target.getEyePosition(1));
     }
 
-    private double bindReach() {
-        return isAimedCast() ? EnkiduAbility.RANGE + 4
-                + (getMode() == Mode.AREA ? EnkiduAbility.AREA_RADIUS : 0) : 48;
-    }
-
     private void restrain() {
-        // Refresh briefly, but never carry this cast's stun or float past its bind deadline.
-        int refreshTicks = Math.min(3, getMode().bindTicks - (int) getPhaseAge(0));
         boolean changed = false;
         Iterator<Binding> iterator = bindings.iterator();
         while (iterator.hasNext()) {
@@ -211,15 +187,15 @@ public final class EnkiduVfxEntity extends Entity {
             double dx = target.getX() - binding.anchor.x, dz = target.getZ() - binding.anchor.z;
             if (!EnkiduAbility.isEnemy(owner, target) || target.removed || AbilityHelper.isDodging(target)
                     || dx * dx + dz * dz > 9 || Math.abs(target.getY() - binding.anchor.y) > 6
-                    || owner.distanceToSqr(target) > bindReach() * bindReach()) {
+                    || owner.distanceToSqr(target) > 48 * 48) {
                 iterator.remove(); changed = true; continue;
             }
             if (target.isPassenger()) target.stopRiding();
-            target.addEffect(new EffectInstance(KaziEffects.HEAVEN_BOUND.get(), refreshTicks, 0, false, false, false));
+            target.addEffect(new EffectInstance(KaziEffects.HEAVEN_BOUND.get(), 3, 0, false, false, false));
             if (!target.hasEffect(KaziEffects.HEAVEN_BOUND.get())) {
                 iterator.remove(); changed = true; continue;
             }
-            AbilityHelper.slowEntityFall(target, refreshTicks);
+            AbilityHelper.slowEntityFall(target, 3);
             target.setJumping(false);
             AbilityHelper.setDeltaMovement(target, 0, Math.min(0, target.getDeltaMovement().y), 0);
         }
@@ -239,11 +215,11 @@ public final class EnkiduVfxEntity extends Entity {
             double dx = target.getX() - binding.anchor.x, dz = target.getZ() - binding.anchor.z;
             if (!EnkiduAbility.isEnemy(owner, target) || target.removed || AbilityHelper.isDodging(target)
                     || dx * dx + dz * dz > 9 || Math.abs(target.getY() - binding.anchor.y) > 6
-                    || owner.distanceToSqr(target) > bindReach() * bindReach()) {
+                    || owner.distanceToSqr(target) > 48 * 48) {
                 iterator.remove();
                 continue;
             }
-            // Strike once the restraint expires, including any overlapping cast.
+            // Stop refreshing the effect, then wait for its last three ticks to expire.
             // Never remove another cast's bind or damage a target while it is still bound.
             if (target.hasEffect(KaziEffects.HEAVEN_BOUND.get())) continue;
             iterator.remove(); // Consume this strike before damage callbacks can run.

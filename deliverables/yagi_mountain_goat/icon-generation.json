@@ -1,8 +1,0 @@
-{
-  "generator": "built-in image_gen",
-  "transparent_background": true,
-  "prompt": "Create one Minecraft mod inventory item sprite for the Yagi Yagi no Mi, Model: Mountain Goat. A compact ivory-white devil fruit with clearly readable pale-gray spiral markings, two slender charcoal horn-shaped stems curving backward like mountain goat horns, and one small muted green leaf. Crisp pixel art with a limited palette and blocky pixel clusters, readable at 128x128, simple shaded volume, centered complete silhouette with a small transparent margin. This is an edible fantasy fruit, not an animal head. No text, frame, scene, ground shadow, or extra objects. Genuinely transparent background.",
-  "source": "C:/Users/th3wyz/.codex/generated_images/01a059c9-27fb-7111-ab1d-f9fb7afde2bd/exec-9c087574-ba15-4ee0-8cfd-fe717865c314.png",
-  "asset": "src/main/resources/assets/kazimod/textures/items/yagi_yagi_no_mi_model_mountain_goat.png",
-  "processing": "Resized to 128x128 with nearest-neighbor sampling, preserving transparency."
-}

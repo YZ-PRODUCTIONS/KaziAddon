@@ -1,11 +1,11 @@
 package net.kazi.kazimod.entities.boss.sunjinwoo;
 
 import net.MrMagicalCart.cartaddon.init.CartWeapons;
-import net.kazi.kazimod.entities.boss.sunjinwoo.abilities.SilentBoxAbility;
-import net.kazi.kazimod.entities.boss.sunjinwoo.abilities.SilentDeathAbility;
-import net.kazi.kazimod.entities.boss.sunjinwoo.abilities.SilentSliceAbility;
-import net.kazi.kazimod.entities.boss.sunjinwoo.abilities.SilentStepAbility;
-import net.kazi.kazimod.entities.boss.sunjinwoo.abilities.SilentStrideAbility;
+import net.kazi.kazimod.abilities.NagiRework.SilentBoxAbility;
+import net.kazi.kazimod.abilities.NagiRework.SilentDeathAbility;
+import net.kazi.kazimod.abilities.NagiRework.SilentSliceAbility;
+import net.kazi.kazimod.abilities.NagiRework.SilentStepAbility;
+import net.kazi.kazimod.abilities.NagiRework.SilentStrideAbility;
 import net.kazi.kazimod.entities.boss.luffy.goals.DirectAbilityGoal;
 import net.kazi.kazimod.init.KaziEntities;
 import net.minecraft.entity.Entity;

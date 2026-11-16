@@ -95,7 +95,7 @@ public final class EaSoundController {
 
     private static final class EaSound extends TickableSound {
         private final EaVfxEntity entity;
-        private static final float BASE_VOLUME = 1.0F;
+        private static final float BASE_VOLUME = 0.9F;
         private static final int LIFETIME = EaVfxEntity.CHARGE_TICKS
                 + EaVfxEntity.RELEASE_TICKS + EaVfxEntity.FADE_TICKS;
         private boolean fading;
