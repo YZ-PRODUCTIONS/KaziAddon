@@ -18,7 +18,7 @@ public abstract class LightningClashMixin {
     @Shadow private float travelSpeed;
     @Unique private float kazi$clashLimit = Float.POSITIVE_INFINITY;
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "tick", at = @At("HEAD"), remap = true)
     private void kazi$scanClashes(CallbackInfo ci) {
         LightningEntity beam = (LightningEntity) (Object) this;
         if (beam.level.isClientSide) return;
@@ -28,8 +28,8 @@ public abstract class LightningClashMixin {
         if (beam.isAlive() && beam.getLength() > kazi$clashLimit) beam.setLength(kazi$clashLimit);
     }
 
-    @ModifyArg(method = "tick", at = @At(value = "INVOKE",
-            target = "Lxyz/pixelatedw/mineminenomi/entities/projectiles/goro/LightningEntity;setLength(F)V"), index = 0)
+    @ModifyArg(method = "tick", remap = true, at = @At(value = "INVOKE",
+            target = "Lxyz/pixelatedw/mineminenomi/entities/projectiles/goro/LightningEntity;setLength(F)V", remap = false), index = 0)
     private float kazi$limitGrowth(float length) {
         return Math.min(length, kazi$clashLimit);
     }

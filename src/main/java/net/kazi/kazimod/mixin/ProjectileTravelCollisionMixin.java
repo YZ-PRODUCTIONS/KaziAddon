@@ -14,7 +14,7 @@ public abstract class ProjectileTravelCollisionMixin {
     @Unique private Vector3d kazi$travelStart;
     @Unique private double kazi$expectedTravel;
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "tick", at = @At("HEAD"), remap = true)
     private void kazi$captureTravel(CallbackInfo ci) {
         AbilityProjectileEntity projectile = (AbilityProjectileEntity) (Object) this;
         kazi$travelStart = projectile.position();
