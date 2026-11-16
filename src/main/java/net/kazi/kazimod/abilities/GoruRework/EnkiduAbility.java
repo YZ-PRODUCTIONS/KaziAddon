@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Optional;
 import net.kazi.kazimod.entities.EnkiduVfxEntity;
 import net.kazi.kazimod.init.KaziEntities;
+import net.kazi.kazimod.init.KaziSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -35,19 +37,20 @@ public final class EnkiduAbility extends Ability {
     public static final int MAX_AREA_TARGETS = 8;
     public static final double ABSOLUTE_RADIUS = 40;
     private static final int CANCEL_COOLDOWN = 10 * 20;
-    private static final int COUNTER_WINDOW_TICKS = 4 * 20;
+    private static final int COUNTER_WINDOW_TICKS = 2 * 20;
+    private static final int BIND_SECONDS = 2;
     private static final ResourceLocation ICON = new ResourceLocation("kazimod", "textures/abilities/enkidu_chains_of_heaven.png");
 
     public enum Mode {
-        SINGLE("Chains of Heaven", 5, 60, 600, 20),
-        AREA("Chains of Heaven: Enkidu", 10, 60, 600, 20),
-        COUNTER("ZASSHU", 5, 60, 600, 20),
-        ABSOLUTE("Enkidu: Absolute Bind", 10, 60, 600, 20);
+        SINGLE("Chains of Heaven", 5, 600, 1),
+        AREA("Chains of Heaven: Enkidu", 10, 600, 1),
+        COUNTER("ZASSHU", 5, 600, 20),
+        ABSOLUTE("Enkidu: Absolute Bind", 10, 600, 1);
         public final String title;
         public final int chargeTicks, bindTicks, cooldownTicks;
         public final float damage;
-        Mode(String title, int charge, int bind, int cooldown, float damage) {
-            this.title = title; chargeTicks = charge; bindTicks = bind; cooldownTicks = cooldown; this.damage = damage;
+        Mode(String title, int charge, int cooldown, float damage) {
+            this.title = title; chargeTicks = charge; bindTicks = BIND_SECONDS * 20; cooldownTicks = cooldown; this.damage = damage;
         }
         @Override public String toString() { return title; }
     }
@@ -57,11 +60,12 @@ public final class EnkiduAbility extends Ability {
             .setIcon(ICON).setSourceHakiNature(SourceHakiNature.SPECIAL)
             .setSourceType(SourceType.INTERNAL).setSourceElement(SourceElement.SHOCKWAVE)
             .addDescriptionLine(
-                    new StringTextComponent("Chains of Heaven: Aim at an enemy within 64 blocks. Bind them for 3 seconds, then deal 20 damage after the bind expires."),
-                    new StringTextComponent("Chains of Heaven: Enkidu: Mark a 12-block radius ahead. Bind up to 8 enemies for 3 seconds, then deal 20 damage each after the bind expires."),
+                    new StringTextComponent("Chains of Heaven: Aim at an enemy within 64 blocks. Bind them for " + BIND_SECONDS + " seconds, then deal 20 damage after the bind expires."),
+                    new StringTextComponent("Chains of Heaven: Enkidu: Mark a 12-block radius ahead. Bind up to 8 enemies for " + BIND_SECONDS + " seconds, then deal 20 damage each after the bind expires."),
                     new StringTextComponent("Single: 0.25 second charge. Area: 0.5 second charge. All forms have a 30 second cooldown."),
-                    new StringTextComponent("ZASSHU: Wait up to 4 seconds for an enemy attack. Negate the triggering hit and bind the attacker, then deal 20 damage after release."),
-                    new StringTextComponent("Enkidu: Absolute Bind: Bind all hostile players, mobs and NPCs within 40 blocks of you for 3 seconds, then deal 20 damage each. 0.5 second charge, 30 second cooldown."),
+                    new StringTextComponent("Single and area casts can miss. If no eligible enemy is caught in your aim, the chains still cast and use their normal cooldown."),
+                    new StringTextComponent("ZASSHU: Wait up to 2 seconds for an enemy attack. Negate the triggering hit and bind the attacker for " + BIND_SECONDS + " seconds, then deal 20 damage after release."),
+                    new StringTextComponent("Enkidu: Absolute Bind: Bind all hostile players, mobs and NPCs within 40 blocks of you for " + BIND_SECONDS + " seconds, then deal 20 damage each. 0.5 second charge, 30 second cooldown."),
                     new StringTextComponent("Seriousness selects the form automatically: Normal - ZASSHU; Stage 1 - Chains of Heaven; Stage 2 - Chains of Heaven: Enkidu; Stage 3 - Enkidu: Absolute Bind."),
                     new StringTextComponent("Once activated, the charge and counter window cannot be canceled."))
             .setUnlockCheck(SeriousnessAbility::isEligible)
@@ -139,14 +143,14 @@ public final class EnkiduAbility extends Ability {
             return;
         }
         LivingEntity target = activeMode == Mode.SINGLE ? aimedTarget(user) : null;
-        if (activeMode == Mode.SINGLE && target == null) {
-            if (user instanceof PlayerEntity) ((PlayerEntity) user).displayClientMessage(
-                    new StringTextComponent("Aim at an enemy within 64 blocks to summon the chains."), true);
-            return;
-        }
         Vector3d center = activeMode == Mode.ABSOLUTE ? user.position()
                 : target == null ? aimedArea(user) : target.position();
-        startChains(user, center, target);
+        if (startChains(user, center, target)) playCastSound(user);
+    }
+
+    private void playCastSound(LivingEntity user) {
+        user.level.playSound(null, user.getX(), user.getY(), user.getZ(),
+                KaziSounds.ENKIDU_CAST_SFX.get(), SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 
     private boolean startChains(LivingEntity user, Vector3d center, LivingEntity target) {
@@ -178,7 +182,10 @@ public final class EnkiduAbility extends Ability {
             counterTriggered = false;
         }
         activeMode = Mode.COUNTER;
-        if (startChains(user, attacker.position(), attacker)) return 0;
+        if (startChains(user, attacker.position(), attacker)) {
+            playCastSound(user);
+            return 0;
+        }
         cooldownComponent.startCooldown(user, CANCEL_COOLDOWN);
         return amount;
     }

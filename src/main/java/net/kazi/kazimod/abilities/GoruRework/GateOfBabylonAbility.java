@@ -3,9 +3,11 @@ package net.kazi.kazimod.abilities.GoruRework;
 import net.kazi.kazimod.entities.GateOfBabylonEntity;
 import net.kazi.kazimod.entities.BabylonVolleyPattern;
 import net.kazi.kazimod.init.KaziEntities;
+import net.kazi.kazimod.init.KaziSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.StringTextComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.*;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.*;
@@ -35,7 +37,8 @@ public final class GateOfBabylonAbility extends Ability {
                     new StringTextComponent("Press once. Each shot aims at the nearest hostile player within 64 blocks."),
                     new StringTextComponent("Seriousness selects the form automatically: Normal - Treasury of Uruk (50 gates); Stage 1 - Gate of Babylon (75 gates); Stages 2 and 3 - Gate of Babylon EX (100 gates)."),
                     new StringTextComponent("One weapon per gate, alternating 1- and 2-tick gaps. When no hostile player is in range, aim with your crosshair."),
-                    new StringTextComponent("Each weapon deals 1 base damage and flies for up to 30 seconds, passing through entities. Walls block the weapons."))
+                    new StringTextComponent("Each weapon deals 1 base damage and flies for up to 30 seconds, passing through entities. Walls block the weapons."),
+                    new StringTextComponent("After a sword hits an enemy, other treasury swords can damage that enemy again 10 ticks later."))
             .addAdvancedDescriptionLine(AbilityDescriptionLine.NEW_LINE, ChargeComponent.getTooltip(CHARGE_TICKS),
                     DealDamageComponent.getTooltip(DAMAGE), CooldownComponent.getTooltip(COOLDOWN_TICKS))
             .setUnlockCheck(SeriousnessAbility::isEligible)
@@ -79,6 +82,8 @@ public final class GateOfBabylonAbility extends Ability {
         if (!user.level.addFreshEntity(gates)) { gates = null; return; }
         pending = true;
         charge.startCharging(user, CHARGE_TICKS);
+        user.level.playSound(null, user.getX(), user.getY(), user.getZ(),
+                KaziSounds.GATE_OF_BABYLON_CAST_SFX.get(), SoundCategory.PLAYERS, 1.0F, 1.0F);
         animation.start(user, ModAnimations.POINT_LEFT_ARM, CHARGE_TICKS + 5,
                 entity -> !entity.isAlive() || !charge.isCharging());
     }

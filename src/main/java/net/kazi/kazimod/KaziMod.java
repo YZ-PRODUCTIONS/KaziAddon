@@ -33,6 +33,9 @@ public class KaziMod {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, KaziConfig.SPEC, "kazimod.toml");
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        // Custom fruit lists can bypass native Hana ability initialization. Its
+        // renderer subscriber still runs, so initialize the entity holders before registries fire.
+        xyz.pixelatedw.mineminenomi.entities.projectiles.hana.HanaProjectiles.HANDS.getId();
         KaziAbilities.register(modEventBus);
         KaziItems.register();
         KaziRegistry.ITEMS.register(modEventBus);

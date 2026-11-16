@@ -732,6 +732,7 @@
 	"ability.kazimod.projection.description.1": "Caladbolg: Fires a charged explosive projectile that erupts on impact.",
 	"ability.kazimod.projection.description.2": "Universe of Infinite Blades: Automatically destroys nearby projectiles with summoned swords.",
 	"ability.kazimod.projection.description.3": "Instant Sword Replication: Opens portals that rapidly launch weakly homing swords at a target.",
+	"ability.kazimod.projection.description.4": "Legendary Weapon Trace: While Mugen no Kensei or Infinite Creation of Swords is active, roll from a shuffled cycle of legendary moves and use the roll once within 15 seconds. Each available move appears before repeats. Projection returns with half that move's cooldown. Sneak-use to discard; unused rolls have a 10-second cooldown.",
 	"ability.kazimod.propelling_blasts.description.0": "The user propels themselves forward using a series of small explosions.",
 	"ability.kazimod.punk_cross.description.0": "Uses %s magnetic items and stuns the target in a cross-shaped structure.",
 	"ability.kazimod.radiant_slice.description.0": "The user dashes forward and rapidly slashes the opponent with haki-infused strikes",

@@ -4,6 +4,8 @@ import net.kazi.kazimod.abilities.GoruRework.EnkiduAbility;
 import net.kazi.kazimod.abilities.GoruRework.GateOfBabylonAbility;
 import net.kazi.kazimod.entities.BabylonImpactEntity;
 import net.kazi.kazimod.init.KaziEntities;
+import net.kazi.kazimod.seiryu.SeiryuPartEntity;
+import net.kazi.kazimod.worldturtle.WorldTurtlePartEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -15,15 +17,23 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.entity.PartEntity;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import xyz.pixelatedw.mineminenomi.api.events.ProjectileHitEvent;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
 
 /** Treasure weapons pierce entities using the normal damage/dodge pipeline. */
+@Mod.EventBusSubscriber(modid = "kazimod")
 public final class BabylonWeaponEntity extends AbilityProjectileEntity {
     public static final int LIFETIME_TICKS = 30 * 20;
+    private static final BabylonHitCooldown<LivingEntity> SWORD_HITS = new BabylonHitCooldown<>();
     private static final DataParameter<Integer> VARIANT = EntityDataManager.defineId(BabylonWeaponEntity.class, DataSerializers.INT);
     private int flightTicks;
     private int lastEntityImpactTick = -2;
+    private boolean hitLanded;
     public BabylonWeaponEntity(EntityType<? extends BabylonWeaponEntity> type, World world) {
         super(type, world);
         configure();
@@ -46,6 +56,35 @@ public final class BabylonWeaponEntity extends AbilityProjectileEntity {
         setPassThroughEntities();
         setEntityCollisionSize(1.1); setBlockCollisionSize(.5);
         setHurtTime(0);
+        onEntityImpactEvent = this::onSuccessfulHit;
+    }
+
+    // MMNM posts this before applying damage. Let defenses such as Imagine Breaker
+    // intercept the sword first, even while the target is on cooldown.
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onSwordContact(ProjectileHitEvent event) {
+        if (!(event.getProjectile() instanceof BabylonWeaponEntity)
+                || !(event.getHit() instanceof EntityRayTraceResult)) return;
+        BabylonWeaponEntity sword = (BabylonWeaponEntity) event.getProjectile();
+        if (sword.level.isClientSide) return;
+        LivingEntity enemy = damageRecipient(((EntityRayTraceResult) event.getHit()).getEntity());
+        if (enemy != null && SWORD_HITS.blocks(enemy, sword.getId(), sword.level.getGameTime())) {
+            event.setCanceled(true);
+        }
+    }
+
+    private void onSuccessfulHit(LivingEntity target) {
+        hitLanded = true;
+        LivingEntity enemy = damageRecipient(target);
+        if (enemy != null) SWORD_HITS.record(enemy, getId(), level.getGameTime());
+    }
+
+    // Different body parts of a single enemy share its timer.
+    private static LivingEntity damageRecipient(Entity target) {
+        if (target instanceof PartEntity<?>) target = ((PartEntity<?>) target).getParent();
+        if (target instanceof SeiryuPartEntity) return ((SeiryuPartEntity) target).owner();
+        if (target instanceof WorldTurtlePartEntity) return ((WorldTurtlePartEntity) target).owner();
+        return target instanceof LivingEntity ? (LivingEntity) target : null;
     }
     @Override public void defineSynchedData() { super.defineSynchedData(); entityData.define(VARIANT, 0); }
     public int getVariant() { return entityData.get(VARIANT); }
@@ -68,11 +107,11 @@ public final class BabylonWeaponEntity extends AbilityProjectileEntity {
                 if (AbilityHelper.isDodging(living)) return;
             }
         }
+        hitLanded = false;
         super.onModHit(hit);
+        if (!hitLanded && hit instanceof EntityRayTraceResult
+                && damageRecipient(((EntityRayTraceResult) hit).getEntity()) != null) return;
         boolean blockImpact = hit.getType() == RayTraceResult.Type.BLOCK;
-        // Dense piercing contacts share one flash every two ticks. Damage and
-        // hit sounds still run for every accepted contact; the final wall flash
-        // always appears, even directly after an entity contact in the same tick.
         if (blockImpact || tickCount - lastEntityImpactTick >= 2) {
             Vector3d outward = getDeltaMovement().scale(-1);
             if (hit instanceof BlockRayTraceResult) {
@@ -84,6 +123,6 @@ public final class BabylonWeaponEntity extends AbilityProjectileEntity {
             if (!blockImpact) lastEntityImpactTick = tickCount;
         }
         level.playSound(null, blockPosition(), SoundEvents.TRIDENT_HIT, SoundCategory.PLAYERS, .45F, 1.2F);
-        if (hit.getType() == RayTraceResult.Type.BLOCK) remove();
+        if (blockImpact) remove();
     }
 }

@@ -47,7 +47,8 @@ import net.kazi.kazimod.abilities.Kake.LuckySlotAbility;
 import net.kazi.kazimod.abilities.Kake.SlotSpinAbility;
 import net.kazi.kazimod.abilities.KamaRework.*;
 import net.kazi.kazimod.abilities.AkumaRework.*;
-import net.kazi.kazimod.abilities.NagiRework.*;
+import net.kazi.kazimod.entities.boss.sunjinwoo.abilities.*;
+import net.kazi.kazimod.abilities.NagiAwakening.*;
 import net.kazi.kazimod.abilities.KendoStyle.SeveranceAbility;
 import net.kazi.kazimod.abilities.KendoStyle.ZanshiAbility;
 import net.kazi.kazimod.abilities.SakuRework.*;
@@ -136,6 +137,11 @@ import net.kazi.kazimod.abilities.UoSeiryuRework.SeiryuHeavyPointRework;
 import net.kazi.kazimod.abilities.UoSeiryuRework.BoloBreathRework;
 import net.kazi.kazimod.abilities.UoSeiryuRework.TatsumakiRework;
 import net.kazi.kazimod.abilities.YamiRework.BlackHoleRework;
+import net.kazi.kazimod.abilities.Yagi.HornRamAbility;
+import net.kazi.kazimod.abilities.Yagi.AstralFlightAbility;
+import net.kazi.kazimod.abilities.Yagi.MountainGoatFormAbility;
+import net.kazi.kazimod.abilities.Yagi.MountainLeapAbility;
+import net.kazi.kazimod.abilities.YagiAwakening.*;
 import net.kazi.kazimod.abilities.boss.gojo.BossHollowPurpleAbility;
 import net.kazi.kazimod.abilities.boss.gojo.BossLapseBlueAbility;
 import net.kazi.kazimod.abilities.boss.gojo.BossMaxOutputLapseBlueAbility;
@@ -156,6 +162,14 @@ import java.util.Arrays;
 public class KaziAbilities {
 
     public static final AbilityCore<?>[] KAZIABILITY = new AbilityCore[]{
+            HornRamAbility.INSTANCE,
+            MountainLeapAbility.INSTANCE,
+            MountainGoatFormAbility.INSTANCE,
+            AstralFlightAbility.INSTANCE,
+            StarBlazingAbility.INSTANCE,
+            ShockerBreakerAbility.INSTANCE,
+            ChaosSaberAbility.INSTANCE,
+            ChaosBusterAbility.INSTANCE,
             GokuroRework.INSTANCE,
             HijonnaKukuuRework.INSTANCE,
             KarasusuRework.INSTANCE,
@@ -410,11 +424,9 @@ public class KaziAbilities {
             DivineSlayerAbility.INSTANCE,
             TrillionDarkAbility.INSTANCE,
             DemonTransformationAbility.INSTANCE,
-            SilentStrideAbility.INSTANCE,
-            SilentSliceAbility.INSTANCE,
-            SilentStepAbility.INSTANCE,
-            SilentBoxAbility.INSTANCE,
-            SilentDeathAbility.INSTANCE,
+            IllusionShatterAbility.INSTANCE,
+            CombatPremonitionAbility.INSTANCE,
+            DragonStrikeAbility.INSTANCE,
             KanzenSaiminAbility.INSTANCE,
             KurohitsugiAbility.INSTANCE,
             GoryutenmetsuAbility.INSTANCE,
@@ -434,11 +446,18 @@ public class KaziAbilities {
 
     };
 
+    // These have separate boss-only IDs and must never join the player command group.
+    private static final AbilityCore<?>[] BOSS_ABILITIES = {
+            SilentStrideAbility.INSTANCE, SilentSliceAbility.INSTANCE,
+            SilentStepAbility.INSTANCE, SilentBoxAbility.INSTANCE, SilentDeathAbility.INSTANCE
+    };
+
     public static void register(IEventBus eventBus) {
         KaziRegistry.ABILITIES.register(eventBus);
 
 
         Arrays.stream(KAZIABILITY).forEach(KaziRegistry::registerAbility);
+        Arrays.stream(BOSS_ABILITIES).forEach(KaziRegistry::registerAbility);
 
         AbilityCommandGroup.create("KAZI", () -> KAZIABILITY);
     }

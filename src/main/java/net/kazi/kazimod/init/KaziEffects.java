@@ -8,6 +8,8 @@ import net.minecraftforge.fml.RegistryObject;
 
 public class KaziEffects {
     public static final RegistryObject<Effect> BLOOD_POISON = KaziRegistry.EFFECTS.register("blood_poison", BloodPoisonEffect::new);
+    public static final RegistryObject<Effect> IMAGINE_BROKEN = KaziRegistry.EFFECTS.register(
+            "imagine_broken", net.kazi.kazimod.abilities.NagiAwakening.ImagineBrokenEffect::new);
     public static final RegistryObject<Effect> HEAVEN_BOUND = KaziRegistry.EFFECTS.register("heaven_bound", HeavenBoundEffect::new);
 
     public static final RegistryObject<Effect> KIRIN_SLEEP = KaziRegistry.EFFECTS.register("kirin_sleep", KirinSleepEffect::new);

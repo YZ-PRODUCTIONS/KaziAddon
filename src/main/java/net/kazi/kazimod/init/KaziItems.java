@@ -21,6 +21,11 @@ import net.kazi.kazimod.abilities.SakuRework.*;
 import net.kazi.kazimod.abilities.Tenki.*;
 import net.kazi.kazimod.abilities.Toki.*;
 import net.kazi.kazimod.abilities.Toshi.*;
+import net.kazi.kazimod.abilities.Yagi.HornRamAbility;
+import net.kazi.kazimod.abilities.Yagi.AstralFlightAbility;
+import net.kazi.kazimod.abilities.Yagi.MountainGoatFormAbility;
+import net.kazi.kazimod.abilities.Yagi.MountainLeapAbility;
+import net.kazi.kazimod.abilities.YagiAwakening.*;
 import net.kazi.kazimod.api.KaziRegistry;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -38,6 +43,7 @@ public class KaziItems {
     public static RegistryObject<AkumaNoMiItem> TOKI_TOKI_NO_MI;
     public static RegistryObject<AkumaNoMiItem> TENKI_TENKI_NO_MI;
     public static RegistryObject<AkumaNoMiItem> KOKU_KOKU_NO_MI;
+    public static RegistryObject<AkumaNoMiItem> YAGI_YAGI_NO_MI_MODEL_MOUNTAIN_GOAT;
     public static RegistryObject<AkumaNoMiItem> KAKE_KAKE_NO_MI;
     public static RegistryObject<AkumaNoMiItem> NUSU_NUSU_NO_MI;
     public static RegistryObject<AkumaNoMiItem> SAKU_SAKU_NO_MI;
@@ -116,6 +122,21 @@ public class KaziItems {
                         HollowPurpleAbility.INSTANCE,
                         InfinityAbility.INSTANCE,
                         DomainExpansionInfiniteVoidAbility.INSTANCE
+                )
+        );
+
+        YAGI_YAGI_NO_MI_MODEL_MOUNTAIN_GOAT = KaziRegistry.registerItem(
+                "yagi_yagi_no_mi_model_mountain_goat",
+                () -> new AkumaNoMiItem(
+                        "Yagi Yagi no Mi, Model: Mountain Goat", 1, FruitType.ZOAN,
+                        HornRamAbility.INSTANCE,
+                        MountainLeapAbility.INSTANCE,
+                        MountainGoatFormAbility.INSTANCE,
+                        AstralFlightAbility.INSTANCE,
+                        StarBlazingAbility.INSTANCE,
+                        ShockerBreakerAbility.INSTANCE,
+                        ChaosSaberAbility.INSTANCE,
+                        ChaosBusterAbility.INSTANCE
                 )
         );
 

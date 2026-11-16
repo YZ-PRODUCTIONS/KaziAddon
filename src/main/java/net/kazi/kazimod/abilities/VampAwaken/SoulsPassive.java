@@ -10,10 +10,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.particles.BlockParticleData;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -52,6 +56,13 @@ public class SoulsPassive extends PassiveAbility2 {
                     null)});
 
     public static final int MAX_SOUL_STACKS = 5;
+    private static final String[] SOUL_LOSS_LINES = {
+            "Now do it another 3 million times, why don'tcha!?",
+            "That's more like it!",
+            "I haven't had this much fun in ages!",
+            "Don't mistake my patience for cowardice.",
+            "Hmph."
+    };
     private static final float PROTECTION_TIME = 100.0F;
     private static final int SMOKE_DURATION_TICKS = 40;
 
@@ -114,6 +125,13 @@ public class SoulsPassive extends PassiveAbility2 {
         }
 
         this.soulStacks--;
+        if (entity instanceof PlayerEntity && entity.level instanceof ServerWorld) {
+            String line = SOUL_LOSS_LINES[MAX_SOUL_STACKS - 1 - this.soulStacks];
+            ((ServerWorld) entity.level).getServer().getPlayerList().broadcastMessage(
+                    new TranslationTextComponent("chat.type.text", entity.getDisplayName(),
+                            new StringTextComponent(line)), ChatType.CHAT, entity.getUUID());
+        }
+        spawnSoulBloodBurst(entity);
         this.protectionTimer = PROTECTION_TIME;
         this.smokeTicks = SMOKE_DURATION_TICKS;
         this.spawnActivationBats(entity);
@@ -192,6 +210,27 @@ public class SoulsPassive extends PassiveAbility2 {
                 return "I";
             default:
                 return "";
+        }
+    }
+
+    /** One radial spray per consumed soul; server particles are visible to nearby players. */
+    private void spawnSoulBloodBurst(LivingEntity entity) {
+        if (!(entity.level instanceof ServerWorld)) return;
+        ServerWorld world = (ServerWorld) entity.level;
+        BlockParticleData blood = new BlockParticleData(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState());
+        double centerY = entity.getY() + entity.getBbHeight() * .55;
+        double turn = entity.getRandom().nextDouble() * Math.PI * 2;
+        // Evenly distributed spherical jets, each with a fast tip and slower trailing droplets.
+        for (int jet = 0; jet < 32; jet++) {
+            double y = 1 - 2 * (jet + .5) / 32;
+            double horizontal = Math.sqrt(1 - y*y);
+            double angle = turn + jet * 2.399963229728653;
+            double x = Math.cos(angle) * horizontal, z = Math.sin(angle) * horizontal;
+            for (int drop = 0; drop < 3; drop++) {
+                double speed = .24 + drop * .15 + entity.getRandom().nextDouble() * .06;
+                world.sendParticles(blood, entity.getX() + x * .2, centerY + y * .2,
+                        entity.getZ() + z * .2, 0, x * speed, y * speed, z * speed, 1);
+            }
         }
     }
 
