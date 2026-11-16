@@ -1,6 +1,7 @@
 package net.kazi.kazimod.init;
 
 import net.kazi.kazimod.entities.MalevolentShrineEntity;
+import net.kazi.kazimod.entities.DragonStrikeEntity;
 import net.kazi.kazimod.entities.ShadowDoppelmanEntity;
 import net.kazi.kazimod.entities.VegapunkTraderEntity;
 import net.kazi.kazimod.entities.boss.aizen.AizenBossEntity;
@@ -15,6 +16,7 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 public class KaziEntityAttributes {
 
     public static void onAttributeCreate(EntityAttributeCreationEvent event) {
+        event.put(KaziEntities.DRAGON_STRIKE.get(), DragonStrikeEntity.createAttributes().build());
         event.put(KaziEntities.MALEVOLENT_SHRINE.get(),
                 MalevolentShrineEntity.createAttributes().build());
 

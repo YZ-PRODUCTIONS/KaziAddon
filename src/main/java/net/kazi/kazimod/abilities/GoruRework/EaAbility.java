@@ -6,6 +6,9 @@ import net.kazi.kazimod.entities.WindsRaptureShape;
 import net.kazi.kazimod.events.handlers.EaFallProtection;
 import net.kazi.kazimod.init.KaziAnimations;
 import net.kazi.kazimod.init.KaziEntities;
+import net.kazi.kazimod.init.KaziPacketHandler;
+import net.kazi.kazimod.network.EaCrimsonOverlayPacket;
+import java.util.UUID;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -29,8 +32,9 @@ import xyz.pixelatedw.mineminenomi.init.ModSounds;
 
 /** Ea commits to its charge once activated; the released attack runs independently. */
 public final class EaAbility extends Ability {
+    public static final float BASE_DAMAGE = 200.0F;
     public enum Mode {
-        EA("Ea: Enuma Elish", 100, 120), PILLAR("Uta Darunaki", 50, 25), WINDS("Ea: Winds of Rapture", 50, 35);
+        EA("Ea: Enuma Elish", BASE_DAMAGE, 80), PILLAR("Uta Darunaki", 50, 25), WINDS("Ea: Winds of Rapture", 50, 35);
         final String title;
         final float damage, cooldownTicks;
         Mode(String title, float damage, int cooldownSeconds) {
@@ -40,8 +44,7 @@ public final class EaAbility extends Ability {
     }
     private final AltModeComponent<Mode> modes = new EaModes(this)
             .addChangeModeEvent((user, ability, mode) -> updateDisplay(mode));
-    public static final float BASE_DAMAGE = 100.0F;
-    public static final float COOLDOWN_TICKS = 120 * 20;
+    public static final float COOLDOWN_TICKS = 80 * 20;
     public static final float CANCEL_COOLDOWN_TICKS = 30 * 20;
     public static final AbilityCore<EaAbility> INSTANCE = new AbilityCore.Builder<>(
             "Ea: Divine Sword of Rapture", AbilityCategory.DEVIL_FRUITS, EaAbility::new)
@@ -81,6 +84,7 @@ public final class EaAbility extends Ability {
     private EaVfxEntity visual;
     private Mode activeMode = Mode.PILLAR;
     private boolean pendingCast;
+    private UUID crimsonSession;
     private Vector3d launchOrigin;
     private Vector3d lockedPosition;
     private static final String GRAVITY_LOCK_TAG = "kazimodEaGravityLock";
@@ -166,6 +170,11 @@ public final class EaAbility extends Ability {
         visual = new EaVfxEntity(KaziEntities.EA_VFX.get(), user.level);
         visual.beginCharge(user, this, activeMode == Mode.WINDS);
         user.level.addFreshEntity(visual);
+        if (activeMode == Mode.EA || activeMode == Mode.WINDS) {
+            crimsonSession = UUID.randomUUID();
+            KaziPacketHandler.sendEaCrimsonOverlay(crimsonSession, EaCrimsonOverlayPacket.Action.CHARGE,
+                    activeMode == Mode.WINDS);
+        }
         animation.start(user, KaziAnimations.EA_CHARGE,
                 (activeMode == Mode.WINDS ? WindsRaptureShape.CHARGE_TICKS : EaVfxEntity.CHARGE_TICKS) + 5,
                 entity -> !entity.isAlive() || !charge.isCharging());
@@ -308,6 +317,12 @@ public final class EaAbility extends Ability {
         pendingCast = false;
         if (activeMode != Mode.EA) clearStance(user);
         visual.release(user);
+        if (crimsonSession != null) {
+            KaziPacketHandler.sendEaCrimsonOverlay(crimsonSession, visual.isReleased()
+                    ? EaCrimsonOverlayPacket.Action.RELEASE : EaCrimsonOverlayPacket.Action.CANCEL,
+                    activeMode == Mode.WINDS);
+            crimsonSession = null;
+        }
         cooldownComponent.startCooldown(user, activeMode.cooldownTicks);
     }
 
@@ -316,6 +331,11 @@ public final class EaAbility extends Ability {
         clearStance(user);
         if (!pendingCast) return;
         pendingCast = false;
+        if (crimsonSession != null) {
+            KaziPacketHandler.sendEaCrimsonOverlay(crimsonSession, EaCrimsonOverlayPacket.Action.CANCEL,
+                    activeMode == Mode.WINDS);
+            crimsonSession = null;
+        }
         dodgeProtectionUntil = 0;
         launchOrigin = null;
         if (charge.isCharging()) charge.forceStopCharging(user);
@@ -412,6 +432,7 @@ public final class EaAbility extends Ability {
 
     @Override public void load(CompoundNBT tag) {
         super.load(tag);
+        crimsonSession = null;
         dodgeProtectionUntil = 0;
         ownsChargeStuck = false;
         ownsFloat = false;

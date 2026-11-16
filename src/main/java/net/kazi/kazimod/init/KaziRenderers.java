@@ -12,6 +12,7 @@ import net.kazi.kazimod.models.projectiles.DiceProjectileRenderer;
 import net.kazi.kazimod.renderers.abilities.WeatherCloudReworkRenderer;
 import net.kazi.kazimod.renderers.abilities.WhiteTornadoRenderer;
 import net.kazi.kazimod.renderers.entities.*;
+import net.kazi.kazimod.renderers.entities.asriel.*;
 import net.kazi.kazimod.models.projectiles.FugaProjectileRenderer;
 import net.kazi.kazimod.models.projectiles.HellfireBirdRenderer;
 import net.kazi.kazimod.init.KaziAnimations;
@@ -34,6 +35,14 @@ public class KaziRenderers {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.CHAOS_BEAM.get(), ChaosBeamAttackRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.ASRIEL_STAR.get(), AsrielStarRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.ASRIEL_STAR_BURST.get(), AsrielStarBurstRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.ASRIEL_LIGHTNING.get(), AsrielLightningRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.ASRIEL_CHAOS_PROJECTILE.get(), AsrielChaosProjectileRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.ASRIEL_CHAOS_FIELD.get(), AsrielChaosFieldRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.DRAGON_STRIKE.get(), DragonStrikeRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.DRAGON_ATTACK_VFX.get(), DragonAttackVfxRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(KaziEntities.GATE_OF_BABYLON.get(), GateOfBabylonRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(KaziEntities.BABYLON_WEAPON.get(), BabylonWeaponRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(KaziEntities.BABYLON_IMPACT.get(), BabylonImpactRenderer::new);

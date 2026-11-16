@@ -3,6 +3,7 @@ package net.kazi.kazimod.events.handlers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import java.util.List;
 import net.kazi.kazimod.KaziMod;
+import net.kazi.kazimod.client.nagi.InnerDragonsCutsceneVisuals;
 import net.kazi.kazimod.items.PairedSwordsItem;
 import net.kazi.kazimod.renderers.items.PairedSwordsItemRenderer;
 import net.minecraft.client.Minecraft;
@@ -81,6 +82,7 @@ public final class PairedSwordsLayer extends LayerRenderer<AbstractClientPlayerE
 
     private void renderBlade(MatrixStack stack, IRenderTypeBuffer buffers, int light,
                                AbstractClientPlayerEntity player, ItemStack pair, HandSide arm) {
+        if (arm == HandSide.RIGHT && InnerDragonsCutsceneVisuals.isArmMissing(player)) return;
         boolean left = arm == HandSide.LEFT;
         TransformType transform = left ? TransformType.THIRD_PERSON_LEFT_HAND : TransformType.THIRD_PERSON_RIGHT_HAND;
         stack.pushPose();

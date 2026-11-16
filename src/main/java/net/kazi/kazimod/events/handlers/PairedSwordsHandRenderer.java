@@ -1,6 +1,7 @@
 package net.kazi.kazimod.events.handlers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.kazi.kazimod.client.nagi.InnerDragonsCutsceneVisuals;
 import net.kazi.kazimod.items.PairedSwordsItem;
 import net.kazi.kazimod.renderers.items.PairedSwordsItemRenderer;
 import net.minecraft.client.Minecraft;
@@ -53,6 +54,22 @@ public final class PairedSwordsHandRenderer {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player == null || player.isSpectator() || player.hasEffect(ModEffects.NO_HANDS.get())) return;
 
+        if (InnerDragonsCutsceneVisuals.isArmMissing(player)) {
+            // The replacement owns the right pass. Draw only the companion LEFT blade
+            // from its own pass, even when the main pair normally supplies both swords.
+            HandSide arm = event.getHand() == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+            if (arm == HandSide.RIGHT) { event.setCanceled(true); return; }
+            ItemStack pair = PairedSwordsItem.isPair(player.getMainHandItem()) ? player.getMainHandItem()
+                    : PairedSwordsItem.isPair(event.getItemStack()) ? event.getItemStack()
+                    : player.getMainHandItem().isEmpty() && PairedSwordsItem.isPair(player.getOffhandItem())
+                    ? player.getOffhandItem() : ItemStack.EMPTY;
+            if (!pair.isEmpty()) {
+                renderSwordHand(event, player, pair, event.getHand(), event.getSwingProgress());
+                event.setCanceled(true);
+            }
+            return;
+        }
+
         ItemStack mainPair = player.getMainHandItem();
         if (PairedSwordsItem.isPair(mainPair)) {
             // Vanilla omits the offhand pass for a charged crossbow, and omits the
@@ -87,6 +104,7 @@ public final class PairedSwordsHandRenderer {
     private static void renderSwordHand(RenderHandEvent event, ClientPlayerEntity player,
                                          ItemStack pair, Hand hand, float swing) {
         HandSide arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+        if (arm == HandSide.RIGHT && InnerDragonsCutsceneVisuals.isArmMissing(player)) return;
         int sign = arm == HandSide.RIGHT ? 1 : -1;
         // Vanilla's idle/equip/swing transforms. Calling renderItem directly does NOT fire this event again.
         float root = MathHelper.sqrt(swing);

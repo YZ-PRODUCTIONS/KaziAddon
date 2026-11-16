@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import net.kazi.kazimod.abilities.SupaRework.EnhancementAbility;
+import net.kazi.kazimod.abilities.NagiAwakening.ImagineBreakerNegation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -110,6 +111,7 @@ public class EnhancementLightEntity extends Entity {
                     return;
                 }
                 updateHitboxTargets();
+                if (removed) return;
             } else {
                 if (!isOwnerCharging()) {
                     this.remove();
@@ -159,6 +161,12 @@ public class EnhancementLightEntity extends Entity {
     }
 
     private void updateHitboxTargets() {
+        EnhancementBlastHitbox blast = activeBlastHitbox();
+        if (ImagineBreakerNegation.negateBeam(this, this.owner, EnhancementAbility.INSTANCE,
+                blast.getBounds(), blast::closestPoint)) {
+            this.targetsInBlast = Collections.emptyList();
+            return;
+        }
         this.targetsInBlast = this.level.getEntitiesOfClass(LivingEntity.class, getBlastBounds(),
                 target -> target != this.owner && target.isAlive() && !target.isSpectator()
                         && intersectsBlast(target.getBoundingBox()));
