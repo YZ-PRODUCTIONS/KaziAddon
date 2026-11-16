@@ -39,8 +39,8 @@ import java.util.*;
 public class DomainExpansionInfiniteVoidAbility extends Ability {
 
     private static final ITextComponent[] DESCRIPTION;
-    private static final float CHARGE_TIME      = 100.0f;
-    private static final float DOMAIN_DURATION  = 200.0f;
+    private static final float CHARGE_TIME      = 85.0f;  // 4.25 seconds, matching the activation clip.
+    private static final float DOMAIN_DURATION  = 325.0f; // 16.25 seconds, matching the domain music.
     private static final float MIN_COOLDOWN     = 1200.0f;
     private static final float MAX_COOLDOWN     = 2400.0f;
     private static final float RADIUS           = 30.0f;

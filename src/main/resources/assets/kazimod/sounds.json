@@ -1,4 +1,149 @@
 {
+  "chaos_beam_finale": {"sounds": [{"name": "kazimod:asriel/chaos_beam_finale", "stream": true}]},
+  "asriel_text": {"sounds": [{"name": "kazimod:asriel/asriel_text", "volume": 1.0, "stream": false, "preload": true}]},
+  "hopes_and_dreams_music": {
+    "subtitle": "kazimod.subtitle.hopes_and_dreams_music",
+    "sounds": [{"name": "kazimod:asriel/hopes_and_dreams", "stream": true, "attenuation_distance": 100}]
+  },
+  "goru_cutscene_music": {
+    "subtitle": "kazimod.subtitle.goru_cutscene_music",
+    "sounds": [{"name": "kazimod:goru_cutscene_music", "stream": true, "attenuation_distance": 100}]
+  },
+  "hyper_goner_laugh": {
+    "subtitle": "kazimod.subtitle.hyper_goner_laugh",
+    "sounds": [
+      {
+        "name": "kazimod:asriel/hyper_goner_laugh",
+        "stream": false
+      }
+    ]
+  },
+  "hyper_goner_charge": {
+    "subtitle": "kazimod.subtitle.hyper_goner_charge",
+    "sounds": [
+      {
+        "name": "kazimod:asriel/hyper_goner_charge",
+        "stream": true
+      }
+    ]
+  },
+  "hyper_goner_return": {
+    "subtitle": "kazimod.subtitle.hyper_goner_return",
+    "sounds": [
+      {
+        "name": "kazimod:asriel/hyper_goner_return",
+        "stream": false
+      }
+    ]
+  },
+  "enkidu_cast": {
+    "subtitle": "kazimod.subtitle.enkidu_cast",
+    "sounds": [{"name": "kazimod:enkidu_cast", "attenuation_distance": 64}]
+  },
+  "gate_of_babylon_cast": {
+    "subtitle": "kazimod.subtitle.gate_of_babylon_cast",
+    "sounds": [{"name": "kazimod:gate_of_babylon_cast", "attenuation_distance": 64}]
+  },
+  "angel_of_death_cast": {
+    "subtitle": "kazimod.subtitle.angel_of_death_cast",
+    "sounds": [{"name": "kazimod:asriel/angel_of_death_cast", "attenuation_distance": 96}]
+  },
+  "angel_of_death_fire": {
+    "subtitle": "kazimod.subtitle.angel_of_death_fire",
+    "sounds": [{"name": "kazimod:asriel/angel_of_death_fire", "attenuation_distance": 96}]
+  },
+  "shocker_breaker_cast": {
+    "subtitle": "kazimod.subtitle.shocker_breaker_cast",
+    "sounds": [{"name": "kazimod:asriel/shocker_breaker_cast", "attenuation_distance": 96}]
+  },
+  "shocker_breaker_strike": {
+    "subtitle": "kazimod.subtitle.shocker_breaker_strike",
+    "sounds": [{"name": "kazimod:asriel/shocker_breaker_strike", "attenuation_distance": 96}]
+  },
+  "shocker_breaker_strike_alt": {
+    "subtitle": "kazimod.subtitle.shocker_breaker_strike",
+    "sounds": [{"name": "kazimod:asriel/shocker_breaker_strike_alt", "attenuation_distance": 96}]
+  },
+  "chaos_saber_appear": {
+    "subtitle": "kazimod.subtitle.chaos_saber_appear",
+    "sounds": [{"name": "kazimod:asriel/chaos_saber_appear", "attenuation_distance": 96}]
+  },
+  "chaos_saber_grab": {
+    "subtitle": "kazimod.subtitle.chaos_saber_grab",
+    "sounds": [{"name": "kazimod:asriel/chaos_saber_grab", "attenuation_distance": 96}]
+  },
+  "chaos_saber_pullback": {
+    "subtitle": "kazimod.subtitle.chaos_saber_pullback",
+    "sounds": [{"name": "kazimod:asriel/chaos_saber_pullback", "attenuation_distance": 96}]
+  },
+  "chaos_saber_charge": {
+    "subtitle": "kazimod.subtitle.chaos_saber_charge",
+    "sounds": [{"name": "kazimod:asriel/chaos_saber_charge", "attenuation_distance": 96}]
+  },
+  "chaos_saber_voice": {
+    "subtitle": "kazimod.subtitle.chaos_saber_voice",
+    "sounds": [{"name": "kazimod:asriel/chaos_saber_voice", "attenuation_distance": 96}]
+  },
+  "chaos_saber_cut": {
+    "subtitle": "kazimod.subtitle.chaos_saber_cut",
+    "sounds": [{"name": "kazimod:asriel/chaos_saber_cut", "attenuation_distance": 96}]
+  },
+  "chaos_saber_sparkles": {
+    "subtitle": "kazimod.subtitle.chaos_saber_sparkles",
+    "sounds": [{"name": "kazimod:asriel/chaos_saber_sparkles", "attenuation_distance": 96}]
+  },
+  "chaos_beam_charge": {
+    "subtitle": "kazimod.subtitle.chaos_beam_charge",
+    "sounds": [{"name": "kazimod:asriel/chaos_beam_charge", "attenuation_distance": 96}]
+  },
+  "chaos_beam_launch": {
+    "subtitle": "kazimod.subtitle.chaos_beam_launch",
+    "sounds": [{"name": "kazimod:asriel/chaos_beam_launch", "attenuation_distance": 96}]
+  },
+  "chaos_beam_hold": {
+    "subtitle": "kazimod.subtitle.chaos_beam_hold",
+    "sounds": [{"name": "kazimod:asriel/chaos_beam_hold", "attenuation_distance": 96}]
+  },
+  "chaos_buster_target": {
+    "subtitle": "kazimod.subtitle.chaos_buster_target",
+    "sounds": [{"name": "kazimod:asriel/chaos_buster_target", "attenuation_distance": 96}]
+  },
+  "chaos_buster_fire": {
+    "subtitle": "kazimod.subtitle.chaos_buster_fire",
+    "sounds": [{"name": "kazimod:asriel/chaos_buster_fire", "attenuation_distance": 96}]
+  },
+  "chaos_buster_charge": {
+    "subtitle": "kazimod.subtitle.chaos_buster_charge",
+    "sounds": [{"name": "kazimod:asriel/chaos_buster_charge", "attenuation_distance": 96}]
+  },
+  "chaos_buster_beam": {
+    "subtitle": "kazimod.subtitle.chaos_buster_beam",
+    "sounds": [{"name": "kazimod:asriel/chaos_buster_beam", "attenuation_distance": 96}]
+  },
+  "star_blazing_cast": {
+    "subtitle": "kazimod.subtitle.star_blazing_cast",
+    "sounds": [{"name": "kazimod:asriel/star_blazing_cast", "attenuation_distance": 96}]
+  },
+  "star_blazing_summon": {
+    "subtitle": "kazimod.subtitle.star_blazing_summon",
+    "sounds": [{"name": "kazimod:asriel/star_blazing_summon", "attenuation_distance": 96}]
+  },
+  "star_blazing_finale": {
+    "subtitle": "kazimod.subtitle.star_blazing_finale",
+    "sounds": [{"name": "kazimod:asriel/star_blazing_finale", "attenuation_distance": 96}]
+  },
+  "star_blazing_burst": {
+    "subtitle": "kazimod.subtitle.star_blazing_burst",
+    "sounds": [{"name": "kazimod:asriel/star_blazing_burst", "attenuation_distance": 96}]
+  },
+  "fruit_nullification": {
+    "subtitle": "kazimod.subtitle.fruit_nullification",
+    "sounds": [
+      "kazimod:imagine_breaker_1",
+      "kazimod:imagine_breaker_2",
+      "kazimod:imagine_breaker_3"
+    ]
+  },
   "winds_rapture_charge": {
     "subtitle": "kazimod.subtitle.winds_rapture_charge",
     "sounds": [

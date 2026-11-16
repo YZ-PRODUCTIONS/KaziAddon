@@ -1,0 +1,1 @@
+PASS: settings form, startup, turn calibration totals, event order, balanced knife inputs and cancellation guards. No input sent.

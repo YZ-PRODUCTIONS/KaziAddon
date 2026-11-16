@@ -16,8 +16,13 @@ import java.util.Optional;
 
 public class KaziPacketHandler {
 
+<<<<<<< HEAD
     // Visual messages and beam data require matching client/server versions.
     private static final String PROTOCOL_VERSION = "21";
+=======
+    // Legendary Weapon Trace synchronizes the temporary move with tracking clients.
+    private static final String PROTOCOL_VERSION = "31";
+>>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
     private static int id = 0;
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
@@ -28,6 +33,7 @@ public class KaziPacketHandler {
     );
 
     public static void register() {
+<<<<<<< HEAD
         CHANNEL.registerMessage(id++, net.kazi.kazimod.ope.WillePacket.class,
                 net.kazi.kazimod.ope.WillePacket::encode, net.kazi.kazimod.ope.WillePacket::decode,
                 net.kazi.kazimod.ope.WillePacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
@@ -60,6 +66,17 @@ public class KaziPacketHandler {
                 net.kazi.kazimod.yami.YamiVisualPacket::encode,
                 net.kazi.kazimod.yami.YamiVisualPacket::decode,
                 net.kazi.kazimod.yami.YamiVisualPacket::handle,
+=======
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.HyperGonerMusicPacket.class,
+                net.kazi.kazimod.network.HyperGonerMusicPacket::encode,
+                net.kazi.kazimod.network.HyperGonerMusicPacket::decode,
+                net.kazi.kazimod.network.HyperGonerMusicPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.GoruCutsceneMusicPacket.class,
+                net.kazi.kazimod.network.GoruCutsceneMusicPacket::encode,
+                net.kazi.kazimod.network.GoruCutsceneMusicPacket::decode,
+                net.kazi.kazimod.network.GoruCutsceneMusicPacket::handle,
+>>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(id++, net.kazi.kazimod.progression.FruitlessProgressionPacket.class,
                 net.kazi.kazimod.progression.FruitlessProgressionPacket::encode,
@@ -124,10 +141,42 @@ public class KaziPacketHandler {
                 net.kazi.kazimod.network.MammothAnimationPacket::decode,
                 net.kazi.kazimod.network.MammothAnimationPacket::handle,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+<<<<<<< HEAD
         CHANNEL.registerMessage(id++, net.kazi.kazimod.leopard.LeopardGrabPacket.class,
                 net.kazi.kazimod.leopard.LeopardGrabPacket::encode,
                 net.kazi.kazimod.leopard.LeopardGrabPacket::decode,
                 net.kazi.kazimod.leopard.LeopardGrabPacket::handle,
+=======
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.InnerDragonsCutscenePacket.class,
+                net.kazi.kazimod.network.InnerDragonsCutscenePacket::encode,
+                net.kazi.kazimod.network.InnerDragonsCutscenePacket::decode,
+                net.kazi.kazimod.network.InnerDragonsCutscenePacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.InnerDragonsArmPacket.class,
+                net.kazi.kazimod.network.InnerDragonsArmPacket::encode,
+                net.kazi.kazimod.network.InnerDragonsArmPacket::decode,
+                net.kazi.kazimod.network.InnerDragonsArmPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.AsrielSoundPacket.class,
+                net.kazi.kazimod.network.AsrielSoundPacket::encode,
+                net.kazi.kazimod.network.AsrielSoundPacket::decode,
+                net.kazi.kazimod.network.AsrielSoundPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.EaCrimsonOverlayPacket.class,
+                net.kazi.kazimod.network.EaCrimsonOverlayPacket::encode,
+                net.kazi.kazimod.network.EaCrimsonOverlayPacket::decode,
+                net.kazi.kazimod.network.EaCrimsonOverlayPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.ChaosBeamTitlePacket.class,
+                net.kazi.kazimod.network.ChaosBeamTitlePacket::encode,
+                net.kazi.kazimod.network.ChaosBeamTitlePacket::decode,
+                net.kazi.kazimod.network.ChaosBeamTitlePacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.network.LegendaryWeaponTracePacket.class,
+                net.kazi.kazimod.network.LegendaryWeaponTracePacket::encode,
+                net.kazi.kazimod.network.LegendaryWeaponTracePacket::decode,
+                net.kazi.kazimod.network.LegendaryWeaponTracePacket::handle,
+>>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 
@@ -157,6 +206,11 @@ public class KaziPacketHandler {
                 PacketDistributor.PLAYER.with(() -> player),
                 new CameraShakePacket(durationTicks, intensity)
         );
+    }
+
+    public static void sendEaCrimsonOverlay(java.util.UUID session,
+            net.kazi.kazimod.network.EaCrimsonOverlayPacket.Action action,boolean winds) {
+        CHANNEL.send(PacketDistributor.ALL.noArg(), new net.kazi.kazimod.network.EaCrimsonOverlayPacket(session,action,winds));
     }
 
 }

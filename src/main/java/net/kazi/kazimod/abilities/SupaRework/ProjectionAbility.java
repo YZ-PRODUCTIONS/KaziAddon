@@ -14,6 +14,7 @@ import net.kazi.kazimod.init.KaziPacketHandler;
 import net.kazi.kazimod.init.KaziSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -57,10 +58,7 @@ import xyz.pixelatedw.mineminenomi.init.ModEntityPredicates;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
-/**
- * Supa awakening move with four deliberately separate behavior paths. The modes
- * are intentionally left as foundations until their individual effects are set.
- */
+/** Supa awakening projections with independent behavior for each alternate mode. */
 public class ProjectionAbility extends Ability {
     private static final int REPLICATION_SWORD_COUNT = 20;
     private static final int REPLICATION_SHOT_INTERVAL = 5;
@@ -81,7 +79,8 @@ public class ProjectionAbility extends Ability {
 
     public enum Mode {
         RHO_AIAS("Rho Aias"), SECOND("Caladbolg"),
-        THIRD("Universe of Infinite Blades"), FOURTH("Instant Sword Replication");
+        THIRD("Universe of Infinite Blades"), FOURTH("Instant Sword Replication"),
+        LEGENDARY_WEAPON_TRACE("Legendary Weapon Trace");
 
         private final String displayName;
 
@@ -103,13 +102,15 @@ public class ProjectionAbility extends Ability {
             new ResourceLocation("kazimod", "textures/abilities/supa_rho_aias.png"),
             new ResourceLocation("kazimod", "textures/abilities/supa_caladbolg.png"),
             new ResourceLocation("kazimod", "textures/abilities/supa_projectile_counter.png"),
-            new ResourceLocation("kazimod", "textures/abilities/supa_instant_replication.png")
+            new ResourceLocation("kazimod", "textures/abilities/supa_instant_replication.png"),
+            new ResourceLocation("kazimod", "textures/abilities/supa_legendary_weapon_trace.png")
     };
     private static final Pair<String, Object[]>[] DESCRIPTION = new Pair[]{
             ImmutablePair.<String, Object[]>of("Rho Aias: Projects a seven-petal shield that grants invulnerability while maintained.", null),
             ImmutablePair.<String, Object[]>of("Caladbolg: Fires a charged explosive projectile that erupts on impact.", null),
             ImmutablePair.<String, Object[]>of("Universe of Infinite Blades: Automatically destroys nearby projectiles with summoned swords.", null),
-            ImmutablePair.<String, Object[]>of("Instant Sword Replication: Opens portals that rapidly launch weakly homing swords at a target.", null)
+            ImmutablePair.<String, Object[]>of("Instant Sword Replication: Opens portals that rapidly launch weakly homing swords at a target.", null),
+            ImmutablePair.<String, Object[]>of("Legendary Weapon Trace: While Mugen no Kensei or Infinite Creation of Swords is active, roll from a shuffled cycle of legendary moves and use the roll once within 15 seconds. Each available move appears before repeats. Projection returns with half that move's cooldown. Sneak-use to discard; unused rolls have a 10-second cooldown.", null)
     };
 
     public static final AbilityCore<ProjectionAbility> INSTANCE = new AbilityCore.Builder<>(
@@ -194,8 +195,10 @@ public class ProjectionAbility extends Ability {
         boolean allowed;
         switch (mode) {
             case RHO_AIAS:
-                // The base Projection is always available, including inside either marble.
                 allowed = true;
+                break;
+            case LEGENDARY_WEAPON_TRACE:
+                allowed = LegendaryWeaponTrace.isMarbleActive(entity);
                 break;
             case SECOND:
                 allowed = !realityMarbleActive;
@@ -218,8 +221,10 @@ public class ProjectionAbility extends Ability {
      * avoids the transient invalid selection and its chat message entirely.
      */
     private static final class ProjectionAltModeComponent extends AltModeComponent<Mode> {
+        private final ProjectionAbility projection;
         private ProjectionAltModeComponent(ProjectionAbility ability) {
             super(ability, Mode.class, Mode.RHO_AIAS);
+            this.projection = ability;
         }
 
         @Override
@@ -234,8 +239,14 @@ public class ProjectionAbility extends Ability {
                 nbt.putString("currentMode", Mode.THIRD.name());
             } else if (Mode.FOURTH.toString().equals(storedMode)) {
                 nbt.putString("currentMode", Mode.FOURTH.name());
+            } else if (Mode.LEGENDARY_WEAPON_TRACE.toString().equals(storedMode)) {
+                nbt.putString("currentMode", Mode.LEGENDARY_WEAPON_TRACE.name());
             }
             super.load(nbt);
+            // Network restoration loads components after Ability.load. Refresh here so
+            // the constructor's Rho Aias icon cannot survive a restored Trace selection.
+            this.projection.currentMode = getCurrentMode();
+            this.projection.setDisplayIcon(MODE_ICONS[getCurrentMode().ordinal()]);
         }
 
         @Override
@@ -270,9 +281,31 @@ public class ProjectionAbility extends Ability {
             case FOURTH:
                 useFourthProjection(entity, ability);
                 break;
+            case LEGENDARY_WEAPON_TRACE:
+                useLegendaryWeaponTrace(entity, ability);
+                break;
             default:
                 break;
         }
+    }
+
+    private void useLegendaryWeaponTrace(LivingEntity entity, IAbility ability) {
+        if (entity instanceof PlayerEntity) LegendaryWeaponTrace.roll((PlayerEntity) entity, this);
+    }
+
+    void restoreTraceState(CompoundNBT saved) {
+        super.load(saved);
+        CompoundNBT components = saved.getCompound("components");
+        getComponents().forEach((key, component) -> {
+            String id = key.getId().toString();
+            if (components.contains(id, 10)) component.load(components.getCompound(id));
+        });
+        this.currentMode = this.altModeComponent.getCurrentMode();
+        this.setDisplayIcon(MODE_ICONS[this.currentMode.ordinal()]);
+    }
+
+    void startTraceReturnCooldown(LivingEntity user, float cooldown) {
+        this.cooldownComponent.startCooldown(user, cooldown);
     }
 
     private void onAbilityTick(LivingEntity entity, IAbility ability) {

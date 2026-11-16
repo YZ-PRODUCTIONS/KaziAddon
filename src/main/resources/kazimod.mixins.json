@@ -6,6 +6,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "kazimod.refmap.json",
   "mixins": [
+<<<<<<< HEAD
     "SenkeiCollisionMixin",
     "AlchemyLegacyAdvancementMixin",
     "RetiredCharacterEntryMixin",
@@ -66,11 +67,30 @@
     "MammothHybridStatsMixin",
     "MammothLegacyAbilityMixin",
     "MammothTrampleControlMixin",
+=======
+    "KameGuardJumpMixin",
+    "RealityMarbleCollisionMixin",
+    "RealityMarbleTeleportMixin",
+>>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
     "Supamixins.PairedSwordsContainerMixin",
+    "Supamixins.LegendaryWeaponTraceMixin$ValidityChecks",
+    "Supamixins.LegendaryWeaponTraceMixin$HakiRequirements",
+    "Supamixins.LegendaryWeaponTraceMixin$NitoryuRequirements",
+    "Supamixins.LegendaryWeaponTraceMixin$SwordRequirements",
+    "Supamixins.LegendaryWeaponTraceMixin$BluntRequirements",
+    "Supamixins.LegendaryWeaponTraceMixin$PierceCancellation",
+    "Supamixins.LegendaryWeaponTraceMixin$BumakiCancellation",
+    "Supamixins.LegendaryWeaponTraceMixin$GalaxyCancellation",
+    "Supamixins.LegendaryWeaponTraceMixin$FinalExecutionFinish",
+    "Supamixins.LegendaryWeaponTraceMixin$WeaponDurability",
     "CartStylesReplace",
     "CartRaceReplace",
     "CartYamiAbilitiesMixin",
     "LaserBeamDataMixin",
+    "ImagineBreakerPassiveBeamMixin",
+    "ChaosBeamRecoilMixin",
+    "ChaosBeamLivingDamageMixin",
+    "ChaosBeamPlayerDamageMixin",
     "AbilityUnlockBlocker",
     "NusuAbilityCheckBypassMixin",
     "CheckFruitsCommandMixin",
@@ -89,29 +109,10 @@
     "NusuAbilityCheckBypassMixin$KageHelperMixin",
     "NusuAbilityCheckBypassMixin$NightmareSoldiersMixin",
     "NusuAbilityCheckBypassMixin$TriceratopsHelperMixin",
-    "AkumaNoMiBoxMixin",
-    "GuraAirCrackMixin",
-    "GekishinVisualMixin",
-    "GekishinProjectileVisualMixin",
-    "ShingenVisualMixin",
-    "ShimaYurashiVisualMixin",
-    "TenchiMeidoVisualMixin",
-    "CartGuraAirCrackMixin",
-    "CartShingenVisualMixin",
-    "CartKabutowariVisualMixin",
-    "CartHakuaVisualMixin",
-    "CartShimaVisualMixin",
-    "balance.TenkiBoltVfxMixin",
-    "balance.TenkiCloudParticlesMixin",
-    "balance.TenkiCloudVfxMixin",
-    "balance.TenkiExplosionVfxMixin",
-    "balance.TenkiGaleStormMixin",
-    "balance.TenkiLightningVfxMixin",
-    "balance.TenkiParticleReplacementMixin",
-    "balance.TenkiTornadoModeMixin",
-    "balance.TenkiWindVfxMixin"
+    "AkumaNoMiBoxMixin"
   ],
   "client": [
+<<<<<<< HEAD
     "client.TaktRubbleRendererMixin",
     "client.OpeSplitRenderMixin",
     "client.OpeWorldRenderMixin",
@@ -190,6 +191,15 @@
     "client.BloodWorldRenderMixin",
     "client.BloodPlayerPoseMixin",
     "client.BloodFirstPersonMixin"
+=======
+    "client.InnerDragonsArmorMixin",
+    "client.InnerDragonsHeldItemMixin",
+    "client.ShaNaqbaImuruAuraMixin",
+    "client.LaserBeamRendererMixin",
+    "client.KRoomSwordItemRendererMixin",
+    "client.PunctureWilleSwordRenderMixin",
+    "client.ZanGiriMochiLayerSafetyMixin"
+>>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
   ],
   "injectors": {
     "defaultRequire": 1

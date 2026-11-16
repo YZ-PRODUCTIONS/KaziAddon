@@ -1,0 +1,50 @@
+{
+  "source": "output\\validation\\shocker-audio\\mus_sfx_a_lithit.ogg",
+  "source_sha256": "fba206bb2939513fa49b215a0deb5a380a16cf0611cf93e322bc2ea43305fbfc",
+  "baseline": {
+    "sha256": "345a981fe1f0624e407273fbb152a8a6259b6edf31423b0fcbf1f09fac749103",
+    "channels": 1,
+    "sample_rate": 44100,
+    "source_frames": 48960,
+    "source_seconds": 1.110204081632653,
+    "source_rms_dbfs": -12.366853415648775,
+    "decoded_peak_dbfs": -0.7350422033618215,
+    "playback_pitch": 0.6,
+    "playback_seconds": 1.8503401360544218,
+    "playback_rms_dbfs": -12.36691094217408,
+    "playback_peak_dbfs": -0.025616179166418947,
+    "playback_4x_peak_dbfs": 0.00013874768202671626,
+    "playback_high_band_rms_dbfs": -18.467522945355828,
+    "playback_attack_100ms_rms_dbfs": -8.832540492641112,
+    "playback_final_30ms_peak_dbfs": -36.80699805137322
+  },
+  "processed": {
+    "sha256": "6fdf5f435f72a3b2376786b61db484d3099b992f2b6238ff684ba13dbe2cbcd8",
+    "channels": 1,
+    "sample_rate": 44100,
+    "source_frames": 48960,
+    "source_seconds": 1.110204081632653,
+    "source_rms_dbfs": -12.398843462552966,
+    "decoded_peak_dbfs": -0.6852706223058613,
+    "playback_pitch": 0.6,
+    "playback_seconds": 1.8503401360544218,
+    "playback_rms_dbfs": -12.398861782021033,
+    "playback_peak_dbfs": -0.778830144324659,
+    "playback_4x_peak_dbfs": -0.6924544812030797,
+    "playback_high_band_rms_dbfs": -18.831322063187976,
+    "playback_attack_100ms_rms_dbfs": -8.375016955005522,
+    "playback_final_30ms_peak_dbfs": -50.14624588462329
+  },
+  "rms_delta_db": -0.031950839846953016,
+  "master_gain": 1.1961612577927692,
+  "master_soft_ceiling": 0.7632265366407228,
+  "layers": {
+    "body": "pan=mono|c0=0.5*c0+0.5*c1,highpass=f=110,lowpass=f=11000,equalizer=f=1700:t=q:w=0.8:g=3.4,equalizer=f=4200:t=q:w=0.9:g=4.6,asoftclip=type=tanh:threshold=0.72:output=1:oversample=4",
+    "crack": "pan=mono|c0=0.5*c0+0.5*c1,highpass=f=2400,lowpass=f=12500,asoftclip=type=tanh:threshold=0.20:output=1:oversample=4",
+    "electrical": "pan=mono|c0=0.5*c0+0.5*c1,highpass=f=650,lowpass=f=6500,asoftclip=type=atan:threshold=0.30:output=1:oversample=4"
+  },
+  "processing": "Original averaged to mono; parallel dry/mid-forward saturated body, 50ms crack transient and 166Hz-modulated electrical midrange (99.6Hz at game pitch); 4x oversampled saturation; 45ms smooth tail; soft-knee mastering matched at runtime pitch 0.6; mono 44100 Hz Vorbis quality 5.",
+  "preview": "Same playback gain; actual0.6 pitch; before, 750ms silence, after.",
+  "primary_sha256": "6fdf5f435f72a3b2376786b61db484d3099b992f2b6238ff684ba13dbe2cbcd8",
+  "alternate_sha256": "6fdf5f435f72a3b2376786b61db484d3099b992f2b6238ff684ba13dbe2cbcd8"
+}

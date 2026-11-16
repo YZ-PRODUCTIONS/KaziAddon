@@ -4,6 +4,9 @@ import net.kazi.kazimod.events.handlers.DemonWingsLayer;
 import net.kazi.kazimod.events.handlers.GearFifthSmokeLayer;
 import net.kazi.kazimod.events.handlers.GigantSmokeLayer;
 import net.kazi.kazimod.events.handlers.PairedSwordsLayer;
+import net.kazi.kazimod.events.handlers.ImagineBreakerAuraLayer;
+import net.kazi.kazimod.events.handlers.InnerDragonsArmLayer;
+import net.kazi.kazimod.events.handlers.AstralFlightLayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,6 +30,9 @@ public class KaziLayers {
                 renderer.addLayer(new GearFifthSmokeLayer<>(renderer));
                 renderer.addLayer(new GigantSmokeLayer<>(renderer));
                 renderer.addLayer(new DemonWingsLayer<>(renderer));
+                renderer.addLayer(new ImagineBreakerAuraLayer(renderer));
+                renderer.addLayer(new InnerDragonsArmLayer(renderer));
+                renderer.addLayer(new AstralFlightLayer<>(renderer));
                 PairedSwordsLayer.install(renderer);
 
             }

@@ -1,6 +1,8 @@
 package net.kazi.kazimod.abilities.KameRework;
 
 import net.minecraft.entity.LivingEntity;
+import net.kazi.kazimod.abilities.HumanRework.TekkaiRework;
+import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -35,13 +37,22 @@ public class KameGuardPointRework extends MorphAbility2 {
     private static final AbilityAttributeModifier ARMOR_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_ARMOR_UUID, INSTANCE, "Kame Guard Point Modifier", 25.0, AttributeModifier.Operation.ADDITION);
     private static final AbilityAttributeModifier ATTACK_SPEED_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_ATTACK_SPEED_UUID, INSTANCE, "Kame Guard Point Modifier", (double)-0.15F, AttributeModifier.Operation.ADDITION);
     private static final AbilityAttributeModifier KNOCKBACK_RESISTANCE_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_KNOCKBACK_RESISTANCE_UUID, INSTANCE, "Kame Guard Point Knockback Resistance Modifier", 2.0, AttributeModifier.Operation.ADDITION);
-    private static final AbilityAttributeModifier JUMP_BOOST_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_JUMP_BOOST_UUID, INSTANCE, "Kame Guard Point Jump Modifier", -10.0, AttributeModifier.Operation.ADDITION);
+    private static final AbilityAttributeModifier JUMP_BOOST_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_JUMP_BOOST_UUID, INSTANCE, "Kame Guard Point Jump Modifier", -30.0, AttributeModifier.Operation.ADDITION);
     private static final AbilityAttributeModifier SPEED_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_MOVEMENT_SPEED_UUID, INSTANCE, "Kame Guard Point Modifier", -0.85, AttributeModifier.Operation.MULTIPLY_BASE);
     private static final AbilityAttributeModifier SWIM_SPEED_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_SWIM_SPEED_UUID, INSTANCE, "Kame Guard Point Water Speed Modifier", 1.0, AttributeModifier.Operation.ADDITION);
     private static final AbilityAttributeModifier TOUGHNESS_MODIFIER = new AbilityAttributeModifier(AttributeHelper.MORPH_TOUGHNESS_UUID, INSTANCE, "Kame Guard Point Toughness Modifier", 10.0, AttributeModifier.Operation.ADDITION);
 
     public KameGuardPointRework(AbilityCore<KameGuardPointRework> core) {
         super(core);
+        this.addCanUseCheck((entity, ability) -> {
+            // Always permit switching this form off, including old saves with overlapping states.
+            if (this.isContinuous()) return AbilityUseResult.success();
+            TekkaiRework tekkai = AbilityDataCapability.get(entity).getEquippedAbility(TekkaiRework.INSTANCE);
+            if (tekkai != null && tekkai.isContinuous()) {
+                return AbilityUseResult.fail(new StringTextComponent("Kame Guard Point cannot be used during Tekkai or Tekkai Walk Point."));
+            }
+            return AbilityUseResult.success();
+        });
         this.statsComponent.addAttributeModifier(Attributes.ARMOR, ARMOR_MODIFIER);
         this.statsComponent.addAttributeModifier(Attributes.MAX_HEALTH, HEALTH_MODIFIER);
         this.statsComponent.addAttributeModifier(Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER);

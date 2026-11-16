@@ -171,7 +171,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
                     // FIX: stopCooldown first so startCooldown isn't silently ignored
                     this.cooldownComponent.stopCooldown(entity);
                     this.cooldownComponent.startCooldown(entity, COOLDOWN);
-                    this.startKamaTechniqueCooldowns(entity, COOLDOWN * 0.5F);
+                    this.startKamaTechniqueCooldowns(entity, COOLDOWN * 0.25F);
                     voidAbility.startCooldownForClash(other);
 
                     this.chargeComponent.stopCharging(entity);
@@ -299,7 +299,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
             float cooldown = MIN_COOLDOWN + ratio * (MAX_COOLDOWN - MIN_COOLDOWN);
             this.cooldownComponent.stopCooldown(entity);
             this.cooldownComponent.startCooldown(entity, cooldown);
-            this.startKamaTechniqueCooldowns(entity, cooldown * 0.5F);
+            this.startKamaTechniqueCooldowns(entity, cooldown * 0.25F);
         }
         this.cleanedUpEarly = false;
     }
@@ -335,7 +335,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
     public void startCooldownForClash(LivingEntity entity) {
         this.cooldownComponent.stopCooldown(entity);
         this.cooldownComponent.startCooldown(entity, COOLDOWN);
-        this.startKamaTechniqueCooldowns(entity, COOLDOWN * 0.5F);
+        this.startKamaTechniqueCooldowns(entity, COOLDOWN * 0.25F);
     }
 
     private void startKamaTechniqueCooldowns(LivingEntity entity, float duration) {

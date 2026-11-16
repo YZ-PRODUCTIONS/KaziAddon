@@ -1,0 +1,73 @@
+Asriel title reference for Chaos Beam
+
+Text: WHY WONT YOU LET ME WIN
+Finale text: I CAN STILL SAVE MY FRIENDS
+Exact original font: Undertale fnt_main, named 8bitoperator JVE in the resource.
+Font anti-aliasing: off. Use nearest-neighbor sampling.
+
+The production asriel_title.png now contains19glyphs on a128x128atlas, in
+16x32cells with8columns. Glyph order: " EHILMNOTUWYACDFRSV". The original
+12glyphs retain their exact coordinates and pixels; A,C,D,F,R,S,V were copied
+from the same original English atlas using the verified YY metrics below.
+All added glyphs are12x26, zerooffset and14pixeladvance. Finale phrase width
+is340nativepixels, with27characters including5spaces. The existing screen
+layout scales the longer phrase to fit with room for its original ghost jitter.
+
+Source verification:
+https://raw.githubusercontent.com/danielah05/UndertaleDecomp/main/objects/obj_FinalWriter/Draw_0.gml
+The newer decompile uses the symbolic name scr_setfont(fnt_main), resolving the
+older archive's numeric font index 1. Both have the same seven-layer animation.
+https://raw.githubusercontent.com/danielah05/UndertaleDecomp/main/objects/obj_FinalWriter/Create_0.gml
+https://raw.githubusercontent.com/danielah05/UndertaleDecomp/main/objects/obj_FinalWriter/Alarm_1.gml
+https://raw.githubusercontent.com/danielah05/UndertaleDecomp/main/fonts/fnt_main/fnt_main.yy
+
+Bitmap source:
+https://raw.githubusercontent.com/AspectFX/Undertale-Source-Code/master/fonts/fnt_main.png
+Metrics source:
+https://raw.githubusercontent.com/AspectFX/Undertale-Source-Code/master/fonts/fnt_main.font.gmx
+The older GMX character attributes are malformed (e.g. 320,321,...3210).
+Actual glyph sequence is ASCII32 onward. The newer YY confirms the coordinates,
+size, offset and advances for every selected glyph.
+
+These archives are community decompilations of Undertale, not official source
+releases. Undertale was created by Toby Fox. Font identity is directly verified
+in the font resource; this note does not assign a new license to the extracted
+bitmap. FontStruct's original font URL is listed in distributed font metadata:
+https://fontstruct.com/fontstructions/show/534034
+The original creator page was unavailable when checked. Mirrors name nipcen,
+2011, and Creative Commons Attribution Non-commercial Share Alike. Those author
+and license fields were not independently verified with the creator page.
+
+Geometry:
+Reference canvas 640x480. Original title draw origin (90,280); font scale2.
+That y is the draw origin, NOT visible glyph baseline. Opaque capital glyphs
+begin8 native pixels below the draw origin and end26 below; at2x visible
+capital height36, first opaque rowY296, final boundaryY332.
+Native phrase width290 (580 at2x). Centered originX30 preserves a full line
+while leaving enough room for the widest24px original ghost jitter.
+
+Animation, original game30fps:
+Initial delay2frames (0.0666667sec), then one character every6frames (0.2sec),
+including spaces. One whole-string random offset per layer per frame:
+layer1 alpha0.9, x[-2,+2], y[-2,+2]
+layer2 alpha0.7, x[-2,+2], y[-3,+1]
+layer3 alpha0.5, x/y[-8,+8]
+layer4 alpha0.4, x/y[-12,+12]
+layer5 alpha0.3, x/y[-16,+16]
+layer6 alpha0.2, x/y[-20,+20]
+layer7 alpha0.1, x/y[-24,+24]
+All layers are white. No per-character sine wave, rainbow hue or slide.
+Original object exists for200frames (6.666667sec) before switching into battle.
+Source for lifespan:
+https://raw.githubusercontent.com/AspectFX/Undertale-Source-Code/master/objects/obj_asrielappear.object.gmx
+
+Files:
+why_wont_you_let_me_win.png - complete transparent exact phrase at native1x;
+  crop width to prefixAdvances[n] then draw2x for typewriter reveal.
+asriel_title_glyphs.png - minimal glyph atlas for the12unique characters.
+asriel_title_metrics.json - glyph placement, advances, prefix crop widths,
+  geometry and animation metadata.
+fnt_main_original.png - original full English atlas for verification.
+phrase_geometry_preview.png - static640x480 layout preview without ghosting;
+  not a captured gameplay frame.
+*.reference.* - source snapshots for review.

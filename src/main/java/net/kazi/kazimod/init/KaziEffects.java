@@ -7,7 +7,12 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 
 public class KaziEffects {
+<<<<<<< HEAD
     public static final RegistryObject<Effect> BLOOD_POISON = KaziRegistry.EFFECTS.register("blood_poison", BloodPoisonEffect::new);
+=======
+    public static final RegistryObject<Effect> IMAGINE_BROKEN = KaziRegistry.EFFECTS.register(
+            "imagine_broken", net.kazi.kazimod.abilities.NagiAwakening.ImagineBrokenEffect::new);
+>>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
     public static final RegistryObject<Effect> HEAVEN_BOUND = KaziRegistry.EFFECTS.register("heaven_bound", HeavenBoundEffect::new);
 
     public static final RegistryObject<Effect> KIRIN_SLEEP = KaziRegistry.EFFECTS.register("kirin_sleep", KirinSleepEffect::new);

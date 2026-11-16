@@ -70,7 +70,7 @@ Combat update:
   block-protection cancellation are respected. No forced chunk loads or item spam.
 
 World Shaking Spin: 3-second steerable shell rush at 4.05 blocks/tick (three
-times Dawn Whip's configured speed), 30-second cooldown, 60 impact damage at
+times Dawn Whip's configured speed), 30-second cooldown, 20 impact damage at
 most once per target per second. Damage immunity lasts only while spinning.
 Swept shell checks cover actual travel between ticks, skip allies/owner, and
 respect terrain cover and protected areas. Cancelling brakes the rush and

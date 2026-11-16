@@ -1,0 +1,1 @@
+PASS: startup and upfling follow-up timing; no keyboard input sent.

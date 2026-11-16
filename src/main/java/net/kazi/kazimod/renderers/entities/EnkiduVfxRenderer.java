@@ -48,10 +48,14 @@ public final class EnkiduVfxRenderer extends EntityRenderer<EnkiduVfxEntity> {
         if (targets.length > 6) detail = 2;
         else if (targets.length > 3) detail = Math.max(1, detail);
         metal.clear(); glow.clear();
-        if ((entity.getMode() == EnkiduAbility.Mode.AREA || entity.getMode() == EnkiduAbility.Mode.ABSOLUTE)
-                && phase == EnkiduVfxEntity.CHARGING) {
-            // Gates open across the marked ground before choosing victims at release.
-            EnkiduMesh.target(metal, glow, Math.max(1,detail), age, 0, progress, 4, 2,
+        boolean areaCharge = (entity.getMode() == EnkiduAbility.Mode.AREA || entity.getMode() == EnkiduAbility.Mode.ABSOLUTE)
+                && phase == EnkiduVfxEntity.CHARGING;
+        boolean aimedMiss = entity.isAimedCast() && targets.length == 0
+                && (phase == EnkiduVfxEntity.CHARGING || phase == EnkiduVfxEntity.LAUNCHING);
+        if (areaCharge || aimedMiss) {
+            // Empty aimed casts still show gates and retracting chains, with no gameplay target.
+            float width = entity.getMode() == EnkiduAbility.Mode.SINGLE ? .8F : 4;
+            EnkiduMesh.target(metal, glow, Math.max(1,detail), age, aimedMiss ? phase : 0, progress, width, 2,
                     opacity * .75F, fade, entity.getId());
         }
         for (EnkiduVfxEntity.VisualTarget target : targets) {

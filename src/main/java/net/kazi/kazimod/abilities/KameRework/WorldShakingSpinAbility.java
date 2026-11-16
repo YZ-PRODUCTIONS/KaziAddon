@@ -16,12 +16,12 @@ import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 import xyz.pixelatedw.mineminenomi.data.world.ProtectedAreasData;
 
 public final class WorldShakingSpinAbility extends Ability {
-    public static final int DURATION=60,COOLDOWN=600,DAMAGE=60;
-    public static final double SPEED=4.05;
+    public static final int DURATION=60,COOLDOWN=600,DAMAGE=20;
+    public static final double SPEED=2.025;
     public static final AbilityCore<WorldShakingSpinAbility> INSTANCE=new AbilityCore.Builder<>("World Shaking Spin",AbilityCategory.DEVIL_FRUITS,WorldShakingSpinAbility::new)
             .setUnlockCheck(WorldTurtleFormAbility::canUnlock).setSourceHakiNature(SourceHakiNature.HARDENING)
             .setIcon(new ResourceLocation("kazimod","textures/abilities/world_shaking_spin.png"))
-            .addDescriptionLine(new StringTextComponent("Tuck into your shell and spin toward your aim for 3 seconds. Ignore all damage and ram enemies for 60 damage, at most once per second per target. Use again to cancel."))
+            .addDescriptionLine(new StringTextComponent("Tuck into your shell and spin toward your aim for 3 seconds. Ignore all damage and ram enemies for "+DAMAGE+" damage, at most once per second per target. Use again to cancel."))
             .addAdvancedDescriptionLine(CooldownComponent.getTooltip(COOLDOWN),ContinuousComponent.getTooltip(),DealDamageComponent.getTooltip(DAMAGE)).build();
     private final ContinuousComponent continuous=new ContinuousComponent(this);
     private final DealDamageComponent damage=new DealDamageComponent(this);
