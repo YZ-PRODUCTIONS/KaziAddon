@@ -264,28 +264,13 @@ public class AwakeningEssenceDeathHandler {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    static void broadcastAwakening(ServerPlayerEntity player, IDevilFruit devilFruit) {
+    private static void broadcastAwakening(ServerPlayerEntity player, IDevilFruit devilFruit) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server == null) return;
-
-        ExternalAwakeningAnnouncementHandler.recordAnnouncement(player, devilFruit);
 
         java.util.Optional<?> fruit = devilFruit.getDevilFruit();
         String fruitId = fruit.isPresent() ? fruit.get().toString() : "";
         String announcement = getAwakeningAnnouncement(fruitId, player.getName().getString());
-        server.getPlayerList().getPlayers().forEach(p ->
-                p.sendMessage(new StringTextComponent(announcement), p.getUUID()));
-    }
-
-    public static void broadcastSaiyanAwakening(ServerPlayerEntity player, String formName) {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if (server == null) return;
-
-        String playerName = player.getName().getString();
-        String announcement = KaziConfig.INSTANCE.disableCustomAwakeningMessages.get()
-                ? getGenericAwakeningAnnouncement(playerName)
-                : "\u00a76\u00a7l\u2605 \u00a7e" + playerName
-                        + " has pushed even further beyond to " + formName + " \u00a76\u00a7l\u2605";
         server.getPlayerList().getPlayers().forEach(p ->
                 p.sendMessage(new StringTextComponent(announcement), p.getUUID()));
     }
@@ -315,18 +300,6 @@ public class AwakeningEssenceDeathHandler {
             return "\u00a7b\u00a7l\u2605 \u00a7f" + playerName + ": Shrine bright like a diamond \u00a7b\u00a7l\u2605";
         } else if (fruitId.contains("batto_batto_no_mi_model_vampire")) {
             return "\u00a74\u00a7l\u2605 \u00a7c" + playerName + " Has released control art system level 1.. \u00a74\u00a7l\u2605";
-        } else if (fruitId.contains("kame_kame_no_mi")) {
-            return "\u00a72\u00a7l\u2605 \u00a7aIsraeli Allah tech has been realized once more. \u00a72\u00a7l\u2605";
-        } else if (fruitId.contains("kage_kage_no_mi")) {
-            return "\u00a75\u00a7l\u2605 \u00a7d" + playerName + " has fully realized their cursed technique! \u00a75\u00a7l\u2605";
-        } else if (fruitId.contains("yagi_yagi_no_mi_model_mountain_goat")) {
-            return "\u00a7d\u00a7l\u2605 \u00a7f" + playerName + " has become a legendary being made of every soul in the underground! \u00a7d\u00a7l\u2605";
-        } else if (fruitId.contains("ki_ki_no_mi_model_tung_tung_tung_sahur")) {
-            return "\u00a76\u00a7l\u2605 \u00a7e" + playerName + " " + playerName + " " + playerName + " Sahur \u00a76\u00a7l\u2605";
-        } else if (fruitId.contains("supa_supa_no_mi")) {
-            return "\u00a7b\u00a7l\u2605 \u00a7f" + playerName + " has become a true imitation of a heroic spirit! \u00a7b\u00a7l\u2605";
-        } else if (fruitId.contains("goru_goru_no_mi")) {
-            return "\u00a76\u00a7l\u2605 \u00a7e" + playerName + " has become the King of Heroes. \u00a76\u00a7l\u2605";
         }
         return getGenericAwakeningAnnouncement(playerName);
     }

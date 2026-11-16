@@ -268,13 +268,7 @@ public class AwakeningAbilityLoginFix {
     }
 
     public static void syncPlayerAwakeningReplacements(PlayerEntity player) {
-<<<<<<< HEAD
         net.kazi.kazimod.alchemy.AlchemyFeatures.reconcile(player);
-=======
-        net.kazi.kazimod.abilities.Yagi.AstralFlightProgression.sync(player);
-        net.kazi.kazimod.abilities.YagiAwakening.YagiAwakeningProgression.sync(player);
-        net.kazi.kazimod.abilities.NagiAwakening.NagiAwakeningProgression.sync(player);
->>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
         syncGoruKaziAbilities(player);
         syncAwakenedSupaAbilities(player);
         syncGoroKaziAbilities(player);
@@ -288,12 +282,7 @@ public class AwakeningAbilityLoginFix {
 
     private static void restoreAwakenedFruitAbilities(PlayerEntity player) {
         if (player == null || player.level.isClientSide) return;
-<<<<<<< HEAD
         net.kazi.kazimod.alchemy.AlchemyFeatures.reconcile(player);
-=======
-        net.kazi.kazimod.abilities.YagiAwakening.YagiAwakeningProgression.sync(player);
-        net.kazi.kazimod.abilities.NagiAwakening.NagiAwakeningProgression.sync(player);
->>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
         syncGoruKaziAbilities(player);
 
         IDevilFruit devilFruit = DevilFruitCapability.get(player);
@@ -524,14 +513,6 @@ public class AwakeningAbilityLoginFix {
 
         IDevilFruit devilFruit = DevilFruitCapability.get(entity);
         if (devilFruit == null || !devilFruit.hasAwakenedFruit()) return;
-
-        // Match Vampire's retirement rule for Goat's base attacks/form; Astral Flight stays eligible.
-        if (!KaziConfig.INSTANCE.disableFruitChanges.get()
-                && net.kazi.kazimod.abilities.YagiAwakening.YagiAwakeningProgression.isRetired(core)
-                && net.kazi.kazimod.abilities.YagiAwakening.YagiAwakeningSupport.canUnlock(entity)) {
-            event.setResult(Event.Result.DENY);
-            return;
-        }
 
         if (devilFruit.hasDevilFruit(CartAbilities.GORU_GORU_NO_MI)
                 && AWAKENED_GORU_REMOVALS.contains(core)) {

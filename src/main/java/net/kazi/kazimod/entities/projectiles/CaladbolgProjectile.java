@@ -36,7 +36,6 @@ import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 public class CaladbolgProjectile extends AbilityProjectileEntity implements IFlexibleSizeProjectile {
     private static final float DAMAGE = 52.0F;
     private static final double DAMAGE_RADIUS = 15.469D;
-    private static final double GAE_BOLG_DAMAGE_RADIUS = 27.5D;
     private static final double KNOCKBACK_RADIUS = 27.5D;
     private static final DataParameter<Float> SIZE =
             EntityDataManager.defineId(CaladbolgProjectile.class, DataSerializers.FLOAT);
@@ -87,7 +86,7 @@ public class CaladbolgProjectile extends AbilityProjectileEntity implements IFle
         }
 
         List<LivingEntity> damageTargets = WyHelper.getNearbyLiving(
-                this.position(), this.level, hasCrimsonVisuals() ? GAE_BOLG_DAMAGE_RADIUS : DAMAGE_RADIUS,
+                this.position(), this.level, DAMAGE_RADIUS,
                 ModEntityPredicates.getEnemyFactions(this.getThrower()));
         List<LivingEntity> knockbackTargets = WyHelper.getNearbyLiving(
                 this.position(), this.level, KNOCKBACK_RADIUS,

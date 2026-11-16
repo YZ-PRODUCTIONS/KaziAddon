@@ -99,7 +99,6 @@ public class AwakeningEssenceItem extends Item {
         boolean isOpe = fruit.isPresent() && OPE_OPE_NO_MI.equals(fruit.get());
         boolean isKyoka = fruit.isPresent() && KYOKA_KYOKA_NO_MI.equals(fruit.get());
         boolean isNagi = fruit.isPresent() && NAGI_NAGI_NO_MI.equals(fruit.get());
-        boolean isYagi = fruit.isPresent() && new ResourceLocation("kazimod", "yagi_yagi_no_mi_model_mountain_goat").equals(fruit.get());
         boolean isNetsu = fruit.isPresent() && NETSU_NETSU_NO_MI.equals(fruit.get());
         boolean isKira = fruit.isPresent() && KIRA_KIRA_NO_MI.equals(fruit.get());
         boolean isVampire = fruit.isPresent() && BATTO_BATTO_NO_MI_MODEL_VAMPIRE.equals(fruit.get());
@@ -113,11 +112,7 @@ public class AwakeningEssenceItem extends Item {
         boolean tuskMasterySkip = isGuru && net.kazi.kazimod.tusk.TuskState.awakened(player);
 
         if (!isFruitless && !isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi
-<<<<<<< HEAD
                 && !isNetsu && !isKira && !isVampire && !isKame && !isKage && !isGuru && !isPetal && !isSabi && !isIshi && !isLeopard) {
-=======
-                && !isNetsu && !isKira && !isVampire && !isKame && !isKage && !isGuru && !isYagi) {
->>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
             player.sendMessage(new StringTextComponent(
                             "\u00a7cOnly a user eligible for awakening can use this item."),
                     player.getUUID());
@@ -130,11 +125,7 @@ public class AwakeningEssenceItem extends Item {
             return ActionResult.fail(stack);
         }
 
-<<<<<<< HEAD
         boolean bypassBossTrial = isNetsu || isKira || isVampire || isKame || isKage || isGuru || isPetal || isSabi || isIshi || isLeopard;
-=======
-        boolean bypassBossTrial = isNetsu || isKira || isVampire || isKame || isKage || isGuru || isYagi;
->>>>>>> 25f114e1b87ab4440534026453f3d39ec350d021
 
         if (!bypassBossTrial && hasActiveTrial(serverWorld, player.getUUID())) {
             player.sendMessage(new StringTextComponent(

@@ -4,7 +4,6 @@ import net.MrMagicalCart.cartaddon.api.helpers.AbilityLimits;
 import net.MrMagicalCart.cartaddon.abilities.lunarian.LunarianHelper;
 import net.kazi.kazimod.abilities.Nusu.NusuEvents;
 import net.kazi.kazimod.abilities.Nusu.SkillHunterEXAbility;
-import net.kazi.kazimod.abilities.SupaRework.LegendaryWeaponTrace;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -181,7 +180,7 @@ public abstract class NusuAbilityCheckBypassMixin {
     }
 
     /**
-     * Central requirement bypass for borrowed moves. This skips every check registered by
+     * Central requirement bypass for Skill Hunter EX. This skips every check registered by
      * an ability through addCanUseCheck while preserving cooldown, GCD, disable, pool, and
      * protected-area checks in Ability.canUse.
      */
@@ -195,8 +194,7 @@ public abstract class NusuAbilityCheckBypassMixin {
         private java.util.stream.Stream<Ability.ICanUseEvent> kazi$skipRolledCanUseRequirements(
                 java.util.List<Ability.ICanUseEvent> checks, LivingEntity entity) {
             IAbility ability = (IAbility) (Object) this;
-            return (SkillHunterEXAbility.isRolledMove(entity, ability)
-                    || LegendaryWeaponTrace.canUseRolledMove(entity, ability))
+            return SkillHunterEXAbility.isRolledMove(entity, ability)
                     ? java.util.stream.Stream.empty()
                     : checks.stream();
         }

@@ -10,7 +10,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.*;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 
 /** Keeps the Zoan flight controls without a stamina-based grounding phase. */
-public final class  WorldTurtleFlightAbility extends PropelledFlightAbility {
+public final class WorldTurtleFlightAbility extends PropelledFlightAbility {
     public static final AbilityCore<WorldTurtleFlightAbility> INSTANCE =
             new AbilityCore.Builder<>("World Turtle Flight", AbilityCategory.DEVIL_FRUITS, AbilityType.PASSIVE, WorldTurtleFlightAbility::new)
                     .setUnlockCheck(WorldTurtleFormAbility::canUnlock).build();

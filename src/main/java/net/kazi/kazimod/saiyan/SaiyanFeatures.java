@@ -3,7 +3,6 @@ package net.kazi.kazimod.saiyan;
 import java.util.*;
 import net.MrMagicalCart.cartaddon.abilities.generic.CheappoAbility;
 import net.kazi.kazimod.api.KaziRegistry;
-import net.kazi.kazimod.events.AwakeningEssenceDeathHandler;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.*;
 import net.minecraft.entity.player.*;
@@ -147,7 +146,6 @@ public final class SaiyanFeatures {
         reconcile(player); sync(player);
         SaiyanEffect.spawn(player, 0, player.position(), 35, 3);
         player.sendMessage(new StringTextComponent("Unlocked " + SaiyanBalance.FORMS[tier] + "! Maximum Ki: " + SaiyanBalance.maxKi(tier) + ". Select it with Saiyan Transformation's alternate mode."),player.getUUID());
-        AwakeningEssenceDeathHandler.broadcastSaiyanAwakening((ServerPlayerEntity) player, SaiyanBalance.FORMS[tier]);
         return ActionResult.success(item);
     }
     private static ActionResult<ItemStack> fail(PlayerEntity p, ItemStack item, String message) {

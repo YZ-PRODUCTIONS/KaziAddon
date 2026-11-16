@@ -10,7 +10,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.*;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.AbilityDataCapability;
 
 public final class DivineShieldAbility extends Ability {
-    public static final int DURATION=100, COOLDOWN=800;
+    public static final int DURATION=100, COOLDOWN=400;
     public static final AbilityCore<DivineShieldAbility> INSTANCE=new AbilityCore.Builder<>("Divine Shield",AbilityCategory.DEVIL_FRUITS,DivineShieldAbility::new)
             .setUnlockCheck(WorldTurtleFormAbility::canUnlock)
             .setIcon(new ResourceLocation("kazimod","textures/abilities/divine_shield.png"))

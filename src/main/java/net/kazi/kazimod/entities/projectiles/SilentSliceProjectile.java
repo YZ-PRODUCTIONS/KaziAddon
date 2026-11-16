@@ -1,6 +1,6 @@
 package net.kazi.kazimod.entities.projectiles;
 
-import net.kazi.kazimod.entities.boss.sunjinwoo.abilities.SilentSliceAbility;
+import net.kazi.kazimod.abilities.NagiRework.SilentSliceAbility;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;

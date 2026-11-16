@@ -60,7 +60,7 @@ public class EnhancementAbility extends Ability {
     private static final UUID FIRST_TOUGHNESS_ID = UUID.fromString("49166fdf-6ed4-4c78-88ed-03ddc46cd5c3");
     private static final float FIRST_HOLD_TICKS = 20.0F * 20.0F;
     private static final float FIRST_COOLDOWN_TICKS = 20.0F * 20.0F;
-    private static final float THIRD_COOLDOWN_TICKS = 60.0F * 20.0F;
+    private static final float THIRD_COOLDOWN_TICKS = 70.0F * 20.0F;
     private static final double THIRD_RELEASE_SHAKE_RADIUS = 100.0D;
     private static final int THIRD_RELEASE_SHAKE_TICKS = 40;
     private static final float THIRD_RELEASE_SHAKE_INTENSITY = 6.0F;

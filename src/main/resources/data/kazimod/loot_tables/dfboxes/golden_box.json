@@ -52,16 +52,6 @@
               "function": "mineminenomi:fruit_already_exists"
             }
           ],
-          "name": "kazimod:yagi_yagi_no_mi_model_mountain_goat"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 100,
-          "functions": [
-            {
-              "function": "mineminenomi:fruit_already_exists"
-            }
-          ],
           "name": "kazimod:nusu_nusu_no_mi"
         },
         {

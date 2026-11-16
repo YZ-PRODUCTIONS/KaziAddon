@@ -6,43 +6,9 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 
 public class KaziSounds {
-    public static final RegistryObject<SoundEvent> HOPES_AND_DREAMS_MUSIC = KaziRegistry.registerSound("Hopes And Dreams Music");
-    public static final RegistryObject<SoundEvent> CHAOS_BEAM_FINALE_SFX = KaziRegistry.registerSound("Chaos Beam Finale");
-    public static final RegistryObject<SoundEvent> ASRIEL_TEXT_SFX = KaziRegistry.registerSound("Asriel Text");
-    public static final RegistryObject<SoundEvent> HYPER_GONER_LAUGH_SFX = KaziRegistry.registerSound("Hyper Goner Laugh");
-    public static final RegistryObject<SoundEvent> HYPER_GONER_CHARGE_SFX = KaziRegistry.registerSound("Hyper Goner Charge");
-    public static final RegistryObject<SoundEvent> HYPER_GONER_RETURN_SFX = KaziRegistry.registerSound("Hyper Goner Return");
-    public static final RegistryObject<SoundEvent> SHOCKER_BREAKER_CAST_SFX = KaziRegistry.registerSound("Shocker Breaker Cast");
-    public static final RegistryObject<SoundEvent> SHOCKER_BREAKER_STRIKE_SFX = KaziRegistry.registerSound("Shocker Breaker Strike");
-    public static final RegistryObject<SoundEvent> SHOCKER_BREAKER_STRIKE_ALT_SFX = KaziRegistry.registerSound("Shocker Breaker Strike Alt");
-    public static final RegistryObject<SoundEvent> CHAOS_SABER_APPEAR_SFX = KaziRegistry.registerSound("Chaos Saber Appear");
-    public static final RegistryObject<SoundEvent> CHAOS_SABER_GRAB_SFX = KaziRegistry.registerSound("Chaos Saber Grab");
-    public static final RegistryObject<SoundEvent> CHAOS_SABER_PULLBACK_SFX = KaziRegistry.registerSound("Chaos Saber Pullback");
-    public static final RegistryObject<SoundEvent> CHAOS_SABER_CHARGE_SFX = KaziRegistry.registerSound("Chaos Saber Charge");
-    public static final RegistryObject<SoundEvent> CHAOS_SABER_VOICE_SFX = KaziRegistry.registerSound("Chaos Saber Voice");
-    public static final RegistryObject<SoundEvent> CHAOS_SABER_CUT_SFX = KaziRegistry.registerSound("Chaos Saber Cut");
-    public static final RegistryObject<SoundEvent> CHAOS_SABER_SPARKLES_SFX = KaziRegistry.registerSound("Chaos Saber Sparkles");
-    public static final RegistryObject<SoundEvent> CHAOS_BUSTER_TARGET_SFX = KaziRegistry.registerSound("Chaos Buster Target");
-    public static final RegistryObject<SoundEvent> CHAOS_BUSTER_FIRE_SFX = KaziRegistry.registerSound("Chaos Buster Fire");
-    public static final RegistryObject<SoundEvent> CHAOS_BUSTER_CHARGE_SFX = KaziRegistry.registerSound("Chaos Buster Charge");
-    public static final RegistryObject<SoundEvent> CHAOS_BUSTER_BEAM_SFX = KaziRegistry.registerSound("Chaos Buster Beam");
-    public static final RegistryObject<SoundEvent> CHAOS_BEAM_CHARGE_SFX = KaziRegistry.registerSound("Chaos Beam Charge");
-    public static final RegistryObject<SoundEvent> CHAOS_BEAM_LAUNCH_SFX = KaziRegistry.registerSound("Chaos Beam Launch");
-    public static final RegistryObject<SoundEvent> CHAOS_BEAM_HOLD_SFX = KaziRegistry.registerSound("Chaos Beam Hold");
-    public static final RegistryObject<SoundEvent> ANGEL_OF_DEATH_CAST_SFX = KaziRegistry.registerSound("Angel Of Death Cast");
-    public static final RegistryObject<SoundEvent> ANGEL_OF_DEATH_FIRE_SFX = KaziRegistry.registerSound("Angel Of Death Fire");
-    public static final RegistryObject<SoundEvent> STAR_BLAZING_CAST_SFX = KaziRegistry.registerSound("Star Blazing Cast");
-    public static final RegistryObject<SoundEvent> STAR_BLAZING_SUMMON_SFX = KaziRegistry.registerSound("Star Blazing Summon");
-    public static final RegistryObject<SoundEvent> STAR_BLAZING_FINALE_SFX = KaziRegistry.registerSound("Star Blazing Finale");
-    public static final RegistryObject<SoundEvent> STAR_BLAZING_BURST_SFX = KaziRegistry.registerSound("Star Blazing Burst");
-    public static final RegistryObject<SoundEvent> FRUIT_NULLIFICATION_SFX =
-            KaziRegistry.registerSound("Fruit Nullification");
     public static final RegistryObject<SoundEvent> MAMMOTH_ROAR = KaziRegistry.registerSound("mammoth_roar");
 
     public static final RegistryObject<SoundEvent> EA_CAST_SFX = KaziRegistry.registerSound("Ea Cast");
-    public static final RegistryObject<SoundEvent> GORU_CUTSCENE_MUSIC = KaziRegistry.registerSound("Goru Cutscene Music");
-    public static final RegistryObject<SoundEvent> ENKIDU_CAST_SFX = KaziRegistry.registerSound("Enkidu Cast");
-    public static final RegistryObject<SoundEvent> GATE_OF_BABYLON_CAST_SFX = KaziRegistry.registerSound("Gate Of Babylon Cast");
     public static final RegistryObject<SoundEvent> WINDS_RAPTURE_CHARGE_SFX =
             KaziRegistry.registerSound("Winds Rapture Charge");
     public static final RegistryObject<SoundEvent> WINDS_RAPTURE_RELEASE_SFX =

@@ -1,8 +1,5 @@
 package net.kazi.kazimod.init;
 
-import net.kazi.kazimod.animations.asriel.ChaosSaberAnimation;
-import net.kazi.kazimod.animations.asriel.ChaosBeamAnimation;
-import net.kazi.kazimod.animations.asriel.AstralFlightAnimation;
 import net.kazi.kazimod.animations.gojo.GojoBlueAnimation;
 import net.kazi.kazimod.animations.gojo.GojoDomainAnimation;
 import net.kazi.kazimod.animations.gojo.GojoHollowPurpleAnimation;
@@ -30,9 +27,6 @@ public class KaziAnimations {
     public static final AnimationId<GojoDomainAnimation>    GOJO_DOMAIN     = register("gojo_domain");
     public static final AnimationId<GojoHollowPurpleAnimation> GOJO_HOLLOW_PURPLE = register("gojo_hollow_purple");
     public static final AnimationId<EaChargeAnimation> EA_CHARGE = register("ea_charge");
-    public static final AnimationId<ChaosSaberAnimation> CHAOS_SABER = register("chaos_saber");
-    public static final AnimationId<ChaosBeamAnimation> CHAOS_BEAM = register("chaos_beam");
-    public static final AnimationId<AstralFlightAnimation> ASTRAL_FLIGHT = register("astral_flight");
 
 
     public KaziAnimations() {
@@ -54,9 +48,6 @@ public class KaziAnimations {
         AnimationId.register(new GojoDomainAnimation(GOJO_DOMAIN));
         AnimationId.register(new GojoHollowPurpleAnimation(GOJO_HOLLOW_PURPLE));
         AnimationId.register(new EaChargeAnimation(EA_CHARGE));
-        AnimationId.register(new ChaosSaberAnimation(CHAOS_SABER));
-        AnimationId.register(new ChaosBeamAnimation(CHAOS_BEAM));
-        AnimationId.register(new AstralFlightAnimation(ASTRAL_FLIGHT));
 
     }
 }

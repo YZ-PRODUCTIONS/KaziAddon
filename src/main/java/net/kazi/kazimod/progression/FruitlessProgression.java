@@ -28,7 +28,6 @@ import net.kazi.kazimod.abilities.AxeStyleRework.*;
 import net.kazi.kazimod.abilities.BludgeonRework.*;
 import net.kazi.kazimod.abilities.BrawlerRework.GalaxyImpactRework;
 import net.kazi.kazimod.abilities.Nusu.SkillHunterEXAbility;
-import net.kazi.kazimod.abilities.SupaRework.LegendaryWeaponTrace;
 import net.kazi.kazimod.abilities.SaberRework.DivineDepartureClone;
 import net.kazi.kazimod.abilities.SpearRework.*;
 import net.kazi.kazimod.abilities.swordsmanrework.*;
@@ -107,8 +106,7 @@ public final class FruitlessProgression {
     }
 
     public static AbilityUseResult canUse(LivingEntity entity, IAbility ability) {
-        if (!(entity instanceof PlayerEntity) || SkillHunterEXAbility.isRolledMove(entity, ability)
-                || LegendaryWeaponTrace.canUseRolledMove(entity, ability)) {
+        if (!(entity instanceof PlayerEntity) || SkillHunterEXAbility.isRolledMove(entity, ability)) {
             return AbilityUseResult.success();
         }
         if (!fruitless(entity)) {
@@ -137,8 +135,7 @@ public final class FruitlessProgression {
             if (core.getRegistryName() == null) continue;
             if (locked(player, core)) {
                 IAbility equipped = data.getEquippedAbility(core);
-                if (equipped != null && (SkillHunterEXAbility.isRolledMove(player, equipped)
-                        || LegendaryWeaponTrace.isRolledMove(player, equipped))) continue;
+                if (equipped != null && SkillHunterEXAbility.isRolledMove(player, equipped)) continue;
                 if (data.getUnlockTypeForAbility(core) != AbilityUnlock.PROGRESSION) continue;
                 if (equipped != null) AbilityHelper.emergencyStopAbility(player, equipped);
                 IAbility passive = data.getPassiveAbility(core);
@@ -163,9 +160,6 @@ public final class FruitlessProgression {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void unlockAbility(UnlockAbilityEvent event) {
-        IAbilityData data = AbilityDataCapability.get(event.getEntityLiving());
-        if (data != null && LegendaryWeaponTrace.canUseRolledMove(event.getEntityLiving(),
-                data.getEquippedAbility(event.getAbilityCore()))) return;
         if (locked(event.getEntityLiving(), event.getAbilityCore())) event.setResult(Event.Result.DENY);
     }
 

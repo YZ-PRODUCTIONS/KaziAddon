@@ -46,9 +46,6 @@ public class KaziItemModelProps {
         if (KaziItems.KOKU_KOKU_NO_MI != null && KaziItems.KOKU_KOKU_NO_MI.get() != null)
             ItemModelsProperties.register(KaziItems.KOKU_KOKU_NO_MI.get(), type, DEVIL_FRUITS_RANDOMIZER);
 
-        if (KaziItems.YAGI_YAGI_NO_MI_MODEL_MOUNTAIN_GOAT != null && KaziItems.YAGI_YAGI_NO_MI_MODEL_MOUNTAIN_GOAT.get() != null)
-            ItemModelsProperties.register(KaziItems.YAGI_YAGI_NO_MI_MODEL_MOUNTAIN_GOAT.get(), type, DEVIL_FRUITS_RANDOMIZER);
-
         if (KaziItems.KAKE_KAKE_NO_MI != null && KaziItems.KAKE_KAKE_NO_MI.get() != null)
             ItemModelsProperties.register(KaziItems.KAKE_KAKE_NO_MI.get(), type, DEVIL_FRUITS_RANDOMIZER);
 
