@@ -52,7 +52,17 @@ public class KaziMod {
         net.kazi.kazimod.agito.AgitoFeatures.init(modEventBus);
         net.kazi.kazimod.shikigami.ShikigamiFeatures.init(modEventBus);
         net.kazi.kazimod.saiyan.SaiyanFeatures.init(modEventBus);
+        net.kazi.kazimod.petal.PetalFeatures.init(modEventBus);
+        net.kazi.kazimod.decay.DecayFeatures.init(modEventBus);
+        net.kazi.kazimod.alchemy.AlchemyFeatures.init(modEventBus);
+        net.kazi.kazimod.blood.BloodFeatures.init(modEventBus);
         net.kazi.kazimod.tusk.TuskFeatures.init(modEventBus);
+        net.kazi.kazimod.gengar.GengarFeatures.init(modEventBus);
+        net.kazi.kazimod.leopard.LeopardFeatures.init(modEventBus);
+        net.kazi.kazimod.hermano.HermanoFeatures.init(modEventBus);
+        net.kazi.kazimod.longbob.LongbobFeatures.init(modEventBus);
+        net.kazi.kazimod.jerome.JeromeFeatures.init(modEventBus);
+        net.kazi.kazimod.ghoul.GhoulFeatures.init(modEventBus);
 
         modEventBus.addListener((Consumer<FMLCommonSetupEvent>) this::commonSetup);
 

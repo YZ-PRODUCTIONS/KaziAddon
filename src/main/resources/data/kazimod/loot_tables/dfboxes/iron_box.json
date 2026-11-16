@@ -966,6 +966,16 @@
             }
           ],
           "name": "mineminenomi:bomu_bomu_no_mi"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "kazimod:chi_chi_no_mi"
         }
       ],
       "conditions": [

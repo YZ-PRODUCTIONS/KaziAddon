@@ -1,6 +1,7 @@
 package net.kazi.kazimod.abilities.DokuRework;
 
 import net.MrMagicalCart.cartaddon.init.CartEffects;
+import net.kazi.kazimod.init.KaziEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -25,7 +26,7 @@ extends PotionPassiveAbility {
     }
 
     private boolean checkPotionEvent(PlayerEntity player, EffectInstance effect) {
-        return !effect.getEffect().equals(Effects.POISON) && !effect.getEffect().equals(ModEffects.DOKU_POISON.get()) && !effect.getEffect().equals(CartEffects.POISON_PINK.get());
+        return !effect.getEffect().equals(Effects.POISON) && !effect.getEffect().equals(ModEffects.DOKU_POISON.get()) && !effect.getEffect().equals(CartEffects.POISON_PINK.get()) && !effect.getEffect().equals(KaziEffects.BLOOD_POISON.get());
     }
 }
 

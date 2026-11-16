@@ -53,5 +53,11 @@ public final class MahoragaHaki {
         return damage+(float)HaoshokuHakiInfusionAbility.getDamageBoost(entity,damage);
     }
 
+    public static boolean hurtTarget(LivingEntity target,ModDamageSource source,float damage) {
+        // Let native dodge components handle the attack; only a real hit may apply follow-up knockback.
+        float before=target.getHealth()+target.getAbsorptionAmount();
+        return target.hurt(source,damage)&&target.getHealth()+target.getAbsorptionAmount()<before;
+    }
+
     private MahoragaHaki() {}
 }

@@ -22,6 +22,7 @@ public final class AgitoAbility extends Ability {
             "Agito",AbilityCategory.DEVIL_FRUITS,AgitoAbility::new)
             .setUnlockCheck(MahoragaAbility::awakened)
             .setIcon(new ResourceLocation("kazimod","textures/abilities/agito.png"))
+            .addDescriptionLine(new StringTextComponent("Maximum two active Ten Shadows at once, including taming rituals. Dismiss one before summoning another."))
             .addDescriptionLine(new StringTextComponent("Kage awakening: summon Merged Beast Agito. Fights beside you with electrified fists and regenerates 1% of its maximum HP each second."))
             .addDescriptionLine(new StringTextComponent("Left-click your Agito to request a healing embrace. While held, you cannot move or use abilities and Agito cannot attack. Restores 2% of your maximum HP per second. Left-click again, or a hit on either of you, ends the embrace."))
             .addDescriptionLine(new StringTextComponent("First defeat Agito in a taming ritual. Its death removes taming. Cooldown: 10 seconds after dismissal; 20 minutes if defeated."))

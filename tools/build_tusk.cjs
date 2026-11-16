@@ -135,14 +135,7 @@ function model(act){const id='tusk_act_'+act,elements=[],groups=[],outliner=[],a
   for(const side of ['east','west','up','down'])element.faces[side].texture=null;
  return m;
 }
-async function icon(id,act=4){const c=canvas(32),pink='e995c4',gold='ffe9a0',dark='673c70',white='fff4d7',blue='95b4e6';
- const ring=(r,w,col,cx=16,cy=16)=>{for(let y=0;y<32;y++)for(let x=0;x<32;x++){const d=Math.hypot(x-cx,y-cy);if(d>=r-w&&d<=r)c.dot(x,y,col);}};
- if(id.startsWith('act_')||id==='tusk'){c.poly([[7,8],[10,3],[22,3],[25,8],[24,25],[16,29],[8,25]],dark);c.rect(9,7,14,17,pink);c.star(16,10,5,gold);c.rect(11,18,3,3,white);c.rect(19,18,3,3,white);for(let i=0;i<act;i++)c.rect(8+i*5,28,3,2,gold);}
- else if(id==='nail_shot'||id==='nail_shotgun'||id==='pursuing_hole'){for(let j=0;j<(id==='nail_shotgun'?3:1);j++){let o=j*6;c.poly([[4+o,26],[9+o,11],[17+o,4],[15+o,17]],gold);c.line(7+o,24,15+o,7,2,white);}if(id==='pursuing_hole'){ring(11,2,pink);ring(7,1,gold);}}
- else if(id==='stand_barrage'||id==='golden_beatdown'){c.rect(10,8,15,14,pink);c.rect(6,14,5,8,blue);c.rect(10,6,3,4,white);c.rect(15,6,3,4,white);c.rect(20,6,3,4,white);c.star(17,17,5,gold);for(let i=0;i<3;i++)c.line(2,10+i*6,7,8+i*6,2,gold);}
- else {ring(12,2,pink);ring(8,1,gold);for(let i=0;i<36;i++){let a=i*.29,r=2+i*.23;c.dot(16+Math.cos(a)*r,16+Math.sin(a)*r,white);}if(id==='infinite_rotation')c.star(16,16,6,gold);else if(id==='spin_glide')c.line(2,27,27,5,3,blue);else if(id==='wormhole_shot')c.line(7,24,25,8,3,gold);else if(id==='dimensional_dodge')c.poly([[9,10],[16,7],[19,21],[14,27],[10,20]],blue);else if(id==='spiral_burst')for(let i=0;i<8;i++){let a=i*Math.PI/4;c.line(16+Math.cos(a)*11,16+Math.sin(a)*11,16+Math.cos(a)*15,16+Math.sin(a)*15,2,gold);}}
- return sharp(c.data,{raw:{width:32,height:32,channels:4}}).png().toBuffer();
-}
+async function icon(id){return require('./tusk_icons.cjs').icon(id);}
 (async()=>{for(let act=1;act<=4;act++){const id='tusk_act_'+act,file=path.join(root,'deliverables/tusk/'+id+'.bbmodel');
  const existing=fs.existsSync(file),rebuild=!existing||process.argv.includes('--refine');
  let m=existing?JSON.parse(fs.readFileSync(file)):model(act);if(rebuild)m=refinement.refine(m,act);
@@ -154,5 +147,5 @@ async function icon(id,act=4){const c=canvas(32),pink='e995c4',gold='ffe9a0',dar
  console.log(id+': '+m.elements.length+' low-poly parts, '+m.groups.length+' bones, '+m.animations.length+' animations');
  write('src/main/resources/assets/kazimod/textures/abilities/tusk/act_'+act+'.png',await icon('act_'+act,act));
  }
- for(const id of['tusk','nail_shot','nail_shotgun','spin_glide','pursuing_hole','spiral_burst','wormhole_slip','wormhole_shot','dimensional_dodge','stand_barrage','golden_beatdown','infinite_rotation'])write('src/main/resources/assets/kazimod/textures/abilities/tusk/'+id+'.png',await icon(id));
+ for(const id of require('./tusk_icons.cjs').ids)write('src/main/resources/assets/kazimod/textures/abilities/tusk/'+id+'.png',await icon(id));
 })().catch(error=>{console.error(error);process.exit(1);});

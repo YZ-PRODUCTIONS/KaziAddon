@@ -24,6 +24,7 @@ public final class ShikigamiAbility extends Ability {
                 .setUnlockCheck(MahoragaAbility::awakened)
                 .setIcon(new ResourceLocation("kazimod","textures/abilities/"+kind.id+".png"))
                 .addDescriptionLine(new StringTextComponent(kind.description))
+                .addDescriptionLine(new StringTextComponent("Maximum two active Ten Shadows at once, including taming rituals. Dismiss one before summoning another."))
                 .addDescriptionLine(new StringTextComponent("Tamed summons: use again to dismiss. Saved health recovers by 1% per second while dismissed. Protection IV netherite-equivalent armor."))
                 .addDescriptionLine(new StringTextComponent("First defeat this shadow in a taming ritual. If your tamed shadow dies, it must be tamed again after a 20-minute cooldown."))
                 .addAdvancedDescriptionLine(CooldownComponent.getTooltip(200,24000),ContinuousComponent.getTooltip()).build());

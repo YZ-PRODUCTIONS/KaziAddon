@@ -148,12 +148,8 @@ public class GomuGomuNoBazookaRework extends Ability {
         }
         AbilityProjectileEntity p1 = this.projectileComponent.getNewProjectile(entity);
         AbilityProjectileEntity p2 = this.projectileComponent.getNewProjectile(entity);
-        Vector3d dirVec = Vector3d.ZERO;
-        Direction dir = Direction.fromYRot(entity.yRot);
-        dirVec = dirVec.add(Math.abs(dir.getNormal().getX()), Math.abs(dir.getNormal().getY()), Math.abs(dir.getNormal().getZ()));
-        dirVec = dirVec.multiply(this.projectileSpread, 1.0F, this.projectileSpread);
-        p1.moveTo(entity.getX() + dirVec.z, entity.getEyeY(), entity.getZ() + dirVec.x, 0, 0);
-        p2.moveTo(entity.getX() - dirVec.z, entity.getEyeY(), entity.getZ() - dirVec.x, 0, 0);
+        ((net.kazi.kazimod.gomu.GomuLimbData)p1).kazi$arm(1);
+        ((net.kazi.kazimod.gomu.GomuLimbData)p2).kazi$arm(-1);
         this.projectileComponent.shoot(p1, entity, this.projectileSpeed, 0);
         this.projectileComponent.shoot(p2, entity, this.projectileSpeed, 0);
         entity.swing(Hand.MAIN_HAND, true);

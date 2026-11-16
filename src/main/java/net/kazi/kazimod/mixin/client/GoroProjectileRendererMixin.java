@@ -7,11 +7,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.GoroProjectiles;
+import net.MrMagicalCart.cartaddon.entities.projectiles.goroextra.GoroExtraProjectiles;
 
-@Mixin(value=GoroProjectiles.class,remap=false)
+@Mixin(value={GoroProjectiles.class,GoroExtraProjectiles.class},remap=false)
 public abstract class GoroProjectileRendererMixin {
     @Inject(method="registerEntityRenderers",at=@At("TAIL"))
     private static void kazi$stormSphere(FMLClientSetupEvent event,CallbackInfo ci) {
         RenderingRegistry.registerEntityRenderingHandler(GoroProjectiles.RAIGO.get(),GoroRaigoRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GoroExtraProjectiles.RAIGO.get(),GoroRaigoRenderer::new);
     }
 }

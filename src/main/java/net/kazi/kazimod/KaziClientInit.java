@@ -94,12 +94,18 @@ public final class KaziClientInit {
 
         RenderingRegistry.registerEntityRenderingHandler(
                 KaziEntities.DARK_MATTER_PROJECTILE.get(),
-                (new AbilityProjectileRenderer.Factory(new SphereModel()))
-                        .setColor("#000000")
-                        .setScale(1.0D)
+                manager -> new net.kazi.kazimod.yami.YamiProjectileRenderer<>(manager, 1.0F, false)
         );
 
 
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.MOKU_RENDER_ANCHOR.get(),
+                net.kazi.kazimod.moku.MokuEffects.Renderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.PIKA_RENDER_ANCHOR.get(),
+                net.kazi.kazimod.pika.PikaAnchorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.YAMI_RENDER_ANCHOR.get(),
+                net.kazi.kazimod.yami.YamiAnchorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KaziEntities.LIBERATION_BLOCK.get(),
+                net.kazi.kazimod.yami.LiberationBlockRenderer::new);
         MinecraftForge.EVENT_BUS.register(FlashbangEffect.class);
         MinecraftForge.EVENT_BUS.register(new SizeRenderHandler());
     }

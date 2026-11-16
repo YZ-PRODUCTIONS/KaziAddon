@@ -49,7 +49,7 @@ public final class AgitoEntity extends OPEntity implements TenShadowsBeast {
     }
     public static AttributeModifierMap.MutableAttribute createAttributes(){
         return OPEntity.createAttributes().add(Attributes.MAX_HEALTH,500).add(Attributes.ATTACK_DAMAGE,26)
-                .add(Attributes.MOVEMENT_SPEED,.34).add(Attributes.FOLLOW_RANGE,50)
+                .add(Attributes.MOVEMENT_SPEED,.51).add(Attributes.FOLLOW_RANGE,50)
                 .add(Attributes.KNOCKBACK_RESISTANCE,.8).add(Attributes.ARMOR,0).add(Attributes.ARMOR_TOUGHNESS,0);
     }
     @Override protected void registerGoals(){goalSelector.addGoal(0,new SwimGoal(this));}
@@ -244,8 +244,7 @@ public final class AgitoEntity extends OPEntity implements TenShadowsBeast {
         if(delta.multiply(1,0,1).normalize().dot(getLookAngle().multiply(1,0,1).normalize())<.15)return;
         ModDamageSource source=new AbilityDamageSource("agito_"+action().clip,this,AgitoAbility.INSTANCE);
         source.setSourceTypes(new ArrayList<>(Arrays.asList(SourceType.FIST,SourceType.PHYSICAL)));
-        if(barrage)target.invulnerableTime=0;
-        if(target.hurt(source,MahoragaHaki.infuse(this,source,damage))){
+        if(MahoragaHaki.hurtTarget(target,source,MahoragaHaki.infuse(this,source,damage)*.75F)){
             target.knockback(knockback,-delta.x,-delta.z);
             playSound(SoundEvents.PLAYER_ATTACK_STRONG,.8F,.75F);
         }

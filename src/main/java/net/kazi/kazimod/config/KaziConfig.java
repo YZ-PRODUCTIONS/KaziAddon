@@ -14,6 +14,12 @@ public class KaziConfig {
     public final ForgeConfigSpec.IntValue awakeningEssenceRequiredPlayerKills;
     public final ForgeConfigSpec.BooleanValue disableCustomAwakeningMessages;
     public final ForgeConfigSpec.IntValue hakiSenseRange;
+    public final ForgeConfigSpec.BooleanValue elHermanoSpawns;
+    public final ForgeConfigSpec.IntValue elHermanoMinMinutes, elHermanoMaxMinutes;
+    public final ForgeConfigSpec.BooleanValue longbobSpawns;
+    public final ForgeConfigSpec.IntValue longbobMinMinutes, longbobMaxMinutes;
+    public final ForgeConfigSpec.BooleanValue jeromeSpawns;
+    public final ForgeConfigSpec.IntValue jeromeMinMinutes, jeromeMaxMinutes;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -23,6 +29,29 @@ public class KaziConfig {
 
     private KaziConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("KaziMod Configuration").push("kazimod");
+
+        builder.comment("El Hermano world boss. One natural boss at a time, in the Overworld.",
+                "The timer counts while survival/adventure players are in the Overworld; it pauses while a boss is alive.")
+                .push("elHermano");
+        elHermanoSpawns = builder.define("naturalSpawning", true);
+        elHermanoMinMinutes = builder.defineInRange("minimumSpawnMinutes", 30, 1, 1440);
+        elHermanoMaxMinutes = builder.defineInRange("maximumSpawnMinutes", 60, 1, 1440);
+        builder.pop();
+
+        builder.comment("longbobthegod world boss. One natural boss at a time, independently of El Hermano.",
+                "Counts while survival/adventure players are in the Overworld; pauses while the boss is alive.")
+                .push("longbobthegod");
+        longbobSpawns = builder.define("naturalSpawning", true);
+        longbobMinMinutes = builder.defineInRange("minimumSpawnMinutes", 30, 1, 1440);
+        longbobMaxMinutes = builder.defineInRange("maximumSpawnMinutes", 60, 1, 1440);
+        builder.pop();
+
+        builder.comment("Jerome world boss. One natural Jerome at a time in the Overworld.",
+                "Counts while survival/adventure players are present; pauses while Jerome is alive.").push("jerome");
+        jeromeSpawns = builder.define("naturalSpawning", true);
+        jeromeMinMinutes = builder.defineInRange("minimumSpawnMinutes", 30, 1, 1440);
+        jeromeMaxMinutes = builder.defineInRange("maximumSpawnMinutes", 60, 1, 1440);
+        builder.pop();
 
         disableFruitChanges = builder
                 .comment(

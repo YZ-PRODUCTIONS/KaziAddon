@@ -34,6 +34,10 @@ public final class ProjectileClashes {
     public static boolean trade(AbilityProjectileEntity first, AbilityProjectileEntity second) {
         if (first == second || first.level.isClientSide) return true;
         if (!first.isAlive() || !second.isAlive() || first.getOwner() == second.getOwner()) return true;
+        if(first instanceof net.kazi.kazimod.entities.projectiles.DarkMatterReworkProjectile)
+            return ((net.kazi.kazimod.entities.projectiles.DarkMatterReworkProjectile)first).absorbContact(second);
+        if(second instanceof net.kazi.kazimod.entities.projectiles.DarkMatterReworkProjectile)
+            return ((net.kazi.kazimod.entities.projectiles.DarkMatterReworkProjectile)second).absorbContact(first);
         if (first instanceof LightningEntity || second instanceof LightningEntity) return true;
         if (first.getDamage() <= 0 || second.getDamage() <= 0) return false;
 
@@ -110,8 +114,13 @@ public final class ProjectileClashes {
             double along = center.subtract(start).dot(direction);
             if (along < 0 || along > reach) continue;
             double miss = center.distanceToSqr(start.add(direction.scale(along)));
-            double combined = radius + Math.max(0.2, other.getBbWidth() * 0.5);
+            double combined = radius + (other instanceof net.kazi.kazimod.entities.projectiles.DarkMatterReworkProjectile
+                    ?((net.kazi.kazimod.entities.projectiles.DarkMatterReworkProjectile)other).radius():Math.max(0.2, other.getBbWidth() * 0.5));
             if (miss > combined * combined) continue;
+            if(other instanceof net.kazi.kazimod.entities.projectiles.DarkMatterReworkProjectile) {
+                ((net.kazi.kazimod.entities.projectiles.DarkMatterReworkProjectile)other).absorbContact(beam);
+                return beam.isAlive()?reach:0;
+            }
             if (!oncePerTick(beam, other)) continue;
             if (continuous(beam)) {
                 if (erode(other, beam.getDamage())) other.remove();

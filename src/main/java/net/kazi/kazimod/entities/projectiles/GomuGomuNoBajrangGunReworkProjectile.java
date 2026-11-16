@@ -13,9 +13,6 @@ import xyz.pixelatedw.mineminenomi.particles.effects.CommonExplosionParticleEffe
 
 public class GomuGomuNoBajrangGunReworkProjectile extends AbilityProjectileEntity {
 
-    private static final float HITBOX_BASE_OFFSET        = 15.0F;
-    private static final float HITBOX_STRETCH_MULTIPLIER = 3.5F;
-    private static final float STRETCH_SCALE_Z           = 3.1F;
 
     // Base explosion radius — will be scaled by getSize() just like Dai Entei uses 0.6F * size
     private static final float EXPLOSION_RADIUS_MULTIPLIER = 0.3F;  // was 0.6F
@@ -76,19 +73,6 @@ public class GomuGomuNoBajrangGunReworkProjectile extends AbilityProjectileEntit
 
     @Override
     public void tick() {
-        if (!this.level.isClientSide) {
-            Vector3d motion = this.getDeltaMovement();
-            double speed = motion.length();
-            if (speed > 0.001) {
-                Vector3d dir = motion.normalize();
-                float hitboxOffset = HITBOX_BASE_OFFSET + (STRETCH_SCALE_Z * (float) speed * HITBOX_STRETCH_MULTIPLIER);
-                this.setPos(
-                        this.getX() + dir.x * hitboxOffset,
-                        this.getY() + dir.y * hitboxOffset,
-                        this.getZ() + dir.z * hitboxOffset
-                );
-            }
-        }
 
         super.tick();
     }

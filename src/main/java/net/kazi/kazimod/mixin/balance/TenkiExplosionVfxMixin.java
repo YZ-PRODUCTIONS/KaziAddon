@@ -13,6 +13,11 @@ public abstract class TenkiExplosionVfxMixin {
     private void kazimod$noSmoke(ExplosionAbility explosion){
         Entity e=(Entity)(Object)this;
         if(e instanceof xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity
+                && net.kazi.kazimod.pika.PikaVisuals.beamKind((xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity)e)!=0) {
+            net.kazi.kazimod.pika.PikaVisuals.explode(explosion,e);
+            return;
+        }
+        if(e instanceof xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity
                 && net.kazi.kazimod.goro.GoroVisuals.kind((xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity)e)!=0) {
             boolean visible=e.tickCount-kazi$lastElectricImpact>=4;
             ((net.kazi.kazimod.goro.GoroExplosionVisuals)explosion).kazi$goroExplosion(visible);

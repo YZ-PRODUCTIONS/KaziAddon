@@ -63,6 +63,7 @@ public final class TuskFeatures {
             if (blocked(event.getEntityLiving(), event.getAbilityCore())) event.setResult(Event.Result.DENY);
         });
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, TuskFeatures::dodge);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, TuskFeatures::attackLanded);
         MinecraftForge.EVENT_BUS.addListener(TuskFeatures::clonePlayer);
         MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> { clearRuntime(event.getPlayer()); reconcile(event.getPlayer()); sync(event.getPlayer()); });
         MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerRespawnEvent event) -> { reconcile(event.getPlayer()); sync(event.getPlayer()); });
@@ -189,11 +190,23 @@ public final class TuskFeatures {
 
     public static void landed(LivingEntity user, LivingEntity target, int kind, boolean distant) {
         if (!TuskState.awakened(user) || target == user) return;
-        TuskState.get(user).putLong("CombatUntil", user.level.getGameTime() + 200);
-        TuskState.addSpin(user, kind == TuskProjectile.INFINITE ? 0 : 5);
+        // Mastery is technique-specific; Spin is awarded once through the damage event.
         if (kind == TuskProjectile.HOLE) TuskState.progress(user, "HoleHits");
         else if (kind == TuskProjectile.WORMHOLE) TuskState.progress(user, "WormholeHits");
         else if (kind == TuskProjectile.NAIL) { TuskState.progress(user, "NailHits"); if (distant) TuskState.progress(user, "LongShots"); }
+    }
+
+    private static void attackLanded(LivingDamageEvent event) {
+        LivingEntity target = event.getEntityLiving();
+        if (target.level.isClientSide || event.isCanceled() || !Float.isFinite(event.getAmount()) || event.getAmount() <= 0) return;
+        Entity attacker = event.getSource().getEntity();
+        if (!(attacker instanceof PlayerEntity)) return;
+        PlayerEntity user = (PlayerEntity) attacker;
+        if (!TuskState.awakened(user) || !user.isAlive() || user.isSpectator()
+                || AbilityHelper.isWeakenedByKairosekiOrWater(user) || !canHit(user, target)) return;
+        TuskState.get(user).putLong("CombatUntil", user.level.getGameTime() + 200);
+        TuskState.addSpin(user, 5);
+        // The existing five-tick sync batches rapid volleys and area attacks into one HUD update.
     }
 
     private static void dodge(LivingAttackEvent event) {

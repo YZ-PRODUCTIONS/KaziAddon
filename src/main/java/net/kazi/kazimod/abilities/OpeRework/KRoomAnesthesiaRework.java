@@ -46,7 +46,7 @@ public class KRoomAnesthesiaRework extends Ability {
     private final AnimationComponent animationComponent = new AnimationComponent(this);
     private final ChargeComponent chargeComponent = (new ChargeComponent(this)).addStartEvent(this::startChargeEvent).addTickEvent(this::tickChargeEvent).addEndEvent(this::endChargeEvent);
     private final ContinuousComponent continuousComponent = (new ContinuousComponent(this)).addStartEvent(this::startContinuityEvent).addTickEvent(this::tickContinuityEvent).addEndEvent(this::endContinuityEvent);
-    private static final AbilityOverlay OVERLAY;
+    public static final AbilityOverlay OVERLAY;
     private final SkinOverlayComponent skinOverlayComponent;
     private final PoolComponent poolComponent;
     private Interval playSoundInterval;
@@ -110,7 +110,7 @@ public class KRoomAnesthesiaRework extends Ability {
         this.cooldownComponent.startCooldown(entity, 200.0F);
     }
 
-    private void updateKRoomSwordTint(LivingEntity entity, boolean active) {
+    public static void updateKRoomSwordTint(LivingEntity entity, boolean active) {
         if (!(entity instanceof PlayerEntity)) {
             return;
         }
@@ -125,7 +125,7 @@ public class KRoomAnesthesiaRework extends Ability {
         applyKRoomSwordTint(player.getOffhandItem());
     }
 
-    private void clearKRoomSwordTint(PlayerEntity player) {
+    private static void clearKRoomSwordTint(PlayerEntity player) {
         for (ItemStack stack : player.inventory.items) {
             clearKRoomSwordTint(stack);
         }
@@ -134,13 +134,13 @@ public class KRoomAnesthesiaRework extends Ability {
         }
     }
 
-    private void clearKRoomSwordTint(ItemStack stack) {
+    private static void clearKRoomSwordTint(ItemStack stack) {
         if (!stack.isEmpty() && stack.hasTag()) {
             stack.getTag().putBoolean("kroomSwordActive", false);
         }
     }
 
-    private void applyKRoomSwordTint(ItemStack stack) {
+    private static void applyKRoomSwordTint(ItemStack stack) {
         if (stack.isEmpty() || !(stack.getItem() instanceof SwordItem)) {
             return;
         }

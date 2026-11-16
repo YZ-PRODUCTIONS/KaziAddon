@@ -58,7 +58,7 @@ public final class MahoragaProjectile extends ThrowableEntity {
                     damage.setProjectile();
                     float amount=kind()==0?38:32;
                     if(!reflected)amount=MahoragaHaki.infuse(source,damage,amount);
-                    if(target.hurt(damage,amount)) {
+                    if(MahoragaHaki.hurtTarget(target,damage,amount)) {
                         Vector3d dir=getDeltaMovement().normalize();AbilityHelper.setDeltaMovement(target,dir.x*1.5,Math.max(.25,dir.y*.5),dir.z*1.5);
                     }
                 }

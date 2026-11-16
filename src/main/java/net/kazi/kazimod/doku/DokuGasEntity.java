@@ -20,6 +20,7 @@ public final class DokuGasEntity extends Entity {
     private static final DataParameter<Integer> FADE=EntityDataManager.defineId(DokuGasEntity.class,DataSerializers.INT);
     private static final DataParameter<Float> RADIUS=EntityDataManager.defineId(DokuGasEntity.class,DataSerializers.FLOAT);
     private static final DataParameter<Boolean> RED=EntityDataManager.defineId(DokuGasEntity.class,DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> GREEN=EntityDataManager.defineId(DokuGasEntity.class,DataSerializers.BOOLEAN);
     private int refreshed, fadeStart=-1;
     private final Deque<Vector3d> trail=new ArrayDeque<>();
     public DokuGasEntity(EntityType<? extends DokuGasEntity> type,World world){super(type,world);noPhysics=true;setNoGravity(true);}
@@ -39,6 +40,8 @@ public final class DokuGasEntity extends Entity {
     public int kind(){return entityData.get(KIND);}
     public float radius(){return entityData.get(RADIUS);}
     public boolean red(){return entityData.get(RED);}
+    public boolean green(){return entityData.get(GREEN);}
+    public DokuGasEntity green(boolean enabled){if(!level.isClientSide)entityData.set(GREEN,enabled);return this;}
     public boolean fading(){return entityData.get(FADE)>0;}
     public Deque<Vector3d> trail(){return trail;}
     public float opacity(float partial){return Math.min(1,(tickCount+partial)/10F)*(fadeStart<0?1:Math.max(0,1-(tickCount-fadeStart+partial)/20F));}
@@ -60,7 +63,7 @@ public final class DokuGasEntity extends Entity {
     }
     @Override public AxisAlignedBB getBoundingBoxForCulling(){return getBoundingBox().inflate(kind()==ROAD?40:radius()*2+4);}
     @Override public boolean shouldRenderAtSqrDistance(double distance){return distance<160*160;}
-    @Override protected void defineSynchedData(){entityData.define(KIND,CLOUD);entityData.define(OWNER,-1);entityData.define(FADE,0);entityData.define(RADIUS,3F);entityData.define(RED,false);}
+    @Override protected void defineSynchedData(){entityData.define(KIND,CLOUD);entityData.define(OWNER,-1);entityData.define(FADE,0);entityData.define(RADIUS,3F);entityData.define(RED,false);entityData.define(GREEN,false);}
     @Override protected void readAdditionalSaveData(CompoundNBT nbt){}
     @Override protected void addAdditionalSaveData(CompoundNBT nbt){}
     @Override public IPacket<?> getAddEntityPacket(){return NetworkHooks.getEntitySpawningPacket(this);}

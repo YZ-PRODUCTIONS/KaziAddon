@@ -70,7 +70,9 @@ public abstract class AbilityUnlockBlocker {
         AbilityCore self = (AbilityCore)(Object) this;
 
         if (kazi$isBlocked(self) || net.kazi.kazimod.progression.FruitlessProgression.locked(entity, self)
-                || net.kazi.kazimod.tusk.TuskFeatures.blocked(entity, self)) {
+                || net.kazi.kazimod.tusk.TuskFeatures.blocked(entity, self)
+                || net.kazi.kazimod.gengar.GengarFeatures.blocked(entity, self)
+                || net.kazi.kazimod.decay.DecayFeatures.blocked(entity, self)) {
             cir.setReturnValue(false);
         }
     }

@@ -24,6 +24,7 @@ public final class MahoragaAbility extends Ability {
             "Mahoraga", AbilityCategory.DEVIL_FRUITS, MahoragaAbility::new)
             .setUnlockCheck(MahoragaAbility::awakened)
             .setIcon(new ResourceLocation("kazimod", "textures/abilities/mahoraga.png"))
+            .addDescriptionLine(new StringTextComponent("Maximum two active Ten Shadows at once, including taming rituals. Dismiss one before summoning another."))
             .addDescriptionLine(new StringTextComponent("Kage awakening: summon an adaptive guardian that protects you and your teammates within 50 blocks. Use again to dismiss."))
             .addDescriptionLine(new StringTextComponent("After 10 seconds without a hit, each wheel turn adapts to ALL remembered attacks: +33% resistance per distinct attack and +15% per distinct element or type, up to immunity. Adaptations expire 30 minutes after first learned; Haki categories and special damage cannot be adapted to."))
             .addDescriptionLine(new StringTextComponent("Cooldown: 10 seconds after dismissal, 20 minutes if Mahoraga is defeated."))

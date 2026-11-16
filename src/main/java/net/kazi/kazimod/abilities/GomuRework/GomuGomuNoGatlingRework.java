@@ -92,6 +92,7 @@ public class GomuGomuNoGatlingRework extends RepeaterAbility2 {
         this.setCustomShootLogic((living) -> {
             for (int i = 0; i < 5; i++) {
                 AbilityProjectileEntity p = this.getProjectileFactory(living);
+                ((net.kazi.kazimod.gomu.GomuLimbData)p).kazi$gatling(true);
                 this.projectileComponent.shootWithSpread(p, living, this.projectileSpeed, 3.0F, this.projectileSpread);
             }
         });

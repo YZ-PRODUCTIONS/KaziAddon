@@ -202,3 +202,35 @@ tasks.register('prepareStableRunClient', Sync) {
     from(sourceSets.main.output.classesDirs) { into 'classes' }
     from(sourceSets.main.output.resourcesDir) { into 'resources' }
 }
+
+// Gradle's runClient also needs isolation: another build can clear main classes
+// while Minecraft is still running and lazily loading combat/VFX classes.
+def isolatedClientDir = layout.projectDirectory.dir(".gradle/client-runtimes/${UUID.randomUUID()}")
+def isolatedClientSources = sourceSets.create('isolatedClientRuntime') {
+    java.setSrcDirs([])
+    resources.setSrcDirs([])
+    output.classesDirs.setFrom(isolatedClientDir.dir('classes'))
+    output.resourcesDir = isolatedClientDir.dir('resources').asFile
+}
+isolatedClientSources.runtimeClasspath = sourceSets.main.runtimeClasspath.minus(sourceSets.main.output).plus(isolatedClientSources.output)
+
+tasks.register('prepareIsolatedRunClient', Sync) {
+    dependsOn 'classes'
+    into isolatedClientDir
+    from(sourceSets.main.output.classesDirs) { into 'classes' }
+    from(sourceSets.main.output.resourcesDir) { into 'resources' }
+}
+tasks.register('cleanupIsolatedRunClient', Delete) {
+    delete isolatedClientDir
+}
+tasks.withType(JavaExec).matching { it.name == 'runClient' }.configureEach {
+    dependsOn 'prepareIsolatedRunClient'
+    finalizedBy 'cleanupIsolatedRunClient'
+    doFirst {
+        def config = runConfig.get()
+        config.sources = config.sources.collect { it == sourceSets.main ? isolatedClientSources : it }
+        config.mods.each { mod ->
+            mod.sources = mod.sources.collect { it == sourceSets.main ? isolatedClientSources : it }
+        }
+    }
+}

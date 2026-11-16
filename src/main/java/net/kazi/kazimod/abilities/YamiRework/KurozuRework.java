@@ -40,7 +40,7 @@ extends Ability {
     // Cart initializes its Yami replacements during mod construction. Registering
     // description text here would initialize WyRegistry/Forge registries too early.
     private static final ITextComponent[] DESCRIPTION = {
-            new StringTextComponent("Creates a strong gravitational force, that pulls the opponent towards the user.")
+            new StringTextComponent("Pulls opponents toward the user and absorbs hostile projectiles dealing less than 40 damage.")
     };
     private static final float COOLDOWN = 300.0f;
     private static final float DAMAGE = 30.0f;
@@ -71,12 +71,14 @@ extends Ability {
 
     private void onContinuityStart(LivingEntity entity, IAbility ability) {
         this.animationComponent.start(entity, ModAnimations.POINT_LEFT_ARM);
+        net.kazi.kazimod.yami.YamiCombat.beginKurozu(entity);
     }
 
     private void onContinuityTick(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) {
             return;
         }
+        net.kazi.kazimod.yami.YamiCombat.pullProjectiles(entity);
         RayTraceResult mop = WyHelper.rayTraceBlocksAndEntities((Entity)entity, 128.0);
         double i = mop.getLocation().x;
         double j = mop.getLocation().y - (mop instanceof EntityRayTraceResult ? 1.0 : 0.0);
@@ -107,6 +109,7 @@ extends Ability {
     }
 
     private void onContinuityEnd(LivingEntity entity, IAbility ability) {
+        net.kazi.kazimod.yami.YamiCombat.endKurozu(entity);
         if (entity.level.isClientSide) {
             return;
         }

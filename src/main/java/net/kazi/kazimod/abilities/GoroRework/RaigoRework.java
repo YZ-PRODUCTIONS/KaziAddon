@@ -27,16 +27,18 @@ import xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ProjectileComponent;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
+import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.api.util.Interval;
 import xyz.pixelatedw.mineminenomi.config.ClientConfig;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity;
-import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.RaigoProjectile;
+import net.MrMagicalCart.cartaddon.entities.projectiles.goroextra.ReworkedRaigoProjectile;
+import net.MrMagicalCart.cartaddon.init.CartSounds;
 import xyz.pixelatedw.mineminenomi.init.ModI18n;
 import xyz.pixelatedw.mineminenomi.init.ModSounds;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
-/** Kazi-owned copy of Mine Mine no Mi 0.10.11's Raigo and Mamaragan modes. */
+/** CartAddon Raigo and Mamaragan mechanics, without the Voltage Up prerequisite. */
 public class RaigoRework extends Ability {
     private static final ResourceLocation DEFAULT_ICON =
             new ResourceLocation("mineminenomi", "textures/abilities/raigo.png");
@@ -71,10 +73,10 @@ public class RaigoRework extends Ability {
                             AbilityDescriptionLine.NEW_LINE,
                             (e, a) -> ModI18n.ABILITY_DESCRIPTION_DURING_THUNDERSTORM.copy(),
                             CooldownComponent.getTooltip(700.0F),
-                            ChargeComponent.getTooltip(100.0F),
+                            ChargeComponent.getTooltip(80.0F),
                             (e, a) -> ModI18n.ABILITY_DESCRIPTION_WITHOUT_THUNDERSTORM.copy(),
-                            CooldownComponent.getTooltip(1700.0F),
-                            ChargeComponent.getTooltip(240.0F),
+                            CooldownComponent.getTooltip(1500.0F),
+                            ChargeComponent.getTooltip(100.0F),
                             AbilityDescriptionLine.NEW_LINE)
                     .addAdvancedDescriptionLine(ProjectileComponent.getProjectileTooltips())
                     .addAdvancedDescriptionLine(
@@ -87,6 +89,7 @@ public class RaigoRework extends Ability {
                             CooldownComponent.getTooltip(1400.0F),
                             ContinuousComponent.getTooltip(1200.0F))
                     .setSourceElement(SourceElement.LIGHTNING)
+                    .setSourceHakiNature(SourceHakiNature.SPECIAL)
                     .setIcon(DEFAULT_ICON)
                     .build();
 
@@ -106,7 +109,7 @@ public class RaigoRework extends Ability {
                     .addChangeModeEvent(this::onAltModeChange);
     private final Interval spawnLightningInterval = new Interval(10);
 
-    private RaigoProjectile raigoProjectile;
+    private ReworkedRaigoProjectile raigoProjectile;
     private boolean isThundering;
 
     public RaigoRework(AbilityCore<RaigoRework> core) {
@@ -139,7 +142,7 @@ public class RaigoRework extends Ability {
             if (!chargeComponent.isCharging()) {
                 isThundering = thunderstormResult.isSuccess();
                 spawnLightningInterval.restartIntervalToZero();
-                chargeComponent.startCharging(entity, isThundering ? 240.0F : 100.0F);
+                chargeComponent.startCharging(entity, isThundering ? 80.0F : 100.0F);
             } else if (chargeComponent.getChargeTime() >= 20.0F) {
                 chargeComponent.stopCharging(entity);
             }
@@ -149,10 +152,12 @@ public class RaigoRework extends Ability {
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         if (entity.level.isClientSide) return;
         RayTraceResult mop = WyHelper.rayTraceBlocksAndEntities(entity);
-        raigoProjectile = new RaigoProjectile(entity.level, entity, this);
+        raigoProjectile = new ReworkedRaigoProjectile(entity.level, entity, this);
         raigoProjectile.moveTo(
                 mop.getLocation().x, 128.0D, mop.getLocation().z, 0.0F, 0.0F);
         entity.level.addFreshEntity(raigoProjectile);
+        entity.level.playSound(null, entity.blockPosition(), CartSounds.RAIGO_CHARGING_SFX.get(),
+                SoundCategory.PLAYERS, 20.0F, 1.0F);
     }
 
     private void onChargeTick(LivingEntity entity, IAbility ability) {
@@ -162,7 +167,8 @@ public class RaigoRework extends Ability {
             return;
         }
         raigoProjectile.setLife(raigoProjectile.getMaxLife());
-        raigoProjectile.increaseSize(isThundering ? 0.08F : 0.0032F);
+        raigoProjectile.increaseSize(isThundering ? 0.21F : 0.11F);
+        raigoProjectile.setChargedAmount(chargeComponent.getChargePercentage());
     }
 
     private void onChargeEnd(LivingEntity entity, IAbility ability) {
@@ -180,7 +186,7 @@ public class RaigoRework extends Ability {
                 return;
             }
             raigoProjectile.setLife(raigoProjectile.getMaxLife());
-            AbilityHelper.setDeltaMovement(raigoProjectile, 0.0D, -0.75D, 0.0D);
+            AbilityHelper.setDeltaMovement(raigoProjectile, 0.0D, -2.75D, 0.0D);
         } else if (spawnLightningInterval.canTick()) {
             if (canUse(entity).isFail()) {
                 continuousComponent.stopContinuity(entity);
@@ -227,7 +233,7 @@ public class RaigoRework extends Ability {
                 raigoProjectile.remove();
             }
             raigoProjectile = null;
-            cooldownComponent.startCooldown(entity, isThundering ? 700.0F : 1700.0F);
+            cooldownComponent.startCooldown(entity, isThundering ? 700.0F : 1500.0F);
         } else {
             cooldownComponent.startCooldown(entity, 1400.0F);
         }
@@ -267,8 +273,8 @@ public class RaigoRework extends Ability {
         bolt.setTargetTimeToReset(resetTime);
     }
 
-    private RaigoProjectile createProjectile(LivingEntity entity) {
-        return new RaigoProjectile(entity.level, entity, this);
+    private ReworkedRaigoProjectile createProjectile(LivingEntity entity) {
+        return new ReworkedRaigoProjectile(entity.level, entity, this);
     }
 
     public enum Mode {

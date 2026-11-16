@@ -28,7 +28,7 @@ public final class TuskAbility extends Ability {
         DODGE("Dimensional Dodge", "dimensional_dodge", 3, 0, 15, 240, "Slip partially into a wormhole for 0.6 seconds, avoiding ordinary attacks. Unavoidable damage and environmental hazards still apply."),
         BARRAGE("Stand Barrage", "stand_barrage", 4, 0, 25, 240, "Tusk unleashes a two-second punching barrage, ending with a powerful knockback strike. Use again to cancel."),
         BEATDOWN("Golden Beatdown", "golden_beatdown", 4, 0, 40, 400, "Grab a nearby enemy, then deliver coordinated Stand strikes and a heavy finisher. Missing leaves you briefly exposed. Use again to release."),
-        INFINITE("Infinite Rotation", "infinite_rotation", 4, 1, 100, 2400, "Charge for 2.5 seconds and fire a golden nail that tracks the enemy you aim at when firing. A hit applies 10 seconds of rotation damage and slowing. Effects do not stack or refresh; this does not permanently stun. Use again to cancel.");
+        INFINITE("Infinite Rotation", "infinite_rotation", 4, 1, 100, 1000, "Charge for 2.5 seconds and fire a golden nail that tracks the enemy you aim at when firing. A hit applies 10 seconds of rotation damage and slowing. Effects do not stack or refresh; this does not permanently stun. Use again to cancel.");
         public final String title, id, description;
         public final int act, nails, cooldown;
         public final float spin;
@@ -87,7 +87,11 @@ public final class TuskAbility extends Ability {
                     actMode.setMode(user, Act.values()[act - 1]);
             });
         }
-        if (move == Move.NAIL) addTickEvent((user, ability) -> setDisplayName(new StringTextComponent(TuskState.act(user) >= 2 ? "Golden Nail" : "Nail Shot")));
+        if (move == Move.NAIL) addTickEvent((user, ability) -> {
+            boolean golden = TuskState.act(user) >= 2;
+            setDisplayName(new StringTextComponent(golden ? "Golden Nail" : "Nail Shot"));
+            setDisplayIcon(icon(golden ? "golden_nail" : "nail_shot"));
+        });
         addCanUseCheck((user, ability) -> {
             if (!(user instanceof PlayerEntity) || !TuskState.awakened(user) || TuskState.act(user) < move.act)
                 return fail("Select a mastered Tusk Act that supports this technique.");
@@ -128,9 +132,9 @@ public final class TuskAbility extends Ability {
         if (!TuskState.spend(user, move.nails, move.spin)) return;
         TuskState.get(user).putBoolean("Manifest", true);
         switch (move) {
-            case NAIL: shoot(user, TuskProjectile.NAIL, hand(user), user.getLookAngle(), 10 + (TuskState.act(user) - 1) * 3, 0); pose(user, 2, 10); break;
+            case NAIL: shoot(user, TuskProjectile.NAIL, hand(user), user.getLookAngle(), (10 + (TuskState.act(user) - 1) * 3) * (TuskState.act(user) >= 2 ? .5F : 1), 0); pose(user, 2, 10); break;
             case SHOTGUN:
-                for (int i = -2; i <= 2; i++) shoot(user, TuskProjectile.SHOTGUN, hand(user), user.getLookAngle().yRot(i * .065F), 6 + TuskState.act(user), i);
+                for (int i = -2; i <= 2; i++) shoot(user, TuskProjectile.SHOTGUN, hand(user), user.getLookAngle().yRot(i * .065F), (6 + TuskState.act(user)) * .5F, i);
                 pose(user, 4, 14); break;
             case HOLE: shoot(user, TuskProjectile.SEEKER, hand(user), user.getLookAngle(), 16, 0); pose(user, 5, 14); break;
             case BURST: burst(user); pose(user, 6, 20); break;

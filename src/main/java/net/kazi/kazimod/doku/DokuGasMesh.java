@@ -24,6 +24,9 @@ public final class DokuGasMesh {
     private static final RenderType GAS=State.gas(),LIQUID=State.liquid();
     private static double noise(int i,int seed){double x=Math.sin(i*127.1+seed*31.73)*43758.5453;return x-Math.floor(x);}
     public static void volume(MatrixStack stack,IRenderTypeBuffer buffers,Quaternion camera,int kind,float age,float radius,boolean red,float opacity,int seed,boolean far){
+        volume(stack,buffers,camera,kind,age,radius,red,false,opacity,seed,far);
+    }
+    public static void volume(MatrixStack stack,IRenderTypeBuffer buffers,Quaternion camera,int kind,float age,float radius,boolean red,boolean green,float opacity,int seed,boolean far){
         IVertexBuilder out=buffers.getBuffer(GAS);
         int count=far?16:44;
         boolean narrow=kind==DokuGasEntity.DEMON||kind==DokuGasEntity.PROJECTILE||kind==DokuGasEntity.ROAD;
@@ -39,18 +42,21 @@ public final class DokuGasMesh {
             if(kind==DokuGasEntity.PROJECTILE||kind==DokuGasEntity.ROAD)y-=height*.5;
             double size=radius*(narrow?.65:.27)*(1+cycle*.65)*( .8+noise(i+5,seed)*.7);
             float alpha=(float)(Math.sin(cycle*Math.PI)*opacity*(far?.72:.42));
-            int color=red?(i%4==0?0xff7265:i%3==0?0x801530:0xd63553):(i%4==0?0xd6a3f2:i%3==0?0x391c5e:0x8d49bd);
+            int color=green?(i%4==0?0xe5ffbd:i%3==0?0x51894b:0xa4df76):red?(i%4==0?0xff7265:i%3==0?0x801530:0xd63553):(i%4==0?0xd6a3f2:i%3==0?0x391c5e:0x8d49bd);
             puff(stack,out,camera,x,y,z,size,size*(.75+noise(i+7,seed)*.55),age*.2+i*73,color,alpha,i%4);
         }
     }
     public static void wisps(MatrixStack stack,IRenderTypeBuffer buffers,Quaternion camera,List<Vector3d> points,float age,float radius,boolean red,float alpha,boolean far){
+        wisps(stack,buffers,camera,points,age,radius,red,false,alpha,far);
+    }
+    public static void wisps(MatrixStack stack,IRenderTypeBuffer buffers,Quaternion camera,List<Vector3d> points,float age,float radius,boolean red,boolean green,float alpha,boolean far){
         IVertexBuilder out=buffers.getBuffer(GAS);
         int step=far?4:2;
         for(int i=0;i<points.size();i+=step){
             Vector3d p=points.get(i);float fade=1-i/(float)points.size();
             double size=radius*(.7+i*.025);
             puff(stack,out,camera,p.x,p.y+.15+Math.sin(age*.06-i*.5)*.15,p.z,size,size*.8,age*.4+i*39,
-                    red?0xd4476b:0xb57de4,alpha*fade*.3F,i%4);
+                    green?0xc3f297:red?0xd4476b:0xb57de4,alpha*fade*.3F,i%4);
         }
     }
     private static void puff(MatrixStack stack,IVertexBuilder out,Quaternion camera,double x,double y,double z,double w,double h,double angle,int color,float alpha,int tile){
@@ -63,6 +69,9 @@ public final class DokuGasMesh {
         out.vertex(stack.last().pose(),(float)x,(float)y,(float)z).color(color>>16&255,color>>8&255,color&255,(int)(MathHelper.clamp(alpha,0,1)*255)).uv(u,v).endVertex();
     }
     public static void road(MatrixStack stack,IRenderTypeBuffer buffers,List<Vector3d> points,float radius,float age,boolean red,float alpha){
+        road(stack,buffers,points,radius,age,red,false,alpha);
+    }
+    public static void road(MatrixStack stack,IRenderTypeBuffer buffers,List<Vector3d> points,float radius,float age,boolean red,boolean green,float alpha){
         if(points.size()<2)return;
         IVertexBuilder out=buffers.getBuffer(LIQUID);
         Vector3d[][] rings=new Vector3d[points.size()][12];
@@ -78,6 +87,7 @@ public final class DokuGasMesh {
             float fade=(1-i/(float)rings.length)*alpha*.55F;
             float shimmer=(float)(.5+.5*Math.sin(j*Math.PI/6+age*.08-i*.4));
             int r=red?(int)(135+90*shimmer):(int)(65+95*shimmer),g=(int)(24+35*shimmer),b=red?(int)(50+30*shimmer):(int)(125+95*shimmer);
+            if(green){r=(int)(110+100*shimmer);g=(int)(175+65*shimmer);b=(int)(65+80*shimmer);}
             for(Vector3d p:new Vector3d[]{rings[i][j],rings[i+1][j],rings[i+1][(j+1)%12],rings[i][(j+1)%12]})
                 out.vertex(stack.last().pose(),(float)p.x,(float)p.y,(float)p.z).color(r,g,b,(int)(fade*255)).endVertex();
         }

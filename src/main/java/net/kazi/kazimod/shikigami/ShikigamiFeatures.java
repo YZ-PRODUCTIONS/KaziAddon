@@ -89,6 +89,7 @@ public final class ShikigamiFeatures {
     }
     private static void tick(TickEvent.PlayerTickEvent e){
         PlayerEntity p=e.player;if(e.phase!=TickEvent.Phase.END||p.level.isClientSide||p.tickCount%10!=0)return;
+        TenShadowsTaming.enforceLimit(p);
         IAbilityData data=AbilityDataCapability.get(p);boolean awakened=MahoragaAbility.awakened(p),changed=false;
         if(awakened){
             Set<AbilityCore<?>> oldCores=new HashSet<>();

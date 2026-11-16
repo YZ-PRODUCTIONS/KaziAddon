@@ -63,7 +63,7 @@ public final class MahoragaEntity extends OPEntity implements TenShadowsBeast {
     }
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return OPEntity.createAttributes().add(Attributes.MAX_HEALTH,700)
-                .add(Attributes.ATTACK_DAMAGE,32).add(Attributes.MOVEMENT_SPEED,.34)
+                .add(Attributes.ATTACK_DAMAGE,32).add(Attributes.MOVEMENT_SPEED,.51)
                 .add(Attributes.FOLLOW_RANGE,50).add(Attributes.KNOCKBACK_RESISTANCE,.9)
                 .add(Attributes.ARMOR,0).add(Attributes.ARMOR_TOUGHNESS,0);
     }
@@ -257,9 +257,10 @@ public final class MahoragaEntity extends OPEntity implements TenShadowsBeast {
             }
             jumpCooldown=24;
         } else if(action==MahoragaAction.AIR_TAKEDOWN && age==10 && validEnemy(target) && distanceToSqr(target)<36 && canSee(target)) {
-            strike(target,18,SourceType.BLUNT,0);
-            droppingTarget=target;dropTicks=0;
-            AbilityHelper.setDeltaMovement(target,0,-3.4,0);setDeltaMovement(getDeltaMovement().multiply(.4,0,.4).add(0,-1.7,0));
+            if(strike(target,18,SourceType.BLUNT,0)){
+                droppingTarget=target;dropTicks=0;
+                AbilityHelper.setDeltaMovement(target,0,-3.4,0);setDeltaMovement(getDeltaMovement().multiply(.4,0,.4).add(0,-1.7,0));
+            }
         } else if(action==MahoragaAction.THROW_BLOCK) {
             if(age==10 && !pickBlock()) {start(MahoragaAction.AIR_BLAST);return;}
             if(age==25 && target!=null) {shoot(target,0);entityData.set(ROCK,0);rangedCooldown=65;}
@@ -289,8 +290,7 @@ public final class MahoragaEntity extends OPEntity implements TenShadowsBeast {
         if(!validEnemy(target))return false;
         ModDamageSource source=new AbilityDamageSource("mahoraga_"+action().clip,this,MahoragaAbility.INSTANCE);
         source.setSourceTypes(new ArrayList<>(Arrays.asList(type,SourceType.PHYSICAL)));
-        if(type==SourceType.FIST && action()==MahoragaAction.PUNCH_BARRAGE)target.invulnerableTime=0;
-        boolean hit=target.hurt(source,MahoragaHaki.infuse(this,source,damage));
+        boolean hit=MahoragaHaki.hurtTarget(target,source,MahoragaHaki.infuse(this,source,damage));
         if(hit && knockback>0) {
             Vector3d direction=target.position().subtract(position()).multiply(1,0,1).normalize();
             AbilityHelper.setDeltaMovement(target,direction.x*knockback,.4,direction.z*knockback);

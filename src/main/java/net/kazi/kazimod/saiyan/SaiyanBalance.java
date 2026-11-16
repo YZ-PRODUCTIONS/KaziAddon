@@ -12,7 +12,7 @@ public final class SaiyanBalance {
     public static final String[] FORMS = {"Base", "Super Saiyan", "Super Saiyan 2", "Super Saiyan 3", "Super Saiyan God", "Super Saiyan Blue", "Ultra Instinct"};
     public static final float[] POWER = {1, 1.3F, 1.5F, 1.8F, 2.1F, 2.5F, 3};
     public static final int[] TRANSMISSION_RANGE = {24, 32, 40, 48, 64, 80, 96};
-    public static final float[] DRAIN = {0, 2, 3.6F, 8, 5, 9, 12};
+    public static final float[] DRAIN = {0, 1, 1.8F, 4, 2.5F, 4.5F, 6};
     public static final int[] COLORS = {0x69dfff, 0xffd52b, 0xffe54b, 0xffcf32, 0xff334a, 0x26bfff, 0xd9eaff};
     private SaiyanBalance() {}
     public static int tier(int tier) { return Math.max(0, Math.min(FORMS.length-1, tier)); }

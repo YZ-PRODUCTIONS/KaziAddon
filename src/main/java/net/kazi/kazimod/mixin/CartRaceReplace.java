@@ -60,6 +60,10 @@ public abstract class CartRaceReplace {
         String resourceName = WyHelper.getResourceName(localizedName);
         WyRegistry.getLangMap().put("race.mineminenomi." + resourceName, localizedName);
         Supplier<I> modifiedRace = race;
+        if (resourceName.equalsIgnoreCase("zombie")) {
+            WyRegistry.getLangMap().put("race.mineminenomi.zombie", "Ghoul");
+            modifiedRace = () -> (I) net.kazi.kazimod.ghoul.GhoulFeatures.race();
+        }
         if (resourceName.equalsIgnoreCase("cyborg")) {
             modifiedRace = () -> {
                 CharacterCreatorSelectionMap.SelectionInfo info =
@@ -243,6 +247,7 @@ public abstract class CartRaceReplace {
         // Also filter direct quest grants and saved unlocks/equipment, which bypass canUnlock.
         // Match Cart's core only: Saber still uses Kazi's DivineDepartureClone.
         return core == GeneticAwakeningAbility.INSTANCE
+                || net.kazi.kazimod.ghoul.GhoulFeatures.retired(core)
                 || core == NewDivineDepartureAbility.INSTANCE;
     }
 }

@@ -15,6 +15,7 @@ import xyz.pixelatedw.mineminenomi.renderers.entities.LightningEntityRenderer;
 public abstract class LaserBeamRendererMixin {
     @Inject(method={"renderLightning"}, at={@At(value="HEAD")}, cancellable=true)
     private static void kazimod$laser(LightningEntity entity, float partial, MatrixStack stack, IRenderTypeBuffer buffer, int light, CallbackInfo ci) {
+        if (((net.kazi.kazimod.pika.PikaBeamVisuals)entity).kazi$pikaKind() != 0) return;
         if (((LaserBeamVisualData)entity).kazimod$isKamehameha()) {
             net.kazi.kazimod.saiyan.SaiyanClient.beam(entity, partial, stack, buffer);
             ci.cancel();

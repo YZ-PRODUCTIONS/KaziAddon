@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {"layer0": "kazimod:items/chi_chi_no_mi"}
+}

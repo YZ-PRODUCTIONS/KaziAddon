@@ -9,7 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity;
 import xyz.pixelatedw.mineminenomi.renderers.entities.LightningEntityRenderer;
 
-@Mixin(value = LightningEntityRenderer.class, remap = false, priority = 2000)
+// Apply after the replacement renderers so this HEAD guard runs before they draw.
+@Mixin(value = LightningEntityRenderer.class, remap = false, priority = 900)
 public abstract class TripleTHeavenlyBeamMixin {
     @Inject(method = "renderLightning", at = @At("HEAD"), cancellable = true)
     private static void kazimod$hiddenGameplayBeam(LightningEntity entity, float partial, MatrixStack stack,

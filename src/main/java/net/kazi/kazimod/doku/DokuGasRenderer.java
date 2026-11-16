@@ -15,6 +15,7 @@ import xyz.pixelatedw.mineminenomi.models.entities.projectiles.HydraModel;
 
 public final class DokuGasRenderer extends EntityRenderer<DokuGasEntity> {
     private static final ResourceLocation HYDRA=new ResourceLocation("mineminenomi","textures/models/projectiles/hydra_full.png");
+    private static final ResourceLocation GREEN_HYDRA=new ResourceLocation("minecraft","textures/block/white_concrete.png");
     private final HydraModel<Entity> head=new HydraModel<>();
     public DokuGasRenderer(EntityRendererManager manager){
         super(manager);shadowRadius=0;
@@ -33,19 +34,19 @@ public final class DokuGasRenderer extends EntityRenderer<DokuGasEntity> {
             List<Vector3d> points=new ArrayList<>();points.add(new Vector3d(0,gas.kind()==DokuGasEntity.ROAD?-.35:0,0));
             for(Vector3d point:gas.trail())if(point.distanceToSqr(position)<1600)points.add(point.subtract(position));
             if(gas.kind()==DokuGasEntity.ROAD){
-                DokuGasMesh.road(stack,buffers,points,gas.radius(),age,gas.red(),alpha);
+                DokuGasMesh.road(stack,buffers,points,gas.radius(),age,gas.red(),gas.green(),alpha);
                 if(owner!=null){
                     stack.pushPose();stack.translate(0,-.5,0);stack.mulPose(Vector3f.YP.rotationDegrees(180-MathHelper.rotLerp(partial,owner.yRotO,owner.yRot)));
                     stack.mulPose(Vector3f.XP.rotationDegrees(-MathHelper.lerp(partial,owner.xRotO,owner.xRot)));
                     float scale=gas.red()?3.8F:3;stack.scale(scale,-scale,scale);
                     head.jaw2.xRot=.23F+MathHelper.sin(age*.09F)*.035F;
-                    head.renderToBuffer(stack,buffers.getBuffer(RenderType.entityTranslucent(HYDRA)),15728880,OverlayTexture.NO_OVERLAY,1,gas.red()?.22F:1,gas.red()?.3F:1,alpha*(first?.12F:.65F));
+                    head.renderToBuffer(stack,buffers.getBuffer(RenderType.entityTranslucent(gas.green()?GREEN_HYDRA:HYDRA)),15728880,OverlayTexture.NO_OVERLAY,gas.green()?.68F:1,gas.red()?.22F:1,gas.green()?.4F:gas.red()?.3F:1,alpha*(first?.12F:.65F));
                     stack.popPose();
                 }
             }
-            DokuGasMesh.wisps(stack,buffers,entityRenderDispatcher.cameraOrientation(),points,age,gas.radius(),gas.red(),alpha,far);
+            DokuGasMesh.wisps(stack,buffers,entityRenderDispatcher.cameraOrientation(),points,age,gas.radius(),gas.red(),gas.green(),alpha,far);
         }
-        DokuGasMesh.volume(stack,buffers,entityRenderDispatcher.cameraOrientation(),gas.kind(),age,gas.radius(),gas.red(),alpha,gas.getId(),far);
+        DokuGasMesh.volume(stack,buffers,entityRenderDispatcher.cameraOrientation(),gas.kind(),age,gas.radius(),gas.red(),gas.green(),alpha,gas.getId(),far);
         stack.popPose();
     }
     private static Vector3d lerp(Entity e,float p){return new Vector3d(MathHelper.lerp(p,e.xOld,e.getX()),MathHelper.lerp(p,e.yOld,e.getY()),MathHelper.lerp(p,e.zOld,e.getZ()));}

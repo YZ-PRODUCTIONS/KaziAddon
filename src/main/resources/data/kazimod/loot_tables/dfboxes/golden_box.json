@@ -473,6 +473,16 @@
             }
           ],
           "name": "kazimod:hito_hito_no_mi_model_saiyan"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 100,
+          "functions": [
+            {
+              "function": "mineminenomi:fruit_already_exists"
+            }
+          ],
+          "name": "kazimod:petal_petal_no_mi"
         }
       ],
       "conditions": [

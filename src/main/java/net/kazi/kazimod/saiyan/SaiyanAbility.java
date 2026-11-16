@@ -23,11 +23,11 @@ import xyz.pixelatedw.mineminenomi.init.ModEffects;
 
 public final class SaiyanAbility extends Ability {
     public enum Move {
-        CHARGE("Ki Charge","ki_charge",0,0,20,"Gather ki in a rising aura while stunned and unable to use other abilities. Base form only; finish other active abilities first. Taking a hit interrupts charging and triggers a 30-second cooldown. Use again to stop. Restores 6% of maximum ki per second."),
+        CHARGE("Ki Charge","ki_charge",0,0,20,"Gather ki in a rising aura while stunned and unable to use other abilities. Base form only; finish other active abilities first. Taking a hit interrupts charging and triggers a 30-second cooldown. Use again to stop. Restores 12% of maximum ki per second."),
         // Keep the old core registered so existing player saves can be migrated.
-        BLAST("Ki Blast","ki_blast",0,8,12,"Fire a fast golden ki blast. Alternate mode charges a larger blast for 30 ki."),
+        BLAST("Ki Blast","ki_blast",0,8,12,"Fire a fast golden ki blast. Alternate mode charges a larger blast for 15 ki."),
         METEOR("Meteor Combination","meteor_combination",0,20,160,"Lunge forward, grab the enemy, and slam them into the ground. While Ultra Instinct is active, this automatically becomes Celestial Meteor: carry them into space, pause above Earth for one second, then dive back down. Use again to release early."),
-        KAMEHAMEHA("Kamehameha","kamehameha",0,18,240,"Cup a blue ki sphere, then unleash a steerable continuous beam that hits once per second. Charges for 2 seconds; drains 12 ki per second while firing. Use again to cancel."),
+        KAMEHAMEHA("Kamehameha","kamehameha",0,18,240,"Cup a blue ki sphere, then unleash a steerable continuous beam that hits once per second. Charges for 2 seconds; drains 6 ki per second while firing. Use again to cancel."),
         TRANSMISSION("Instant Transmission","instant_transmission",0,18,160,"Blink behind the target in your sights, or to a safe point along your aim. Range increases with your active form: 24 / 32 / 40 / 48 / 64 / 80 / 96 blocks in Base / SS1 / SS2 / SS3 / God / Blue / Ultra Instinct."),
         TRANSFORM("Saiyan Transformation","super_saiyan",1,30,40,"Transform into your selected awakening. Alternate mode cycles unlocked forms. Use again to return to base; stronger forms drain ki faster. Ultra Instinct has a six-second entrance that stuns you and prevents all incoming damage. Once transformed, it automatically dodges avoidable attacks below 30 damage and teleports behind the attacker when space allows."),
         DRAGON("Dragon Fist","dragon_fist",3,65,500,"Rush forward behind a translucent energy dragon. While Ultra Instinct is active, this automatically becomes Dragon Ascension: a five-times-larger dragon bites an enemy, carries them 200 blocks upward, and slams them back down. Requires Super Saiyan 3 awakening."),
@@ -45,11 +45,12 @@ public final class SaiyanAbility extends Ability {
                 .setSourceHakiNature(SourceHakiNature.IMBUING).setSourceType(move==Move.METEOR||move==Move.DRAGON?SourceType.FIST:SourceType.PROJECTILE)
                 .setSourceElement(SourceElement.LIGHT).setIcon(icon(move.icon))
                 .addDescriptionLine(new StringTextComponent(move.description))
-                .addDescriptionLine(new StringTextComponent("Ki cost: "+move.cost+". Cooldown: "+(move.cooldown/20F)+" seconds"+(move==Move.DRAGON?" (15 seconds in Ultra Instinct)":"")+"."))
+                .addDescriptionLine(new StringTextComponent("Ki cost: "+kiCost(move)+". Cooldown: "+(move.cooldown/20F)+" seconds"+(move==Move.DRAGON?" (15 seconds in Ultra Instinct)":"")+"."))
                 .build();
         return result;
     }
     public static AbilityCore<SaiyanAbility> core(Move move){return CORES[move.ordinal()];}
+    public static float kiCost(Move move){return move==Move.TRANSFORM?move.cost:move.cost*.5F;}
     public static boolean isSaiyan(AbilityCore<?> core){return core==SaiyanFlightAbility.INSTANCE||Arrays.asList(CORES).contains(core);}
     public static ResourceLocation icon(String name){return new ResourceLocation("kazimod","textures/abilities/saiyan/"+name+".png");}
     private final Move move;
@@ -122,7 +123,7 @@ public final class SaiyanAbility extends Ability {
             }
             if(AbilityHelper.isWeakenedByKairosekiOrWater(user))return AbilityUseResult.fail(new StringTextComponent("Your Devil Fruit is weakened."));
             if(SaiyanState.action(user)>=2)return AbilityUseResult.fail(new StringTextComponent("Finish your current technique first."));
-            float cost=move==Move.BLAST&&mode.isMode(Mode.ALTERNATE)?30:move.cost;
+            float cost=move==Move.BLAST&&mode.isMode(Mode.ALTERNATE)?15:kiCost(move);
             if(SaiyanState.ki(user)<cost)return AbilityUseResult.fail(new StringTextComponent("Not enough ki. Use Ki Charge."));
             return AbilityUseResult.success();
         });
@@ -161,7 +162,7 @@ public final class SaiyanAbility extends Ability {
             return;
         }
         if(move==Move.TRANSMISSION){teleport(player);return;}
-        float cost=move==Move.BLAST&&mode.isMode(Mode.ALTERNATE)?30:move.cost;
+        float cost=move==Move.BLAST&&mode.isMode(Mode.ALTERNATE)?15:kiCost(move);
         if(!SaiyanState.spend(user,cost))return;
         if(move==Move.BLAST&&mode.isMode(Mode.NORMAL)){
             shoot(user,0,6,.32F,2.2F);SaiyanState.pose(user,5,8);cooldownComponent.startCooldown(user,12);return;
@@ -198,7 +199,7 @@ public final class SaiyanAbility extends Ability {
             case CHARGE:
                 if(!SaiyanState.get(user).getBoolean("Charging")||SaiyanState.form(user)>0){continuous.stopContinuity(user);break;}
                 stunWhileCharging(user);
-                SaiyanState.addKi(user,SaiyanState.maxKi(user)*.003F);SaiyanState.pose(user,1,8);
+                SaiyanState.addKi(user,SaiyanState.maxKi(user)*.006F);SaiyanState.pose(user,1,8);
                 if(SaiyanState.ki(user)>=SaiyanState.maxKi(user))continuous.stopContinuity(user);
                 break;
             case BLAST:
@@ -214,7 +215,7 @@ public final class SaiyanAbility extends Ability {
                     user.level.addFreshEntity(beam);
                 }
                 if(ticks>=40){
-                    if(beam==null||!beam.isAlive()||!SaiyanState.spend(user,.6F)){continuous.stopContinuity(user);break;}
+                    if(beam==null||!beam.isAlive()||!SaiyanState.spend(user,.3F)){continuous.stopContinuity(user);break;}
                     // Native hit resets only run at full beam length; steering and walls must not stop damage pulses.
                     if((ticks-40)%20==0){
                         beam.targets.clear();beam.explosionTargets.clear();beam.clearTargets();
@@ -298,7 +299,7 @@ public final class SaiyanAbility extends Ability {
                     &&user.level.noCollision(user,user.getBoundingBox().move(candidate.subtract(user.position())))&&!user.level.containsAnyLiquid(user.getBoundingBox().move(candidate.subtract(user.position())))){safe=candidate;break;}
         }
         if(safe==null){user.displayClientMessage(new StringTextComponent("No safe teleport destination."),true);return;}
-        if(!SaiyanState.spend(user,18))return;
+        if(!SaiyanState.spend(user,kiCost(Move.TRANSMISSION)))return;
         SaiyanEffect.spawn(user,5,user.position(),12,1);SaiyanFeatures.play(user,SaiyanFeatures.TELEPORT.get(),.6F,1);
         user.teleportTo(safe.x,safe.y,safe.z);user.fallDistance=0;
         SaiyanEffect.spawn(user,5,user.position(),12,1);SaiyanState.pose(user,8,10);

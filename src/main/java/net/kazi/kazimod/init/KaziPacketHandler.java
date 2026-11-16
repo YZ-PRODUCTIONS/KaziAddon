@@ -16,8 +16,8 @@ import java.util.Optional;
 
 public class KaziPacketHandler {
 
-    // Seiryu's synchronized body path requires matching client/server packets.
-    private static final String PROTOCOL_VERSION = "11";
+    // Visual messages and beam data require matching client/server versions.
+    private static final String PROTOCOL_VERSION = "21";
     private static int id = 0;
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
@@ -28,6 +28,39 @@ public class KaziPacketHandler {
     );
 
     public static void register() {
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.ope.WillePacket.class,
+                net.kazi.kazimod.ope.WillePacket::encode, net.kazi.kazimod.ope.WillePacket::decode,
+                net.kazi.kazimod.ope.WillePacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.ope.OpeVisualPacket.class,
+                net.kazi.kazimod.ope.OpeVisualPacket::encode,
+                net.kazi.kazimod.ope.OpeVisualPacket::decode,
+                net.kazi.kazimod.ope.OpeVisualPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.mochi.MochiVisualPacket.class,
+                net.kazi.kazimod.mochi.MochiVisualPacket::encode,
+                net.kazi.kazimod.mochi.MochiVisualPacket::decode,
+                net.kazi.kazimod.mochi.MochiVisualPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.yami.DarknessLaunchPacket.class,
+                net.kazi.kazimod.yami.DarknessLaunchPacket::encode,
+                net.kazi.kazimod.yami.DarknessLaunchPacket::decode,
+                net.kazi.kazimod.yami.DarknessLaunchPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.moku.MokuVisualPacket.class,
+                net.kazi.kazimod.moku.MokuVisualPacket::encode,
+                net.kazi.kazimod.moku.MokuVisualPacket::decode,
+                net.kazi.kazimod.moku.MokuVisualPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.pika.PikaVisualPacket.class,
+                net.kazi.kazimod.pika.PikaVisualPacket::encode,
+                net.kazi.kazimod.pika.PikaVisualPacket::decode,
+                net.kazi.kazimod.pika.PikaVisualPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.yami.YamiVisualPacket.class,
+                net.kazi.kazimod.yami.YamiVisualPacket::encode,
+                net.kazi.kazimod.yami.YamiVisualPacket::decode,
+                net.kazi.kazimod.yami.YamiVisualPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(id++, net.kazi.kazimod.progression.FruitlessProgressionPacket.class,
                 net.kazi.kazimod.progression.FruitlessProgressionPacket::encode,
                 net.kazi.kazimod.progression.FruitlessProgressionPacket::decode,
@@ -90,6 +123,11 @@ public class KaziPacketHandler {
                 net.kazi.kazimod.network.MammothAnimationPacket::encode,
                 net.kazi.kazimod.network.MammothAnimationPacket::decode,
                 net.kazi.kazimod.network.MammothAnimationPacket::handle,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, net.kazi.kazimod.leopard.LeopardGrabPacket.class,
+                net.kazi.kazimod.leopard.LeopardGrabPacket::encode,
+                net.kazi.kazimod.leopard.LeopardGrabPacket::decode,
+                net.kazi.kazimod.leopard.LeopardGrabPacket::handle,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 

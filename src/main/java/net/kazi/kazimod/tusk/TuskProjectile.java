@@ -70,7 +70,7 @@ public final class TuskProjectile extends AbilityProjectileEntity {
     private void createHole(LivingEntity owner, BlockRayTraceResult hit) {
         List<TuskProjectile> active = holes(owner);
         for (int i = 0; i <= active.size() - 6; i++) active.get(i).remove();
-        TuskProjectile hole = new TuskProjectile(owner, TuskAbility.core(TuskAbility.Move.HOLE), HOLE, 12 + act());
+        TuskProjectile hole = new TuskProjectile(owner, TuskAbility.core(TuskAbility.Move.HOLE), HOLE, (12 + act()) * (kind() == NAIL ? .5F : 1));
         hole.entityData.set(TARGET, entityData.get(TARGET)); hole.entityData.set(FACE, hit.getDirection().get3DDataValue());
         Vector3d at = hit.getLocation().add(Vector3d.atLowerCornerOf(hit.getDirection().getNormal()).scale(.04));
         hole.setPos(at.x, at.y, at.z); level.addFreshEntity(hole);

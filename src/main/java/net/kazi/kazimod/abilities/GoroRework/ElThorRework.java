@@ -100,8 +100,12 @@ public class ElThorRework extends Ability {
         AbilityHelper.slowEntityFall(entity);
         if (!particleInterval.canTick()) return;
 
-        RayTraceResult mop = WyHelper.rayTraceBlocksAndEntities(entity, 256.0D, 0.4F);
-        aimVfx = net.kazi.kazimod.goro.GoroVfxEntity.refresh(aimVfx, entity, mop.getLocation(),
+        Vector3d target = getGroundAim(entity);
+        if (target == null) {
+            aimVfx = net.kazi.kazimod.goro.GoroVfxEntity.stop(aimVfx);
+            return;
+        }
+        aimVfx = net.kazi.kazimod.goro.GoroVfxEntity.refresh(aimVfx, entity, target,
                 net.kazi.kazimod.goro.GoroVfxEntity.AIM, 2 + 4 * chargeComponent.getChargePercentage(), false);
     }
 
@@ -109,14 +113,18 @@ public class ElThorRework extends Ability {
         if (entity.level.isClientSide) return;
         aimVfx = net.kazi.kazimod.goro.GoroVfxEntity.stop(aimVfx);
 
-        RayTraceResult mop = WyHelper.rayTraceBlocksAndEntities(entity);
+        animationComponent.stop(entity);
+        Vector3d mopPos = getGroundAim(entity);
+        if (mopPos == null) {
+            cooldownComponent.startCooldown(entity, 440.0F);
+            return;
+        }
         double time = chargeComponent.getChargePercentage();
         float multiplier = (float) (0.4D + time * 0.6D);
         if (((MorphInfo) ModMorphs.VOLT_AMARU.get()).isActive(entity)) {
             multiplier += 0.25F;
         }
 
-        Vector3d mopPos = mop.getLocation();
         BlockRayTraceResult hitResult = entity.level.clip(new RayTraceContext(
                 mopPos,
                 mopPos.add(0.0D, 128.0D, 0.0D),
@@ -145,8 +153,17 @@ public class ElThorRework extends Ability {
         entity.level.playSound(
                 null, new BlockPos(mopPos), ModSounds.EL_THOR_SFX.get(),
                 SoundCategory.PLAYERS, 20.0F, 1.0F);
-        animationComponent.stop(entity);
         cooldownComponent.startCooldown(entity, 440.0F);
+    }
+
+    @Nullable
+    private Vector3d getGroundAim(LivingEntity entity) {
+        Vector3d eye = entity.getEyePosition(1.0F);
+        BlockRayTraceResult hit = entity.level.clip(new RayTraceContext(
+                eye, eye.add(entity.getLookAngle().scale(256.0D)),
+                RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, entity));
+        if (hit.getType() != RayTraceResult.Type.BLOCK || hit.getDirection() != net.minecraft.util.Direction.UP) return null;
+        return hit.getLocation().add(0, 0.01D, 0);
     }
 
     private void setBoltProperties(

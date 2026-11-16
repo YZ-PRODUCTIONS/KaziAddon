@@ -17,7 +17,10 @@ import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.LightningEntity;
 
 /** The custom JAR's entity-data synchronization for laser classification and width. */
 @Mixin(value = LightningEntity.class, remap = false)
-public abstract class LaserBeamDataMixin extends AbilityProjectileEntity implements LaserBeamVisualData, net.kazi.kazimod.goro.GoroBoltVisuals {
+public abstract class LaserBeamDataMixin extends AbilityProjectileEntity implements LaserBeamVisualData, net.kazi.kazimod.goro.GoroBoltVisuals, net.kazi.kazimod.pika.PikaBeamVisuals {
+    @Unique private static final DataParameter<Integer> KAZI_PIKA_KIND =
+            EntityDataManager.defineId(LightningEntity.class, DataSerializers.INT);
+    @Override public int kazi$pikaKind() { return entityData.get(KAZI_PIKA_KIND); }
     @Unique private static final DataParameter<Integer> KAZI_GORO_KIND =
             EntityDataManager.defineId(LightningEntity.class, DataSerializers.INT);
     @Override public int kazi$goroKind() { return entityData.get(KAZI_GORO_KIND); }
@@ -39,6 +42,7 @@ public abstract class LaserBeamDataMixin extends AbilityProjectileEntity impleme
     @Override
     public void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(KAZI_PIKA_KIND, 0);
         this.entityData.define(KAZI_GORO_KIND, 0);
         this.entityData.define(KAZI_BEAM_DAMAGE, 0.0F);
         this.entityData.define(KAZI_IS_LASER, false);
@@ -52,6 +56,7 @@ public abstract class LaserBeamDataMixin extends AbilityProjectileEntity impleme
             return;
         }
         LightningEntity beam = (LightningEntity) (Object) this;
+        this.entityData.set(KAZI_PIKA_KIND, net.kazi.kazimod.pika.PikaVisuals.beamKind(beam));
         net.kazi.kazimod.goro.GoroVisuals.mark(beam);
         this.entityData.set(KAZI_BEAM_DAMAGE,
                 Float.isFinite(this.getDamage()) ? Math.max(0.0F, this.getDamage()) : 0.0F);

@@ -17,7 +17,32 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityUseResult;
 /** Per-player taming progress and death locks, shared by all six Kage summons. */
 public final class TenShadowsTaming {
     public static final int DEATH_COOLDOWN=24000;
+    public static final int MAX_SUMMONS=2;
     private static final String ROOT="kazimodTenShadows";
+
+    private static java.util.List<LivingEntity> activeSummons(LivingEntity owner){
+        java.util.List<LivingEntity> active=new java.util.ArrayList<>();
+        MahoragaEntity mahoraga=MahoragaFeatures.find(owner);
+        if(mahoraga!=null&&!mahoraga.isDismissing())active.add(mahoraga);
+        AgitoEntity agito=AgitoFeatures.find(owner);
+        if(agito!=null&&!agito.isDismissing())active.add(agito);
+        for(ShikigamiKind kind:ShikigamiKind.values()){
+            ShikigamiEntity beast=ShikigamiFeatures.find(owner,kind);
+            if(beast!=null&&!beast.dismissing())active.add(beast);
+        }
+        return active;
+    }
+    public static int activeCount(LivingEntity owner){return activeSummons(owner).size();}
+    public static void enforceLimit(LivingEntity owner){
+        java.util.List<LivingEntity> active=activeSummons(owner);
+        for(int i=MAX_SUMMONS;i<active.size();i++){
+            LivingEntity beast=active.get(i);
+            if(beast instanceof MahoragaEntity)((MahoragaEntity)beast).beginDismiss();
+            else if(beast instanceof AgitoEntity)((AgitoEntity)beast).beginDismiss();
+            else ((ShikigamiEntity)beast).beginDismiss();
+        }
+        if(active.size()>MAX_SUMMONS)tell(owner,"You can have only two Ten Shadows summoned at once. Extra shadows have been dismissed.");
+    }
 
     private static CompoundNBT state(LivingEntity owner,String id){
         CompoundNBT data=owner.getPersistentData(),all=data.getCompound(ROOT);
@@ -44,8 +69,9 @@ public final class TenShadowsTaming {
     }
     public static boolean canSummon(LivingEntity owner,String id){
         int left=remaining(owner,id);
-        if(left==0)return true;
-        tell(owner,"This shadow is recovering. Try again in "+((left+19)/20)+" seconds.");return false;
+        if(left>0){tell(owner,"This shadow is recovering. Try again in "+((left+19)/20)+" seconds.");return false;}
+        if(activeCount(owner)>=MAX_SUMMONS){tell(owner,"You can have only two Ten Shadows summoned at once. Dismiss one first.");return false;}
+        return true;
     }
     public static AbilityUseResult canUse(LivingEntity owner,String id,boolean active){
         if(owner.level.isClientSide){
@@ -59,6 +85,7 @@ public final class TenShadowsTaming {
         int left=remaining(owner,id);
         if(!active&&left>0)return AbilityUseResult.fail(new StringTextComponent("This shadow is recovering. Try again in "+((left+19)/20)+" seconds."));
         if(active&&!tamed(owner,id))return AbilityUseResult.fail(new StringTextComponent("Defeat this shadow to complete its taming ritual."));
+        if(!active&&activeCount(owner)>=MAX_SUMMONS)return AbilityUseResult.fail(new StringTextComponent("You can have only two Ten Shadows summoned at once. Dismiss one first."));
         return AbilityUseResult.success();
     }
     public static void prepare(LivingEntity entity){

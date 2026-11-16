@@ -30,6 +30,33 @@
 		#Range: 1 ~ 100000
 		range = 1000
 
+	#El Hermano world boss. One natural boss at a time, in the Overworld.
+	#The timer counts while survival/adventure players are in the Overworld; it pauses while a boss is alive.
+	[kazimod.elHermano]
+		#Range: 1 ~ 1440
+		minimumSpawnMinutes = 30
+		#Range: 1 ~ 1440
+		maximumSpawnMinutes = 60
+		naturalSpawning = true
+
+	#longbobthegod world boss. One natural boss at a time, independently of El Hermano.
+	#Counts while survival/adventure players are in the Overworld; pauses while the boss is alive.
+	[kazimod.longbobthegod]
+		#Range: 1 ~ 1440
+		minimumSpawnMinutes = 30
+		#Range: 1 ~ 1440
+		maximumSpawnMinutes = 60
+		naturalSpawning = true
+
+	#Jerome world boss. One natural Jerome at a time in the Overworld.
+	#Counts while survival/adventure players are present; pauses while Jerome is alive.
+	[kazimod.jerome]
+		#Range: 1 ~ 1440
+		minimumSpawnMinutes = 30
+		#Range: 1 ~ 1440
+		maximumSpawnMinutes = 60
+		naturalSpawning = true
+
 	#Awakening announcement settings.
 	[kazimod.awakeningMessages]
 		#Set to true to disable fruit-specific awakening messages.

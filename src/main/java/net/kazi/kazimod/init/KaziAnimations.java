@@ -15,6 +15,7 @@ import xyz.pixelatedw.mineminenomi.api.animations.Animation;
 import xyz.pixelatedw.mineminenomi.api.animations.AnimationId;
 
 public class KaziAnimations {
+    public static final AnimationId<net.kazi.kazimod.ope.WilleAnimation> WILLE_THRUST = register("wille_thrust");
 
     public static final AnimationId<SukunaDomainAnimation>  SUKUNA_DOMAIN   = register("sukuna_domain");
     public static final AnimationId<FugaSukunaAnimation>    FUGA_SUKUNA     = register("fuga_sukuna");
@@ -36,6 +37,7 @@ public class KaziAnimations {
     }
 
     public static void clientInit() {
+        AnimationId.register(new net.kazi.kazimod.ope.WilleAnimation(WILLE_THRUST));
         AnimationId.register(new SukunaDomainAnimation(SUKUNA_DOMAIN));
         AnimationId.register(new FugaSukunaAnimation(FUGA_SUKUNA));
         AnimationId.register(new LightningFuryAnimation(LIGHTNING_FURY));

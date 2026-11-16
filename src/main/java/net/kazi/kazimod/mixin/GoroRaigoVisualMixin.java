@@ -6,10 +6,13 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.pixelatedw.mineminenomi.entities.projectiles.goro.RaigoProjectile;
+import xyz.pixelatedw.mineminenomi.entities.projectiles.AbilityProjectileEntity;
+import xyz.pixelatedw.mineminenomi.entities.projectiles.IFlexibleSizeProjectile;
+import net.MrMagicalCart.cartaddon.entities.projectiles.goroextra.ReworkedRaigoProjectile;
 
-@Mixin(value=RaigoProjectile.class,remap=false)
+@Mixin(value={RaigoProjectile.class,ReworkedRaigoProjectile.class},remap=false)
 public abstract class GoroRaigoVisualMixin {
-    @Shadow private boolean dealtAOE;
+    @Shadow(remap=false) private boolean dealtAOE;
 
     @ModifyConstant(method="onTickEvent",constant=@Constant(intValue=25))
     private int kazi$noRaigoParticles(int count) { return 0; }
@@ -20,7 +23,7 @@ public abstract class GoroRaigoVisualMixin {
 
     @Inject(method="onBlockImpactEvent",at=@At("HEAD"))
     private void kazi$raigoImpact(BlockPos hit,CallbackInfo ci) {
-        RaigoProjectile ball=(RaigoProjectile)(Object)this;
-        if(!dealtAOE)GoroVfxEntity.spawn(ball.level,ball.position(),GoroVfxEntity.IMPACT,ball.getSize()*.85F,36);
+        AbilityProjectileEntity ball=(AbilityProjectileEntity)(Object)this;
+        if(!dealtAOE)GoroVfxEntity.spawn(ball.level,ball.position(),GoroVfxEntity.IMPACT,((IFlexibleSizeProjectile)ball).getSize()*.85F,36);
     }
 }

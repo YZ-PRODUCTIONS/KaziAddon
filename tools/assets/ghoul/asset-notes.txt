@@ -1,0 +1,13 @@
+Ghoul refinement assets
+
+The material atlas was generated with the built-in image generation tool, not the API/CLI fallback.
+Saved source: tools/assets/ghoul/material-atlas.png
+Final textures: src/main/resources/assets/kazimod/textures/entities/ghoul_{ukaku,koukaku,rinkaku,bikaku}.png
+Editable models: deliverables/ghoul/{ukaku,koukaku,rinkaku,bikaku}.bbmodel
+Generator: tools/refine_ghoul.cjs
+
+Generation prompt:
+Create a production game texture atlas, perfectly flat orthographic unlit texture, square image divided into four equal quadrants with NO gutters, NO labels, NO text, no objects, no perspective. This is for Minecraft-style low-poly organic kagune weapons inspired by Tokyo Ghoul. Hand-painted pixel-art surface detail at a moderate pixel resolution, visible clusters of square pixels, crisp deliberate shapes, not random noise and not photorealism. Each quadrant fills its entire area with a continuous material. Upper left: luminous crimson and magenta crystalline feather material, angular branching dark purple veins and narrow hot pink facets, rich red base. Upper right: dark wine-purple chitin armor with sweeping layered shell striations, restrained lilac beveled edge highlights and black-plum recesses, violet base. Lower left: deep crimson muscular tendril material with flowing lengthwise black-red fibers and occasional thin scarlet vascular threads, no blood or gore. Lower right: blue-teal dense organic tail skin, lengthwise indigo bands with cyan turquoise rim highlights and subtle scale marks. Materials should have broad readable value structure and refined painted detail, not dense speckles, no white shine spots. All four quadrants should be edge-to-edge usable UV texture swatches, not illustrated examples of weapons.
+
+Texture preparation: quadrant extraction, 64x64 filtered detail, brightness 1.18, nearest-neighbor upscale to 256x256.
+The model geometry and 17 ability icons are authored locally. The tentacles and tail use continuous mesh deformation at runtime; their Blockbench files contain editable resting geometry.

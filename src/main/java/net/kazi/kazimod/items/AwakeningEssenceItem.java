@@ -105,10 +105,14 @@ public class AwakeningEssenceItem extends Item {
         boolean isKame = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.KAME_KAME_NO_MI);
         boolean isKage = devilFruit != null && devilFruit.hasDevilFruit(xyz.pixelatedw.mineminenomi.init.ModAbilities.KAGE_KAGE_NO_MI);
         boolean isGuru = net.kazi.kazimod.tusk.TuskState.hasFruit(player);
+        boolean isPetal = net.kazi.kazimod.petal.PetalState.fruit(player);
+        boolean isSabi = net.kazi.kazimod.decay.DecayFeatures.fruit(player);
+        boolean isIshi = net.kazi.kazimod.alchemy.AlchemyFeatures.fruit(player);
+        boolean isLeopard = net.kazi.kazimod.leopard.LeopardFeatures.fruit(player);
         boolean tuskMasterySkip = isGuru && net.kazi.kazimod.tusk.TuskState.awakened(player);
 
         if (!isFruitless && !isKoku && !isKama && !isGomu && !isBomu && !isOpe && !isKyoka && !isNagi
-                && !isNetsu && !isKira && !isVampire && !isKame && !isKage && !isGuru) {
+                && !isNetsu && !isKira && !isVampire && !isKame && !isKage && !isGuru && !isPetal && !isSabi && !isIshi && !isLeopard) {
             player.sendMessage(new StringTextComponent(
                             "\u00a7cOnly a user eligible for awakening can use this item."),
                     player.getUUID());
@@ -121,7 +125,7 @@ public class AwakeningEssenceItem extends Item {
             return ActionResult.fail(stack);
         }
 
-        boolean bypassBossTrial = isNetsu || isKira || isVampire || isKame || isKage || isGuru;
+        boolean bypassBossTrial = isNetsu || isKira || isVampire || isKame || isKage || isGuru || isPetal || isSabi || isIshi || isLeopard;
 
         if (!bypassBossTrial && hasActiveTrial(serverWorld, player.getUUID())) {
             player.sendMessage(new StringTextComponent(
@@ -157,6 +161,30 @@ public class AwakeningEssenceItem extends Item {
             if (!player.isCreative()) {
                 player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
             }
+            return ActionResult.success(stack);
+        }
+
+        if (isLeopard) {
+            if (!net.kazi.kazimod.leopard.LeopardFeatures.awaken(player, stack)) return ActionResult.fail(stack);
+            if (!player.isCreative()) player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
+            return ActionResult.success(stack);
+        }
+
+        if (isPetal) {
+            if (!net.kazi.kazimod.petal.PetalFeatures.awaken(player, stack)) return ActionResult.fail(stack);
+            if (!player.isCreative()) player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
+            return ActionResult.success(stack);
+        }
+
+        if (isSabi) {
+            if (!net.kazi.kazimod.decay.DecayFeatures.awaken(player, stack)) return ActionResult.fail(stack);
+            if (!player.isCreative()) player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
+            return ActionResult.success(stack);
+        }
+
+        if (isIshi) {
+            if (!net.kazi.kazimod.alchemy.AlchemyFeatures.awaken(player, stack)) return ActionResult.fail(stack);
+            if (!player.isCreative()) player.getPersistentData().putLong(COOLDOWN_END_TAG, now + TRIAL_COOLDOWN_MS);
             return ActionResult.success(stack);
         }
 

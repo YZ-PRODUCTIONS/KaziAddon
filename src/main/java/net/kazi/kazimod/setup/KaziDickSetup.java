@@ -496,7 +496,6 @@ public class KaziDickSetup {
                 RadioKnifeAbility.INSTANCE
         );
         FruitAbilityInjector.addAbilities(ModAbilities.OPE_OPE_NO_MI,
-                KRoomAnesthesiaRework.INSTANCE,
                 TaktRework.INSTANCE,
                 ShockWilleRework.INSTANCE,
                 PunctureWilleRework.INSTANCE,

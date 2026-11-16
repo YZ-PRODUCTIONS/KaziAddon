@@ -456,6 +456,22 @@ public class KaziEntities {
                             .build("kazimod:item_kaiten"));
 
     // ── Yami Yami no Mi projectiles ──────────────────────────────────────
+    public static final RegistryObject<EntityType<net.kazi.kazimod.moku.MokuRenderAnchor>> MOKU_RENDER_ANCHOR =
+            ENTITY_TYPES.register("moku_render_anchor", () -> EntityType.Builder.<net.kazi.kazimod.moku.MokuRenderAnchor>of(
+                    net.kazi.kazimod.moku.MokuRenderAnchor::new, EntityClassification.MISC)
+                    .sized(.1F,.1F).noSave().noSummon().build("moku_render_anchor"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.pika.PikaRenderAnchor>> PIKA_RENDER_ANCHOR =
+            ENTITY_TYPES.register("pika_render_anchor", () -> EntityType.Builder.<net.kazi.kazimod.pika.PikaRenderAnchor>of(
+                    net.kazi.kazimod.pika.PikaRenderAnchor::new, EntityClassification.MISC)
+                    .sized(.1F,.1F).noSave().noSummon().build("pika_render_anchor"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.yami.YamiRenderAnchor>> YAMI_RENDER_ANCHOR =
+            ENTITY_TYPES.register("yami_render_anchor", () -> EntityType.Builder.<net.kazi.kazimod.yami.YamiRenderAnchor>of(
+                    net.kazi.kazimod.yami.YamiRenderAnchor::new, EntityClassification.MISC)
+                    .sized(.1F,.1F).noSave().noSummon().build("yami_render_anchor"));
+    public static final RegistryObject<EntityType<net.kazi.kazimod.yami.LiberationBlockProjectile>> LIBERATION_BLOCK =
+            ENTITY_TYPES.register("liberation_block", () -> EntityType.Builder.<net.kazi.kazimod.yami.LiberationBlockProjectile>of(
+                    net.kazi.kazimod.yami.LiberationBlockProjectile::new, EntityClassification.MISC)
+                    .sized(.9F,.9F).clientTrackingRange(8).setUpdateInterval(2).noSave().noSummon().build("liberation_block"));
     public static final RegistryObject<EntityType<DarkMatterReworkProjectile>> DARK_MATTER_PROJECTILE =
             ENTITY_TYPES.register("dark_matter_projectile", () ->
                     EntityType.Builder.<DarkMatterReworkProjectile>of(DarkMatterReworkProjectile::new, EntityClassification.MISC)

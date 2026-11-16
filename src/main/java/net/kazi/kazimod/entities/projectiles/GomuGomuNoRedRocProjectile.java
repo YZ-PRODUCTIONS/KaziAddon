@@ -16,12 +16,6 @@ import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
 
 public class GomuGomuNoRedRocProjectile extends AbilityProjectileEntity {
 
-    // Must match BASE_FORWARD_OFFSET and STRETCH_OFFSET_MULTIPLIER in RedRocProjectileRenderer,
-    // and stretchScaleZ set in GomuReworkProjectiles (3.1F).
-    // Tweak these alongside the renderer constants to keep hitbox and visual in sync.
-    private static final float HITBOX_BASE_OFFSET = 1.5F;
-    private static final float HITBOX_STRETCH_MULTIPLIER = 0.35F;
-    private static final float STRETCH_SCALE_Z = 3.1F;
 
     public GomuGomuNoRedRocProjectile(EntityType type, World world) {
         super(type, world);
@@ -61,21 +55,6 @@ public class GomuGomuNoRedRocProjectile extends AbilityProjectileEntity {
 
     @Override
     public void tick() {
-        // Push the hitbox forward to match the visual fist position before collision checks run.
-        // The offset formula mirrors RedRocProjectileRenderer so both stay in sync.
-        if (!this.level.isClientSide) {
-            Vector3d motion = this.getDeltaMovement();
-            double speed = motion.length();
-            if (speed > 0.001) {
-                Vector3d dir = motion.normalize();
-                float hitboxOffset = HITBOX_BASE_OFFSET + (STRETCH_SCALE_Z * (float) speed * HITBOX_STRETCH_MULTIPLIER);
-                this.setPos(
-                        this.getX() + dir.x * hitboxOffset,
-                        this.getY() + dir.y * hitboxOffset,
-                        this.getZ() + dir.z * hitboxOffset
-                );
-            }
-        }
 
         super.tick();
 

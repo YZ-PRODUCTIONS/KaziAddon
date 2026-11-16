@@ -268,6 +268,7 @@ public class AwakeningAbilityLoginFix {
     }
 
     public static void syncPlayerAwakeningReplacements(PlayerEntity player) {
+        net.kazi.kazimod.alchemy.AlchemyFeatures.reconcile(player);
         syncGoruKaziAbilities(player);
         syncAwakenedSupaAbilities(player);
         syncGoroKaziAbilities(player);
@@ -281,6 +282,7 @@ public class AwakeningAbilityLoginFix {
 
     private static void restoreAwakenedFruitAbilities(PlayerEntity player) {
         if (player == null || player.level.isClientSide) return;
+        net.kazi.kazimod.alchemy.AlchemyFeatures.reconcile(player);
         syncGoruKaziAbilities(player);
 
         IDevilFruit devilFruit = DevilFruitCapability.get(player);
@@ -502,6 +504,12 @@ public class AwakeningAbilityLoginFix {
         LivingEntity entity = event.getEntityLiving();
         AbilityCore<?> core = event.getAbilityCore();
         if (entity == null || core == null) return;
+
+        // Check Ishi replacements before the fruit cache can allow the retired originals.
+        if (net.kazi.kazimod.alchemy.AlchemyFeatures.blocked(entity, core)) {
+            event.setResult(Event.Result.DENY);
+            return;
+        }
 
         IDevilFruit devilFruit = DevilFruitCapability.get(entity);
         if (devilFruit == null || !devilFruit.hasAwakenedFruit()) return;
