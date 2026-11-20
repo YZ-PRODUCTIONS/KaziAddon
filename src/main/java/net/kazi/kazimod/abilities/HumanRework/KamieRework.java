@@ -112,7 +112,8 @@ public class KamieRework extends Ability {
     }
 
     public float onDamageTakenEvent(LivingEntity entity, IAbility ability, DamageSource damageSource, float damage) {
-        if (net.kazi.kazimod.decay.DecayAbility.bypassesDodge(damageSource)) return damage;
+        if (net.kazi.kazimod.decay.DecayAbility.bypassesDodge(damageSource)
+                || net.kazi.kazimod.petal.PetalAbility.bypassesDodge(damageSource)) return damage;
         if (super.isContinuous() && AbilityHelper.canUseMomentumAbilities(entity) && !AbilityHelper.isGrabbing(entity)) {
             boolean isDamageTaken = true;
             boolean isUnavoidable = damageSource instanceof ModDamageSource && ((ModDamageSource)damageSource).isUnavoidable();

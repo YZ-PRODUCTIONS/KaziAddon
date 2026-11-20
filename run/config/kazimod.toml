@@ -30,31 +30,16 @@
 		#Range: 1 ~ 100000
 		range = 1000
 
-	#El Hermano world boss. One natural boss at a time, in the Overworld.
-	#The timer counts while survival/adventure players are in the Overworld; it pauses while a boss is alive.
+	#Include El Hermano in the shared world boss rotation.
 	[kazimod.elHermano]
-		#Range: 1 ~ 1440
-		minimumSpawnMinutes = 30
-		#Range: 1 ~ 1440
-		maximumSpawnMinutes = 60
 		naturalSpawning = true
 
-	#longbobthegod world boss. One natural boss at a time, independently of El Hermano.
-	#Counts while survival/adventure players are in the Overworld; pauses while the boss is alive.
+	#Include longbobthegod in the shared world boss rotation.
 	[kazimod.longbobthegod]
-		#Range: 1 ~ 1440
-		minimumSpawnMinutes = 30
-		#Range: 1 ~ 1440
-		maximumSpawnMinutes = 60
 		naturalSpawning = true
 
-	#Jerome world boss. One natural Jerome at a time in the Overworld.
-	#Counts while survival/adventure players are present; pauses while Jerome is alive.
+	#Include Jerome in the shared world boss rotation.
 	[kazimod.jerome]
-		#Range: 1 ~ 1440
-		minimumSpawnMinutes = 30
-		#Range: 1 ~ 1440
-		maximumSpawnMinutes = 60
 		naturalSpawning = true
 
 	#Awakening announcement settings.
@@ -63,4 +48,12 @@
 		#When disabled, every awakening uses: (PlayerName) Has awakened their devil fruit!
 		#Default: false.
 		disableCustomMessages = false
+
+	#Shared spawn interval for El Hermano, longbobthegod, and Jerome.
+	#Only one natural world boss can be active. Spawns wait for an Overworld player at the Doriki cap.
+	[kazimod.worldBosses]
+		#Range: 1 ~ 1440
+		minimumSpawnMinutes = 30
+		#Range: 1 ~ 1440
+		maximumSpawnMinutes = 60
 

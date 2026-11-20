@@ -17,7 +17,7 @@ import java.util.Optional;
 public class KaziPacketHandler {
 
     // Combined restored and current packets require matching clients and servers.
-    private static final String PROTOCOL_VERSION = "32";
+    private static final String PROTOCOL_VERSION = "37";
     private static int id = 0;
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(

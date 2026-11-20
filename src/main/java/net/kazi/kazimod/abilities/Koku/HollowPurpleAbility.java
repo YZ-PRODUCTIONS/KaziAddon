@@ -2,7 +2,7 @@ package net.kazi.kazimod.abilities.Koku;
 
 import net.kazi.kazimod.abilities.GomuRework.GearFifthRework;
 import net.kazi.kazimod.entities.projectiles.HollowPurpleProjectile;
-import net.kazi.kazimod.init.KaziAnimations;
+import net.kazi.kazimod.jjk.JjkGesture;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.kazi.kazimod.init.KaziSounds;
 import net.minecraft.entity.LivingEntity;
@@ -91,6 +91,7 @@ public class HollowPurpleAbility extends Ability {
             HollowPurpleProjectile proj =
                     HollowPurpleProjectile.ACTIVE_PROJECTILES.get(entity.getUUID());
             if (proj != null && proj.isAlive()) {
+                JjkGesture.PURPLE_FLICK.play(animationComponent, entity, 15);
                 proj.detonate();
                 return;
             }
@@ -102,7 +103,7 @@ public class HollowPurpleAbility extends Ability {
 
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         // No launch — just start the animation and reset flags
-        this.animationComponent.start(entity, KaziAnimations.GOJO_HOLLOW_PURPLE);
+        JjkGesture.PURPLE.play(animationComponent, entity, (int) CHARGE_TIME);
         this.chargeVisual.start(entity, ability, net.kazi.kazimod.entities.KokuVfxEntity.PURPLE_CHARGE, (int) CHARGE_TIME);
         fireAnimTriggered = false;
         chantTriggered    = false;
@@ -142,7 +143,7 @@ public class HollowPurpleAbility extends Ability {
         entity.level.addFreshEntity(projectile);
         projectile.shootFromRotation(entity, entity.xRot, entity.yRot, 0.0F, 4.5F, 0.0F);
         // Cooldown starts when the projectile detonates, not when fired
-        this.animationComponent.stop(entity);
+        JjkGesture.PURPLE_FLICK.play(animationComponent, entity, 15);
         fireAnimTriggered = false;
         chantTriggered    = false;
     }

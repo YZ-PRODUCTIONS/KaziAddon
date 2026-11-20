@@ -43,6 +43,7 @@ public class KaziAnimations {
     }
 
     public static void clientInit() {
+        net.kazi.kazimod.jjk.JjkCastAnimation.register();
         AnimationId.register(new net.kazi.kazimod.ope.WilleAnimation(WILLE_THRUST));
         AnimationId.register(new SukunaDomainAnimation(SUKUNA_DOMAIN));
         AnimationId.register(new FugaSukunaAnimation(FUGA_SUKUNA));

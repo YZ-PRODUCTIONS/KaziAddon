@@ -38,20 +38,22 @@ public final class BossLootHandler {
             Item item = drop.getItem().getItem();
             return item == essence || item == gold || item == iron || item == wood;
         });
-        addDrop(drops, boss, essence, 1);
-        addDrop(drops, boss, gold, goldCount);
-        addDrop(drops, boss, iron, ironCount);
-        addDrop(drops, boss, wood, woodCount);
+        addSingleDrops(drops, boss, essence, 1);
+        addSingleDrops(drops, boss, gold, goldCount);
+        addSingleDrops(drops, boss, iron, ironCount);
+        addSingleDrops(drops, boss, wood, woodCount);
     }
 
     private static boolean isWorldBoss(LivingEntity entity) {
         return entity instanceof HermanoEntity || entity instanceof LongbobEntity || entity instanceof JeromeEntity;
     }
 
-    private static void addDrop(Collection<ItemEntity> drops, LivingEntity boss, Item item, int count) {
-        ItemEntity drop = new ItemEntity(boss.level, boss.getX(), boss.getY() + .5, boss.getZ(), new ItemStack(item, count));
-        drop.setDefaultPickUpDelay();
-        drops.add(drop);
+    private static void addSingleDrops(Collection<ItemEntity> drops, LivingEntity boss, Item item, int count) {
+        for (int i = 0; i < count; i++) {
+            ItemEntity drop = new ItemEntity(boss.level, boss.getX(), boss.getY() + .5, boss.getZ(), new ItemStack(item));
+            drop.setDefaultPickUpDelay();
+            drops.add(drop);
+        }
     }
 
     private BossLootHandler() {}

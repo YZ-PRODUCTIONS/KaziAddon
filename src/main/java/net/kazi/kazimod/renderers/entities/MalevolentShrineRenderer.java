@@ -37,7 +37,8 @@ extends MobRenderer<MalevolentShrineEntity, MalevolentShrineModel> {
         matrixStack.scale(5.0f, 5.0f, 5.0f);
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
         matrixStack.popPose();
-        if (entity.getDomainRadius() > 0.0f) {
+        float radius = entity.getSlashRadius();
+        if (radius > 0.0f) {
             Vector3d origin = entity.getDomainOrigin();
             matrixStack.pushPose();
             matrixStack.translate(origin.x - MathHelper.lerp((double)partialTicks, (double)entity.xOld, (double)entity.getX()), origin.y - MathHelper.lerp((double)partialTicks, (double)entity.yOld, (double)entity.getY()), origin.z - MathHelper.lerp((double)partialTicks, (double)entity.zOld, (double)entity.getZ()));
@@ -45,7 +46,9 @@ extends MobRenderer<MalevolentShrineEntity, MalevolentShrineModel> {
             Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
             right.transform(this.entityRenderDispatcher.cameraOrientation());
             up.transform(this.entityRenderDispatcher.cameraOrientation());
-            KamaVfxMesh.domain(KamaVfxRenderer.slashSink(matrixStack, buffer), entity.getVfxAge(partialTicks), entity.getDomainRadius(), right.x(), right.y(), right.z(), up.x(), up.y(), up.z());
+            int count = entity.isClashProjection() ? KamaVfxMesh.CLASH_SLASH_COUNT : KamaVfxMesh.DOMAIN_SLASH_COUNT;
+            KamaVfxMesh.domain(KamaVfxRenderer.slashSink(matrixStack, buffer), entity.getVfxAge(partialTicks), radius,
+                    right.x(), right.y(), right.z(), up.x(), up.y(), up.z(), count);
             matrixStack.popPose();
         }
     }

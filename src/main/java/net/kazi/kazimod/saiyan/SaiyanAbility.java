@@ -1,5 +1,8 @@
 package net.kazi.kazimod.saiyan;
 
+import net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsCutscenes;
+import net.kazi.kazimod.abilities.cinematics.AwakeningCutsceneType;
+
 import java.awt.Color;
 import java.util.*;
 import net.minecraft.entity.*;
@@ -23,13 +26,13 @@ import xyz.pixelatedw.mineminenomi.init.ModEffects;
 
 public final class SaiyanAbility extends Ability {
     public enum Move {
-        CHARGE("Ki Charge","ki_charge",0,0,20,"Gather ki in a rising aura while stunned and unable to use other abilities. Base form only; finish other active abilities first. Taking a hit interrupts charging and triggers a 30-second cooldown. Use again to stop. Restores 12% of maximum ki per second."),
+        CHARGE("Ki Charge","ki_charge",0,0,20,"Restore 12% of maximum ki per second in base form. Charging locks ground movement and other abilities, but can continue during Ki Flight. Taking a hit interrupts charging and triggers a 30-second cooldown. Use again to stop."),
         // Keep the old core registered so existing player saves can be migrated.
         BLAST("Ki Blast","ki_blast",0,8,12,"Fire a fast golden ki blast. Alternate mode charges a larger blast for 15 ki."),
         METEOR("Meteor Combination","meteor_combination",0,20,160,"Lunge forward, grab the enemy, and slam them into the ground. While Ultra Instinct is active, this automatically becomes Celestial Meteor: carry them into space, pause above Earth for one second, then dive back down. Use again to release early."),
         KAMEHAMEHA("Kamehameha","kamehameha",0,18,240,"Cup a blue ki sphere, then unleash a steerable continuous beam that hits once per second. Charges for 2 seconds; drains 6 ki per second while firing. Use again to cancel."),
         TRANSMISSION("Instant Transmission","instant_transmission",0,18,160,"Blink behind the target in your sights, or to a safe point along your aim. Range increases with your active form: 24 / 32 / 40 / 48 / 64 / 80 / 96 blocks in Base / SS1 / SS2 / SS3 / God / Blue / Ultra Instinct."),
-        TRANSFORM("Saiyan Transformation","super_saiyan",1,30,40,"Transform into your selected awakening. Alternate mode cycles unlocked forms. Use again to return to base; stronger forms drain ki faster. Ultra Instinct has a six-second entrance that stuns you and prevents all incoming damage. Once transformed, it automatically dodges avoidable attacks below 30 damage and teleports behind the attacker when space allows."),
+        TRANSFORM("Saiyan Transformation","super_saiyan",1,30,40,"Transform into your selected awakening. Alternate mode cycles unlocked forms. Use again to return to base; stronger forms drain ki faster. Ultra Instinct has a six-second entrance that stuns you and prevents all incoming damage; its cutscene can replay once every 20 minutes. Once transformed, it automatically dodges avoidable attacks below 30 damage and teleports behind the attacker when space allows."),
         DRAGON("Dragon Fist","dragon_fist",3,65,500,"Rush forward behind a translucent energy dragon. While Ultra Instinct is active, this automatically becomes Dragon Ascension: a five-times-larger dragon bites an enemy, carries them 200 blocks upward, and slams them back down. Requires Super Saiyan 3 awakening."),
         SPIRIT("Spirit Bomb","spirit_bomb",4,160,SaiyanBalance.SPIRIT_COOLDOWN,"Raise both hands to gather a giant blue-white sphere for 8 seconds, then throw it toward your aim. Requires Super Saiyan God awakening. Use again to cancel before release.");
         final String title,icon,description;final int tier,cost,cooldown;
@@ -159,6 +162,8 @@ public final class SaiyanAbility extends Ability {
             if(selected==SaiyanBalance.ULTRA_INSTINCT)SaiyanFeatures.updateTransformationLock(user);
             if(SaiyanState.form(user)!=SaiyanBalance.ULTRA_INSTINCT)SaiyanFeatures.play(user,SaiyanFeatures.TRANSFORM.get(),.7F,1);
             SaiyanFeatures.sync(player);
+            if(SaiyanFeatures.isInstinctTransforming(user))
+                InnerDragonsCutscenes.start(user,SaiyanState.get(user).getLong("ActionStart"),AwakeningCutsceneType.ULTRA_INSTINCT);
             return;
         }
         if(move==Move.TRANSMISSION){teleport(player);return;}
@@ -174,8 +179,6 @@ public final class SaiyanAbility extends Ability {
         }
         if(move==Move.METEOR)meteor=new SaiyanMeteor(user,grab,damage);
         if(move==Move.CHARGE){
-            SaiyanFlightAbility.stopFlight(player);
-            if(player.abilities.flying){player.abilities.flying=false;player.onUpdateAbilities();}
             player.stopUsingItem();SaiyanState.get(user).putBoolean("Charging",true);
             stunWhileCharging(user);SaiyanState.pose(user,1,40);
         }
@@ -253,6 +256,7 @@ public final class SaiyanAbility extends Ability {
         if(user instanceof PlayerEntity)SaiyanFeatures.sync((PlayerEntity)user);
     }
     private static void stunWhileCharging(LivingEntity user){
+        if(SaiyanFlightAbility.isAirborneFlight(user))return;
         user.addEffect(new EffectInstance(ModEffects.MOVEMENT_BLOCKED.get(),3,0,false,false,false));
         user.setDeltaMovement(Vector3d.ZERO);user.setSprinting(false);user.fallDistance=0;
     }

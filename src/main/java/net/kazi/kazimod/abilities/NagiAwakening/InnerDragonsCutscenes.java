@@ -13,8 +13,15 @@ import net.kazi.kazimod.abilities.YagiAwakening.ChaosBeamRecoil;
 import net.kazi.kazimod.abilities.YagiAwakening.ChaosBeamHealing;
 import net.kazi.kazimod.init.KaziPacketHandler;
 import net.kazi.kazimod.network.InnerDragonsCutscenePacket;
+import net.kazi.kazimod.petal.PetalField;
+import net.kazi.kazimod.saiyan.SaiyanFeatures;
+import net.kazi.kazimod.saiyan.SaiyanState;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -34,6 +41,8 @@ import xyz.pixelatedw.mineminenomi.api.events.WyLivingHurtEvent;
 @Mod.EventBusSubscriber(modid = "kazimod")
 public final class InnerDragonsCutscenes {
     public static final double VIEW_RADIUS = 100;
+    private static final long INSTINCT_REPLAY_TICKS = 20 * 60 * 20;
+    private static final String NEXT_INSTINCT_CUTSCENE = "KaziNextInstinctCutscene";
     private static final Map<UUID, Scene> SCENES = new HashMap<>();
     private static final Map<LivingEntity, ReturnProtection> RETURN_PROTECTION = new IdentityHashMap<>();
     private static final List<FinaleEffects> PENDING_EFFECTS = new ArrayList<>();
@@ -49,21 +58,66 @@ public final class InnerDragonsCutscenes {
     }
 
     public static void start(LivingEntity user, long startTick, AwakeningCutsceneType type) {
+        start(user, startTick, type, null, null);
+    }
+
+    public static void startDomainClash(LivingEntity gojo, LivingEntity sukuna) {
+        start(gojo, gojo.level.getGameTime(), AwakeningCutsceneType.DOMAIN_CLASH, sukuna, null);
+    }
+
+    public static void startKageyoshi(LivingEntity user, PetalField release) {
+        if (!(user instanceof ServerPlayerEntity) || release == null || release.removed
+                || release.level != user.level || release.kind() != 6) return;
+        start(user, user.level.getGameTime(), AwakeningCutsceneType.SENBONZAKURA_KAGEYOSHI, null, release);
+    }
+
+    private static void start(LivingEntity user, long startTick, AwakeningCutsceneType type, LivingEntity opponent, PetalField release) {
         if (!(user.level instanceof ServerWorld)) return;
+        ServerWorld world = (ServerWorld) user.level;
+        if ((type == AwakeningCutsceneType.DOMAIN_CLASH) != (opponent != null)) return;
+        if ((type == AwakeningCutsceneType.SENBONZAKURA_KAGEYOSHI) != (release != null)) return;
+        Scene previous = SCENES.get(user.getUUID());
+        if (type.cameraOnly() && previous != null && previous.isActive()) return;
+        if (type != AwakeningCutsceneType.DOMAIN_CLASH && isClashLocked(user)) return;
+        long replayClock = 0;
+        CompoundNBT instinctHistory = null;
+        if (type == AwakeningCutsceneType.ULTRA_INSTINCT) {
+            if (!(user instanceof ServerPlayerEntity)) return;
+            replayClock = world.getServer().overworld().getGameTime();
+            // Forge copies this tag on respawn. Keep it separate from the fruit's runtime state.
+            instinctHistory = user.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+            if (replayClock < instinctHistory.getLong(NEXT_INSTINCT_CUTSCENE)) return;
+        }
         cancel(user);
-        Scene scene = new Scene(user, (ServerWorld) user.level, startTick, type);
+        Scene scene = new Scene(user, world, startTick, type, release);
+        if (instinctHistory != null && !scene.isActive()) return;
+        scene.opponent = opponent;
         SCENES.put(user.getUUID(), scene);
         if (type == AwakeningCutsceneType.EA_DRAW)
             net.kazi.kazimod.abilities.GoruRework.GoruCutsceneMusic.start(user);
         InnerDragonsCutscenePacket packet = scene.packet(false);
         for (ServerPlayerEntity viewer : scene.world.players()) {
-            if (viewer.isAlive() && !viewer.removed && viewer.distanceToSqr(user) <= VIEW_RADIUS * VIEW_RADIUS
-                    && !isWatching(viewer)) {
+            if (viewer.isAlive() && !viewer.removed && (viewer.distanceToSqr(user) <= VIEW_RADIUS * VIEW_RADIUS
+                    || opponent != null && viewer.distanceToSqr(opponent) <= VIEW_RADIUS * VIEW_RADIUS)
+                    && available(viewer, type)) {
                 // The client keeps its first scene. Do not grant an extra protection window
                 // for a second scene whose start packet it would ignore.
                 scene.viewers.put(viewer.getUUID(), viewer);
                 send(viewer, packet);
             }
+        }
+        if (instinctHistory != null) {
+            if (scene.viewers.isEmpty()) {
+                SCENES.remove(user.getUUID());
+                return;
+            }
+            instinctHistory.putLong(NEXT_INSTINCT_CUTSCENE, replayClock + INSTINCT_REPLAY_TICKS);
+            user.getPersistentData().put(PlayerEntity.PERSISTED_NBT_TAG, instinctHistory);
+        }
+        if (opponent != null) {
+            scene.pin(user);
+            scene.pin(opponent);
+            for (LivingEntity viewer : scene.viewers.values()) scene.pin(viewer);
         }
     }
 
@@ -84,23 +138,50 @@ public final class InnerDragonsCutscenes {
         if (returning != null && returning.active(entity)) return true;
         for (Scene scene : SCENES.values()) {
             if (scene.protectsDamage() && entity.level == scene.world
-                    && (entity == scene.user || scene.viewers.get(entity.getUUID()) == entity)) return true;
+                    && (entity == scene.user || entity == scene.opponent || scene.viewers.get(entity.getUUID()) == entity)) return true;
         }
         return false;
     }
 
-    private static boolean isWatching(ServerPlayerEntity viewer) {
+    private static boolean available(ServerPlayerEntity viewer, AwakeningCutsceneType next) {
         for (Scene scene : SCENES.values()) {
-            if (scene.isActive() && viewer.level == scene.world
-                    && scene.viewers.get(viewer.getUUID()) == viewer) return true;
+            if (!scene.isActive() || viewer.level != scene.world || scene.viewers.get(viewer.getUUID()) != viewer) continue;
+            // Cosmetic cameras yield to clashes and protected awakenings, but not to one another.
+            if (!scene.type.cameraOnly() || next.cameraOnly()) return false;
+            scene.viewers.remove(viewer.getUUID());
+            send(viewer, scene.packet(true));
+        }
+        return true;
+    }
+
+    public static boolean isClashLocked(Entity entity) {
+        if (entity == null || entity.level.isClientSide || SCENES.isEmpty()) return false;
+        for (Scene scene : SCENES.values()) {
+            if (scene.opponent != null && scene.pins.containsKey(entity)
+                    && entity.level == scene.world && scene.isActive()) return true;
         }
         return false;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void ability(xyz.pixelatedw.mineminenomi.api.events.ability.AbilityUseEvent.Pre event) {
+        if (isClashLocked(event.getEntityLiving())) event.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void interact(net.minecraftforge.event.entity.player.PlayerInteractEvent event) {
+        if (event.isCancelable() && isClashLocked(event.getPlayer())) event.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void breakBlock(net.minecraftforge.event.world.BlockEvent.BreakEvent event) {
+        if (isClashLocked(event.getPlayer())) event.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void nativeAttack(WyLivingAttackEvent event) {
         // MMNM can apply damage-triggered effects before entering vanilla's damage path.
-        if (isProtected(event.getEntityLiving())) event.setCanceled(true);
+        if (isProtected(event.getEntityLiving()) || isClashLocked(event.getSource().getEntity())) event.setCanceled(true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -115,7 +196,7 @@ public final class InnerDragonsCutscenes {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void attack(LivingAttackEvent event) {
-        if (isProtected(event.getEntityLiving())) event.setCanceled(true);
+        if (isProtected(event.getEntityLiving()) || isClashLocked(event.getSource().getEntity())) event.setCanceled(true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -151,6 +232,7 @@ public final class InnerDragonsCutscenes {
                 scene.viewers.values().removeIf(viewer -> viewer.removed || !viewer.isAlive()
                         || viewer.level != scene.world
                         || scene.world.getServer().getPlayerList().getPlayer(viewer.getUUID()) != viewer);
+                if (scene.opponent != null) scene.holdPositions();
             }
         }
         applyFinishedEffects();
@@ -200,6 +282,7 @@ public final class InnerDragonsCutscenes {
         PENDING_EFFECTS.removeIf(effects -> effects.caster == entity);
         for (Scene scene : SCENES.values()) {
             if (scene.viewers.get(entity.getUUID()) == entity) scene.viewers.remove(entity.getUUID());
+            scene.pins.remove(entity);
         }
     }
 
@@ -246,12 +329,16 @@ public final class InnerDragonsCutscenes {
         final ServerWorld world;
         final long start;
         final AwakeningCutsceneType type;
+        final PetalField release;
         final ChaosBeamFinaleLift lift;
         final Map<UUID, ServerPlayerEntity> viewers = new HashMap<>();
+        final Map<LivingEntity, Vector3d> pins = new IdentityHashMap<>();
+        LivingEntity opponent;
         boolean completed;
 
-        Scene(LivingEntity user, ServerWorld world, long start, AwakeningCutsceneType type) {
+        Scene(LivingEntity user, ServerWorld world, long start, AwakeningCutsceneType type, PetalField release) {
             this.type = type;
+            this.release = release;
             this.user = user;
             this.world = world;
             this.start = start;
@@ -259,8 +346,24 @@ public final class InnerDragonsCutscenes {
         }
 
         InnerDragonsCutscenePacket packet(boolean cancel) {
+            if (release != null) return new InnerDragonsCutscenePacket(user.getId(), user.getUUID(), start,
+                    release.position(), release.yaw(), cancel, type, null,
+                    new InnerDragonsCutscenePacket.BankaiRelease(release.getId(), profileName(user, "Bankai"), visibleParts(user)));
+            InnerDragonsCutscenePacket.ClashPartner clash = opponent == null ? null :
+                    new InnerDragonsCutscenePacket.ClashPartner(opponent.getId(), opponent.getUUID(),
+                            opponent.position(), profileName(user, "Koku"), profileName(opponent, "Kama"),
+                            visibleParts(user), visibleParts(opponent));
             return new InnerDragonsCutscenePacket(user.getId(), user.getUUID(), start,
-                    user.position(), user.yBodyRot, cancel, type);
+                    user.position(), clash == null ? user.yBodyRot : user.yRot, cancel, type, clash);
+        }
+
+        private static String profileName(LivingEntity actor, String fallback) {
+            return actor instanceof ServerPlayerEntity ? ((ServerPlayerEntity)actor).getGameProfile().getName() : fallback;
+        }
+
+        private static int visibleParts(LivingEntity actor) {
+            if (!(actor instanceof ServerPlayerEntity)) return 127;
+            return actor.getEntityData().get(net.kazi.kazimod.mixin.ClashSkinPartsAccessor.kazi$skinParts()) & 127;
         }
 
         boolean isActive() {
@@ -271,6 +374,7 @@ public final class InnerDragonsCutscenes {
         }
 
         boolean protectsDamage() {
+            if (type.cameraOnly()) return false;
             long age = world.getGameTime() - start;
             // Cover the boundary before END-tick cleanup transfers the audience to RETURN_PROTECTION.
             return isActive() || age >= type.durationTicks && age < type.protectionTicks;
@@ -296,12 +400,34 @@ public final class InnerDragonsCutscenes {
         }
 
         boolean eligible() {
+            if (release != null) return !release.removed;
+            if (type == AwakeningCutsceneType.ULTRA_INSTINCT)
+                return SaiyanFeatures.isInstinctTransforming(user) && SaiyanState.get(user).getLong("ActionStart") == start;
+            if (type == AwakeningCutsceneType.DOMAIN_CLASH)
+                return opponent != null && !opponent.removed && opponent.isAlive() && opponent.level == world;
             if (type == AwakeningCutsceneType.CHAOS_BEAM_FINALE)
                 return net.kazi.kazimod.abilities.YagiAwakening.YagiAwakeningSupport.canUnlock(user);
             if (type == AwakeningCutsceneType.HYPER_GONER)
                 return net.kazi.kazimod.abilities.YagiAwakening.HyperGonerCutscene.canContinue(user);
             return type == AwakeningCutsceneType.EA_DRAW ? net.kazi.kazimod.abilities.GoruRework.SeriousnessAbility.canContinueDraw(user)
                     : user.isAlive();
+        }
+
+        void pin(LivingEntity actor) {
+            pins.put(actor, actor.position());
+            actor.setDeltaMovement(Vector3d.ZERO);
+            actor.fallDistance = 0;
+        }
+
+        void holdPositions() {
+            pins.forEach((actor, anchor) -> {
+                if (actor.level != world || actor.removed || !actor.isAlive()
+                        || actor != user && actor != opponent && !viewers.containsKey(actor.getUUID())) return;
+                actor.setDeltaMovement(Vector3d.ZERO);
+                actor.fallDistance = 0;
+                if (actor.position().distanceToSqr(anchor) > .0004)
+                    actor.teleportTo(anchor.x, anchor.y, anchor.z);
+            });
         }
 
         void close() {

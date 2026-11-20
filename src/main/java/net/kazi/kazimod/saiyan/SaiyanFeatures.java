@@ -1,5 +1,8 @@
 package net.kazi.kazimod.saiyan;
 
+import net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsCutscenes;
+import net.kazi.kazimod.abilities.cinematics.AwakeningCutsceneType;
+
 import java.util.*;
 import net.MrMagicalCart.cartaddon.abilities.generic.CheappoAbility;
 import net.kazi.kazimod.api.KaziRegistry;
@@ -170,7 +173,7 @@ public final class SaiyanFeatures {
             state.putBoolean("Flight",false);sync(p);
         }
         updateTransformationLock(p);
-        if(form==0 && !state.getBoolean("Flight") && !state.getBoolean("Charging") && SaiyanState.action(p)==0)
+        if(form==0 && !state.getBoolean("Charging") && SaiyanState.action(p)==0)
             SaiyanState.addKi(p,.04F);
         if(p.tickCount%5==0)sync(p);
     }
@@ -196,6 +199,10 @@ public final class SaiyanFeatures {
                 &&n.getInt("FinisherCaptor")==target.getId();
     }
     public static boolean isActionLocked(LivingEntity user){return isKiCharging(user)||isInstinctTransforming(user)||isFinisherActive(user);}
+    public static boolean isMovementLocked(LivingEntity user){
+        return isInstinctTransforming(user)||isFinisherActive(user)
+                ||isKiCharging(user)&&!SaiyanFlightAbility.isAirborneFlight(user);
+    }
     public static void markSpiritBombTarget(LivingEntity target){
         target.getPersistentData().putLong(SPIRIT_BOOST_UNTIL,target.level.getGameTime()+21);
     }
@@ -309,6 +316,8 @@ public final class SaiyanFeatures {
         form=Math.min(SaiyanState.tier(user),SaiyanBalance.tier(form));
         CompoundNBT state=SaiyanState.get(user);
         if(state.getInt("Form")!=form){
+            if(!user.level.isClientSide && state.getInt("Form")==SaiyanBalance.ULTRA_INSTINCT)
+                InnerDragonsCutscenes.cancel(user,AwakeningCutsceneType.ULTRA_INSTINCT);
             Entity old=user.level.getEntity(state.getInt("AuraEntity"));
             if(old instanceof SaiyanEffect&&((SaiyanEffect)old).owner()==user&&((SaiyanEffect)old).kind()==SaiyanEffect.TRANSFORMATION_AURA)old.remove();
             state.remove("AuraEntity");

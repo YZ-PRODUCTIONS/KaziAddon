@@ -2,7 +2,6 @@ package net.kazi.kazimod.longbob;
 
 import net.minecraft.entity.*;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -19,7 +18,6 @@ public final class LongbobFeatures {
             EntityType.Builder.<LongbobCloud>of(LongbobCloud::new,EntityClassification.MISC).sized(.1F,.1F).clientTrackingRange(16).updateInterval(20).noSave().build("longbob_poison_cloud"));
     public static void init(IEventBus bus){
         TYPES.register(bus);bus.addListener((EntityAttributeCreationEvent e)->e.put(BOSS.get(),LongbobEntity.createAttributes().build()));
-        MinecraftForge.EVENT_BUS.addListener(LongbobSpawning::tick);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT,()->()->LongbobClient.init(bus));
     }
     private LongbobFeatures(){}

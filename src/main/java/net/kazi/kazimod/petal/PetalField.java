@@ -1,6 +1,7 @@
 package net.kazi.kazimod.petal;
 import java.util.*;
 import net.minecraft.entity.*;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.*;
@@ -12,15 +13,40 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 public final class PetalField extends Entity {
  public static final int SENKEI_SWORD_INTERVAL=40;
+ public static final int PRISON_LIFE=80;
  private static final DataParameter<Integer> KIND=EntityDataManager.defineId(PetalField.class,DataSerializers.INT),OWNER=EntityDataManager.defineId(PetalField.class,DataSerializers.INT),START=EntityDataManager.defineId(PetalField.class,DataSerializers.INT),LIFE=EntityDataManager.defineId(PetalField.class,DataSerializers.INT);
  private static final DataParameter<Float> SIZE=EntityDataManager.defineId(PetalField.class,DataSerializers.FLOAT),X=EntityDataManager.defineId(PetalField.class,DataSerializers.FLOAT),Y=EntityDataManager.defineId(PetalField.class,DataSerializers.FLOAT),Z=EntityDataManager.defineId(PetalField.class,DataSerializers.FLOAT),YAW=EntityDataManager.defineId(PetalField.class,DataSerializers.FLOAT);
  private static final DataParameter<CompoundNBT> TARGETS=EntityDataManager.defineId(PetalField.class,DataSerializers.COMPOUND_TAG);
  private final Set<UUID> hit=new HashSet<>(),captured=new HashSet<>(),damagedThisTick=new HashSet<>();private float health=48,power=30;private PetalAbility attack;private UUID ownerUUID;
+ private LivingEntity prisoner;
  public PetalField(EntityType<?> type,World world){super(type,world);noPhysics=true;setNoGravity(true);}
  @Override protected void defineSynchedData(){entityData.define(TARGETS,new CompoundNBT());entityData.define(KIND,0);entityData.define(OWNER,-1);entityData.define(START,0);entityData.define(LIFE,20);entityData.define(SIZE,1F);entityData.define(X,0F);entityData.define(Y,0F);entityData.define(Z,0F);entityData.define(YAW,0F);}
  public static PetalField spawn(LivingEntity p,int kind,Vector3d pos,int life,float size){
   for(PetalField old:p.level.getEntitiesOfClass(PetalField.class,p.getBoundingBox().inflate(96),e->e.owner()==p&&e.kind()==kind))old.remove();
   PetalField e=new PetalField(PetalFeatures.FIELD.get(),p.level);e.entityData.set(KIND,kind);e.entityData.set(OWNER,p.getId());e.ownerUUID=p.getUUID();e.entityData.set(START,(int)p.level.getGameTime());e.entityData.set(LIFE,life);e.entityData.set(SIZE,size);e.entityData.set(YAW,p.yRot);e.health=kind==9?96:48;e.setPos(pos.x,pos.y,pos.z);e.end(pos);p.level.addFreshEntity(e);return e;
+ }
+ public static PetalField prison(LivingEntity p,LivingEntity target){
+  PetalField field=spawn(p,4,target.position(),PRISON_LIFE,3);
+  field.prisoner=target;target.stopRiding();field.holdPrisoner();
+  return field;
+ }
+ /** Unregistered display stand-in while a cinematic viewer lacks the real field's spawn data. */
+ public static PetalField releasePreview(World world,int owner,long start,Vector3d at,float yaw){
+  if(!world.isClientSide)throw new IllegalArgumentException("Client display only");
+  PetalField f=new PetalField(PetalFeatures.FIELD.get(),world);
+  f.entityData.set(KIND,6);f.entityData.set(OWNER,owner);f.entityData.set(START,(int)start);
+  f.entityData.set(LIFE,PetalAbility.BANKAI_RELEASE_LIFE);f.entityData.set(YAW,yaw);
+  f.setPos(at.x,at.y,at.z);f.end(at);return f;
+ }
+ private void holdPrisoner(){
+  if(prisoner==null)return;
+  prisoner.addEffect(new EffectInstance(PetalFeatures.PRISON_STUN.get(),3,0,false,false,false));
+  prisoner.stopUsingItem();prisoner.setSprinting(false);prisoner.fallDistance=0;
+  xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper.setDeltaMovement(prisoner,Vector3d.ZERO);
+  if(prisoner.distanceToSqr(this)>1e-6){
+   if(prisoner instanceof ServerPlayerEntity)((ServerPlayerEntity)prisoner).connection.teleport(getX(),getY(),getZ(),prisoner.yRot,prisoner.xRot);
+   else prisoner.setPos(getX(),getY(),getZ());
+  }
  }
  public int kind(){return entityData.get(KIND);}public int life(){return entityData.get(LIFE);}public float size(){return entityData.get(SIZE);}public float yaw(){return entityData.get(YAW);}public float age(float partial){return Math.max(0,(int)level.getGameTime()-entityData.get(START)+partial);}
  public LivingEntity owner(){Entity e=level.getEntity(entityData.get(OWNER));return e instanceof LivingEntity&&(ownerUUID==null||ownerUUID.equals(e.getUUID()))?(LivingEntity)e:null;}
@@ -29,11 +55,17 @@ public final class PetalField extends Entity {
   if(p==null||!PetalFeatures.usable(p)||!PetalState.scattered(p)||p.distanceToSqr(this)>96*96||age>=life()||(kind==7||kind==8||kind==9)&&!PetalState.bankai(p)){remove();return;}
   if(kind==1||kind==2||kind==8){setPos(p.getX(),p.getY(),p.getZ());entityData.set(YAW,p.yRot);end(PetalFeatures.aim(p,kind==1?24:5));}
   if(kind==1&&age>=8&&age%10==0){Vector3d a=p.getEyePosition(1),b=end();for(LivingEntity t:enemies(p,new AxisAlignedBB(a,b).inflate(.85)))if(t.getBoundingBox().inflate(.65).clip(a,b).isPresent()&&p.canSee(t))hurt(p,t,PetalState.bankai(p)?7:5,1);}
-  if(kind==4||kind==9){float radius=size();if(age==20)for(LivingEntity t:enemies(p,getBoundingBox().inflate(radius,2,radius)))if(t.position().distanceToSqr(position())<radius*radius&&p.canSee(t))captured.add(t.getUUID());
-   if(age>=20){radius=kind==9?Math.max(1.5F,size()*(1-(age-20)/110F)):size();
+  if(kind==4){
+   if(prisoner==null||prisoner.level!=level||!PetalFeatures.canHit(p,prisoner)){remove();return;}
+   if(age>=30&&age%10==0)hurt(p,prisoner,1,4);
+   if(!prisoner.isAlive()){remove();return;}
+   holdPrisoner();
+  }
+  if(kind==9){float radius=size();if(age==20)for(LivingEntity t:enemies(p,getBoundingBox().inflate(radius,2,radius)))if(t.position().distanceToSqr(position())<radius*radius&&p.canSee(t))captured.add(t.getUUID());
+   if(age>=20){radius=Math.max(1.5F,size()*(1-(age-20)/110F));
     for(LivingEntity t:enemies(p,getBoundingBox().inflate(size()+1,3,size()+1)))if(captured.contains(t.getUUID())){
-     double d=t.position().distanceTo(position());if(d>size()+1||kind==9&&!p.canSee(t)){captured.remove(t.getUUID());continue;}
-     if(age%10==0)hurt(p,t,kind==9?6:1,4);t.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN,6,1));
+     double d=t.position().distanceTo(position());if(d>size()+1||!p.canSee(t)){captured.remove(t.getUUID());continue;}
+     if(age%10==0)hurt(p,t,6,4);t.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN,6,1));
      if(d>radius-.4&&d<size()+1){t.setDeltaMovement(t.getDeltaMovement().add(position().subtract(t.position()).normalize().scale(.12)));t.hurtMarked=true;}
     }
    }
@@ -53,7 +85,11 @@ public final class PetalField extends Entity {
  private List<LivingEntity> enemies(LivingEntity p,AxisAlignedBB box){return level.getEntitiesOfClass(LivingEntity.class,box,t->PetalFeatures.canHit(p,t));}
  private double horizontalDistanceSqr(Entity target){double x=target.getX()-getX(),z=target.getZ()-getZ();return x*x+z*z;}
  private void hurt(LivingEntity p,LivingEntity t,float amount,int move){LivingEntity owner=PetalFeatures.bodyOwner(t);if(owner==null||!damagedThisTick.add(owner.getUUID()))return;if(move==8&&!hit.add(owner.getUUID()))return;if(attack==null)attack=PetalAbility.CORES[move].createAbility();attack.hurt(p,owner,amount);}
- @Override public boolean isPickable(){return (kind()==4||kind()==9)&&age(0)>=20&&!removed;}
+ @Override public void remove(){
+  if(!level.isClientSide&&prisoner!=null){prisoner.removeEffect(PetalFeatures.PRISON_STUN.get());prisoner=null;}
+  super.remove();
+ }
+ @Override public boolean isPickable(){return !removed&&(kind()==4||kind()==9&&age(0)>=20);}
  @Override public boolean canBeCollidedWith(){return kind()!=4&&isPickable();}
  @Override public boolean hurt(DamageSource s,float amount){if(level.isClientSide||!isPickable()||!Float.isFinite(amount)||amount<=0)return false;if(s.getEntity()==owner())return false;health-=amount;if(health<=0)remove();return true;}
  @Override public AxisAlignedBB getBoundingBoxForCulling(){return super.getBoundingBox().inflate(kind()==7?size()+3:kind()==1?26:kind()==6?32:24);}

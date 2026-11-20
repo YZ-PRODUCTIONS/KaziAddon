@@ -1,5 +1,7 @@
 package net.kazi.kazimod.abilities.Koku;
 
+import net.kazi.kazimod.jjk.JjkGesture;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -15,6 +17,7 @@ import xyz.pixelatedw.mineminenomi.api.abilities.AbilityCore;
 import xyz.pixelatedw.mineminenomi.api.abilities.AbilityDescriptionLine;
 import xyz.pixelatedw.mineminenomi.api.abilities.IAbility;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.AbilityComponent;
+import xyz.pixelatedw.mineminenomi.api.abilities.components.AnimationComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.ContinuousComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.CooldownComponent;
 import xyz.pixelatedw.mineminenomi.api.abilities.components.DamageTakenComponent;
@@ -50,6 +53,7 @@ public class InfinityAbility extends Ability {
     private final StackComponent stackComponent;
     private final PoolComponent  poolComponent;
 
+    private final AnimationComponent animationComponent = new AnimationComponent(this);
     private int stackInvulTimer = 0;
     private static final int STACK_INVUL_TICKS = 10;
 
@@ -62,6 +66,7 @@ public class InfinityAbility extends Ability {
         this.addComponents(new AbilityComponent[]{
                 this.continuousComponent,
                 this.damageTakenComponent,
+                this.animationComponent,
                 this.stackComponent,
                 this.poolComponent
         });
@@ -79,6 +84,7 @@ public class InfinityAbility extends Ability {
     }
 
     private void onStartContinuity(LivingEntity entity, IAbility ability) {
+        JjkGesture.INFINITY.play(animationComponent, entity, 20);
         this.stackComponent.setDefaultStacks(MAX_STACKS);
         this.stackComponent.revertStacksToDefault(entity, ability);
     }

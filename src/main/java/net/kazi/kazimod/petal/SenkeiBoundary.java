@@ -17,7 +17,7 @@ public final class SenkeiBoundary {
         if(!(mover instanceof LivingEntity)||mover.isSpectator())return Stream.empty();
         Stream.Builder<VoxelShape> shapes=Stream.builder();
         for(PetalField field:mover.level.getEntitiesOfClass(PetalField.class,query.inflate(28,20,28),
-                f->f.isAlive()&&f.age(0)<f.life()&&(f.kind()==7||f.kind()==4&&f.age(0)>=20))){
+                f->f.isAlive()&&f.age(0)<f.life()&&(f.kind()==7||f.kind()==4))){
             if(field.kind()==4&&mover==field.owner())continue;
             for(AxisAlignedBB wall:WALLS.computeIfAbsent(field,SenkeiBoundary::walls))
                 if(wall.intersects(query))shapes.add(VoxelShapes.create(wall));

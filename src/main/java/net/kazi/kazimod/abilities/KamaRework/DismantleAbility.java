@@ -1,5 +1,7 @@
 package net.kazi.kazimod.abilities.KamaRework;
 
+import net.kazi.kazimod.jjk.JjkGesture;
+
 import java.util.List;
 import net.kazi.kazimod.events.components.DashComboComponent;
 import net.kazi.kazimod.init.KaziParticleEffects;
@@ -32,7 +34,6 @@ import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
-import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
@@ -120,7 +121,7 @@ public class DismantleAbility extends Ability {
     // Charge events — only reached in BARRAGE mode
     // -------------------------------------------------------------------------
     private void startChargeEvent(LivingEntity entity, IAbility ability) {
-        this.animationComponent.start(entity, ModAnimations.UPPER_SLASH, ANIMATION_TICKS);
+        JjkGesture.BARRAGE_READY.play(animationComponent, entity, CHARGE_TIME);
         if (!entity.level.isClientSide) {
             entity.level.playSound((PlayerEntity) null, entity.blockPosition(),
                     KaziSounds.DISMANTLE_SFX.get(), SoundCategory.PLAYERS, 1.0F, 1.0F);
@@ -140,6 +141,8 @@ public class DismantleAbility extends Ability {
     // -------------------------------------------------------------------------
     private void executeSlash(LivingEntity entity, IAbility ability) {
         boolean isBarrage = altModeComponent.isMode(Mode.BARRAGE);
+        (isBarrage && (barrageHitsFired & 1) != 0 ? JjkGesture.DISMANTLE_BACKHAND : JjkGesture.DISMANTLE)
+                .play(animationComponent, entity, ANIMATION_TICKS);
         float percentageDamage = entity.getMaxHealth() * (isBarrage ? 0.02F : 0.10F);
 
         List targets = this.rangeComponent.getTargetsInLine(entity, (float) DISTANCE, WIDTH);

@@ -4,6 +4,8 @@ import java.util.*;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.kazi.kazimod.worldturtle.WorldTurtleMesh.Sink;
+import net.kazi.kazimod.client.nagi.InnerDragonsCutsceneClient;
+import net.kazi.kazimod.client.nagi.UltraInstinctPresentation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.audio.TickableSound;
@@ -86,7 +88,7 @@ public final class SaiyanClient {
     private static final List<SaiyanEffect> IMPACTS=new ArrayList<>();
     private static boolean flightVisible(PlayerEntity player,PlayerEntity local){
         if(player==local)return SaiyanState.get(player).getBoolean("Active")
-                &&player.abilities.flying&&!player.isOnGround()&&!SaiyanFeatures.isActionLocked(player);
+                &&SaiyanFlightAbility.isAirborneFlight(player)&&!SaiyanFeatures.isMovementLocked(player);
         return SaiyanState.get(player).getBoolean("Flight");
     }
     private static boolean valid(FlightFrame frame){
@@ -96,6 +98,9 @@ public final class SaiyanClient {
     }
     public static Sink sink(MatrixStack stack,IRenderTypeBuffer buffers,boolean glow){
         return sink(stack,buffers,glow?ENERGY:SOLID);
+    }
+    public static Sink auraSink(MatrixStack stack,IRenderTypeBuffer buffers,boolean glow){
+        return sink(stack,buffers,glow?AURA:AURA_SHELL);
     }
     private static Sink sink(MatrixStack stack,IRenderTypeBuffer buffers,RenderType type){
         IVertexBuilder b=buffers.getBuffer(type);Matrix4f pose=stack.last().pose();
@@ -115,7 +120,7 @@ public final class SaiyanClient {
         MinecraftForge.EVENT_BUS.addListener(SaiyanClient::impactFlash);
         MinecraftForge.EVENT_BUS.addListener(SaiyanClient::impactCamera);
         MinecraftForge.EVENT_BUS.addListener((InputUpdateEvent e)->{
-            if(!SaiyanFeatures.isActionLocked(e.getPlayer()))return;
+            if(!SaiyanFeatures.isMovementLocked(e.getPlayer()))return;
             net.minecraft.util.MovementInput input=e.getMovementInput();
             input.forwardImpulse=0;input.leftImpulse=0;input.jumping=false;input.shiftKeyDown=false;
             input.up=false;input.down=false;input.left=false;input.right=false;
@@ -152,6 +157,7 @@ public final class SaiyanClient {
     private static void playerAura(RenderPlayerEvent.Post event){
         Minecraft mc=Minecraft.getInstance();if(mc.level==null||mc.player==null)return;
         PlayerEntity p=event.getPlayer();
+        if(InnerDragonsCutsceneClient.isInstinctCaster(p))return; // The staged aura is drawn after the skin writes depth.
         CompoundNBT data=SaiyanState.get(p);if(!data.getBoolean("Active")||p.isInvisible()||p.distanceToSqr(mc.player)>64*64)return;
         if(p==mc.player&&mc.options.getCameraType().isFirstPerson())return;
         float partial=event.getPartialRenderTick();
@@ -490,6 +496,8 @@ public final class SaiyanClient {
         return form>0?SaiyanMesh.tint(out,SaiyanBalance.COLORS[SaiyanBalance.tier(form)]):out;
     }
     public static void pose(PlayerModel<?> model,LivingEntity player,float age){
+        float entrance=UltraInstinctPresentation.entranceAge(player,age-player.tickCount);
+        if(entrance>=0){UltraInstinctPresentation.pose(model,entrance);return;}
         CompoundNBT state=SaiyanState.get(player);if(!state.getBoolean("Active"))return;
         int action=SaiyanState.action(player);float t=(float)(player.level.getGameTime()-state.getLong("ActionStart"));
         t+=age-player.tickCount;

@@ -1,6 +1,7 @@
 package net.kazi.kazimod.longbob;
 
 import java.util.*;
+import net.kazi.kazimod.events.WorldBossAggro;
 import net.kazi.kazimod.doku.DokuGasEntity;
 import net.kazi.kazimod.mahoraga.MahoragaHaki;
 import net.minecraft.enchantment.Enchantments;
@@ -43,6 +44,7 @@ public final class LongbobEntity extends OPEntity {
     private final ServerBossInfo bar=new ServerBossInfo(new TranslationTextComponent("entity.kazimod.longbobthegod"),BossInfo.Color.GREEN,BossInfo.Overlay.PROGRESS);
     private final int[] cooldowns=new int[LongbobAction.values().length];
     private boolean initialized,natural,announced,retaliating;
+    private final WorldBossAggro aggro=new WorldBossAggro();
     private int recovery,coatingTicks,geppoTravelTicks;
     private BlockPos home;
     private DokuGasEntity gas,roadGas;
@@ -78,8 +80,7 @@ public final class LongbobEntity extends OPEntity {
         if(fresh){setHealth(getMaxHealth());home=blockPosition();begin(LongbobAction.ARRIVAL);}
         initialized=true;
     }
-    public boolean enemy(LivingEntity target){return target!=null&&target!=this&&target.isAlive()&&target.level==level&&!isAlliedTo(target)
-            &&(!(target instanceof PlayerEntity)||!((PlayerEntity)target).isCreative()&&!target.isSpectator());}
+    public boolean enemy(LivingEntity target){return aggro.canAttack(this,target);}
     @Override public boolean isAlliedTo(Entity other){return other instanceof LongbobEntity||super.isAlliedTo(other);}
     private void begin(LongbobAction next){
         if(action()==LongbobAction.ROAD){setNoGravity(false);if(roadGas!=null)roadGas.finish();roadGas=null;}
@@ -227,8 +228,8 @@ public final class LongbobEntity extends OPEntity {
         if(level.isClientSide)return super.hurt(source,amount);
         if(!initialized)initialize(true);
         LivingEntity attacker=source.getEntity() instanceof LivingEntity?(LivingEntity)source.getEntity():null;
-        if(enemy(attacker))setTarget(attacker);
         boolean damaged=super.hurt(source,amount);
+        if(damaged)aggro.retaliate(this,attacker);
         if(damaged&&coated()&&!retaliating&&enemy(attacker)&&source.getDirectEntity()==attacker){
             retaliating=true;try{hit(attacker,5,"doku_fugu",false);}finally{retaliating=false;}
         }

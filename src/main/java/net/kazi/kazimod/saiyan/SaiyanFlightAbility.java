@@ -27,7 +27,7 @@ public final class SaiyanFlightAbility extends FlyAltAbility {
         setDisplayName(new StringTextComponent("Ki Flight"));
         setDisplayIcon(SaiyanAbility.icon("ki_flight"));
         addCanUseCheck((user,ability)->user.isAlive()&&SaiyanState.hasFruit(user)
-                &&!SaiyanFeatures.isActionLocked(user)&&!AbilityHelper.isWeakenedByKairosekiOrWater(user)&&!user.hasEffect(ModEffects.ABILITY_OFF.get())
+                &&!SaiyanFeatures.isMovementLocked(user)&&!AbilityHelper.isWeakenedByKairosekiOrWater(user)&&!user.hasEffect(ModEffects.ABILITY_OFF.get())
                 ?AbilityUseResult.success():AbilityUseResult.fail(null));
         addRemoveEvent((user,ability)->{
             if(user instanceof PlayerEntity&&!user.level.isClientSide){
@@ -43,9 +43,9 @@ public final class SaiyanFlightAbility extends FlyAltAbility {
         super.tick(user);
         if(!(user instanceof PlayerEntity)||user.level.isClientSide)return;
         PlayerEntity player=(PlayerEntity)user;
-        boolean flying=!player.isCreative()&&!player.isSpectator()&&player.abilities.flying&&!player.isOnGround()
+        boolean flying=!player.isCreative()&&isAirborneFlight(player)
                 &&!isPaused()&&canUse(player).isSuccess();
-        boolean creativeFlight=player.isCreative()&&!player.isSpectator()&&player.abilities.flying&&!player.isOnGround()&&!SaiyanFeatures.isActionLocked(player)
+        boolean creativeFlight=player.isCreative()&&isAirborneFlight(player)&&!SaiyanFeatures.isMovementLocked(player)
                 &&player.isAlive()&&SaiyanState.hasFruit(player)&&!AbilityHelper.isWeakenedByKairosekiOrWater(player);
         updateAura(player,flying||creativeFlight);
         if(flying){
@@ -58,6 +58,10 @@ public final class SaiyanFlightAbility extends FlyAltAbility {
 
     @Override public int getHeightDifference(PlayerEntity player){return 35;}
     @Override public float getSpeedMultiplier(PlayerEntity player){return .91F;}
+
+    static boolean isAirborneFlight(LivingEntity user){
+        return user instanceof PlayerEntity && ((PlayerEntity)user).abilities.flying && !user.isSpectator() && !user.isOnGround();
+    }
 
     private static void setFlightSpeed(PlayerEntity player,float speed){
         if(Math.abs(player.abilities.getFlyingSpeed()-speed)<.00001F)return;

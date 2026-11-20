@@ -33,7 +33,7 @@ public final class PetalMesh extends RenderState {
    for(int i=0;i<count;i++){double t=((i/(double)count+age*.035)%1),a=i*2.399+time,spread=(.12+Math.sin(t*Math.PI)*.42)*size,rad=spread*(.3+(i%7)/10D);double x=end.x*t+u.x*Math.cos(a)*rad+w.x*Math.sin(a)*rad,y=end.y*t+u.y*Math.cos(a)*rad+w.y*Math.sin(a)*rad,z=end.z*t+u.z*Math.cos(a)*rad+w.z*Math.sin(a)*rad;petal(v,m,x,y,z,.05+(i%3)*.018,a,alpha,false);}
   }else if(kind==2){for(int band=0;band<4;band++)for(int i=0;i<64;i++){double a=i*Math.PI/32+time,r=.25+band*.27,c=a+Math.PI/32;ribbon(v,m,new Vector3d(Math.cos(a)*r,1.25+Math.sin(a)*r,-.9),new Vector3d(Math.cos(c)*r,1.25+Math.sin(c)*r,-.9),new Vector3d(Math.cos(a)*.16,Math.sin(a)*.16,0),new Vector3d(Math.cos(c)*.16,Math.sin(c)*.16,0),alpha*.8F,false);}for(int i=0;i<count/2;i++){double t=i/(double)(count/2),r=Math.sqrt(t)*1.15,a=i*2.399+time*.8;petal(v,m,Math.cos(a)*r,1.25+Math.sin(a)*r,-.9+.18*t,.08,a+time,alpha,false);}}
   else if(kind==3){for(int i=0;i<70;i++){double a=i*2.399,r=.2+age*.045;petal(v,m,Math.cos(a)*r,.5+(i%13)*.08-age*.015,Math.sin(a)*r,.055,a+time,alpha,false);}}
-  else if(kind==4||kind==9){double close=Math.min(1,age/20),r=kind==9?Math.max(1.5,size*(1-Math.max(0,age-20)/110)):size;
+  else if(kind==4||kind==9){double close=Math.min(1,age/(kind==4?6:20)),r=kind==9?Math.max(1.5,size*(1-Math.max(0,age-20)/110)):size;
    sphereBands(v,m,r+(1-close)*2,time,alpha*(float)close*(kind==9?.85F:.5F),kind==9?11:7);
    for(int i=0;i<count;i++){double t=(i+.5)/count,y=1-2*t,a=i*2.399+time*(kind==9?1.8:1),belt=Math.sqrt(1-y*y);double radius=r+(1-close)*2;petal(v,m,Math.cos(a)*belt*radius,1.2+y*radius*.75,Math.sin(a)*belt*radius,.07+(kind==9?.025:0),a+time,alpha*(float)(.5+close*.5),false);}ring(s,b,r,alpha*.7F,age);
   }else if(kind==5){

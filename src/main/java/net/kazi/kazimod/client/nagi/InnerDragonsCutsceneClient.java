@@ -10,6 +10,9 @@ import net.kazi.kazimod.abilities.NagiAwakening.InnerDragonsSequence;
 import net.kazi.kazimod.client.asriel.ChaosBeamFinale;
 import net.kazi.kazimod.client.asriel.ChaosBeamTitleOverlay;
 import net.kazi.kazimod.network.InnerDragonsCutscenePacket;
+import net.kazi.kazimod.jjk.ClashStage;
+import net.kazi.kazimod.petal.PetalField;
+import net.kazi.kazimod.petal.PetalState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.ISound;
@@ -60,11 +63,14 @@ public final class InnerDragonsCutsceneClient {
         Minecraft mc = Minecraft.getInstance();
         if (packet.cancel) {
             if (scene != null && scene.packet.casterUuid.equals(packet.casterUuid)
-                    && scene.packet.startTick == packet.startTick && scene.packet.type == packet.type) stop();
+                    && scene.packet.startTick == packet.startTick && scene.packet.type == packet.type
+                    && (packet.release == null || packet.release.fieldId == scene.packet.release.fieldId)) stop();
             return;
         }
         if (mc.level == null || mc.player == null || !mc.player.isAlive()
                 || !finite(packet.origin) || !Float.isFinite(packet.yaw)) return;
+        if (packet.clash != null && (!finite(packet.clash.origin)
+                || packet.casterUuid.equals(packet.clash.uuid))) return;
         long elapsed = mc.level.getGameTime() - packet.startTick;
         if (elapsed < -20 || elapsed >= packet.type.durationTicks) return;
         // Simultaneous awakenings must not repeatedly seize the camera from one another.
@@ -98,12 +104,27 @@ public final class InnerDragonsCutsceneClient {
 
     public static LivingEntity subject() {
         if (scene == null) return null;
-        Entity candidate = scene.world.getEntity(scene.packet.casterId);
-        if (candidate instanceof LivingEntity && candidate.getUUID().equals(scene.packet.casterUuid))
+        return tracked(scene.packet.casterId, scene.packet.casterUuid, scene.proxy);
+    }
+
+    private static LivingEntity tracked(int id, UUID uuid, LivingEntity fallback) {
+        if (scene.viewer.getUUID().equals(uuid)) return scene.viewer;
+        Entity candidate = scene.world.getEntity(id);
+        if (candidate instanceof LivingEntity && candidate.getUUID().equals(uuid))
             return (LivingEntity) candidate;
         for (LivingEntity player : scene.world.players())
-            if (player.getUUID().equals(scene.packet.casterUuid)) return player;
-        return scene.proxy;
+            if (player.getUUID().equals(uuid)) return player;
+        return fallback;
+    }
+
+    public static ClashStage clashStage() { return isDomainClash() ? scene.clashStage : null; }
+    public static LivingEntity clashOpponent() {
+        if (!isDomainClash()) return null;
+        InnerDragonsCutscenePacket.ClashPartner b = scene.packet.clash;
+        return tracked(b.id, b.uuid, scene.partnerProxy);
+    }
+    public static boolean clashPlayer(UUID who) {
+        return isDomainClash() && (scene.packet.casterUuid.equals(who) || scene.packet.clash.uuid.equals(who));
     }
 
     /** The visual renderer draws this skin-backed stand-in if the caster is outside entity tracking. */
@@ -122,6 +143,27 @@ public final class InnerDragonsCutsceneClient {
     public static boolean isGoat() { return active() && scene.packet.type == AwakeningCutsceneType.HYPER_GONER; }
     public static boolean isChaosFinale() { return active() && scene.packet.type == AwakeningCutsceneType.CHAOS_BEAM_FINALE; }
     public static boolean isNagi() { return active() && scene.packet.type == AwakeningCutsceneType.INNER_DRAGONS; }
+    public static boolean isDomainClash() { return active() && scene.packet.type == AwakeningCutsceneType.DOMAIN_CLASH; }
+    public static boolean isKageyoshi() { return active() && scene.packet.release != null; }
+    public static boolean isInstinct() { return active() && scene.packet.type == AwakeningCutsceneType.ULTRA_INSTINCT; }
+    public static boolean isInstinctCaster(Entity actor) {
+        return scene != null && scene.packet.type == AwakeningCutsceneType.ULTRA_INSTINCT
+                && scene.packet.casterUuid.equals(actor.getUUID()) && active();
+    }
+    public static boolean isKageyoshiCaster(Entity actor) {
+        return isKageyoshi() && scene.packet.casterUuid.equals(actor.getUUID());
+    }
+    static float castYaw() { return scene.packet.yaw; }
+    public static boolean stagesRelease(PetalField field) {
+        return isKageyoshi() && field.level == scene.world && field.getId() == scene.packet.release.fieldId;
+    }
+    static PetalField releaseForShot() {
+        Entity tracked = scene.world.getEntity(scene.packet.release.fieldId);
+        if (tracked instanceof PetalField && !tracked.removed && ((PetalField) tracked).kind() == 6) return (PetalField)tracked;
+        if (scene.preview == null) scene.preview = PetalField.releasePreview(scene.world, scene.packet.casterId,
+                scene.packet.startTick, scene.packet.origin, scene.packet.yaw);
+        return scene.preview;
+    }
     public static boolean activeAt(float age) { return scene != null && scene.packet.type.active(age); }
 
     public static float yaw(float partial) {
@@ -138,6 +180,12 @@ public final class InnerDragonsCutsceneClient {
             return;
         }
         if (event.phase == TickEvent.Phase.START) {
+            if (scene.packet.type.cameraOnly()) {
+                boolean down = Minecraft.getInstance().options.keyShift.isDown();
+                boolean dismiss = down && !scene.shiftHeld;
+                scene.shiftHeld = down;
+                if (dismiss) { stop(); return; }
+            }
             scene.beginLiftTick();
             return;
         }
@@ -157,6 +205,15 @@ public final class InnerDragonsCutsceneClient {
                 scene.sounds.add(audio);
                 Minecraft.getInstance().getSoundManager().play(audio);
             }
+        } else if (isInstinct()) {
+            // Punctuate the release without restarting the existing form-owned theme.
+            cue(scene.lastSoundAge, now, UltraInstinctPresentation.REVEAL, SoundEvents.GENERIC_EXPLODE, .43F, .67F);
+            cue(scene.lastSoundAge, now, UltraInstinctPresentation.REVEAL + 2, SoundEvents.BEACON_POWER_SELECT, .29F, 1.45F);
+        } else if (isDomainClash()) {
+            cue(scene.lastSoundAge, now, 0, SoundEvents.BEACON_ACTIVATE, .55F, .66F);
+            cue(scene.lastSoundAge, now, 48, SoundEvents.RESPAWN_ANCHOR_CHARGE, .78F, .64F);
+            cue(scene.lastSoundAge, now, 54, SoundEvents.GENERIC_EXPLODE, .50F, .62F);
+            cue(scene.lastSoundAge, now, 116, SoundEvents.GLASS_BREAK, .38F, .83F);
         } else if (isGoat()) {
             // Original Hyper Goner laugh/charge and the original return-from-whiteout cue.
             cue(scene.lastSoundAge, now, 12, KaziSounds.HYPER_GONER_LAUGH_SFX.get(), .8F, 1F);
@@ -171,7 +228,7 @@ public final class InnerDragonsCutsceneClient {
             cue(scene.lastSoundAge, now, 58, SoundEvents.RESPAWN_ANCHOR_CHARGE, .8F, .6F);
             cue(scene.lastSoundAge, now, 90, SoundEvents.GLASS_BREAK, 1F, .65F);
             cue(scene.lastSoundAge, now, 94, SoundEvents.GENERIC_EXPLODE, .7F, .7F);
-        } else {
+        } else if (isNagi()) {
             cue(scene.lastSoundAge, now, 0, SoundEvents.BEACON_AMBIENT, .45F, .5F);
             cue(scene.lastSoundAge, now, 16, SoundEvents.RESPAWN_ANCHOR_CHARGE, .65F, .65F);
             cue(scene.lastSoundAge, now, InnerDragonsSequence.ARM_BREAK_TICK,
@@ -214,16 +271,51 @@ public final class InnerDragonsCutsceneClient {
         mc.options.setCameraType(PointOfView.FIRST_PERSON);
         event.getInfo().setup(scene.world, scene.camera, false, false, partial);
         float time = age(partial);
-        float sinceBreak = time - (isGoat() ? 224 : scene.packet.type == AwakeningCutsceneType.EA_DRAW ? 90 : InnerDragonsSequence.ARM_BREAK_TICK);
-        float impact = !isChaosFinale() && sinceBreak >= 0 && sinceBreak < 12 ? (float) Math.exp(-sinceBreak / 3F) : 0;
+        float sinceBreak = time - (isDomainClash() ? 54 : isGoat() ? 224 :
+                scene.packet.type == AwakeningCutsceneType.EA_DRAW ? 90 : InnerDragonsSequence.ARM_BREAK_TICK);
+        float impact = isInstinct() ? UltraInstinctPresentation.shake(time)
+                : !isChaosFinale() && !isKageyoshi() && sinceBreak >= 0 && sinceBreak < 12 ? (float) Math.exp(-sinceBreak / 3F) : 0;
         event.setYaw(scene.camera.yRot + (float) Math.sin(time * 3.7) * impact * 2.1F);
         event.setPitch(scene.camera.xRot + ((float) Math.cos(time * 4.1) * 1.5F - .65F) * impact);
-        event.setRoll((float) Math.sin(time * 3.1) * impact * .9F);
+        event.setRoll(scene.shotRoll + (float) Math.sin(time * 3.1) * impact * .9F);
     }
 
     private static void positionCamera(float partial) {
         if (scene == null) return;
         float t = age(partial);
+        if (scene.packet.type == AwakeningCutsceneType.ULTRA_INSTINCT) {
+            UltraInstinctPresentation.Shot shot = UltraInstinctPresentation.shot(origin(partial), scene.packet.yaw, t);
+            placeLookingAt(shot.focus, shot.eye);
+            return;
+        }
+        if (scene.packet.release != null) {
+            // One low, uninterrupted dolly along the sword aisle. Both axes belong to
+            // the cast, not to a viewer turning their mouse during the release.
+            Minecraft mc = Minecraft.getInstance();
+            double yaw = Math.toRadians(scene.packet.yaw);
+            Vector3d front = new Vector3d(-Math.sin(yaw), 0, Math.cos(yaw));
+            Vector3d hand = new Vector3d(-Math.cos(yaw), 0, -Math.sin(yaw));
+            float rise = smooth(t / 47F), settle = smooth((t - 30) / 42F);
+            double aspect = mc.getWindow().getWidth() / (double)Math.max(1, mc.getWindow().getHeight());
+            double lens = MathHelper.clamp(Math.tan(Math.toRadians(35)) /
+                    Math.tan(Math.toRadians(MathHelper.clamp(mc.options.fov, 30, 110) * .5)), .74, 1.9);
+            double distance = (1.48 + 2.42 * rise + .42 * settle) * lens
+                    * MathHelper.clamp(1.5 / aspect, 1, 1.65);
+            Vector3d base = scene.packet.origin;
+            Vector3d focus = base.add(hand.scale(.18 * (1 - rise))).add(0, 1.02 + .73 * rise + .16 * settle, 0);
+            Vector3d eye = base.add(front.scale(distance)).add(hand.scale(.20 * (1 - rise)))
+                    .add(0, .27 + .10 * rise, 0);
+            placeLookingAt(focus, eye);
+            return;
+        }
+        if (scene.clashStage != null) {
+            Minecraft mc = Minecraft.getInstance();
+            ClashStage.Shot shot = scene.clashStage.shot(t, (double)mc.getWindow().getWidth()
+                    / Math.max(1,mc.getWindow().getHeight()), mc.options.fov);
+            scene.shotRoll = shot.roll;
+            placeLookingAt(shot.focus, shot.eye);
+            return;
+        }
         double bodyYaw = Math.toRadians(yaw(partial));
         Vector3d right = new Vector3d(-Math.cos(bodyYaw), 0, -Math.sin(bodyYaw));
         Vector3d forward = new Vector3d(-Math.sin(bodyYaw), 0, Math.cos(bodyYaw));
@@ -254,6 +346,10 @@ public final class InnerDragonsCutsceneClient {
             Vector3d radial = forward.scale(Math.cos(turn)).add(right.scale(Math.sin(turn)));
             desired = focus.add(radial.scale(5 + 7*widen)).add(0, 1.5 + 6*widen, 0);
         }
+        placeLookingAt(focus, desired);
+    }
+
+    private static void placeLookingAt(Vector3d focus, Vector3d desired) {
         RayTraceResult hit = scene.world.clip(new RayTraceContext(focus, desired,
                 RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, scene.camera));
         if (hit.getType() != RayTraceResult.Type.MISS) {
@@ -273,6 +369,11 @@ public final class InnerDragonsCutsceneClient {
         int width = event.getWindow().getGuiScaledWidth();
         int height = event.getWindow().getGuiScaledHeight();
         float t = age(event.getPartialTicks());
+        if (isInstinct()) {
+            UltraInstinctPresentation.overlay(event.getMatrixStack(), width, height, t);
+            event.setCanceled(true);
+            return;
+        }
         if (isChaosFinale()) {
             net.kazi.kazimod.client.asriel.ChaosBeamFinale.render(event.getMatrixStack(), width, height, t);
             event.setCanceled(true);
@@ -280,10 +381,16 @@ public final class InnerDragonsCutsceneClient {
         }
         float fade = Math.max(1 - smooth(t / 8), smooth((t - (scene.packet.type.durationTicks - 9)) / 9));
         if (isGoat()) net.kazi.kazimod.client.asriel.HyperGonerVisuals.overlay(event.getMatrixStack(), width, height, t);
-        int bar = Math.round(height * .105F);
+        int bar = Math.round(height * (isKageyoshi() ? .04F : isDomainClash() ? .0625F : .105F));
         AbstractGui.fill(event.getMatrixStack(), 0, 0, width, bar, 0xFF07070D);
         AbstractGui.fill(event.getMatrixStack(), 0, height - bar, width, height, 0xFF07070D);
-        if (!isGoat() && fade > .001F)
+        if (isKageyoshi() && Minecraft.getInstance().options.showSubtitles) {
+            net.minecraft.util.text.TranslationTextComponent line = new net.minecraft.util.text.TranslationTextComponent(
+                    t < 20 ? "cinematic.kazimod.bankai_release" : "ability.kazimod.petal_senbonzakura_kageyoshi");
+            AbstractGui.drawCenteredString(event.getMatrixStack(), Minecraft.getInstance().font, line,
+                    width / 2, height - bar - 12, 0xFFFFFFFF);
+        }
+        if (!isGoat() && !isDomainClash() && !isKageyoshi() && fade > .001F)
             AbstractGui.fill(event.getMatrixStack(), 0, 0, width, height, ((int) (fade * 255) << 24));
         // Cancel this frame's HUD, without mutating the user's hide-GUI preference.
         event.setCanceled(true);
@@ -370,6 +477,11 @@ public final class InnerDragonsCutsceneClient {
         final PointOfView previousPerspective;
         final CameraAnchor camera;
         final RemoteClientPlayerEntity proxy;
+        final RemoteClientPlayerEntity partnerProxy;
+        final ClashStage clashStage;
+        PetalField preview;
+        boolean shiftHeld;
+        float shotRoll;
         final List<ISound> sounds = new ArrayList<>();
         float lastSoundAge = -1;
         LivingEntity liftTickCaster;
@@ -415,10 +527,34 @@ public final class InnerDragonsCutsceneClient {
             viewer = mc.player;
             previousCamera = mc.getCameraEntity();
             previousPerspective = mc.options.getCameraType();
+            shiftHeld = mc.options.keyShift.isDown();
             camera = new CameraAnchor(world);
             NetworkPlayerInfo info = mc.getConnection() == null ? null : mc.getConnection().getPlayerInfo(packet.casterUuid);
-            GameProfile profile = info == null ? new GameProfile(packet.casterUuid, "Nagi") : info.getProfile();
-            proxy = new RemoteClientPlayerEntity(world, profile);
+            GameProfile profile = info == null ? new GameProfile(packet.casterUuid,
+                    packet.release != null ? packet.release.name : packet.type == AwakeningCutsceneType.ULTRA_INSTINCT ? "Saiyan"
+                    : packet.clash == null ? "Nagi" : packet.clash.kokuName) : info.getProfile();
+            proxy = packet.release != null ? new ClashSkinProxy(world, profile, packet.release.skinParts)
+                    : packet.type == AwakeningCutsceneType.ULTRA_INSTINCT ? new ClashSkinProxy(world, profile, 127)
+                    : packet.clash == null ? new RemoteClientPlayerEntity(world, profile)
+                    : new ClashSkinProxy(world, profile, packet.clash.kokuParts);
+            if (packet.release != null) {
+                CompoundNBT tag = PetalState.get(proxy);
+                tag.putBoolean("Fruit", true);
+                tag.putInt("Action", 6);
+                tag.putLong("Start", packet.startTick);
+                tag.putLong("End", packet.startTick + 40);
+            }
+            if (packet.clash == null) {
+                clashStage = null;
+                partnerProxy = null;
+            } else {
+                InnerDragonsCutscenePacket.ClashPartner b = packet.clash;
+                clashStage = new ClashStage(packet.origin,b.origin,packet.yaw);
+                NetworkPlayerInfo partner = mc.getConnection() == null ? null : mc.getConnection().getPlayerInfo(b.uuid);
+                partnerProxy = new ClashSkinProxy(world, partner == null
+                        ? new GameProfile(b.uuid,b.kamaName) : partner.getProfile(), b.kamaParts);
+                partnerProxy.setPos(b.origin.x,b.origin.y,b.origin.z);
+            }
             double lift = packet.type == AwakeningCutsceneType.CHAOS_BEAM_FINALE
                     ? ChaosBeamFinaleLift.height(world.getGameTime() - packet.startTick) : 0;
             proxy.setPos(packet.origin.x, packet.origin.y, packet.origin.z);
@@ -428,6 +564,16 @@ public final class InnerDragonsCutsceneClient {
             proxy.zOld = proxy.zo = proxy.getZ();
             proxy.yBodyRot = proxy.yBodyRotO = proxy.yRot = proxy.yRotO = proxy.yHeadRot = proxy.yHeadRotO = packet.yaw;
             camera.place(packet.origin, packet.yaw, 0);
+        }
+    }
+
+    private static final class ClashSkinProxy extends RemoteClientPlayerEntity {
+        final int parts;
+        ClashSkinProxy(ClientWorld world, GameProfile profile, int parts) {
+            super(world,profile); this.parts=parts;
+        }
+        @Override public boolean isModelPartShown(net.minecraft.entity.player.PlayerModelPart part) {
+            return (parts & part.getMask()) != 0;
         }
     }
 

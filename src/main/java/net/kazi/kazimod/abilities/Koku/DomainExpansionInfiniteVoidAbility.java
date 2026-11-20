@@ -3,6 +3,7 @@ package net.kazi.kazimod.abilities.Koku;
 import net.kazi.kazimod.abilities.GomuRework.GearFifthRework;
 import net.kazi.kazimod.abilities.KamaRework.DomainExpansionMalevolentShrine;
 import net.kazi.kazimod.entities.InfiniteVoidBarrierEntity;
+import net.kazi.kazimod.jjk.JjkGesture;
 import net.kazi.kazimod.events.DomainClashManager;
 import net.kazi.kazimod.init.*;
 import net.minecraft.block.*;
@@ -43,7 +44,7 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
     private static final float DOMAIN_DURATION  = 325.0f; // 16.25 seconds, matching the domain music.
     private static final float MIN_COOLDOWN     = 1200.0f;
     private static final float MAX_COOLDOWN     = 2400.0f;
-    private static final float RADIUS           = 30.0f;
+    public static final float RADIUS            = 30.0f;
     private static final float DAMAGE           = 5.0f;
     private static final int   DAMAGE_INTERVAL  = 40;
     private static final int   STREAK_PHASE_END = 60;
@@ -63,12 +64,7 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
     private int sparkleTick;
     private int streakTickCounter;
     private final Map<BlockPos, BlockState> replacedBlocks;
-    private final Map<BlockPos, BlockState> clashReplacedBlocks;
-
-    // Clash visuals — sphere + barrier shown during clash, no effects applied
-    private SphereEntity              clashSphere;
     private InfiniteVoidBarrierEntity clashBarrier;
-    private Vector3d                  clashPosition;
 
     public DomainExpansionInfiniteVoidAbility(final AbilityCore<DomainExpansionInfiniteVoidAbility> core) {
         super(core);
@@ -83,15 +79,11 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
         this.sparkleTick        = 0;
         this.streakTickCounter  = 0;
         this.replacedBlocks     = new HashMap<>();
-        this.clashReplacedBlocks = new HashMap<>();
-        this.clashSphere        = null;
-        this.clashBarrier       = null;
-        this.clashPosition      = null;
         this.isNew = true;
         this.addComponents(this.chargeComponent, this.domainComponent, this.animationComponent);
         this.addCanUseCheck(this::canUseCheck);
         this.addUseEvent(this::onUseEvent);
-        this.addTickEvent(this::onAbilityTick);
+        this.addRemoveEvent((entity, ability) -> DomainClashManager.abort(entity));
     }
 
     private AbilityUseResult canUseCheck(final LivingEntity entity, final IAbility ability) {
@@ -124,7 +116,7 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
     }
 
     private void onChargeStart(final LivingEntity entity, final IAbility ability) {
-        this.animationComponent.start(entity, KaziAnimations.GOJO_DOMAIN);
+        JjkGesture.VOID_SIGN.play(this.animationComponent, entity, (int)CHARGE_TIME);
         if (!entity.level.isClientSide) {
             entity.level.playSound(null, entity.blockPosition(),
                     KaziSounds.INFINITE_VOID_SFX.get(), SoundCategory.PLAYERS, 1.0f, 1.0f);
@@ -134,20 +126,8 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
                 if (otherData == null) continue;
                 final DomainExpansionMalevolentShrine shrine =
                         otherData.getEquippedAbility(DomainExpansionMalevolentShrine.INSTANCE);
-                if (shrine != null && shrine.isCharging()) {
-                    DomainClashManager.startClash(entity, other);
-                    startClashVisuals(entity);
-                    shrine.startClashVisuals(other, entity);
-                    this.chargeComponent.stopCharging(entity);
-                    this.animationComponent.stop(entity);
-                    shrine.stopChargingNoCD(other);
-                    // Set clash cooldown — stopCooldown first so startCooldown isn't ignored
-                    super.cooldownComponent.stopCooldown(entity);
-                    super.cooldownComponent.startCooldown(entity, MAX_COOLDOWN);
-                    this.startKokuTechniqueCooldowns(entity, MAX_COOLDOWN * 0.25F);
-                    shrine.startCooldownForClash(other);
-                    return;
-                }
+                if (shrine != null && shrine.isCharging() &&
+                        DomainClashManager.startClash(entity, this, other, shrine)) return;
             }
         }
     }
@@ -163,47 +143,22 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
 
     // ── Clash visual management ───────────────────────────────────────────────
 
-    public void startClashVisuals(final LivingEntity entity) {
-        if (entity.level.isClientSide) return;
-        stopClashVisuals(entity);
-        this.clashPosition = new Vector3d(entity.getX(), entity.getY(), entity.getZ());
-
-        // The existing collision barrier now renders the imported domain shell.
-
-        this.clashBarrier = new InfiniteVoidBarrierEntity(
-                (EntityType<? extends Entity>) KaziEntities.INFINITE_VOID_BARRIER.get(), entity.level);
-        this.clashBarrier.setSpawner(entity);
-        this.clashBarrier.setRadius(RADIUS);
-        this.clashBarrier.yRot = entity.yRot;
-        this.clashBarrier.beginVoidExpansion();
-        this.clashBarrier.setPos(this.clashPosition.x, this.clashPosition.y, this.clashPosition.z);
-        entity.level.addFreshEntity(this.clashBarrier);
-
-        this.replaceBlocksAt(entity, this.clashPosition, this.clashReplacedBlocks);
-
-        entity.level.playSound(null, entity.blockPosition(),
-                KaziSounds.INFINITE_VOID_MUSIC_SFX.get(), SoundCategory.PLAYERS, 1.0f, 1.0f);
+    public void startClashVisuals(LivingEntity user, LivingEntity opponent) {
+        if (user.level.isClientSide) return;
+        clashBarrier = new InfiniteVoidBarrierEntity(KaziEntities.INFINITE_VOID_BARRIER.get(), user.level);
+        clashBarrier.setSpawner(user);
+        clashBarrier.setRadius(RADIUS);
+        double dx = opponent.getX() - user.getX(), dz = opponent.getZ() - user.getZ();
+        clashBarrier.yRot = dx * dx + dz * dz < .01 ? user.yRot : (float)Math.toDegrees(-Math.atan2(dx, dz));
+        clashBarrier.beginClashExpansion();
+        clashBarrier.setPos(user.getX(), user.getY(), user.getZ());
+        user.level.addFreshEntity(clashBarrier);
+        JjkGesture.CLASH_VOID_SIGN.play(animationComponent, user, net.kazi.kazimod.abilities.cinematics.AwakeningCutsceneType.DOMAIN_CLASH.durationTicks);
     }
 
-    private void stopClashVisuals(final LivingEntity entity) {
-        if (this.clashSphere  != null) { this.clashSphere.remove();  this.clashSphere  = null; }
-        if (this.clashBarrier != null) { this.clashBarrier.remove(); this.clashBarrier = null; }
-        this.restoreBlocks(entity, this.clashReplacedBlocks);
-        this.clashPosition = null;
-        stopMusic(entity);
-    }
-
-    // Tick event — spawns streak particles while clash is active
-    private void onAbilityTick(final LivingEntity entity, final IAbility ability) {
-        if (entity.level.isClientSide) return;
-        if (this.clashPosition == null) return;
-        if (this.clashSphere != null && this.clashSphere.isAlive()) {
-            this.clashSphere.setPos(this.clashPosition.x, this.clashPosition.y, this.clashPosition.z);
-        }
-        if (this.clashBarrier != null && this.clashBarrier.isAlive()) {
-            this.clashBarrier.setPos(this.clashPosition.x, this.clashPosition.y, this.clashPosition.z);
-        }
-        // Clash uses the same imported shell without changing clash resolution.
+    private void stopClashVisuals(LivingEntity user) {
+        if (clashBarrier != null) { clashBarrier.remove(); clashBarrier = null; }
+        if (animationComponent.isPlaying()) animationComponent.stop(user);
     }
 
     // ── Domain events ─────────────────────────────────────────────────────────
@@ -271,7 +226,6 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
         stopClashVisuals(entity);
         // Winner: clear the clash cooldown entirely
         super.cooldownComponent.stopCooldown(entity);
-        DomainClashManager.clearResolved(entity.getUUID());
         if (entity instanceof ServerPlayerEntity)
             ((ServerPlayerEntity) entity).sendMessage(
                     new StringTextComponent(TextFormatting.GREEN + "You have won the domain clash!"),
@@ -285,7 +239,6 @@ public class DomainExpansionInfiniteVoidAbility extends Ability {
         // already on cooldown, so the loser's intended MIN_COOLDOWN was never applied.
         super.cooldownComponent.stopCooldown(entity);
         super.cooldownComponent.startCooldown(entity, MAX_COOLDOWN);
-        DomainClashManager.clearResolved(entity.getUUID());
         if (entity instanceof ServerPlayerEntity)
             ((ServerPlayerEntity) entity).sendMessage(
                     new StringTextComponent(TextFormatting.RED + "You have lost the domain clash."),

@@ -93,6 +93,13 @@ public class FoxfireBallRework extends Ability {
         this.continuousComponent.startContinuity(entity, 150.0F);
     }
 
+    public void discardHeldBall() {
+        if (FoxfireBallReworkProjectile != null && !FoxfireBallReworkProjectile.isLaunched()) {
+            FoxfireBallReworkProjectile.remove();
+        }
+        FoxfireBallReworkProjectile = null;
+    }
+
     private void onSwing(LivingEntity entity, IAbility ability) {
         if (this.continuousComponent.isContinuous()) {
             this.FoxfireBallReworkProjectile.setLaunched(true); // Enable tracking

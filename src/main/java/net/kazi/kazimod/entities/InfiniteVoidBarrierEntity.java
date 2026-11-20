@@ -33,6 +33,8 @@ public class InfiniteVoidBarrierEntity extends Entity implements IEntityAddition
 
     private static final DataParameter<Boolean> VOID_VISUAL =
             EntityDataManager.defineId(InfiniteVoidBarrierEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> CLASH_VISUAL =
+            EntityDataManager.defineId(InfiniteVoidBarrierEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> VISUAL_START =
             EntityDataManager.defineId(InfiniteVoidBarrierEntity.class, DataSerializers.INT);
 
@@ -42,6 +44,14 @@ public class InfiniteVoidBarrierEntity extends Entity implements IEntityAddition
     }
 
     public boolean hasVoidVisual() { return this.entityData.get(VOID_VISUAL); }
+    public boolean isClashVisual() { return entityData.get(CLASH_VISUAL); }
+    @Override public boolean saveAsPassenger(CompoundNBT tag) {
+        return !isClashVisual() && super.saveAsPassenger(tag);
+    }
+    public void beginClashExpansion() {
+        beginVoidExpansion();
+        entityData.set(CLASH_VISUAL, true);
+    }
 
     public float getVisualAge(float partial) {
         int elapsed = (int) this.level.getGameTime() - this.entityData.get(VISUAL_START);
@@ -51,8 +61,7 @@ public class InfiniteVoidBarrierEntity extends Entity implements IEntityAddition
     /** Animation radius only: the local collision radius remains unchanged. */
     public float getVisualRadius(float partial) {
         if (!hasVoidVisual()) return getRadius();
-        float p = Math.max(0.0F, Math.min(1.0F, getVisualAge(partial) / 40.0F));
-        return getRadius() * p * p * (3.0F - 2.0F * p);
+        return net.kazi.kazimod.models.abilities.InfiniteVoidMesh.expansionRadius(getRadius(), getVisualAge(partial));
     }
 
     private static final double WALL_THICKNESS    = 0.6;
@@ -94,6 +103,7 @@ public class InfiniteVoidBarrierEntity extends Entity implements IEntityAddition
     protected void defineSynchedData() {
         this.getEntityData().define(RADIUS, 0.0F);
         this.entityData.define(VOID_VISUAL, false);
+        this.entityData.define(CLASH_VISUAL, false);
         this.entityData.define(VISUAL_START, 0);
     }
 
@@ -314,10 +324,20 @@ public class InfiniteVoidBarrierEntity extends Entity implements IEntityAddition
     }
 
     @Override
-    public void writeSpawnData(PacketBuffer buffer) { buffer.writeFloat(getRadius()); }
+    public void writeSpawnData(PacketBuffer buffer) {
+        buffer.writeFloat(getRadius());
+        buffer.writeBoolean(hasVoidVisual());
+        buffer.writeInt(this.entityData.get(VISUAL_START));
+        buffer.writeBoolean(isClashVisual());
+    }
 
     @Override
-    public void readSpawnData(PacketBuffer buffer) { setRadius(buffer.readFloat()); }
+    public void readSpawnData(PacketBuffer buffer) {
+        setRadius(buffer.readFloat());
+        this.entityData.set(VOID_VISUAL, buffer.readBoolean());
+        this.entityData.set(VISUAL_START, buffer.readInt());
+        this.entityData.set(CLASH_VISUAL, buffer.readBoolean());
+    }
 
     @Override
     public IPacket<?> getAddEntityPacket() { return NetworkHooks.getEntitySpawningPacket(this); }

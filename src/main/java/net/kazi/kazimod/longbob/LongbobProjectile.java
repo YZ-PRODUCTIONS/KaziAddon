@@ -28,9 +28,17 @@ public final class LongbobProjectile extends AbilityProjectileEntity {
         onBlockImpactEvent=pos->{if(kind==CHLORO)cloud();};
     }
     @Override public void defineSynchedData(){super.defineSynchedData();entityData.define(KIND,HYDRA);}
+    @Override public void onModHit(RayTraceResult hit){
+        if(!level.isClientSide&&hit instanceof EntityRayTraceResult){
+            Entity victim=((EntityRayTraceResult)hit).getEntity();
+            LivingEntity owner=getThrower();
+            if(victim instanceof LivingEntity&&owner instanceof LongbobEntity&&!((LongbobEntity)owner).enemy((LivingEntity)victim))return;
+        }
+        super.onModHit(hit);
+    }
     public int kind(){return entityData.get(KIND);}
     @Override public void tick(){super.tick();if(!level.isClientSide&&isAlive())trail=DokuGasEntity.refresh(trail,this,DokuGasEntity.PROJECTILE,kind()==HYDRA?1.8F:1.1F,false,true).green(true);}
-    private void cloud(){if(spent||level.isClientSide)return;spent=true;LivingEntity owner=getThrower();if(owner!=null)LongbobCloud.spawn(owner,position(),6,100);if(trail!=null)trail.finish();}
+    private void cloud(){if(spent||level.isClientSide)return;spent=true;LivingEntity owner=getThrower();if(owner instanceof LongbobEntity)LongbobCloud.spawn((LongbobEntity)owner,position(),6,100);if(trail!=null)trail.finish();}
     @Override public void remove(){if(trail!=null)trail.finish();super.remove();}
     @Override public AxisAlignedBB getBoundingBoxForCulling(){return super.getBoundingBoxForCulling().inflate(6);}
 }

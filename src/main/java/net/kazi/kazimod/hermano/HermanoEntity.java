@@ -1,6 +1,7 @@
 package net.kazi.kazimod.hermano;
 
 import java.util.*;
+import net.kazi.kazimod.events.WorldBossAggro;
 import net.kazi.kazimod.mahoraga.MahoragaHaki;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
@@ -39,6 +40,7 @@ public final class HermanoEntity extends OPEntity {
     private static final DataParameter<Boolean> POWER=EntityDataManager.defineId(HermanoEntity.class,DataSerializers.BOOLEAN);
     private final ServerBossInfo bar=new ServerBossInfo(new TranslationTextComponent("entity.kazimod.el_hermano"),BossInfo.Color.RED,BossInfo.Overlay.PROGRESS);
     private boolean initialized,natural,announced,counterTriggered;
+    private final WorldBossAggro aggro=new WorldBossAggro();
     private int recovery,specialCooldown,counterCooldown,geppoTravelTicks;
     private BlockPos home;
     private Vector3d rushDirection=Vector3d.ZERO;
@@ -76,9 +78,7 @@ public final class HermanoEntity extends OPEntity {
         if(fresh){setHealth(getMaxHealth());home=blockPosition();begin(HermanoAction.ARRIVAL);}
         initialized=true;
     }
-    public boolean enemy(LivingEntity target){return target!=null&&target!=this&&target.isAlive()&&target.level==level
-            &&!(target instanceof HermanoEntity)&&!isAlliedTo(target)
-            &&(!(target instanceof PlayerEntity)||!((PlayerEntity)target).isCreative()&&!target.isSpectator());}
+    public boolean enemy(LivingEntity target){return !(target instanceof HermanoEntity)&&aggro.canAttack(this,target);}
     private void begin(HermanoAction action){
         entityData.set(ACTION,action.ordinal());entityData.set(START,(int)level.getGameTime());navigation.stop();counterTriggered=false;rushHit.clear();geppoTravelTicks=0;
         if(action==HermanoAction.FULL_POWER){entityData.set(POWER,true);playSound(SoundEvents.ENDER_DRAGON_GROWL,1,.7F);}
@@ -226,12 +226,13 @@ public final class HermanoEntity extends OPEntity {
         if(!initialized)initialize(true);
         if(source.getEntity() instanceof HermanoEntity)return false;
         LivingEntity attacker=source.getEntity() instanceof LivingEntity?(LivingEntity)source.getEntity():null;
-        if(enemy(attacker))setTarget(attacker);
         if(!source.isBypassInvul()&&attacker!=null){
             if(action()==HermanoAction.IDLE&&counterCooldown==0&&random.nextFloat()<.22F){begin(HermanoAction.COUNTER);counterCooldown=160;}
             if(action()==HermanoAction.COUNTER&&actionAge(0)<22){amount*=.5F;counterTriggered=true;}
         }
-        return super.hurt(source,amount);
+        boolean damaged=super.hurt(source,amount);
+        if(damaged)aggro.retaliate(this,attacker);
+        return damaged;
     }
     @Override public boolean doHurtTarget(Entity entity){if(entity instanceof LivingEntity){melee((LivingEntity)entity,15,1);return true;}return false;}
     @Override public void die(DamageSource source){

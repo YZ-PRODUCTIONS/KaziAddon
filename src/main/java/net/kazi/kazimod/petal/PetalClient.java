@@ -25,6 +25,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.kazi.kazimod.models.zoan.CerberusRig;
 import net.kazi.kazimod.tusk.TuskClient;
+import net.kazi.kazimod.client.nagi.InnerDragonsCutsceneClient;
 public final class PetalClient {
  private static final Map<String,CerberusRig> MODELS=new HashMap<>();
  public static void init(IEventBus bus){bus.addListener((FMLClientSetupEvent e)->{RenderingRegistry.registerEntityRenderingHandler(PetalFeatures.FIELD.get(),FieldRenderer::new);e.enqueueWork(()->Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap().values().forEach(r->r.addLayer(new SwordLayer(r))));});MinecraftForge.EVENT_BUS.addListener(PetalClient::firstPerson);MinecraftForge.EVENT_BUS.addListener(PetalClient::heldItem);}
@@ -34,12 +35,30 @@ public final class PetalClient {
  private static final class SwordLayer extends LayerRenderer<AbstractClientPlayerEntity,PlayerModel<AbstractClientPlayerEntity>> {
   SwordLayer(PlayerRenderer r){super(r);}
   @Override public void render(MatrixStack s,IRenderTypeBuffer b,int light,AbstractClientPlayerEntity p,float walk,float amount,float partial,float age,float yaw,float pitch){
-   if(!PetalState.get(p).getBoolean("Fruit")||!p.isAlive()||p.isInvisible())return;int action=PetalState.action(p);float t=p.level.getGameTime()-PetalState.get(p).getLong("Start")+partial;
-   if(!PetalState.scattered(p)||action==6&&t<4||action==8){if(p.getMainHandItem().isEmpty()||action==8){s.pushPose();getParentModel().rightArm.translateAndRotate(s);s.translate(0,.7,-.08);s.mulPose(Vector3f.XP.rotationDegrees(-90));s.scale(1/16F,1/16F,1/16F);if(action==8)HakuteikenVisual.sword(s,b,t,1);else model("sword",s,b,action==6?Math.max(0,1-t/4):1);s.popPose();}}
-   if(PetalState.scattered(p)&&action!=8&&(action!=6||t>=38)){s.pushPose();s.translate(0,1.5,0);s.scale(1,-1,1);PetalMesh.orbit(s,b,p.tickCount+partial,1,PetalState.bankai(p),.7F);s.popPose();}
+   int action=PetalState.action(p);
+   boolean release=(action==6||action<0)&&InnerDragonsCutsceneClient.isKageyoshiCaster(p);
+   if((!release&&!PetalState.get(p).getBoolean("Fruit"))||!p.isAlive()||p.isInvisible())return;
+   float t=release?InnerDragonsCutsceneClient.age(partial):p.level.getGameTime()-PetalState.get(p).getLong("Start")+partial;
+   if(release)action=t<40?6:-1;
+   boolean scattered=release||PetalState.scattered(p);
+   if((!scattered||action==6&&t<4||action==8)&&(p.getMainHandItem().isEmpty()||action==8)){
+    s.pushPose();net.minecraft.client.renderer.model.ModelRenderer arm=getParentModel().rightArm;
+    arm.translateAndRotate(s);s.translate(0,.7,-.08);
+    if(release){
+     // Keep the hilt in the posed hand, but let the blade hang straight down.
+     s.mulPose(Vector3f.XP.rotation(-arm.xRot));s.mulPose(Vector3f.YP.rotation(-arm.yRot));s.mulPose(Vector3f.ZP.rotation(-arm.zRot));s.translate(0,.15,0);
+    }else s.mulPose(Vector3f.XP.rotationDegrees(-90));
+    s.scale(1/16F,1/16F,1/16F);if(action==8)HakuteikenVisual.sword(s,b,t,1);else model("sword",s,b,action==6?Math.max(0,1-t/4):1);s.popPose();
+   }
+   if(scattered&&action!=8&&(action!=6||t>=38)){s.pushPose();s.translate(0,1.5,0);s.scale(1,-1,1);PetalMesh.orbit(s,b,p.tickCount+partial,1,release?t>=40:PetalState.bankai(p),.7F);s.popPose();}
   }
  }
- public static void pose(PlayerModel<?> m,LivingEntity p,float time){if(!(p instanceof PlayerEntity)||!PetalState.get(p).getBoolean("Fruit"))return;int action=PetalState.action(p);if(action<0)return;float t=p.level.getGameTime()-PetalState.get(p).getLong("Start")+(time-p.tickCount),blend=MathHelper.clamp(t/5,0,1);float pitch=action==6?MathHelper.lerp(HakuteikenVisual.smooth((t-4)/10),-.8F,.12F):action==1?-1.4F:action==2?-1.2F:action==8?-1.8F:-.7F;m.rightArm.xRot=MathHelper.lerp(blend,m.rightArm.xRot,pitch);m.rightArm.yRot=action==2?-.6F:0;m.leftArm.xRot=MathHelper.lerp(blend,m.leftArm.xRot,action==6?.2F:-.3F);if(action==8){
+ public static void pose(PlayerModel<?> m,LivingEntity p,float time){if(!(p instanceof PlayerEntity))return;
+  int action=PetalState.action(p);
+  if((action==6||action<0)&&InnerDragonsCutsceneClient.isKageyoshiCaster(p)){
+   releasePose(m,InnerDragonsCutsceneClient.age(time-p.tickCount));return;
+  }
+  if(!PetalState.get(p).getBoolean("Fruit")||action<0)return;float t=p.level.getGameTime()-PetalState.get(p).getLong("Start")+(time-p.tickCount),blend=MathHelper.clamp(t/5,0,1);float pitch=action==6?MathHelper.lerp(HakuteikenVisual.smooth((t-4)/10),-.8F,.12F):action==1?-1.4F:action==2?-1.2F:action==8?-1.8F:-.7F;m.rightArm.xRot=MathHelper.lerp(blend,m.rightArm.xRot,pitch);m.rightArm.yRot=action==2?-.6F:0;m.leftArm.xRot=MathHelper.lerp(blend,m.leftArm.xRot,action==6?.2F:-.3F);if(action==8){
     float ready=HakuteikenVisual.smooth((t-12)/40),rush=HakuteikenVisual.smooth((t-HakuteikenTiming.CHARGE)/4),fade=1-HakuteikenVisual.smooth((t-HakuteikenTiming.RUSH_END)/16);
     m.rightArm.xRot=MathHelper.lerp(fade,m.rightArm.xRot,MathHelper.lerp(rush,-.65F-ready*.35F,-1.65F));
     m.rightArm.yRot=MathHelper.lerp(fade,m.rightArm.yRot,MathHelper.lerp(rush,-.8F,-.12F));
@@ -51,8 +70,20 @@ public final class PetalClient {
     m.leftLeg.xRot=MathHelper.lerp(fade,m.leftLeg.xRot,.12F+.25F*rush);
     m.jacket.copyFrom(m.body);m.leftPants.copyFrom(m.leftLeg);m.rightPants.copyFrom(m.rightLeg);
    }m.rightSleeve.copyFrom(m.rightArm);m.leftSleeve.copyFrom(m.leftArm);}
+ private static void releasePose(PlayerModel<?> m,float t){
+  float drop=HakuteikenVisual.smooth((t-2)/8),reveal=HakuteikenVisual.smooth((t-12)/22);
+  float weight=1-HakuteikenVisual.smooth((t-60)/12);
+  m.rightArm.xRot=MathHelper.lerp(weight,m.rightArm.xRot,-2.56F+.76F*drop+.09F*reveal);
+  m.rightArm.yRot=MathHelper.lerp(weight,m.rightArm.yRot,.02F-.09F*drop);
+  m.rightArm.zRot=MathHelper.lerp(weight,m.rightArm.zRot,.04F+.09F*drop);
+  m.leftArm.xRot=MathHelper.lerp(weight,m.leftArm.xRot,.09F+.08F*reveal);
+  m.leftArm.zRot=MathHelper.lerp(weight,m.leftArm.zRot,-.13F-.06F*reveal);
+  m.head.xRot=MathHelper.lerp(weight,m.head.xRot,.13F-.19F*reveal);
+  m.head.yRot=MathHelper.lerp(weight,m.head.yRot,-.06F);
+  m.hat.copyFrom(m.head);m.rightSleeve.copyFrom(m.rightArm);m.leftSleeve.copyFrom(m.leftArm);
+ }
  private static void heldItem(RenderHandEvent event){PlayerEntity p=Minecraft.getInstance().player;if(p!=null&&PetalState.get(p).getBoolean("Fruit")&&PetalState.action(p)==8)event.setCanceled(true);}
- private static void firstPerson(RenderWorldLastEvent e){Minecraft mc=Minecraft.getInstance();PlayerEntity p=mc.player;if(p==null||!mc.options.getCameraType().isFirstPerson()||!PetalState.get(p).getBoolean("Fruit")||(!p.getMainHandItem().isEmpty()||PetalState.scattered(p))&&PetalState.action(p)!=8)return;
+ private static void firstPerson(RenderWorldLastEvent e){Minecraft mc=Minecraft.getInstance();PlayerEntity p=mc.player;if(p==null||mc.getCameraEntity()!=p||!mc.options.getCameraType().isFirstPerson()||!PetalState.get(p).getBoolean("Fruit")||(!p.getMainHandItem().isEmpty()||PetalState.scattered(p))&&PetalState.action(p)!=8)return;
   MatrixStack s=e.getMatrixStack();Vector3d at=p.getEyePosition(e.getPartialTicks()).subtract(mc.gameRenderer.getMainCamera().getPosition());s.pushPose();s.translate(at.x,at.y,at.z);s.mulPose(Vector3f.YP.rotationDegrees(180-p.yRot));s.translate(-.35,-.55,-.6);s.mulPose(Vector3f.XP.rotationDegrees(-20));s.scale(1/16F,1/16F,1/16F);IRenderTypeBuffer.Impl b=mc.renderBuffers().bufferSource();if(PetalState.action(p)==8)HakuteikenVisual.sword(s,b,p.level.getGameTime()-PetalState.get(p).getLong("Start")+e.getPartialTicks(),.45F);else model("sword",s,b,.9F);s.popPose();b.endBatch();}
  public static void drawField(PetalField f,float partial,MatrixStack s,IRenderTypeBuffer b){float age=f.age(partial);LivingEntity p=f.owner();Minecraft mc=Minecraft.getInstance();boolean self=p==mc.player&&mc.options.getCameraType().isFirstPerson();float alpha=self&&(f.kind()==2||f.kind()==8)?.15F:.9F;int quality=mc.options.particles==ParticleStatus.MINIMAL?100:mc.options.particles==ParticleStatus.DECREASED?180:320;
   s.pushPose();Vector3d end=f.end().subtract(f.position());float facing=f.yaw();
@@ -65,5 +96,5 @@ public final class PetalClient {
   if(f.kind()==7){float phase=age%PetalField.SENKEI_SWORD_INTERVAL;if(phase<14)for(LivingEntity target:f.swordTargets()){Vector3d at=target.getPosition(partial).subtract(f.getPosition(partial));PetalMesh.field(10,age,f.life(),1,at,f.yaw(),s,b,alpha,quality);s.pushPose();s.translate(at.x,at.y+target.getBbHeight()+8*Math.max(0,1-phase/12),at.z);s.mulPose(Vector3f.YP.rotationDegrees(180-target.yRot));PetalSwordVisual.sword(s,b,Math.min(1,age/10),quality>100);s.popPose();}}
   s.popPose();
  }
- private static final class FieldRenderer extends EntityRenderer<PetalField>{FieldRenderer(EntityRendererManager m){super(m);}@Override public ResourceLocation getTextureLocation(PetalField f){return new ResourceLocation("kazimod","textures/entities/petal_sword.png");}@Override public void render(PetalField f,float yaw,float partial,MatrixStack s,IRenderTypeBuffer b,int light){drawField(f,partial,s,b);}}
+ private static final class FieldRenderer extends EntityRenderer<PetalField>{FieldRenderer(EntityRendererManager m){super(m);}@Override public ResourceLocation getTextureLocation(PetalField f){return new ResourceLocation("kazimod","textures/entities/petal_sword.png");}@Override public void render(PetalField f,float yaw,float partial,MatrixStack s,IRenderTypeBuffer b,int light){if(!InnerDragonsCutsceneClient.stagesRelease(f))drawField(f,partial,s,b);}}
 }

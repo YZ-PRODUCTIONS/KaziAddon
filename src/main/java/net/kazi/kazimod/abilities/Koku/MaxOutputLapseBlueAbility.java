@@ -1,7 +1,7 @@
 package net.kazi.kazimod.abilities.Koku;
 
 import net.kazi.kazimod.entities.projectiles.LapseBlueProjectile;
-import net.kazi.kazimod.init.KaziAnimations;
+import net.kazi.kazimod.jjk.JjkGesture;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -87,6 +87,7 @@ public class MaxOutputLapseBlueAbility extends Ability {
         if (!entity.level.isClientSide) {
             LapseBlueProjectile proj = LapseBlueProjectile.ACTIVE_PROJECTILES.get(entity.getUUID());
             if (proj != null && proj.isAlive()) {
+                JjkGesture.BLUE_GUIDE.play(animationComponent, entity, 18);
                 proj.toggleStopped();
                 return;
             }
@@ -98,7 +99,7 @@ public class MaxOutputLapseBlueAbility extends Ability {
 
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         if (!entity.level.isClientSide) {
-            this.animationComponent.start(entity, KaziAnimations.GOJO_BLUE);
+            JjkGesture.BLUE_MAX.play(animationComponent, entity, (int) CHARGE_TIME);
             this.chargeVisual.start(entity, ability, net.kazi.kazimod.entities.KokuVfxEntity.BLUE_CHARGE, (int) CHARGE_TIME);
         }
     }
@@ -112,7 +113,7 @@ public class MaxOutputLapseBlueAbility extends Ability {
         this.chargeVisual.stop();
         if (!entity.level.isClientSide) {
             this.projectileComponent.shoot(entity, 0.5F, 0.1F);
-            this.animationComponent.start(entity, KaziAnimations.GOJO_BLUE);
+            JjkGesture.BLUE_GUIDE.play(animationComponent, entity, 18);
         }
     }
 

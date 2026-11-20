@@ -1,5 +1,7 @@
 package net.kazi.kazimod.saiyan;
 
+import net.kazi.kazimod.client.nagi.UltraInstinctPresentation;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -75,8 +77,9 @@ public final class SaiyanModels {
     private static final class HairLayer extends LayerRenderer<AbstractClientPlayerEntity,PlayerModel<AbstractClientPlayerEntity>> {
         HairLayer(PlayerRenderer renderer){super(renderer);}
         @Override public void render(MatrixStack stack,IRenderTypeBuffer buffers,int light,AbstractClientPlayerEntity player,float limb,float amount,float partial,float age,float yaw,float pitch){
-            int form=SaiyanState.form(player);
-            if(!SaiyanState.get(player).getBoolean("Active")||player.isInvisible()||player.isSpectator())return;
+            float entrance=UltraInstinctPresentation.entranceAge(player,partial);
+            int form=entrance<0?SaiyanState.form(player):UltraInstinctPresentation.hairForm(entrance);
+            if((entrance<0&&!SaiyanState.get(player).getBoolean("Active"))||player.isInvisible()||player.isSpectator())return;
             // First-person arms never render player layers; keep inventory previews visible.
             SaiyanModels model=model(HAIR[form]);Map<String,CerberusRig.Pose> pose=model.rig.pose();
             float flying=SaiyanState.get(player).getBoolean("Flight")?1:0;
@@ -89,7 +92,9 @@ public final class SaiyanModels {
                 for(int i=0;i<7;i++)add(pose,"long_lock_"+i,bend*.75F,lean*.55F);
                 for(int i=0;i<3;i++)add(pose,"bang_"+i,bend*.18F,lean*.2F);
             }
-            stack.pushPose();getParentModel().head.translateAndRotate(stack);stack.scale(1/16F,-1/16F,-1/16F);
+            stack.pushPose();getParentModel().head.translateAndRotate(stack);
+            if(entrance>=0)UltraInstinctPresentation.irisLight(stack,buffers,entrance);
+            stack.scale(1/16F,-1/16F,-1/16F);
             ResourceLocation texture=form==0?BASE_HAIR_TEXTURE:model.texture;
             model.draw(model.rig.nodes,pose,stack,buffers.getBuffer(RenderType.entityCutoutNoCull(texture)),light,1,form==0?0x252830:0xffffff);
             stack.popPose();

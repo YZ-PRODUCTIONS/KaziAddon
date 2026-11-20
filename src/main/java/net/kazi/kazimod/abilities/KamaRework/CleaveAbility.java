@@ -1,5 +1,7 @@
 package net.kazi.kazimod.abilities.KamaRework;
 
+import net.kazi.kazimod.jjk.JjkGesture;
+
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.kazi.kazimod.init.KaziSounds;
 import net.minecraft.entity.LivingEntity;
@@ -35,7 +37,6 @@ import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.init.ModAbilityPools;
-import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
@@ -146,6 +147,7 @@ public class CleaveAbility extends Ability {
 
     // ── Pull phase ────────────────────────────────────────────────────────────
     public void onPullStart(LivingEntity entity, IAbility ability) {
+        JjkGesture.CLEAVE_REACH.play(animationComponent, entity, 15);
         // Extend continuity window so the pull animation has time to complete
         this.continuousComponent.setThresholdTime(entity, 200.0F);
     }
@@ -174,7 +176,7 @@ public class CleaveAbility extends Ability {
 
     // ── Hold (charge) phase ───────────────────────────────────────────────────
     private void onHoldStart(LivingEntity entity, IAbility ability) {
-        this.animationComponent.start(entity, ModAnimations.POINT_ARMS);
+        JjkGesture.CLEAVE.play(animationComponent, entity, (int) HOLD_DURATION);
     }
 
     private void onHoldTick(LivingEntity entity, IAbility ability) {

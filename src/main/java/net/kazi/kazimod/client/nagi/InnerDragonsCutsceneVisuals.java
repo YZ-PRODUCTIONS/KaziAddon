@@ -96,6 +96,20 @@ public final class InnerDragonsCutsceneVisuals {
         float age = InnerDragonsCutsceneClient.age(partial);
         if (!InnerDragonsCutsceneClient.activeAt(age)) return;
         restoreSceneDepth(client);
+        if (InnerDragonsCutsceneClient.isInstinct()) {
+            UltraInstinctPresentation.render(event);
+            return;
+        }
+        if (InnerDragonsCutsceneClient.isKageyoshi()) {
+            KageyoshiPresentation.render(event);
+            return;
+        }
+        if (InnerDragonsCutsceneClient.isDomainClash()) {
+            net.kazi.kazimod.jjk.ClashTableau.render(event.getMatrixStack(), client.renderBuffers().bufferSource(),
+                    client.gameRenderer.getMainCamera().getPosition(), InnerDragonsCutsceneClient.clashStage(),
+                    InnerDragonsCutsceneClient.subject(), InnerDragonsCutsceneClient.clashOpponent(), age);
+            return;
+        }
         if (InnerDragonsCutsceneClient.isChaosFinale()) {
             net.kazi.kazimod.client.asriel.ChaosBeamFinale.world(event);
             return;

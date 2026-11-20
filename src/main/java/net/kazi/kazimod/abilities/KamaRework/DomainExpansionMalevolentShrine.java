@@ -6,7 +6,7 @@ import java.util.List;
 import net.kazi.kazimod.abilities.Koku.DomainExpansionInfiniteVoidAbility;
 import net.kazi.kazimod.entities.MalevolentShrineEntity;
 import net.kazi.kazimod.events.DomainClashManager;
-import net.kazi.kazimod.init.KaziAnimations;
+import net.kazi.kazimod.jjk.JjkGesture;
 import net.kazi.kazimod.init.KaziEntities;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.kazi.kazimod.init.KaziSounds;
@@ -107,7 +107,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
         this.addCanUseCheck(this::canUseCheck);
         this.addUseEvent(this::onUseEvent);
         this.addTickEvent(this::onClashTick);
-        this.addRemoveEvent((entity, ability) -> stopConstructionVisual());
+        this.addRemoveEvent((entity, ability) -> { stopConstructionVisual(); DomainClashManager.abort(entity); });
     }
 
     private AbilityUseResult canUseCheck(LivingEntity entity, IAbility ability) {
@@ -147,7 +147,7 @@ public class DomainExpansionMalevolentShrine extends Ability {
     }
 
     private void onChargeStart(LivingEntity entity, IAbility ability) {
-        this.animationComponent.start(entity, KaziAnimations.SUKUNA_DOMAIN);
+        JjkGesture.SHRINE_SIGN.play(animationComponent, entity, (int)CHARGE_TIME);
 
         if (!entity.level.isClientSide) {
             stopConstructionVisual();
@@ -163,22 +163,8 @@ public class DomainExpansionMalevolentShrine extends Ability {
                 DomainExpansionInfiniteVoidAbility voidAbility =
                         (DomainExpansionInfiniteVoidAbility) otherData.getEquippedAbility(
                                 DomainExpansionInfiniteVoidAbility.INSTANCE);
-                if (voidAbility != null && voidAbility.isCharging()) {
-                    DomainClashManager.startClash(entity, other);
-                    voidAbility.startClashVisuals(other);
-                    this.startClashVisuals(entity, other);
-
-                    // FIX: stopCooldown first so startCooldown isn't silently ignored
-                    this.cooldownComponent.stopCooldown(entity);
-                    this.cooldownComponent.startCooldown(entity, COOLDOWN);
-                    this.startKamaTechniqueCooldowns(entity, COOLDOWN * 0.25F);
-                    voidAbility.startCooldownForClash(other);
-
-                    this.chargeComponent.stopCharging(entity);
-                    this.animationComponent.stop(entity);
-                    voidAbility.stopChargingNoCD(other);
-                    return;
-                }
+                if (voidAbility != null && voidAbility.isCharging() &&
+                        DomainClashManager.startClash(other, voidAbility, entity, this)) return;
             }
         }
     }
@@ -369,18 +355,16 @@ public class DomainExpansionMalevolentShrine extends Ability {
         cleanupClash(entity);
         // Winner: clear cooldown entirely
         this.cooldownComponent.stopCooldown(entity);
-        DomainClashManager.clearResolved(entity.getUUID());
         sendMessage(entity, TextFormatting.GREEN + "You have won the domain clash!");
     }
 
     public void resolveClashLoss(LivingEntity entity) {
-        if (clashShrineEntity != null) { clashShrineEntity.remove(); clashShrineEntity = null; }
+        cleanupClash(entity);
         // FIX: stopCooldown first — startCooldown is ignored if already on cooldown.
         // Without this, the loser stays locked at the COOLDOWN set during clash start
         // and the MIN_COOLDOWN intended here was silently swallowed.
         this.cooldownComponent.stopCooldown(entity);
         this.cooldownComponent.startCooldown(entity, MIN_COOLDOWN);
-        DomainClashManager.clearResolved(entity.getUUID());
         sendMessage(entity, TextFormatting.RED + "You have lost the domain clash.");
     }
 
@@ -394,40 +378,30 @@ public class DomainExpansionMalevolentShrine extends Ability {
         if (entity.level.isClientSide) return;
         cleanupClash(entity);
 
-        Vector3d look = entity.getLookAngle();
-        this.clashShrineEntity = new MalevolentShrineEntity(
-                KaziEntities.MALEVOLENT_SHRINE.get(), entity.level);
-        this.clashShrineEntity.moveTo(
-                entity.getX() - look.x * SPAWN_BEHIND_DISTANCE,
-                entity.getY(),
-                entity.getZ() - look.z * SPAWN_BEHIND_DISTANCE,
-                entity.yRot + 180.0F, 0.0F);
-        this.clashShrineEntity.yBodyRot = entity.yRot + 180.0F;
-        this.clashShrineEntity.setDeltaMovement(Vector3d.ZERO);
-        this.clashShrineEntity.setNoGravity(true);
-        this.clashShrineEntity.setInvulnerable(true);
-        this.clashShrineEntity.activateDomainVisual(RANGE, entity.position());
-        entity.level.addFreshEntity(this.clashShrineEntity);
-
-        if (voidUser != null && voidUser.isAlive()) {
-            double barrierRadius = 30.0;
-            double distToVoidUser = entity.distanceTo(voidUser);
-            if (distToVoidUser > barrierRadius) {
-                Vector3d toVoid = voidUser.position().subtract(entity.position());
-                if (toVoid.lengthSqr() > 0.001D) {
-                    toVoid = toVoid.normalize();
-                    double spawnDist = barrierRadius * 0.75;
-                    entity.teleportTo(
-                            voidUser.getX() - toVoid.x * spawnDist,
-                            voidUser.getY(),
-                            voidUser.getZ() - toVoid.z * spawnDist);
-                }
-            }
+        Vector3d away = entity.position().subtract(voidUser.position());
+        if (away.length() > 30.0) {
+            away = away.normalize().scale(22.5);
+            entity.teleportTo(voidUser.getX() + away.x, voidUser.getY(), voidUser.getZ() + away.z);
         }
+        net.kazi.kazimod.jjk.ClashStage stage = new net.kazi.kazimod.jjk.ClashStage(
+                voidUser.position(), entity.position(), voidUser.yRot);
+        double dx = stage.shrine.x - voidUser.getX(), dz = stage.shrine.z - voidUser.getZ();
+        clashShrineEntity = new MalevolentShrineEntity(KaziEntities.MALEVOLENT_SHRINE.get(), entity.level);
+        clashShrineEntity.moveTo(stage.shrine.x, stage.shrine.y, stage.shrine.z,
+                (float)Math.toDegrees(Math.atan2(dx, -dz)), 0);
+        clashShrineEntity.yBodyRot = clashShrineEntity.yRot;
+        clashShrineEntity.setNoGravity(true);
+        clashShrineEntity.setInvulnerable(true);
+        clashShrineEntity.activateClashVisual(stage, DomainExpansionInfiniteVoidAbility.RADIUS);
+        entity.level.addFreshEntity(clashShrineEntity);
+        JjkGesture.CLASH_SHRINE_SIGN.play(animationComponent, entity, net.kazi.kazimod.abilities.cinematics.AwakeningCutsceneType.DOMAIN_CLASH.durationTicks);
     }
 
     public void cleanupClash(LivingEntity entity) {
-        if (clashShrineEntity != null) { clashShrineEntity.remove(); clashShrineEntity = null; }
+        if (clashShrineEntity != null) {
+            clashShrineEntity.remove(); clashShrineEntity = null;
+            if (animationComponent.isPlaying()) animationComponent.stop(entity);
+        }
     }
 
     private static boolean canUnlock(LivingEntity user) {

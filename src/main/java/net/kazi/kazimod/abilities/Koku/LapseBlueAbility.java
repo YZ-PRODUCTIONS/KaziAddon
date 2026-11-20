@@ -1,16 +1,14 @@
 package net.kazi.kazimod.abilities.Koku;
 
 import net.kazi.kazimod.entities.projectiles.HollowNukeProjectile;
-import net.kazi.kazimod.init.KaziAnimations;
+import net.kazi.kazimod.jjk.JjkGesture;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.play.server.SAnimateHandPacket;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import xyz.pixelatedw.mineminenomi.api.abilities.*;
@@ -136,7 +134,7 @@ public class LapseBlueAbility extends Ability {
         this.slamTarget = null;
         this.teleported = false;
         this.slammed = false;
-        this.animationComponent.start(entity, KaziAnimations.GOJO_BLUE);
+        JjkGesture.BLUE_PULL.play(animationComponent, entity, (int) PULL_CONTINUITY_TIME);
         this.pullVisualTicks = 0;
         this.pullVisual.start(entity, ability, net.kazi.kazimod.entities.KokuVfxEntity.BLUE_PULL, (int) PULL_CONTINUITY_TIME);
     }
@@ -195,6 +193,7 @@ public class LapseBlueAbility extends Ability {
             if (this.grabEntityComponent.hasGrabbedEntity()) {
                 LivingEntity grabbed = this.grabEntityComponent.getGrabbedEntity();
                 this.slamTarget = grabbed;
+                JjkGesture.BLUE_LIFT.play(animationComponent, entity, (int) SLAM_TELEPORT_DELAY);
 
                 this.grabEntityComponent.release(entity);
 
@@ -202,8 +201,6 @@ public class LapseBlueAbility extends Ability {
                 grabbed.addEffect(new EffectInstance(
                         (Effect) ModEffects.DIZZY.get(), 40, 0, false, false));
 
-                ((ServerWorld) entity.level).getChunkSource()
-                        .broadcastAndSend(entity, new SAnimateHandPacket(entity, 0));
 
                 AbilityHelper.setDeltaMovement(grabbed, 0.0, 3.0, 0.0);
             } else {
@@ -228,6 +225,7 @@ public class LapseBlueAbility extends Ability {
 
                 if (!teleported && this.chargeComponent.getChargeTime() >= SLAM_TELEPORT_DELAY) {
                     teleported = true;
+                    JjkGesture.BLUE_SLAM.play(animationComponent, entity, (int) CHARGE_TIME);
                     entity.teleportTo(
                             slamTarget.getX(),
                             slamTarget.getY() + 5.0,
@@ -247,8 +245,6 @@ public class LapseBlueAbility extends Ability {
                             (Effect) ModEffects.ANTI_KNOCKBACK.get(), 10, 0, false, false));
 
                     if (distToFloor > 2.0 && this.hitTrackerComponent.canHit(slamTarget)) {
-                        ((ServerWorld) entity.level).getChunkSource()
-                                .broadcastAndSend(entity, new SAnimateHandPacket(entity, 0));
                         this.dealDamageComponent.hurtTarget(entity, slamTarget, SLAM_DAMAGE);
                     }
 

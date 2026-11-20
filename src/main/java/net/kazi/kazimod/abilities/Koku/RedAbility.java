@@ -3,12 +3,11 @@ package net.kazi.kazimod.abilities.Koku;
 import net.kazi.kazimod.abilities.GomuRework.GearFifthRework;
 import net.kazi.kazimod.entities.projectiles.MaxOutputRedProjectile;
 import net.kazi.kazimod.entities.projectiles.RedProjectile;
-import net.kazi.kazimod.init.KaziAnimations;
+import net.kazi.kazimod.jjk.JjkGesture;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.kazi.kazimod.init.KaziSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.play.server.SAnimateHandPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.vector.Vector3d;
@@ -134,7 +133,7 @@ public class RedAbility extends Ability {
 
     private void onChargeStart(LivingEntity entity, IAbility ability) {
         if (!entity.level.isClientSide) {
-            this.animationComponent.start(entity, KaziAnimations.GOJO_RED);
+            (currentMode == RedMode.MAX_OUTPUT ? JjkGesture.RED_MAX : JjkGesture.RED).play(animationComponent, entity, (int) CHARGE_TIME);
             this.chargeVisual.start(entity, ability, net.kazi.kazimod.entities.KokuVfxEntity.RED_CHARGE, (int) CHARGE_TIME);
             entity.level.playSound(
                     (PlayerEntity) null,
@@ -156,14 +155,12 @@ public class RedAbility extends Ability {
             net.kazi.kazimod.entities.KokuVfxEntity.impact(entity.level,
                     net.kazi.kazimod.entities.KokuVfxEntity.castOrigin(entity, 1.0F, 0),
                     net.kazi.kazimod.entities.KokuVfxEntity.RED_IMPACT, 2.0F);
-            this.animationComponent.stop(entity);
+            JjkGesture.RED_KICK.play(animationComponent, entity, 12);
             if (currentMode == RedMode.MAX_OUTPUT) {
                 this.maxOutputProjectileComponent.shoot(entity, 3.0F, 1.0F);
             } else {
                 this.projectileComponent.shoot(entity, 3.0F, 1.0F);
             }
-            ((ServerWorld) entity.level).getChunkSource()
-                    .broadcastAndSend(entity, new SAnimateHandPacket(entity, 0));
             entity.level.playSound(
                     (PlayerEntity) null,
                     entity.blockPosition(),

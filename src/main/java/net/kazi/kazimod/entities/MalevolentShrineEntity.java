@@ -1,5 +1,6 @@
 package net.kazi.kazimod.entities;
 
+import net.kazi.kazimod.jjk.ClashStage;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -14,6 +15,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class MalevolentShrineEntity extends MobEntity {
+    @Override public boolean saveAsPassenger(CompoundNBT tag) {
+        return !isClashProjection() && super.saveAsPassenger(tag);
+    }
 
     // Presentation metadata only. Domain damage, duration, and destruction stay in the local ability.
     private static final DataParameter<Float> DOMAIN_RADIUS = EntityDataManager.defineId(MalevolentShrineEntity.class, DataSerializers.FLOAT);
@@ -29,7 +33,19 @@ public class MalevolentShrineEntity extends MobEntity {
     }
 
     public void activateDomainVisual(float radius, Vector3d origin) {
+        setVisual(radius, origin, false);
+    }
+
+    public void activateClashVisual(ClashStage stage, float arenaRadius) {
+        // Inscribe the slash field in Kama's half of the barrier, including vertically separated casts.
+        float radius = arenaRadius * .5F;
+        Vector3d direction = stage.kama.subtract(stage.koku).normalize();
+        setVisual(radius, stage.anchor.add(direction.scale(radius)), true);
+    }
+
+    private void setVisual(float radius, Vector3d origin, boolean clash) {
         CompoundNBT position = new CompoundNBT();
+        position.putBoolean("Clash", clash);
         position.putDouble("X", origin.x);
         position.putDouble("Y", origin.y);
         position.putDouble("Z", origin.z);
@@ -43,7 +59,10 @@ public class MalevolentShrineEntity extends MobEntity {
         return position.isEmpty() ? this.position() : new Vector3d(position.getDouble("X"), position.getDouble("Y"), position.getDouble("Z"));
     }
 
-    public float getDomainRadius() { return this.entityData.get(DOMAIN_RADIUS); }
+    public boolean isClashProjection() { return this.entityData.get(DOMAIN_ORIGIN).getBoolean("Clash"); }
+    public float getSlashRadius() { return this.entityData.get(DOMAIN_RADIUS); }
+    // A visual projection is not a second active domain for fog, sky, or camera shake.
+    public float getDomainRadius() { return isClashProjection() ? 0 : getSlashRadius(); }
     public float getConstruction() { return 1.0F; }
 
     public float getVfxAge(float partial) {
@@ -53,8 +72,8 @@ public class MalevolentShrineEntity extends MobEntity {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        if (getDomainRadius() <= 0.0F) return super.shouldRenderAtSqrDistance(distance);
-        double range = getDomainRadius() + 96.0D + position().distanceTo(getDomainOrigin());
+        if (getSlashRadius() <= 0.0F) return super.shouldRenderAtSqrDistance(distance);
+        double range = getSlashRadius() + 96.0D + position().distanceTo(getDomainOrigin());
         return distance <= range * range;
     }
 

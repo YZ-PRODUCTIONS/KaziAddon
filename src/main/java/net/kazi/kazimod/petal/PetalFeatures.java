@@ -5,6 +5,8 @@ import net.minecraft.entity.player.*;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectType;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
@@ -15,6 +17,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.*;
 import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.network.*;
@@ -22,6 +25,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.*;
 import xyz.pixelatedw.mineminenomi.api.abilities.*;
 import xyz.pixelatedw.mineminenomi.api.enums.*;
+import xyz.pixelatedw.mineminenomi.api.events.ability.AbilityUseEvent;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
 import xyz.pixelatedw.mineminenomi.data.entity.ability.*;
 import xyz.pixelatedw.mineminenomi.data.entity.devilfruit.DevilFruitCapability;
@@ -32,15 +36,26 @@ import xyz.pixelatedw.mineminenomi.wypi.WyNetwork;
 public final class PetalFeatures {
  private static final DeferredRegister<EntityType<?>> TYPES=DeferredRegister.create(ForgeRegistries.ENTITIES,"kazimod");
  public static final RegistryObject<EntityType<PetalField>> FIELD=TYPES.register("petal_field",()->EntityType.Builder.<PetalField>of(PetalField::new,EntityClassification.MISC).sized(1,1).clientTrackingRange(12).updateInterval(2).noSave().build("petal_field"));
+ private static final DeferredRegister<Effect> EFFECTS=DeferredRegister.create(ForgeRegistries.POTIONS,"kazimod");
+ public static final RegistryObject<Effect> PRISON_STUN=EFFECTS.register("blooming_prison_stun",()->new Effect(EffectType.HARMFUL,0xf486bf){});
  private static final SimpleChannel CHANNEL=NetworkRegistry.newSimpleChannel(new ResourceLocation("kazimod","petal"),()->"1","1"::equals,"1"::equals);
  public static void init(IEventBus bus){
-  TYPES.register(bus);for(AbilityCore<?> c:PetalAbility.CORES)net.kazi.kazimod.api.KaziRegistry.registerAbility(c);
+  TYPES.register(bus);EFFECTS.register(bus);for(AbilityCore<?> c:PetalAbility.CORES)net.kazi.kazimod.api.KaziRegistry.registerAbility(c);
   net.kazi.kazimod.api.KaziRegistry.registerItem("petal_petal_no_mi",()->new AkumaNoMiItem("Hanabira Hanabira no Mi",3,FruitType.PARAMECIA,PetalAbility.available()));
   AbilityCommandGroup.create("PETAL",PetalAbility::available);
   CHANNEL.registerMessage(0,PetalPacket.class,PetalPacket::encode,PetalPacket::decode,PetalPacket::handle,Optional.of(NetworkDirection.PLAY_TO_CLIENT));
   MinecraftForge.EVENT_BUS.addListener(PetalFeatures::tick);
   MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH,PetalFeatures::hurt);
   MinecraftForge.EVENT_BUS.addListener(PetalFeatures::projectile);
+  MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST,(AbilityUseEvent.Pre e)->{
+   if(prisonStunned(e.getEntityLiving()))e.setCanceled(true);
+  });
+  MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST,(LivingAttackEvent e)->{
+   if(e.getSource().getDirectEntity() instanceof LivingEntity&&prisonStunned((LivingEntity)e.getSource().getDirectEntity()))e.setCanceled(true);
+  });
+  MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST,(PlayerInteractEvent e)->{
+   if(e.isCancelable()&&prisonStunned(e.getPlayer()))e.setCanceled(true);
+  });
   MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent e)->{PetalState.reset(e.getPlayer());reconcile(e.getPlayer());sync(e.getPlayer());});
   MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerChangedDimensionEvent e)->{PetalState.reset(e.getPlayer());sync(e.getPlayer());});
   MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedOutEvent e)->PetalState.reset(e.getPlayer()));
@@ -66,6 +81,7 @@ public final class PetalFeatures {
   if(p.tickCount%4==0)sync(p);
  }
  public static boolean usable(LivingEntity p){return p.isAlive()&&!p.isSpectator()&&PetalState.fruit(p)&&!AbilityHelper.isWeakenedByKairosekiOrWater(p);}
+ public static boolean prisonStunned(LivingEntity entity){return PRISON_STUN.isPresent()&&entity.hasEffect(PRISON_STUN.get());}
  public static LivingEntity bodyOwner(LivingEntity t){if(t instanceof net.kazi.kazimod.seiryu.SeiryuPartEntity)return ((net.kazi.kazimod.seiryu.SeiryuPartEntity)t).owner();if(t instanceof net.kazi.kazimod.worldturtle.WorldTurtlePartEntity)return ((net.kazi.kazimod.worldturtle.WorldTurtlePartEntity)t).owner();return t;}
  public static boolean canHit(LivingEntity p,LivingEntity t){LivingEntity owner=bodyOwner(t);return owner!=null&&!allied(p,owner)&&net.kazi.kazimod.saiyan.SaiyanAbility.canHit(p,owner);}
  public static LivingEntity summonOwner(LivingEntity t){

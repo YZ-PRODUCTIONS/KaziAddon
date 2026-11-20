@@ -164,7 +164,8 @@ public class KenbunshokuHakiFutureSightRework extends Ability {
     }
 
     public float damageTakenEvent(LivingEntity entity, IAbility ability, DamageSource source, float damage) {
-        if (net.kazi.kazimod.decay.DecayAbility.bypassesDodge(source)) return damage;
+        if (net.kazi.kazimod.decay.DecayAbility.bypassesDodge(source)
+                || net.kazi.kazimod.petal.PetalAbility.bypassesFutureSight(source)) return damage;
         if (!super.isContinuous() || !AbilityHelper.canUseMomentumAbilities(entity) || AbilityHelper.isGrabbing(entity)) {
             return damage;
         }

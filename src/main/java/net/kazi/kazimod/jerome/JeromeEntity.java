@@ -1,6 +1,7 @@
 package net.kazi.kazimod.jerome;
 
 import java.util.*;
+import net.kazi.kazimod.events.WorldBossAggro;
 import net.kazi.kazimod.mahoraga.MahoragaHaki;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
@@ -40,6 +41,7 @@ public final class JeromeEntity extends OPEntity {
     private static final DataParameter<Float> SCALE=EntityDataManager.defineId(JeromeEntity.class,DataSerializers.FLOAT);
     private final ServerBossInfo bar=new ServerBossInfo(new TranslationTextComponent("entity.kazimod.jerome"),BossInfo.Color.YELLOW,BossInfo.Overlay.PROGRESS);
     private boolean initialized,natural,announced;
+    private final WorldBossAggro aggro=new WorldBossAggro();
     private int recovery,specialCooldown,slamCooldown,beamCooldown,geppoTravelTicks,surgeStage;
     private float previousScale=1;
     private JeromeBeam beam;
@@ -95,9 +97,7 @@ public final class JeromeEntity extends OPEntity {
         if(fresh){setHealth(getMaxHealth());home=blockPosition();begin(JeromeAction.ARRIVAL);}
         initialized=true;
     }
-    public boolean enemy(LivingEntity target){return target!=null&&target!=this&&target.isAlive()&&target.level==level
-            &&!(target instanceof JeromeEntity)&&!isAlliedTo(target)
-            &&(!(target instanceof PlayerEntity)||!((PlayerEntity)target).isCreative()&&!target.isSpectator());}
+    public boolean enemy(LivingEntity target){return aggro.canAttack(this,target);}
     @Override public boolean isAlliedTo(Entity other){return other instanceof JeromeEntity||super.isAlliedTo(other);}
     private void endBeam(){if(beam!=null){beam.remove();beam=null;}setNoGravity(false);}
     private void begin(JeromeAction action){
@@ -247,8 +247,8 @@ public final class JeromeEntity extends OPEntity {
         if(!initialized)initialize(true);
         if(source.getEntity() instanceof JeromeEntity)return false;
         LivingEntity attacker=source.getEntity() instanceof LivingEntity?(LivingEntity)source.getEntity():null;
-        if(enemy(attacker))setTarget(attacker);
         float health=getHealth();boolean damaged=super.hurt(source,amount);
+        if(damaged)aggro.retaliate(this,attacker);
         if(damaged&&isAlive()&&getHealth()<health){entityData.set(POWER,Math.min(1,rage()+(health-getHealth())/(getMaxHealth()*.8F)));applyPower();}
         return damaged;
     }

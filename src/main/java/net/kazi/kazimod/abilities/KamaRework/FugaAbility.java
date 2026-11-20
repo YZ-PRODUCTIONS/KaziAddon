@@ -1,7 +1,7 @@
 package net.kazi.kazimod.abilities.KamaRework;
 
 import net.kazi.kazimod.entities.projectiles.FugaProjectile;
-import net.kazi.kazimod.init.KaziAnimations;
+import net.kazi.kazimod.jjk.JjkGesture;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.kazi.kazimod.init.KaziSounds;
 import net.minecraft.entity.LivingEntity;
@@ -59,7 +59,7 @@ public class FugaAbility extends Ability {
 
     private void startChargeEvent(LivingEntity entity, IAbility ability) {
         // No launch — player floats via slowEntityFall in duringChargeEvent
-        this.animationComponent.start(entity, KaziAnimations.FUGA_SUKUNA, (int) CHARGE_TIME);
+        JjkGesture.FURNACE.play(animationComponent, entity, (int) CHARGE_TIME);
         stopChargeVisual();
         this.chargeVisual = net.kazi.kazimod.entities.KamaVfxEntity.charge(entity, ability, (int) CHARGE_TIME);
 
@@ -79,7 +79,7 @@ public class FugaAbility extends Ability {
 
     private void endChargeEvent(LivingEntity entity, IAbility ability) {
         stopChargeVisual();
-        this.animationComponent.stop(entity);
+        JjkGesture.ARROW_RELEASE.play(animationComponent, entity, 16);
         float multiplier = this.chargeComponent.getChargePercentage();
 
         FugaProjectile projectile = new FugaProjectile(entity.level, entity);

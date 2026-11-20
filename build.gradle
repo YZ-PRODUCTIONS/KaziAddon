@@ -1,3 +1,5 @@
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 buildscript {
     repositories {
@@ -175,6 +177,8 @@ tasks.named('processResources', ProcessResources).configure {
     }}
 
 tasks.named('jar', Jar).configure {
+    // Keep the development archive out of the release directory until remapping succeeds.
+    destinationDirectory = layout.buildDirectory.dir('intermediates/jar')
     // processResources exposes this to IDE runs; MixinGradle also adds it to the jar.
     filesMatching("${mod_id}.refmap.json") {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -192,6 +196,18 @@ tasks.named('jar', Jar).configure {
     }
 
     finalizedBy 'reobfJar'
+}
+
+def mainJar = tasks.named('jar', Jar)
+def releaseJar = layout.buildDirectory.file(mainJar.flatMap { it.archiveFileName }.map { "libs/${it}".toString() })
+tasks.matching { it.name == 'reobfJar' }.configureEach {
+    outputs.file(releaseJar)
+    doLast {
+        def source = mainJar.get().archiveFile.get().asFile.toPath()
+        def target = releaseJar.get().asFile.toPath()
+        Files.createDirectories(target.parent)
+        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING)
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {

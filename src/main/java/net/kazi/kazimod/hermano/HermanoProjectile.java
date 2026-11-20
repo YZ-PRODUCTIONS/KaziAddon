@@ -1,7 +1,6 @@
 package net.kazi.kazimod.hermano;
 
 import net.minecraft.entity.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.datasync.*;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
@@ -28,14 +27,14 @@ public final class HermanoProjectile extends AbilityProjectileEntity {
         if(level.isClientSide||spent||!isAlive())return;
         Entity victim=hit instanceof EntityRayTraceResult?((EntityRayTraceResult)hit).getEntity():null;
         if(victim instanceof AbilityProjectileEntity){super.onModHit(hit);return;}
-        LivingEntity owner=getThrower();if(owner==null){remove();return;}
-        if(victim==owner||victim!=null&&owner.isAlliedTo(victim))return;
+        LivingEntity thrower=getThrower();if(!(thrower instanceof HermanoEntity)){remove();return;}
+        HermanoEntity owner=(HermanoEntity)thrower;
+        if(victim!=null&&(owner.isAlliedTo(victim)||victim instanceof LivingEntity&&!owner.enemy((LivingEntity)victim)))return;
         spent=true;float radius=entityData.get(POWER)?7:5;
         Vector3d at=hit.getLocation().subtract(getDeltaMovement().normalize().scale(.25));
         ModDamageSource source=new ModDamageSource("el_hermano_power_impact").causeEntityDamageFromSource(owner);
         source.setSourceElement(SourceElement.SHOCKWAVE).setProjectile().setInternal().bypassLogia().setHakiNature(SourceHakiNature.SPECIAL).setAreaOfEffect();
-        for(LivingEntity target:level.getEntitiesOfClass(LivingEntity.class,new AxisAlignedBB(at,at).inflate(radius))){
-            if(target==owner||!target.isAlive()||owner.isAlliedTo(target)||target instanceof PlayerEntity&&(((PlayerEntity)target).isCreative()||target.isSpectator()))continue;
+        for(LivingEntity target:level.getEntitiesOfClass(LivingEntity.class,new AxisAlignedBB(at,at).inflate(radius),owner::enemy)){
             double distance=target.getBoundingBox().getCenter().distanceTo(at);if(distance>radius)continue;
             if(level.clip(new RayTraceContext(at,target.getBoundingBox().getCenter(),RayTraceContext.BlockMode.COLLIDER,RayTraceContext.FluidMode.NONE,this)).getType()!=RayTraceResult.Type.MISS)continue;
             if(target.hurt(source,getDamage()*(float)(1-.4*distance/radius))){Vector3d d=target.position().subtract(at);target.knockback(2,-d.x,-d.z);}

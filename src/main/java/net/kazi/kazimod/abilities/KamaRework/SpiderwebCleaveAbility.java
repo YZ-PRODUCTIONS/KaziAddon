@@ -1,5 +1,7 @@
 package net.kazi.kazimod.abilities.KamaRework;
 
+import net.kazi.kazimod.jjk.JjkGesture;
+
 import java.util.List;
 import net.kazi.kazimod.init.KaziParticleEffects;
 import net.kazi.kazimod.init.KaziSounds;
@@ -30,7 +32,6 @@ import xyz.pixelatedw.mineminenomi.api.damagesource.SourceElement;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceHakiNature;
 import xyz.pixelatedw.mineminenomi.api.damagesource.SourceType;
 import xyz.pixelatedw.mineminenomi.api.helpers.AbilityHelper;
-import xyz.pixelatedw.mineminenomi.init.ModAnimations;
 import xyz.pixelatedw.mineminenomi.init.ModEffects;
 import xyz.pixelatedw.mineminenomi.particles.effects.ParticleEffect;
 import xyz.pixelatedw.mineminenomi.wypi.WyHelper;
@@ -80,7 +81,7 @@ public class SpiderwebCleaveAbility extends Ability {
     }
 
     private void startChargeEvent(LivingEntity entity, IAbility ability) {
-        this.animationComponent.start(entity, ModAnimations.RYU_NO_IBUKI);
+        JjkGesture.WEB.play(animationComponent, entity, CHARGE_TIME);
 
     }
 
@@ -91,7 +92,7 @@ public class SpiderwebCleaveAbility extends Ability {
     }
 
     private void endChargeEvent(LivingEntity entity, IAbility ability) {
-        this.animationComponent.stop(entity);
+        JjkGesture.WEB_IMPACT.play(animationComponent, entity, 14);
         net.kazi.kazimod.entities.KamaVfxEntity.spawn(entity,
                 net.kazi.kazimod.entities.KamaVfxEntity.WEB, entity.position(), AOE_RANGE, 20);
 

@@ -2,7 +2,9 @@ package net.kazi.kazimod.abilities.cinematics;
 
 /** Stable wire IDs and shared deadlines. Contains no client classes. */
 public enum AwakeningCutsceneType {
-    INNER_DRAGONS(0, 160), EA_DRAW(1, 160), HYPER_GONER(2, 260), CHAOS_BEAM_FINALE(3, 312, 40);
+    INNER_DRAGONS(0, 160), EA_DRAW(1, 160), HYPER_GONER(2, 260), CHAOS_BEAM_FINALE(3, 312, 40),
+    DOMAIN_CLASH(4, 140), SENBONZAKURA_KAGEYOSHI(5, 72),
+    ULTRA_INSTINCT(6, net.kazi.kazimod.saiyan.SaiyanBalance.INSTINCT_TRANSFORM_TICKS);
     public final int wireId;
     public final int durationTicks;
     public final int returnFadeTicks;
@@ -17,6 +19,7 @@ public enum AwakeningCutsceneType {
         this.protectionTicks = durationTicks + returnFadeTicks;
     }
     public boolean active(float age) { return Float.isFinite(age) && age >= 0 && age < durationTicks; }
+    public boolean cameraOnly() { return this == SENBONZAKURA_KAGEYOSHI || this == ULTRA_INSTINCT; }
     public static AwakeningCutsceneType fromWire(int id) {
         for (AwakeningCutsceneType type : values()) if (type.wireId == id) return type;
         throw new IllegalArgumentException("Unknown awakening cinematic: " + id);

@@ -5,6 +5,7 @@ import net.kazi.kazimod.models.abilities.KokuVfxMesh;
 public final class KamaVfxMesh {
     private static final float PI = (float)Math.PI;
     public static final int DOMAIN_SLASH_COUNT = 1152;
+    public static final int CLASH_SLASH_COUNT = 64;
     private static final int[] DOMAIN_OUTLINES = new int[]{4252927, 16732863, 16769899, 9568140, 11700991};
 
     private KamaVfxMesh() {
@@ -125,10 +126,14 @@ public final class KamaVfxMesh {
     }
 
     public static void domain(KokuVfxMesh.Sink out, float age, float radius, float rightX, float rightY, float rightZ, float upX, float upY, float upZ) {
+        domain(out, age, radius, rightX, rightY, rightZ, upX, upY, upZ, DOMAIN_SLASH_COUNT);
+    }
+
+    public static void domain(KokuVfxMesh.Sink out, float age, float radius, float rightX, float rightY, float rightZ, float upX, float upY, float upZ, int count) {
         if (radius <= 0.0f) {
             return;
         }
-        for (int i = 0; i < 1152; ++i) {
+        for (int i = 0; i < count; ++i) {
             float cycle = (float)Math.floor(age / 3.0f + (float)i * 0.17f);
             int variant = KamaVfxMesh.slashHash(i * 7349 + (int)cycle * 19391);
             float a = (float)i * 2.399f + cycle;

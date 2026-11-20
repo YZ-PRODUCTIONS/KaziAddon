@@ -2,7 +2,6 @@ package net.kazi.kazimod.hermano;
 
 import net.minecraft.entity.*;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -23,7 +22,6 @@ public final class HermanoFeatures {
     public static void init(IEventBus bus){
         TYPES.register(bus);
         bus.addListener((EntityAttributeCreationEvent e)->e.put(BOSS.get(),HermanoEntity.createAttributes().build()));
-        MinecraftForge.EVENT_BUS.addListener(HermanoSpawning::tick);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT,()->()->HermanoClient.init(bus));
     }
     private HermanoFeatures(){}
